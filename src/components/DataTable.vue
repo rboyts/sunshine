@@ -308,7 +308,7 @@ export default Vue.extend({
         children.push(this.renderDragHandle(index));
       }
 
-      let on: { [key: string]: Function } = {};
+      let on: { [key: string]: any } = {};
 
       if (column.sortable) {
         on.click = (event: MouseEvent) => this.onSort(event, column.key);
@@ -439,19 +439,33 @@ $inner-border : 1px solid #ccc;
 
   td {
     background-color: #fff;
+    position: relative;
+    z-index: 0;
 
+    &.dragging,
+    &.last-dragged {
+      z-index: 1;
+    }
   }
 
   th {
     background-color: #f1f1f1;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+
+    &.dragging,
+    &.last-dragged {
+      z-index: 3;
+    }
   }
 
   th, td {
     text-align: left;
     white-space: nowrap;
-    padding: 16px;
-    position: relative;
-    z-index: 0;
+    padding: 0 16px;
+    height: 40px;
+    line-height: 40px;
 
     &:not(:last-child) {
       border-right: $inner-border;
@@ -461,11 +475,6 @@ $inner-border : 1px solid #ccc;
       border-left: $inner-border;
       border-right: $inner-border;
       opacity: .8;
-      z-index: 1;
-    }
-
-    &.last-dragged {
-      z-index: 1;
     }
 
     &:not(.notransition) {
