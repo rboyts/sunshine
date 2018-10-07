@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import DataTable from './DataTable.vue';
+import DataTable from '@/components/DataTable.vue';
 
 const DataSources = {
   'users': {

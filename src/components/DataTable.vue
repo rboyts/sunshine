@@ -429,7 +429,7 @@ $inner-border : 1px solid #ccc;
   background-color: #ddd;
 
   overflow: auto;
-  height: 100%;
+  max-height: 100%;
 }
 
 .data-table > table {

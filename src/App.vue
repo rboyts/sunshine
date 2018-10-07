@@ -1,20 +1,12 @@
 <template>
   <div id="app">
-    <HelloWorld />
+    <div id="nav">
+      <router-link to="/">DataTable</router-link> |
+      <router-link to="/about">About</router-link>
+    </div>
+    <router-view/>
   </div>
 </template>
-
-<script lang="ts">
-import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
-
-export default Vue.extend({
-  name: 'app',
-  components: {
-    HelloWorld,
-  },
-});
-</script>
 
 <style lang="scss">
 #app {
@@ -30,5 +22,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #e8e8e8;
+}
+
+#nav {
+  margin-bottom: 40px;
 }
 </style>
