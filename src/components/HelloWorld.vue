@@ -24,10 +24,10 @@ const DataSources = {
   'users': {
     label: 'Users',
     columns: [
-      { key: 'name', label: 'Name' },
-      { key: 'username', label: 'User name' },
+      { key: 'name', label: 'Name', sortable: true },
+      { key: 'username', label: 'User name', sortable: true },
       { key: 'company', label: 'Company' },
-      { key: 'email', label: 'Email' },
+      { key: 'email', label: 'Email', sortable: true },
       { key: 'suite', label: 'Suite' },
       { key: 'street', label: 'Street' },
       { key: 'zipcode', label: 'Zip-code' },
@@ -49,10 +49,10 @@ const DataSources = {
   'github-repos': {
     label: 'Github Repos',
     columns: [
-      { key: 'name', label: 'Name' },
+      { key: 'name', label: 'Name', sortable: true },
       { key: 'stargazers_count', label: 'Stars' },
-      { key: 'language', label: 'Language' },
-      { key: 'full_name', label: 'Full name' },
+      { key: 'language', label: 'Language', sortable: true },
+      { key: 'full_name', label: 'Full name', sortable: true },
       { key: 'homepage', label: 'Homepage' },
       { key: 'size', label: 'Size' },
       { key: 'description', label: 'Description' },

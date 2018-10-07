@@ -3,6 +3,11 @@ import Vue, { VNode } from 'vue';
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
 
+interface ISortState {
+  key: string | null;
+  reverse: boolean;
+}
+
 interface IDragState {
   dragColumnIndex: number;
   startX: number;
@@ -15,6 +20,7 @@ interface IDragState {
 interface IColumn {
   key: string;
   label: string;
+  sortable: boolean;
 }
 
 interface IItem {
@@ -32,6 +38,10 @@ export default Vue.extend({
 
   data() {
     return {
+      sorting: {
+        key: null,
+        reverse: false,
+      } as ISortState,
       drag: null as IDragState | null,
       lastDragged: null as number | null,
     };
@@ -104,10 +114,39 @@ export default Vue.extend({
         }
       });
     },
-
   },
 
   methods: {
+    onSort(event: MouseEvent, key: string) {
+      if (this.sorting.key === key) {
+        this.sorting.reverse = !this.sorting.reverse;
+      } else {
+        this.sorting.key = key;
+        this.sorting.reverse = false;
+      }
+
+      const keyFunc = (item: IItem) => item[key];
+
+      const sortFunc = (a: IItem, b: IItem) => {
+        let keyA = keyFunc(a);
+        let keyB = keyFunc(b);
+        let v = this.sorting.reverse ? 1 : -1;
+
+        switch (true) {
+          case keyA < keyB:
+            return v;
+          case keyA > keyB:
+            return -v;
+          default:
+            return 1;
+        }
+      };
+
+      // XXX: Mutating props is perhaps not a good idea!
+
+      this.items.sort(sortFunc);
+    },
+
     onDrop(event: DragEvent) {
       event.preventDefault();
 
@@ -254,17 +293,49 @@ export default Vue.extend({
     renderHeaderCell(column: IColumn, index: number): VNode {
       const h = this.$createElement;
 
-      const children: Array<string | VNode> = [
-        column.label,
-      ];
+      const children: Array<string | VNode> = [];
+
+      children.push(column.label);
+
+      if (column.sortable) {
+        children.push(this.renderSortArrows(column.key));
+      }
+
+      // spacer
+      children.push(h('span', {style: {flex: 1}}));
 
       if (this.draggable) {
         children.push(this.renderDragHandle(index));
       }
 
-      return this.renderCell('th', column.key, index, [
-        h('div', {class: 'th'}, children),
+      let on: { [key: string]: Function } = {};
+
+      if (column.sortable) {
+        on.click = (event: MouseEvent) => this.onSort(event, column.key);
+      }
+
+      return h('th', {
+        key: column.key,
+        class: {
+          ...this.getColumnClass(index),
+          sortable: column.sortable,
+        },
+        style: this.getColumnStyle(index),
+        on,
+      },
+      [
+        h('div', { class: 'th-flex' }, children),
       ]);
+    },
+
+    renderSortArrows(key: string): VNode {
+      const h = this.$createElement;
+
+      let { sorting } = this;
+
+      let arrow = sorting.key === key ? sorting.reverse ? '\u2193' : '\u2191' : '\u2195';
+
+      return h('span', { class: 'sort' }, arrow);
     },
 
     renderDragHandle(index: number): VNode {
@@ -277,6 +348,7 @@ export default Vue.extend({
           },
           on: {
             dragstart: (event: DragEvent) => this.onDragStart(event, index),
+            click: (event: MouseEvent) => event.stopPropagation(),
           },
         },
         '\u21d4',
@@ -313,14 +385,14 @@ export default Vue.extend({
       };
     },
 
-    getColumnClass(index: number): any {
+    getColumnClass(index: number): { [key: string]: boolean } {
       if (this.drag && this.drag.startX !== 0) {
-        return index === this.drag.dragColumnIndex ? 'dragging notransition' : null;
+        return { 'dragging notransition': index === this.drag.dragColumnIndex };
       }
 
       return {
         'last-dragged': index === this.lastDragged,
-        'notransition': this.drag && this.drag.startX === 0,
+        'notransition': !!this.drag && this.drag.startX === 0,
       };
     },
   },
@@ -407,7 +479,7 @@ $inner-border : 1px solid #ccc;
     }
   }
 
-  .th {
+  .th-flex {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -416,7 +488,15 @@ $inner-border : 1px solid #ccc;
   .handle {
     cursor: move;
     margin-left: 8px;
-    color: #999;
+    color: #666;
+  }
+
+  .sort {
+    margin-left: 8px;
+  }
+
+  .sortable {
+    cursor: pointer;
   }
 }
 </style>
