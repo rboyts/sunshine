@@ -1,19 +1,68 @@
 <template>
   <div class="container">
     <div class="options">
+      <label>Data source:</label>
       <select v-model="tab">
-        <option value="repos">Repositories</option>
-        <option value="users">Users</option>
+        <option v-for="(source, key) in sources" :key="key" :value="key">{{ source.label }}</option>
       </select>
+
+      <label>
+        <input type="checkbox" v-model="draggable">
+        Draggable columns
+      </label>
     </div>
 
-    <data-table :columns="columns" :items="items" />
+    <data-table :columns="columns" :items="items" :draggable="draggable" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import DataTable from './DataTable.vue';
+
+const DataSources = {
+  'users': {
+    label: 'Users',
+    columns: [
+      { key: 'name', label: 'Name' },
+      { key: 'username', label: 'User name' },
+      { key: 'company', label: 'Company' },
+      { key: 'email', label: 'Email' },
+      { key: 'suite', label: 'Suite' },
+      { key: 'street', label: 'Street' },
+      { key: 'zipcode', label: 'Zip-code' },
+      { key: 'city', label: 'City' },
+      { key: 'phone', label: 'Phone' },
+      { key: 'website', label: 'Website' },
+    ],
+    fetch: async () => {
+      const res = await fetch('https://jsonplaceholder.typicode.com/users');
+      const data = await res.json();
+      return data.map((u: any) => ({
+        ...u,
+        ...u.address,
+        company: u.company.name,
+      }));
+    },
+  },
+
+  'github-repos': {
+    label: 'Github Repos',
+    columns: [
+      { key: 'name', label: 'Name' },
+      { key: 'stargazers_count', label: 'Stars' },
+      { key: 'language', label: 'Language' },
+      { key: 'full_name', label: 'Full name' },
+      { key: 'homepage', label: 'Homepage' },
+      { key: 'size', label: 'Size' },
+      { key: 'description', label: 'Description' },
+    ],
+    fetch: async () => {
+      const res = await fetch('https://api.github.com/users/vim-scripts/repos?page=0&per_page=100');
+      return await res.json();
+    },
+  },
+};
 
 export default Vue.extend({
   name: 'HelloWorld',
@@ -24,79 +73,50 @@ export default Vue.extend({
 
   data() {
     return {
-      tab: 'repos',
-      userColumns: [
-        { key: 'name', label: 'Name' },
-        { key: 'username', label: 'User name' },
-        { key: 'company', label: 'Company' },
-        { key: 'email', label: 'Email' },
-        { key: 'suite', label: 'Suite' },
-        { key: 'street', label: 'Street' },
-        { key: 'zipcode', label: 'Zip-code' },
-        { key: 'city', label: 'City' },
-        { key: 'phone', label: 'Phone' },
-        { key: 'website', label: 'Website' },
-      ],
-      reposColumns: [
-        { key: 'name', label: 'Name' },
-        { key: 'stargazers_count', label: 'Stars' },
-        { key: 'language', label: 'Language' },
-        { key: 'full_name', label: 'Full name' },
-        { key: 'homepage', label: 'Homepage' },
-        { key: 'size', label: 'Size' },
-        { key: 'description', label: 'Description' },
-      ],
-      users: [],
-      repos: [],
+      tab: 'users',
+      draggable: true,
+      sources: DataSources,
+      items: [],
+      columns: [],
     };
   },
 
-  computed: {
-    items(): any[] {
-      return this.tab === 'users' ? this.users : this.repos;
-    },
+  methods: {
+    async load(key: string) {
+      let source = this.sources[key];
 
-    columns(): any[] {
-      return this.tab === 'users' ? this.userColumns : this.reposColumns;
+      let items = await source.fetch();
+      this.items = items;
+      this.columns = source.columns;
     },
   },
 
-  methods: {
-    async fetchUsers() {
-      const res = await fetch('https://jsonplaceholder.typicode.com/users');
-      const data = await res.json();
-      this.users = data.map((u: any) => ({
-        ...u,
-        ...u.address,
-        company: u.company.name,
-      }));
-    },
-
-    async fetchRepos() {
-      const res = await fetch('https://api.github.com/users/vim-scripts/repos?page=0&per_page=100');
-      this.repos = await res.json();
+  watch: {
+    tab(val) {
+      this.load(val);
     },
   },
 
   async mounted() {
-    this.fetchUsers();
-    this.fetchRepos();
+    this.load(this.tab);
   },
 });
 </script>
 
 <style scoped lang="scss">
-button {
-  padding: 10px 20px;
+select, option {
+  margin: 0 10px;
+  padding: 8px 16px;
+  border-radius: 3px;
+  font-size: 14px;
 }
 
 .options {
+  font-size: 14px;
   margin-bottom: 24px;
 }
 
 .container {
-  // overflow: hidden;
-  // overflow-x: auto;
   display: flex;
   flex-direction: column;
   height: 100%;
