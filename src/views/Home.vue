@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <h2>Data table demo</h2>
     <div class="options">
       <label>Data source:</label>
       <select v-model="tab">
@@ -20,7 +21,7 @@
 import Vue from 'vue';
 import DataTable from '@/components/DataTable.vue';
 
-const DataSources = {
+const DataSources: any = {
   'users': {
     label: 'Users',
     columns: [

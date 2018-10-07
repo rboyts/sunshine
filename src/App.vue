@@ -2,7 +2,8 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">DataTable</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/chart">DataChart</router-link> |
+      <router-link to="/calendar">Calendar</router-link>
     </div>
     <router-view/>
   </div>
@@ -11,8 +12,8 @@
 <style lang="scss">
 #app {
   box-sizing: border-box;
-  padding: 60px;
-  height: 100vh;
+  padding: 10px 60px;
+  height: calc(100vh - 40px);
 }
 
 body {
@@ -22,9 +23,5 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #e8e8e8;
-}
-
-#nav {
-  margin-bottom: 40px;
 }
 </style>
