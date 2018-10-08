@@ -218,8 +218,8 @@ export default Vue.extend({
       this.lastDragged = null;
       this.drag = {
         dragColumnIndex: index,
-        startX: event.screenX,
-        curX: event.screenX,
+        startX: event.clientX,
+        curX: event.clientX,
         startScrollX: viewport.scrollLeft,
         curScrollX: viewport.scrollLeft,
         widths,
@@ -239,9 +239,9 @@ export default Vue.extend({
       event.preventDefault();
 
       if (!this.drag) return;
-      if (event.screenX === 0) return;
+      if (event.clientX === 0) return;
 
-      this.drag.curX = event.screenX;
+      this.drag.curX = event.clientX;
     },
 
     onScroll(event: UIEvent) {
