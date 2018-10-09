@@ -204,14 +204,11 @@ export default Vue.extend({
 
       this.clearSelection();
 
-      let row = element.closest('tr');
-      if (row === null) return;
-
       let viewport = element.closest('.data-table');
       if (viewport === null) return;
 
       let widths: number[] = [];
-      for (let c of row.children) {
+      for (let c of viewport.children) {
         widths.push((c as HTMLElement).offsetWidth);
       }
 
@@ -259,35 +256,31 @@ export default Vue.extend({
       }
     },
 
-    renderTable(): VNode {
+    renderTable(): VNode[] {
       const h = this.$createElement;
 
-      return h('table',
-        [
-          this.renderHeader(),
-          this.renderBody(),
-        ],
-      );
+      return this.columns.map((column, index) => this.renderColumn(column, index));
     },
 
-    renderHeader(): VNode {
+    renderColumn(column: IColumn, index: number) {
       const h = this.$createElement;
 
-      return h('thead', [
-        h('tr',
-          this.columns.map((column, index) => this.renderHeaderCell(column, index)),
-        ),
+      return h('table', {
+          key: column.key,
+          class: this.getColumnClass(index),
+          style: this.getColumnStyle(index),
+        }, [
+        h('thead', [
+          h('tr', [
+            this.renderHeaderCell(column, index),
+          ]),
+        ]),
+        h('tbody', [
+          this.items.map(item => h('tr', [
+            h('td', item[column.key]),
+          ])),
+        ]),
       ]);
-    },
-
-    renderCell(tag: string, key: string, index: number, children: string | Array<string | VNode>) {
-      const h = this.$createElement;
-
-      return h(tag, {
-        key,
-        class: this.getColumnClass(index),
-        style: this.getColumnStyle(index),
-      }, children);
     },
 
     renderHeaderCell(column: IColumn, index: number): VNode {
@@ -315,12 +308,9 @@ export default Vue.extend({
       }
 
       return h('th', {
-        key: column.key,
         class: {
-          ...this.getColumnClass(index),
           sortable: column.sortable,
         },
-        style: this.getColumnStyle(index),
         on,
       },
       [
@@ -353,29 +343,6 @@ export default Vue.extend({
         },
         '\u21d4',
       );
-    },
-
-    renderBody(): VNode {
-      const h = this.$createElement;
-
-      return h('tbody',
-        this.items.map(item => this.renderRow(item)),
-      );
-    },
-
-    renderRow(item: IItem): VNode {
-      const h = this.$createElement;
-
-      return h('tr',
-        {
-          key: item.id,
-        },
-        this.columns.map((column, index) => this.renderBodyCell(item, column, index)),
-      );
-    },
-
-    renderBodyCell(item: IItem, column: IColumn, index: number): VNode {
-      return this.renderCell('td', column.key, index, item[column.key]);
     },
 
     getColumnStyle(index: number) {
@@ -430,22 +397,37 @@ $inner-border : 1px solid #ccc;
 
   overflow: auto;
   max-height: 100%;
+
+  display: flex;
 }
 
 .data-table > table {
-  width: 100%;
+  // width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 
+  &.dragging {
+    border-left: $inner-border;
+    border-right: $inner-border;
+    opacity: .8;
+  }
+
+  &.dragging,
+  &.last-dragged {
+    z-index: 1;
+
+    th {
+      z-index: 3;
+    }
+  }
+
+  &:not(.notransition) {
+    transition: transform .3s;
+  }
+
   td {
     background-color: #fff;
-    position: relative;
     z-index: 0;
-
-    &.dragging,
-    &.last-dragged {
-      z-index: 1;
-    }
   }
 
   th {
@@ -453,33 +435,17 @@ $inner-border : 1px solid #ccc;
     position: sticky;
     top: 0;
     z-index: 2;
-
-    &.dragging,
-    &.last-dragged {
-      z-index: 3;
-    }
   }
 
   th, td {
-    text-align: left;
     white-space: nowrap;
     padding: 0 16px;
     height: 40px;
     line-height: 40px;
+  }
 
-    &:not(:last-child) {
-      border-right: $inner-border;
-    }
-
-    &.dragging {
-      border-left: $inner-border;
-      border-right: $inner-border;
-      opacity: .8;
-    }
-
-    &:not(.notransition) {
-      transition: transform .3s;
-    }
+  &:not(:last-child) {
+    border-right: $inner-border;
   }
 
   tr:not(:last-child) {
