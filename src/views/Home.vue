@@ -59,14 +59,21 @@ const DataSources: any = {
       { key: 'description', label: 'Description' },
     ],
     fetch: async () => {
-      const res = await fetch('https://api.github.com/users/vim-scripts/repos?page=0&per_page=100');
-      return await res.json();
+      let pages = [0, 1, 2];
+      let requests = pages.map(async page => {
+        const res = await fetch('https://api.github.com/users/vim-scripts/repos?page=0&per_page=100');
+        return await res.json();
+      });
+
+      let results = await Promise.all(requests);
+
+      return [].concat(...results);
     },
   },
 };
 
 export default Vue.extend({
-  name: 'HelloWorld',
+  name: 'TableDemo',
 
   components: {
     DataTable,
