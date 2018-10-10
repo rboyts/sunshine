@@ -15,6 +15,7 @@ interface IDragState {
   startScrollX: number;
   curScrollX: number;
   widths: number[];
+  wrapperWidth: number;
 }
 
 interface IColumn {
@@ -180,6 +181,7 @@ export default Vue.extend({
         startScrollX: 0,
         curScrollX: 0,
         widths,
+        wrapperWidth: 0,
       };
     },
 
@@ -204,8 +206,11 @@ export default Vue.extend({
 
       this.clearSelection();
 
-      let viewport = element.closest('.data-table');
+      let viewport = element.closest('.data-table-wrapper');
       if (viewport === null) return;
+
+      let root = viewport.closest('.data-table');
+      if (root === null) return;
 
       let widths: number[] = [];
       for (let c of viewport.children) {
@@ -217,9 +222,10 @@ export default Vue.extend({
         dragColumnIndex: index,
         startX: event.clientX,
         curX: event.clientX,
-        startScrollX: viewport.scrollLeft,
-        curScrollX: viewport.scrollLeft,
+        startScrollX: root.scrollLeft,
+        curScrollX: root.scrollLeft,
         widths,
+        wrapperWidth: viewport.scrollWidth,
       };
 
       if (event.dataTransfer) {
@@ -364,8 +370,14 @@ export default Vue.extend({
     },
   },
 
-  render(): VNode {
-    return this.$createElement('div',
+  render(h): VNode {
+
+    let style: any = {};
+    if (this.drag && this.drag.wrapperWidth !== 0) {
+      style.width = `${this.drag.wrapperWidth}px`;
+    }
+
+    return h('div',
       {
         class: 'data-table',
         on: {
@@ -378,7 +390,12 @@ export default Vue.extend({
         },
       },
       [
-        this.renderTable(),
+        h('div', {
+          class: 'data-table-wrapper',
+          style,
+        }, [
+          this.renderTable(),
+        ]),
       ],
     );
   },
@@ -397,19 +414,24 @@ $inner-border : 1px solid #ccc;
 
   overflow: auto;
   max-height: 100%;
+}
 
+.data-table-wrapper {
   display: flex;
 }
 
-.data-table > table {
-  // width: 100%;
+// XXX class
+table {
+  flex: 1;
   border-collapse: separate;
   border-spacing: 0;
 
+  opacity: 1;
+
   &.dragging {
-    border-left: $inner-border;
-    border-right: $inner-border;
-    opacity: .8;
+    // border-left: $inner-border;
+    // border-right: $inner-border;
+    opacity: .7;
   }
 
   &.dragging,
@@ -422,8 +444,10 @@ $inner-border : 1px solid #ccc;
   }
 
   &:not(.notransition) {
-    transition: transform .3s;
+    transition: transform .3s, opacity .3s;;
   }
+
+  transition: opacity .3s;
 
   td {
     background-color: #fff;
@@ -445,7 +469,7 @@ $inner-border : 1px solid #ccc;
   }
 
   &:not(:last-child) {
-    border-right: $inner-border;
+    // border-right: $inner-border;
   }
 
   tr:not(:last-child) {
