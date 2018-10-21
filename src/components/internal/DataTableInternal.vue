@@ -1,6 +1,6 @@
 <script lang="ts">
 import Vue, { VNode, VNodeChildrenArrayContents } from 'vue';
-import { IColumn, IItem, ISortState } from './types';
+import { IColumn, IItem, ISortState } from '../types';
 
 interface IDragState {
   dragColumnIndex: number;
@@ -208,7 +208,7 @@ export default Vue.extend({
       }
 
       if (element.scrollHeight - element.scrollTop === element.clientHeight) {
-        this.$emit('scrollBottom');
+        this.$emit('scroll-bottom');
       }
     },
 
@@ -287,8 +287,10 @@ export default Vue.extend({
       let slot = this.$scopedSlots[`~${key}`];
       if (slot) {
         return slot({value, item});
-      } else {
+      } else if (value) {
         return h('td', value);
+      } else {
+        return h('td', {domProps: {innerHTML: '&nbsp;'}});
       }
     },
 
@@ -434,16 +436,11 @@ table {
     padding: 0 16px;
     height: 40px;
     line-height: 40px;
+    border-bottom: $inner-border;
   }
 
   &:not(:last-child) {
     // border-right: $inner-border;
-  }
-
-  tr:not(:last-child) {
-    th, td {
-      border-bottom: $inner-border;
-    }
   }
 
   .th-flex {

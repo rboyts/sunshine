@@ -3,13 +3,10 @@ import Vue, { VNode } from 'vue';
 import moment from 'moment';
 
 export default Vue.extend({
-  name: 'calendar',
+  name: 'ui-calendar-internal',
 
   props: {
-    date: {
-      type: Object as () => moment.Moment,
-      default: () => moment(),
-    },
+    date: Object as () => moment.Moment,
   },
 
   methods: {
@@ -57,11 +54,10 @@ export default Vue.extend({
       [
         h('span', {
           class: {
-            'date': true,
-            'sunday': date.day() === 0,
+            date: true,
+            sunday: date.day() === 0,
           },
         }, d),
-        // h('span', {class: 'text'}, text),
       ]);
     },
   },

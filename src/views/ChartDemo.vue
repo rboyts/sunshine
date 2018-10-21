@@ -5,15 +5,15 @@
     <div class="layout">
       <form class="form">
         <label>Size</label>
-        <input type="range" min="50" max="500" step="50" v-model="size"/>
+        <input type="range" min="50" max="500" step="50" v-model.number="size"/>
 
         <template v-for="(item, i) in items">
           <label :key="`label-${i}`">{{ item.label }}</label>
-          <input :key="`input-${i}`" type="range" v-model="item.value"/>
+          <input :key="`input-${i}`" type="range" v-model.number="item.value"/>
         </template>
       </form>
 
-      <data-chart class="chart" :size="size" :data="items" />
+      <ui-pie-chart class="chart" :size="size" :data="items" />
 
     </div>
   </div>
@@ -22,13 +22,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import DataChart from '@/components/DataChart.vue';
+import UiPieChart from '@/components/UiPieChart.vue';
 
 export default Vue.extend({
   name: 'ChartDemo',
 
   components: {
-    DataChart,
+    UiPieChart,
   },
 
   data() {

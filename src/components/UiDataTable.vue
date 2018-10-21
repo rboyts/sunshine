@@ -6,7 +6,7 @@
       :columns="dataSource.columns"
       :sorting="sorting"
       @sort="onSort"
-      @scrollBottom="fetchMore"
+      @scroll-bottom="fetchMore"
 
       v-bind="$attrs"
     >
@@ -20,17 +20,17 @@
     </data-table-internal>
 
     <div class="flex-row flex-end">
-      <Button @click="pdfExport">PDF</Button>
+      <ui-button small @click="pdfExport">PDF</ui-button>
         &nbsp;
-      <Button @click="excelExport">XLS</Button>
+      <ui-button small @click="excelExport">XLS</ui-button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Button from './Button.vue';
-import DataTableInternal from './DataTableInternal.vue';
+import UiButton from './UiButton.vue';
+import DataTableInternal from './internal/DataTableInternal.vue';
 import { IDataSource, ISortState, IItem } from './types';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -38,7 +38,7 @@ import 'jspdf-autotable';
 export { IDataSource, IColumn, ISortState, IItem, FetchData } from './types';
 
 export default Vue.extend({
-  name: 'data-table',
+  name: 'ui-data-table',
   inheritAttrs: false,
 
   props: {
@@ -46,7 +46,7 @@ export default Vue.extend({
   },
 
   components: {
-    Button,
+    UiButton,
     DataTableInternal,
   },
 

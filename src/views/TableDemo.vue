@@ -2,18 +2,14 @@
   <div class="container">
     <h2>Data table demo</h2>
     <div class="options">
-      <label>Data source:</label>
-      <select v-model="tab">
-        <option v-for="(source, key) in sources" :key="key" :value="key">{{ source.title }}</option>
-      </select>
 
-      <label>
-        <input type="checkbox" v-model="draggable">
-        Draggable columns
-      </label>
+      <label>Data source:</label>
+      <ui-select v-model="source" :items="sources" label="Data source" />
+
+      <ui-checkbox v-model="draggable">Draggable columns</ui-checkbox>
     </div>
 
-    <data-table :data-source="source" :draggable="draggable" >
+    <ui-data-table :data-source="source" :draggable="draggable" >
 
       <!-- Override cell to show email address as link -->
       <td slot="~email" slot-scope="{ value }">
@@ -27,7 +23,7 @@
 
       <!-- Override cell to show a button -->
       <td slot="~actions" slot-scope="{ item }">
-        <Button v-on:click="onEdit(item)">Edit</Button>
+        <ui-button small v-on:click="onEdit(item)">Edit</ui-button>
       </td>
 
       <!-- Override content to show when there is no data -->
@@ -35,21 +31,23 @@
         No data!
       </div>
 
-    </data-table>
+    </ui-data-table>
 
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Button from '@/components/Button.vue';
-import DataTable, {
+import UiButton from '@/components/UiButton.vue';
+import UiCheckbox from '@/components/UiCheckbox.vue';
+import UiSelect from '@/components/UiSelect.vue';
+import UiDataTable, {
   ISortState,
   IColumn,
   IItem,
   IDataSource,
   FetchData,
-} from '@/components/DataTable.vue';
+} from '@/components/UiDataTable.vue';
 
 type BasicFetch = () => Promise<IItem[]>;
 
@@ -130,7 +128,8 @@ const DataSources: {[key: string]: IDataSource} = {
       if (sort === 'created_at') sort = 'created';
       if (sort === 'updated_at') sort = 'updated';
       const page = Math.floor(skip / 50);
-      const res = await fetch(`https://api.github.com/users/vuejs/repos?sort=${sort}&direction=${direction}&page=${page}&per_page=50`);
+      let query = `sort=${sort}&direction=${direction}&page=${page}&per_page=50`;
+      const res = await fetch(`https://api.github.com/users/vuejs/repos?${query}`);
       return await res.json() as IItem[];
     },
   },
@@ -149,22 +148,18 @@ export default Vue.extend({
   name: 'TableDemo',
 
   components: {
-    Button,
-    DataTable,
+    UiButton,
+    UiCheckbox,
+    UiSelect,
+    UiDataTable,
   },
 
   data() {
     return {
-      tab: 'users',
+      source: DataSources.users,
       draggable: true,
       sources: DataSources,
     };
-  },
-
-  computed: {
-    source(): IDataSource {
-      return this.sources[this.tab];
-    },
   },
 
   methods: {

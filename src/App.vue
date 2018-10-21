@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">DataTable</router-link> |
+      <router-link to="/">Inputs</router-link> |
+      <router-link to="/table">DataTable</router-link> |
       <router-link to="/chart">DataChart</router-link> |
       <router-link to="/calendar">Calendar</router-link>
     </div>

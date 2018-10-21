@@ -17,6 +17,7 @@
     "no-consecutive-blank-lines": false,
     "prefer-const": false,
     "curly": false,
+    "no-console": false,
     "arrow-parens": false
   }
 }
