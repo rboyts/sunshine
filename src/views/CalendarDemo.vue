@@ -24,6 +24,8 @@ import moment from 'moment';
 import Calendar from '@/components/Calendar.vue';
 
 export default Vue.extend({
+  name: 'CelanderDemo',
+
   components: {
     Calendar,
   },

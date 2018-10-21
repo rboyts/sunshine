@@ -37,7 +37,7 @@ export default Vue.extend({
         .outerRadius(this.size / 2);
     },
 
-    values(): any[] {
+    values(): number[] {
       return this.data.map(d => d.value);
     },
 

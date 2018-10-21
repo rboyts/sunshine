@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '@/views/Home.vue';
-import Chart from '@/views/Chart.vue';
-import Calendar from '@/views/Calendar.vue';
+import TableDemo from '@/views/TableDemo.vue';
+import ChartDemo from '@/views/ChartDemo.vue';
+import CalendarDemo from '@/views/CalendarDemo.vue';
 
 Vue.use(Router);
 
@@ -12,18 +12,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home,
+      name: 'table',
+      component: TableDemo,
     },
     {
       path: '/chart',
       name: 'chart',
-      component: Chart,
+      component: ChartDemo,
     },
     {
       path: '/calendar',
       name: 'calendar',
-      component: Calendar,
+      component: CalendarDemo,
     },
   ],
 });

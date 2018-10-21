@@ -76,6 +76,7 @@ export default Vue.extend({
 });
 </script>
 
+
 <style lang="scss" scoped>
 
 $inner-border-width: 1px;
@@ -91,6 +92,12 @@ $inner-border: $inner-border-width solid #ccc;
 
   > span {
     padding: 8px;
+
+    // Ensures that columns are always equally wide
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     border: $inner-border;
     margin-right: -$inner-border-width;
@@ -128,4 +135,3 @@ $inner-border: $inner-border-width solid #ccc;
   background-color: #efefef;
 }
 </style>
-
