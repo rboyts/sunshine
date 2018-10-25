@@ -1,0 +1,94 @@
+.ui-btn {
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 500;
+
+  height: $btn-height;
+  border-radius: ($btn-height / 2);
+
+  &:focus {
+    box-shadow: inset 0 0 0 0.125em $color-edit;
+  }
+}
+
+.ui-btn--main {
+  border: none;
+  background-color: $btn-main-bg-color;
+  color: $btn-main-fg-color;
+
+  &:hover {
+    background-color: lighten($btn-main-bg-color, 10%);
+  }
+
+  &:active {
+    background-color: darken($btn-main-bg-color, 10%);
+  }
+}
+
+.ui-btn--secondary {
+  border: 1px solid $btn-secondary-border-color;
+  background-color: $btn-secondary-bg-color;
+  color: $btn-secondary-fg-color;
+
+  &:hover {
+    background-color: lighten($btn-secondary-bg-color, 10%);
+  }
+
+  &:active {
+    background-color: darken($btn-secondary-bg-color, 10%);
+  }
+}
+
+// XXX Not in the design system
+.ui-btn--small {
+  height: 2.0em;
+}
+
+.ui-input {
+  position: relative;
+  border: 1px solid $input-border-color;
+  border-radius: 4px;  // 4% / 2% gives no visible radius
+  background-color: $input-bg-color;
+  color: $input-fg-color;
+  min-width: 150px;
+  max-width: 250px;
+  margin-bottom: 4px;
+  height: 2.5rem;
+
+  &.ui-input--focus,
+  &:hover {
+    border: 1px solid $color-edit;
+    // box-shadow: inset 0 0 0 0.0625 $color-edit;
+    // box-shadow: inset 0 0 0 0.125em $color-edit;
+  }
+}
+
+.ui-input--label {
+  position: absolute;
+  color: $grayest;
+  padding: 0 $input-padding;
+  pointer-events: none;
+  font-size: 14px;
+
+  line-height: calc(2.5rem - 2px);  // subtract border
+
+  transform-origin: $input-padding 0;
+  transition: transform .3s;
+
+  &.ui-input--label-aside {
+    transform: scale((12 / 14)) translate(0, -8px);
+  }
+}
+
+.ui-input--input {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: $almost-black;
+
+  padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+  // padding: 0 16px;
+}

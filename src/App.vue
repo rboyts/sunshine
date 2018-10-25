@@ -16,13 +16,4 @@
   padding: 10px 60px;
   height: calc(100vh - 40px);
 }
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #e8e8e8;
-}
 </style>

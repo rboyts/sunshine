@@ -2,6 +2,16 @@
   <div>
     <h1>Inputs demo</h1>
 
+    <h2>Buttons</h2>
+
+    <ui-button>Primary action</ui-button>&nbsp;
+    <ui-button secondary>Secondary action</ui-button>&nbsp;
+
+
+    <h3>Smaller version</h3>
+    <ui-button small>Primary</ui-button>&nbsp;
+    <ui-button small secondary>Secondary</ui-button>
+
     <h2>Text field</h2>
 
     <ui-input label="Project name" />
@@ -24,7 +34,10 @@
     -->
 
     <h2>Select</h2>
-    <ui-select v-model="country" :items="countries" label="Columns" />
+
+    <ui-select v-model="country" :items="countries" label="Primary" />&nbsp;
+
+    <ui-select secondary v-model="country" :items="countries" label="Secondary" />
 
     <!--
       TODO

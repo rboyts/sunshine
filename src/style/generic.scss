@@ -1,0 +1,21 @@
+html {
+  box-sizing: border-box;
+  font-size: $base-font-size;
+}
+
+button {
+  outline: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: $whiteish;
+}
+
+*, *::after, *::before {
+  box-sizing: inherit;
+}

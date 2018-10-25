@@ -1,12 +1,24 @@
 <template>
-  <ui-menu v-model="show">
-    <ui-button style="text-align: left; min-width: 150px" slot="activator" v-bind="$attrs" v-on="$listeners">
+  <ui-menu
+    v-model="show"
+  >
+    <ui-button
+      style="text-align: left; min-width: 150px"
+      slot="activator"
+      @keydown="onKeyPress"
+      v-bind="$attrs"
+      v-on="$listeners"
+    >
       {{ text }}
       <span slot="right">&#x2bc6;</span>
     </ui-button>
     <div slot="content">
       <ul class="select-list" style="white-space: nowrap">
-        <li v-for="item in items" :key="item.key" class="select-item">
+        <li v-for="item in items"
+          class="select-item"
+          :key="item.key"
+          :class="{'select-item-selected': item === value}"
+        >
           <a href="#" @click.prevent="onClick(item)">{{ item[labelKey] }}</a>
         </li>
       </ul>
@@ -30,7 +42,7 @@ export default Vue.extend({
   },
 
   props: {
-    items: [Array, Object],
+    items: Array as () => any[],
     value: Object,
     labelKey: {
       type: String,
@@ -52,12 +64,44 @@ export default Vue.extend({
     text(): string {
       return this.value ? this.value[this.labelKey] : this.label;
     },
+
+    currentIndex(): number {
+      return this.items.indexOf(this.value);
+    },
   },
 
   methods: {
     onClick(item: any) {
-      this.$emit('input', item);
+      this.setSelectedItem(item);
       this.show = false;
+    },
+
+    setSelectedItem(item: any) {
+      this.$emit('input', item);
+    },
+
+    setNextSelected() {
+      if (this.currentIndex < this.items.length - 1)
+        this.setSelectedItem(this.items[this.currentIndex + 1]);
+    },
+
+    setPrevSelected() {
+      if (this.currentIndex > 0)
+        this.setSelectedItem(this.items[this.currentIndex - 1]);
+    },
+
+    onKeyPress(event: KeyboardEvent) {
+      console.log(event.key);
+      let consumed = false;
+      switch (event.key) {
+        case 'ArrowDown':
+          this.setNextSelected();
+          break;
+        case 'ArrowUp':
+          this.setPrevSelected();
+          break;
+      }
+      return true;
     },
   },
 });
@@ -80,10 +124,11 @@ $item-height: 32px;
 
   text-decoration: none;
   color: #111;
+}
 
-  &:hover {
-    background-color: #f1f1f1;
-  }
+.select-item > a:hover,
+.select-item-selected > a {
+  background-color: #e8e8e8;
 }
 </style>
 
