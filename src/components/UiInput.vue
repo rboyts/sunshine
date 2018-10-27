@@ -1,7 +1,10 @@
 <template>
-  <div
+  <span
     class="ui-input"
-    :class="{'ui-input--focus': hasFocus}"
+    :class="{
+      'ui-input--focus': hasFocus,
+      'ui-input--inactive': inactive,
+    }"
   >
     <span
       class="ui-input--label"
@@ -12,11 +15,15 @@
 
     <input
       class="ui-input--input"
-      v-model="text"
+      :type="type"
+      :value="value"
+      :disabled="inactive"
+      @input="onInput"
+      @keypress="onKeyPress"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
     />
-  </div>
+  </span>
 </template>
 
 <script lang="ts">
@@ -27,19 +34,63 @@ export default Vue.extend({
 
   props: {
     label: String,
+    value: {
+      type: String,
+      default: '',
+    },
+    phone: {
+      type: Boolean,
+      default: false,
+    },
+    inactive: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
     return {
-      text: '',
       hasFocus: false,
     };
   },
 
   computed: {
     hasText(): boolean {
-      return this.text !== '';
-    }
+      return !!this.value;
+    },
+
+    type(): string {
+      if (this.phone) {
+        return 'tel';
+      } else {
+        return 'text';
+      }
+    },
+  },
+
+  methods: {
+    onInput(event: InputEvent) {
+      let input = event.target as HTMLInputElement;
+      this.$emit('input', input.value);
+    },
+
+    onKeyPress(event: KeyboardEvent) {
+      if (!this.isValidKey(event.keyCode)) {
+        event.preventDefault();
+      }
+    },
+
+    isValidKey(keyCode: number): boolean {
+      if (this.phone) {
+        return (
+          keyCode === 43 ||
+          keyCode === 45 ||
+          keyCode >= 48 && keyCode <= 57
+        );
+      } else {
+        return true;
+      }
+    },
   },
 
 });

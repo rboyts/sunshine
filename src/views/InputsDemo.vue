@@ -16,8 +16,22 @@
 
     <h2>Text field</h2>
 
-    <ui-input label="Project name" />
-    <ui-input label="Phone number" />
+    <div>
+      <ui-input v-model="name" label="Project name" /> {{ name }}
+    </div>
+
+    <div>
+      <ui-input v-model="number" phone label="Phone number" /> {{ number }}
+    </div>
+
+    <div>
+      <ui-input label="Inactive Input" inactive />
+    </div>
+
+    <div>
+      <ui-input label="Inactive Input" value="With text" inactive />
+    </div>
+
 
     <!--
       TODO
@@ -70,6 +84,8 @@ export default Vue.extend({
   data() {
     return {
       checked: false,
+      name: '',
+      number: '',
       countries: [
         {title: 'Norge'},
         {title: 'Sverige'},
