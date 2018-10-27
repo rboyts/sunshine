@@ -1,5 +1,5 @@
 <template>
-  <button :class="buttonClass" v-on="$listeners">
+  <button :class="classes" v-on="$listeners">
     <slot />
     <span style="float: right">
       <slot name="right" />
@@ -23,6 +23,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    inactive: {
+      typy: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -30,11 +34,12 @@ export default Vue.extend({
       return !this.secondary;
     },
 
-    buttonClass(): any {
+    classes(): any {
       return {
         'ui-btn': true,
         'ui-btn--main': this.main,
         'ui-btn--secondary': this.secondary,
+        'ui-btn--inactive': this.inactive,
         'ui-btn--small': this.small,
       };
     },

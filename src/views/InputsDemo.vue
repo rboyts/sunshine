@@ -6,6 +6,8 @@
 
     <ui-button>Primary action</ui-button>&nbsp;
     <ui-button secondary>Secondary action</ui-button>&nbsp;
+    <ui-button inactive>Primary inactive</ui-button>&nbsp;
+    <ui-button secondary inactive>Secondary inactive</ui-button>&nbsp;
 
 
     <h3>Smaller version</h3>

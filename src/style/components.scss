@@ -39,6 +39,11 @@
   }
 }
 
+.ui-btn--inactive {
+  background-color: $gray;
+  color: $grayer;
+}
+
 // XXX Not in the design system
 .ui-btn--small {
   height: 2.0em;
