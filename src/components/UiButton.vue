@@ -24,7 +24,7 @@ export default Vue.extend({
       default: false,
     },
     inactive: {
-      typy: Boolean,
+      type: Boolean,
       default: false,
     },
   },
