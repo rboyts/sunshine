@@ -123,12 +123,16 @@
 
 .ui-accordion-heading {
   display: block;
-  line-height: 2.5rem;
+  line-height: 3rem;
   outline: none;
+  border-top: 1px solid $gray;
+  text-decoration: none;
+  color: inherit;
 
   .right {
     float: right;
-    transition: transform .3s;
+    margin-right: 8px;
+    transition: .3s;
 
     &.open {
       transform: rotate(180deg);

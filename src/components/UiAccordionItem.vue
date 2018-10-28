@@ -1,17 +1,17 @@
 <template>
   <div>
     <a
-      tabIndex="0"
+      href="#"
       class="ui-accordion-heading"
       @_click="$emit('click')"
       @click="onClick"
     >
       <slot name="heading" />
-      <span class="right" :class="{open: open}">&#x2bc6;</span>
+      <span class="right" :class="{open: open}">&or;</span>
     </a>
 
     <transition name="dropdown">
-      <div v-if="open" class="ui-accordion-body">
+      <div v-show="open" class="ui-accordion-body">
         <slot />
       </div>
     </transition>

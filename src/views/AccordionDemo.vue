@@ -14,10 +14,16 @@
     <ui-accordion-item>
       <template slot="heading">Other settings</template>
 
-      Other settings here
-      <p>
-        <ui-select>Bar</ui-select>
-      </p>
+<template>
+      <inner-component inline-template>
+        <div>
+          Other settings here
+          <p>
+            <ui-select>Bar</ui-select>
+          </p>
+        </div>
+      </inner-component>
+</template>
     </ui-accordion-item>
 
   </ui-accordion>
@@ -30,6 +36,22 @@ import UiAccordionItem from '@/components/UiAccordionItem.vue';
 import UiButton from '@/components/UiButton.vue';
 import UiSelect from '@/components/UiSelect.vue';
 
+const InnerComponent = {
+  name: 'inner-component',
+
+  components: {
+    UiSelect,
+  },
+
+  created() {
+    console.log('inner component created');
+  },
+
+  mounted() {
+    console.log('inner component mounted');
+  },
+};
+
 export default Vue.extend({
 
   components: {
@@ -37,6 +59,7 @@ export default Vue.extend({
     UiAccordionItem,
     UiButton,
     UiSelect,
+    InnerComponent,
   },
 
 });
