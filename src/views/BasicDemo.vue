@@ -17,19 +17,19 @@
     <h2>Text field</h2>
 
     <div>
-      <ui-input v-model="name" label="Project name" /> <span class="value"> {{ name }}</span>
+      <ui-text-field v-model="name" label="Project name" /> <span class="value"> {{ name }}</span>
     </div>
 
     <div>
-      <ui-input v-model="number" phone label="Phone number" /> <span class="value"> {{ number }}</span>
+      <ui-text-field v-model="number" phone label="Phone number" /> <span class="value"> {{ number }}</span>
     </div>
 
     <div>
-      <ui-input label="Inactive Input" inactive />
+      <ui-text-field label="Inactive Input" inactive />
     </div>
 
     <div>
-      <ui-input label="Inactive Input" value="With text" inactive />
+      <ui-text-field label="Inactive Input" value="With text" inactive />
     </div>
 
 
@@ -89,7 +89,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import UiInput from '@/components/UiInput.vue';
+import UiTextField from '@/components/UiTextField.vue';
 import UiButton from '@/components/UiButton.vue';
 import UiCheckbox from '@/components/UiCheckbox.vue';
 import UiSelect from '@/components/UiSelect.vue';
@@ -100,7 +100,7 @@ export default Vue.extend({
   name: 'InputsDemo',
 
   components: {
-    UiInput,
+    UiTextField,
     UiButton,
     UiCheckbox,
     UiSelect,

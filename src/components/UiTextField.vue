@@ -1,17 +1,10 @@
 <template>
-  <span
-    class="ui-input"
-    :class="{
-      'ui-input--focus': hasFocus,
-      'ui-input--inactive': inactive,
-    }"
+  <ui-base-input
+    :inactive="inactive"
+    :hasFocus="hasFocus"
+    :isEmpty="isEmpty"
+    v-bind="$attrs"
   >
-    <span
-      class="ui-input--label"
-      :class="{'ui-input--label-aside': hasFocus || hasText}"
-    >
-      {{ label }}
-    </span>
 
     <input
       class="ui-input--input"
@@ -23,17 +16,21 @@
       @focus="hasFocus = true"
       @blur="hasFocus = false"
     />
-  </span>
+  </ui-base-input>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import UiBaseInput from './UiBaseInput.vue';
 
 export default Vue.extend({
-  name: 'ui-input',
+  name: 'ui-text-field',
+
+  components: {
+    UiBaseInput,
+  },
 
   props: {
-    label: String,
     value: {
       type: String,
       default: '',
@@ -55,8 +52,8 @@ export default Vue.extend({
   },
 
   computed: {
-    hasText(): boolean {
-      return !!this.value;
+    isEmpty(): boolean {
+      return !this.value;
     },
 
     type(): string {
@@ -92,6 +89,5 @@ export default Vue.extend({
       }
     },
   },
-
 });
 </script>
