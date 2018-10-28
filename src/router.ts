@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import InputsDemo from '@/views/InputsDemo.vue';
+import BasicDemo from '@/views/BasicDemo.vue';
 import TableDemo from '@/views/TableDemo.vue';
 import ChartDemo from '@/views/ChartDemo.vue';
 import CalendarDemo from '@/views/CalendarDemo.vue';
@@ -14,7 +14,7 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: InputsDemo,
+      component: BasicDemo,
     },
     {
       path: '/table',

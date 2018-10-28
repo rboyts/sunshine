@@ -1,0 +1,11 @@
+@import './settings.scss';
+
+@mixin font-action {
+  font-size: $action-font-size;
+  font-weight: $action-font-weight;
+}
+
+@mixin paragraph-font {
+  font-size: $paragraph-font-size;
+  font-weight: $paragraph-font-weight;
+}

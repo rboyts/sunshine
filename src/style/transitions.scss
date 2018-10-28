@@ -1,0 +1,19 @@
+
+.dropdown-enter-active {
+  animation: drop-down .2s;
+  transform-origin: 0 0;
+}
+
+.dropdown-leave-active {
+  animation: drop-down .2s reverse;
+  transform-origin: 0 0;
+}
+
+@keyframes drop-down {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}

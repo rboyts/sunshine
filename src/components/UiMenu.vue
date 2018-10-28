@@ -4,7 +4,7 @@
       <slot name="activator"></slot>
     </span>
 
-    <transition name="fade">
+    <transition name="dropdown">
       <div v-if="value" class="menu-popup" :style="style">
         <slot name="content"></slot>
       </div>
@@ -66,25 +66,6 @@ export default Vue.extend({
   border-radius: 3px;
 
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.fade-enter-active {
-  animation: drop-down .2s;
-  transform-origin: 0 0;
-}
-
-.fade-leave-active {
-  animation: drop-down .2s reverse;
-  transform-origin: 0 0;
-}
-
-@keyframes drop-down {
-  0% {
-    transform: scaleY(0);
-  }
-  100% {
-    transform: scaleY(1);
-  }
 }
 </style>
 

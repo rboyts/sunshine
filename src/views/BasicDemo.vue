@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Inputs demo</h1>
+    <h1>Basic components demo</h1>
 
     <h2>Buttons</h2>
 
@@ -17,11 +17,11 @@
     <h2>Text field</h2>
 
     <div>
-      <ui-input v-model="name" label="Project name" /> {{ name }}
+      <ui-input v-model="name" label="Project name" /> <span class="value"> {{ name }}</span>
     </div>
 
     <div>
-      <ui-input v-model="number" phone label="Phone number" /> {{ number }}
+      <ui-input v-model="number" phone label="Phone number" /> <span class="value"> {{ number }}</span>
     </div>
 
     <div>
@@ -35,7 +35,6 @@
 
     <!--
       TODO
-      Model binding
       Generalize (combo box etc)
       Input types (number etc)
     -->
@@ -58,8 +57,32 @@
     <!--
       TODO
       Keyboard mapping
-      Inline label
     -->
+
+    <h2>Accordion</h2>
+
+    <ui-accordion>
+
+      <ui-accordion-item>
+        <template slot="heading">Basic settings</template>
+
+        Basic settings here
+
+        <p>
+          <ui-button>Foo</ui-button>
+        </p>
+      </ui-accordion-item>
+
+      <ui-accordion-item>
+        <template slot="heading">Other settings</template>
+
+        Other settings here
+        <p>
+          <ui-select>Bar</ui-select>
+        </p>
+      </ui-accordion-item>
+
+    </ui-accordion>
 
   </div>
 </template>
@@ -70,6 +93,8 @@ import UiInput from '@/components/UiInput.vue';
 import UiButton from '@/components/UiButton.vue';
 import UiCheckbox from '@/components/UiCheckbox.vue';
 import UiSelect from '@/components/UiSelect.vue';
+import UiAccordion from '@/components/UiAccordion.vue';
+import UiAccordionItem from '@/components/UiAccordionItem.vue';
 
 export default Vue.extend({
   name: 'InputsDemo',
@@ -79,6 +104,8 @@ export default Vue.extend({
     UiButton,
     UiCheckbox,
     UiSelect,
+    UiAccordion,
+    UiAccordionItem,
   },
 
   data() {
@@ -96,3 +123,12 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+@import '../style/tools.scss';
+
+.value {
+  @include paragraph-font;
+  color: $grayer;
+}
+</style>
