@@ -19,7 +19,7 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    secondary: {
+    primary: {
       type: Boolean,
       default: false,
     },
@@ -30,14 +30,10 @@ export default Vue.extend({
   },
 
   computed: {
-    main(): boolean {
-      return !this.secondary;
-    },
-
     classes(): any {
       return {
-        'ui-btn--main': !this.inactive && this.main,
-        'ui-btn--secondary': !this.inactive && this.secondary,
+        'ui-btn--main': !this.inactive && this.primary,
+        'ui-btn--secondary': !this.inactive && !this.primary,
         'ui-btn--inactive': this.inactive,
         'ui-btn--small': this.small,
       };

@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <h2>Data table demo</h2>
     <div class="options">
 
       <label>Data source:</label>

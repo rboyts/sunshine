@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import BasicDemo from '@/views/BasicDemo.vue';
+import AccordionDemo from '@/views/AccordionDemo.vue';
 import TableDemo from '@/views/TableDemo.vue';
 import ChartDemo from '@/views/ChartDemo.vue';
 import CalendarDemo from '@/views/CalendarDemo.vue';
@@ -15,6 +16,11 @@ export default new Router({
       path: '/',
       name: 'home',
       component: BasicDemo,
+    },
+    {
+      path: '/accordion',
+      name: 'accordion',
+      component: AccordionDemo,
     },
     {
       path: '/table',

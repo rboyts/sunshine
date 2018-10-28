@@ -1,7 +1,5 @@
 <template>
   <div>
-    <h2>Data chart demo</h2>
-
     <div class="layout">
       <form class="form">
         <label>Size</label>

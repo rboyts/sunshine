@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>Calendar demo</h2>
     <div class="options">
       <ui-button @click="onPrevClick">&lt;&lt;</ui-button>
       <ui-button @click="onTodayClick">{{ today }}</ui-button>

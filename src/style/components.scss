@@ -135,3 +135,32 @@
     }
   }
 }
+
+.ui-tabs {
+  border-bottom: 2px solid $almost-gray;
+  margin-bottom: 24px;
+
+  > a {
+    display: inline-block;
+    line-height: 40px;
+
+    text-decoration: none;
+    color: $grayer;
+
+    // border: 1px solid $gray;
+    margin-bottom: -2px;
+
+    &.router-link-exact-active {
+      color: $almost-black;
+      border-bottom: 2px solid $smartdok-yellow;
+    }
+
+    &:hover {
+      color: $almost-black;
+    }
+
+    &:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+}
