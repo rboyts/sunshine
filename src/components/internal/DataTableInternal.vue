@@ -141,6 +141,17 @@ export default Vue.extend({
     onDragEnd(event: DragEvent) {
       event.preventDefault();
 
+      // Current
+      // 1. transition off
+      // 2. new position, recalculate translate
+
+      // 1. Transition off
+      // tick
+      // 2. New position, recalculate translate
+      // tick
+      // 3. Transition on
+      // 4. translate 0
+
       // Need to delay resetting the state until the current state is rendered,
       // for animations to be correct
       Vue.nextTick(() => {
@@ -374,13 +385,19 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 
-$outer-border : 1px solid #bbb;
-$inner-border : 1px solid #ccc;
+@import '@/style/tools.scss';
+
+$outer-border : 1px solid $gray;
+$inner-border : 1px solid $almost-gray;
 
 .data-table {
-  border: $outer-border;
-  border-radius: 3px;
-  background-color: #ddd;
+  @include font-action;
+
+  border-top: $outer-border;
+  border-bottom: $outer-border;
+
+  // border-radius: 3px;
+  background-color: $almost-gray;
 
   overflow: auto;
   margin-bottom: 8px;
@@ -434,8 +451,8 @@ table {
   th, td {
     white-space: nowrap;
     padding: 0 16px;
-    height: 40px;
-    line-height: 40px;
+    height: 2.5rem;
+    line-height: 2.5rem;
     border-bottom: $inner-border;
   }
 

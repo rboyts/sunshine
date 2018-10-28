@@ -18,6 +18,6 @@
 #app {
   box-sizing: border-box;
   padding: 10px 60px;
-  height: calc(100vh - 40px);
+  height: calc(100vh - 80px);
 }
 </style>

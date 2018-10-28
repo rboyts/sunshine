@@ -170,17 +170,9 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-select, option {
-  margin: 0 10px;
-  padding: 8px 16px;
-  border-radius: 3px;
-  border: 1px solid #999;
-  font-size: 14px;
-}
-
 .options {
-  font-size: 14px;
-  margin-bottom: 24px;
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
 }
 
 .container {
