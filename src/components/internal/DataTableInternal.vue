@@ -28,6 +28,7 @@ export default Vue.extend({
     return {
       drag: null as IDragState | null,
       lastDragged: null as number | null,
+      notransition: false,
     };
   },
 
@@ -101,7 +102,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onDrop(event: DragEvent) {
+    async onDrop(event: DragEvent) {
       event.preventDefault();
 
       if (!this.drag) return;
@@ -110,6 +111,12 @@ export default Vue.extend({
 
       let from = dragColumnIndex;
       let to = this.currentDropIndex;
+
+      // Prevent sliding animations when re-positioning columns
+      // this.notransition = true;
+
+      // Wait one tick for the transitions to be disabled
+      // await Vue.nextTick();
 
       // XXX: Mutating props is perhaps not a good idea!
       if (from !== to) {
@@ -136,32 +143,30 @@ export default Vue.extend({
         widths,
         wrapperWidth: 0,
       };
+
+      // Give the columns one tick to settle in the new spot, before enabling
+      // animations, and letting them slide back into place
+      await Vue.nextTick();
+
+      this.lastDragged = to;
+      this.drag = null;
+      this.notransition = false;
     },
 
     onDragEnd(event: DragEvent) {
       event.preventDefault();
 
-      // Current
-      // 1. transition off
-      // 2. new position, recalculate translate
-
-      // 1. Transition off
-      // tick
-      // 2. New position, recalculate translate
-      // tick
-      // 3. Transition on
-      // 4. translate 0
-
       // Need to delay resetting the state until the current state is rendered,
       // for animations to be correct
-      Vue.nextTick(() => {
-        window.requestAnimationFrame(() => {
-          if (this.drag)
-            this.lastDragged = this.drag.dragColumnIndex;
+      // Vue.nextTick(() => {
+      //   // window.requestAnimationFrame(() => {
+      //     this.notransition = false;
+      //     if (this.drag)
+      //       this.lastDragged = this.drag.dragColumnIndex;
 
-          this.drag = null;
-        });
-      });
+      //     this.drag = null;
+      //   // });
+      // });
     },
 
     onDragStart(event: DragEvent, index: number) {
@@ -341,12 +346,16 @@ export default Vue.extend({
 
     getColumnClass(index: number): { [key: string]: boolean } {
       if (this.drag && this.drag.startX !== 0) {
-        return { 'dragging notransition': index === this.drag.dragColumnIndex };
+        let isDragging = index === this.drag.dragColumnIndex;
+        return {
+          dragging: isDragging,
+          notransition: isDragging || this.notransition,
+        };
       }
 
       return {
         'last-dragged': index === this.lastDragged,
-        'notransition': !!this.drag && this.drag.startX === 0,
+        'notransition': this.notransition || !!this.drag && this.drag.startX === 0,
       };
     },
   },
