@@ -22,7 +22,8 @@
 
 .ui-tab--link {
   display: inline-block;
-  line-height: 40px;
+  line-height: 2rem;
+  height: 2.5rem;
 
   text-decoration: none;
   color: $grayer;
@@ -36,6 +37,6 @@
   }
 
   &:not(:last-child) {
-    margin-right: 20px;
+    margin-right: 1.5rem;
   }
 }
