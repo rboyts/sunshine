@@ -1,0 +1,24 @@
+
+.ui-accordion {
+  width: 400px;
+  // border: 1px solid $gray;
+}
+
+.ui-accordion-heading {
+  display: block;
+  line-height: 3rem;
+  outline: none;
+  border-top: 1px solid $gray;
+  text-decoration: none;
+  color: inherit;
+
+  .right {
+    float: right;
+    margin-right: 8px;
+    transition: .3s;
+
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
+}

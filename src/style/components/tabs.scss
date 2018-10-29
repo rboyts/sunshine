@@ -1,0 +1,41 @@
+
+.ui-tabs {
+  position: relative;
+  margin-bottom: 24px;
+  white-space: nowrap;
+}
+
+.ui-tabs--border {
+  width: inherit;
+  height: 2px;
+  background-color: $almost-gray;
+}
+
+.ui-tabs--highlight {
+  position: absolute;
+  height: 3px;
+  bottom: 0;
+  background-color: $smartdok-yellow;
+
+  transition: .3s;
+}
+
+.ui-tab--link {
+  display: inline-block;
+  line-height: 40px;
+
+  text-decoration: none;
+  color: $grayer;
+
+  &.router-link-exact-active {
+    color: $almost-black;
+  }
+
+  &:hover {
+    color: $almost-black;
+  }
+
+  &:not(:last-child) {
+    margin-right: 20px;
+  }
+}

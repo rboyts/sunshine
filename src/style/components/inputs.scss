@@ -1,0 +1,57 @@
+.ui-input {
+  position: relative;
+  display: inline-block;
+  border: 1px solid $input-border-color;
+  border-radius: 4px;  // 4% / 2% gives no visible radius
+  background-color: $input-bg-color;
+  color: $input-fg-color;
+  min-width: 150px;
+  max-width: 250px;
+  margin-bottom: 4px;
+  height: 2.5rem;
+
+  &.ui-input--focus,
+  &:hover {
+    border: 1px solid $color-edit;
+    // box-shadow: inset 0 0 0 0.0625 $color-edit;
+    // box-shadow: inset 0 0 0 0.125em $color-edit;
+  }
+
+  &.ui-input--inactive {
+    background-color: $almost-gray;
+
+    .ui-input--label,
+    .ui-input--input {
+      color: $grayer;
+    }
+  }
+}
+
+.ui-input--label {
+  position: absolute;
+  color: $grayest;
+  padding: 0 $input-padding;
+  pointer-events: none;
+  font-size: 14px;
+
+  line-height: calc(2.5rem - 2px);  // subtract border
+
+  transform-origin: $input-padding 0;
+  transition: transform .3s;
+
+  &.ui-input--label-aside {
+    transform: scale((12 / 14)) translate(0, -8px);
+  }
+}
+
+.ui-input--input {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: $almost-black;
+
+  padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+}
