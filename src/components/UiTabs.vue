@@ -23,44 +23,45 @@ export default Vue.extend({
   },
 
   methods: {
-    setActiveTab(tab: Vue) {
+    setActiveTab(this: any, tab: Vue) {
       this.activeTab = tab;
       this.updateHighlight();
     },
 
-    updateHighlight() {
+    setHighlight(left: number, width: number) {
+      this.highlight = {
+        left: `${left}px`,
+        width: `${width}px`,
+      };
+    },
+
+    updateHighlight(this: any) {
       if (!this.activeTab) return;
 
       let el = this.activeTab.$el;
       if (el == null) return;
 
       if (this.highlight.width === '-1') {
-        this.highlight = {
-          left: `${el.offsetLeft + el.offsetWidth / 2}px`,
-          width: '0',
-        };
+        this.setHighlight(el.offsetLeft + el.offsetWidth / 2, 0);
       } else {
-        this.highlight = {
-          left: `${el.offsetLeft}px`,
-          width: `${el.offsetWidth}px`,
-        };
+        this.setHighlight(el.offsetLeft, el.offsetWidth);
       }
-    }
+    },
   },
 
-  created() {
+  created(this: any) {
     this.activeTab = null;
     this.timerId = null;
   },
 
-  mounted() {
+  mounted(this: any) {
     this.timerId = setInterval(() => {
       this.updateHighlight();
     }, 250);
   },
 
-  beforeDestroy() {
+  beforeDestroy(this: any) {
     clearInterval(this.timerId);
-  }
+  },
 });
 </script>
