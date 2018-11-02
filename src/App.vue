@@ -2,7 +2,7 @@
   <div id="app">
     <h1>Components demo page</h1>
 
-    <ui-tabs>
+    <ui-tabs v-if="tabs">
       <ui-tab to="/">{{ home }}</ui-tab>
       <ui-tab to="/accordion">Accordion</ui-tab>
       <ui-tab to="/table">DataTable</ui-tab>
@@ -27,10 +27,11 @@ export default Vue.extend({
 
   data() {
     return {
+      tabs: true,
       home: 'Basic components',
     };
   },
-})
+});
 </script>
 
 

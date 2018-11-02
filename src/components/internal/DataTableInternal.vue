@@ -113,10 +113,10 @@ export default Vue.extend({
       let to = this.currentDropIndex;
 
       // Prevent sliding animations when re-positioning columns
-      // this.notransition = true;
+      this.notransition = true;
 
       // Wait one tick for the transitions to be disabled
-      // await Vue.nextTick();
+      await Vue.nextTick();
 
       // XXX: Mutating props is perhaps not a good idea!
       if (from !== to) {
@@ -451,7 +451,7 @@ table {
   }
 
   th {
-    background-color: #f1f1f1;
+    background-color: $almost-gray;
     position: sticky;
     top: 0;
     z-index: 2;

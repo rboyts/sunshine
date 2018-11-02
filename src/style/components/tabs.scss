@@ -1,42 +1,53 @@
+@import '../settings.scss';
+
+$tabs-height: 2.5rem;
+$tabs-line-height: $tabs-height - 0.5rem;
+$tabs-margin-bottom: 1.5rem;
+$tabs-border-width: 2px;
+$tabs-link-color: $grayer;
+$tabs-link-inactive-color: $almost-black;
+
 
 .ui-tabs {
+  // all: initial;
+
   position: relative;
-  margin-bottom: 24px;
+  margin-bottom: $tabs-margin-bottom;
   white-space: nowrap;
 }
 
 .ui-tabs--border {
   width: inherit;
-  height: 2px;
+  height: $tabs-border-width;
   background-color: $almost-gray;
 }
 
 .ui-tabs--highlight {
   position: absolute;
-  height: 3px;
+  height: $tabs-border-width;
   bottom: 0;
   background-color: $smartdok-yellow;
 
-  transition: .3s;
+  transition: $duration-normal;
 }
 
 .ui-tab--link {
   display: inline-block;
-  line-height: 2rem;
-  height: 2.5rem;
+  height: $tabs-height;
+  line-height: $tabs-line-height;
 
   text-decoration: none;
-  color: $grayer;
+  color: $tabs-link-color;
 
   &.router-link-exact-active {
-    color: $almost-black;
+    color: $tabs-link-inactive-color;
   }
 
   &:hover {
-    color: $almost-black;
+    color: $tabs-link-inactive-color;
   }
 
-  &:not(:last-child) {
-    margin-right: 1.5rem;
+  &:not(:first-child) {
+    margin-left: 1.5rem;
   }
 }
