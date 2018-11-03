@@ -2,7 +2,7 @@
   <div>
     <a
       href="#"
-      class="ui-accordion-heading"
+      class="ui-accordion__heading"
       @_click="$emit('click')"
       @click="onClick"
     >
@@ -11,7 +11,7 @@
     </a>
 
     <transition name="dropdown">
-      <div v-show="open" class="ui-accordion-body">
+      <div v-show="open" class="ui-accordion__body">
         <slot />
       </div>
     </transition>

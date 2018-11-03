@@ -7,7 +7,7 @@
   >
 
     <input
-      class="ui-input--input"
+      class="ui-input__input"
       :type="type"
       :value="value"
       :disabled="inactive"

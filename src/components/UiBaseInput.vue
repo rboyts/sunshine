@@ -7,8 +7,8 @@
     }"
   >
     <span
-      class="ui-input--label"
-      :class="{'ui-input--label-aside': hasFocus || !isEmpty}"
+      class="ui-input__label"
+      :class="{'ui-input__label--aside': hasFocus || !isEmpty}"
     >
       {{ label }}
     </span>

@@ -1,6 +1,6 @@
 @import './settings.scss';
 
-@mixin font-action {
+@mixin action-font {
   font-size: $action-font-size;
   font-weight: $action-font-weight;
 }

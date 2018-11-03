@@ -32,8 +32,9 @@ export default Vue.extend({
   computed: {
     classes(): any {
       return {
-        'ui-btn--main': !this.inactive && this.primary,
-        'ui-btn--secondary': !this.inactive && !this.primary,
+        'ui-btn': true,
+        'ui-btn--main': this.primary,
+        'ui-btn--secondary': !this.primary,
         'ui-btn--inactive': this.inactive,
         'ui-btn--small': this.small,
       };

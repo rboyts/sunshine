@@ -3,12 +3,13 @@
     <div class="options">
 
       <label>Data source:</label>
-      <ui-select v-model="source" :items="sources" label="Data source" />
+      <ui-select v-model="source" :items="Object.values(sources)" label="Data source" />
 
       <ui-checkbox v-model="draggable">Draggable columns</ui-checkbox>
+      <ui-checkbox v-model="condensed">Condensed</ui-checkbox>
     </div>
 
-    <ui-data-table :data-source="source" :draggable="draggable" >
+    <ui-data-table :data-source="source" :draggable="draggable" :condensed="condensed" >
 
       <!-- Override cell to show email address as link -->
       <td slot="~email" slot-scope="{ value }">
@@ -157,6 +158,7 @@ export default Vue.extend({
     return {
       source: DataSources.users,
       draggable: true,
+      condensed: false,
       sources: DataSources,
     };
   },

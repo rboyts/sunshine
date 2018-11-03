@@ -14,6 +14,14 @@ interface IDragState {
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
 
+const classHelper = (name: string, options: {[key: string]: boolean}): {[key: string]: boolean} => {
+  let res = { [name]: true };
+  for (let key of Object.keys(options)) {
+    res[`${name}--${key}`] = options[key];
+  }
+  return res;
+}
+
 export default Vue.extend({
   name: 'data-table-internal',
 
@@ -22,6 +30,7 @@ export default Vue.extend({
     items: Array as () => IItem[],
     sorting: Object as () => ISortState,
     draggable: Boolean,
+    condensed: Boolean,
   },
 
   data() {
@@ -175,10 +184,10 @@ export default Vue.extend({
 
       this.clearSelection();
 
-      let viewport = element.closest('.data-table-wrapper');
+      let viewport = element.closest('.ui-data-table__wrapper');
       if (viewport === null) return;
 
-      let root = viewport.closest('.data-table');
+      let root = viewport.closest('.ui-data-table');
       if (root === null) return;
 
       let widths: number[] = [];
@@ -286,14 +295,16 @@ export default Vue.extend({
       }
 
       return h('th', {
-        class: {
-          sortable: column.sortable,
-        },
+        class: classHelper('ui-data-table__header', {
+          sortable: !!column.sortable,
+        }),
         on,
       },
-      [
-        h('div', { class: 'th-flex' }, children),
-      ]);
+      children
+      // [
+      //   h('div', { class: 'th-flex' }, children),
+      // ]
+      );
     },
 
     renderContentCell(item: IItem, column: IColumn): VNode | string | VNodeChildrenArrayContents {
@@ -315,16 +326,24 @@ export default Vue.extend({
 
       let { sorting } = this;
 
-      let arrow = sorting.key === key ? sorting.reverse ? '\u2193' : '\u2191' : '\u2195';
+      let arrow = sorting.key === key ? '\u2191' : '\u2195';
+      let rotate = sorting.key === key ? sorting.reverse ? '180deg' : '0' : '0';
 
-      return h('span', { class: 'sort' }, arrow);
+      return h('span', {
+        class: classHelper('ui-data-table__header__sort', {
+          reverse: sorting.reverse,
+        }),
+        style: {
+          transform: `rotate(${rotate})`,
+        },
+      }, arrow);
     },
 
     renderDragHandle(index: number): VNode {
       const h = this.$createElement;
       return h('span',
         {
-          class: 'handle',
+          class: 'ui-data-table__header__handle',
           attrs: {
             draggable: true,
           },
@@ -347,16 +366,16 @@ export default Vue.extend({
     getColumnClass(index: number): { [key: string]: boolean } {
       if (this.drag && this.drag.startX !== 0) {
         let isDragging = index === this.drag.dragColumnIndex;
-        return {
+        return classHelper('ui-data-table__column', {
           dragging: isDragging,
           notransition: isDragging || this.notransition,
-        };
+        });
       }
 
-      return {
+      return classHelper('ui-data-table__column', {
         'last-dragged': index === this.lastDragged,
         'notransition': this.notransition || !!this.drag && this.drag.startX === 0,
-      };
+      });
     },
   },
 
@@ -369,7 +388,10 @@ export default Vue.extend({
 
     return h('div',
       {
-        class: 'data-table',
+        class: {
+          'ui-data-table': true,
+          'ui-data-table--condensed': this.condensed,
+        },
         on: {
           drag: this.onDrag,
           dragenter: this.onDragOver,
@@ -381,7 +403,7 @@ export default Vue.extend({
       },
       [
         h('div', {
-          class: 'data-table-wrapper',
+          class: 'ui-data-table__wrapper',
           style,
         }, [
           this.renderTable(),
@@ -391,102 +413,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style scoped lang="scss">
-
-@import '@/style/tools.scss';
-
-$outer-border : 1px solid $gray;
-$inner-border : 1px solid $almost-gray;
-
-.data-table {
-  @include font-action;
-
-  border-top: $outer-border;
-  border-bottom: $outer-border;
-
-  // border-radius: 3px;
-  background-color: $almost-gray;
-
-  overflow: auto;
-  margin-bottom: 8px;
-}
-
-.data-table-wrapper {
-  display: flex;
-}
-
-// XXX class
-table {
-  flex: 1;
-  border-collapse: separate;
-  border-spacing: 0;
-
-  opacity: 1;
-
-  &.dragging {
-    // border-left: $inner-border;
-    // border-right: $inner-border;
-    opacity: .7;
-  }
-
-  &.dragging,
-  &.last-dragged {
-    z-index: 1;
-
-    th {
-      z-index: 3;
-    }
-  }
-
-  &:not(.notransition) {
-    transition: transform .3s, opacity .3s;;
-  }
-
-  transition: opacity .3s;
-
-  td {
-    background-color: #fff;
-    z-index: 0;
-  }
-
-  th {
-    background-color: $almost-gray;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
-
-  th, td {
-    white-space: nowrap;
-    padding: 0 16px;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    border-bottom: $inner-border;
-  }
-
-  &:not(:last-child) {
-    // border-right: $inner-border;
-  }
-
-  .th-flex {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  .handle {
-    cursor: move;
-    margin-left: 8px;
-    color: #666;
-  }
-
-  .sort {
-    margin-left: 8px;
-  }
-
-  .sortable {
-    cursor: pointer;
-  }
-}
-</style>

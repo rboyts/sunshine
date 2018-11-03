@@ -27,31 +27,17 @@ $base-font-size: 16px;
 $font-weight-medium: 500;  // 500 is not available for Lato
 $font-weight-regular: 400;
 
-// Transition
-$duration-normal: .3s;
-
 $h1-font-size: 2rem;
 $h1-font-weight: $font-weight-medium;
 $h2-font-size: 1rem;
 $h2-font-weight: $font-weight-medium;
 $h3-font-size: .75rem;
 $h3-font-weight: $font-weight-medium;
+
 $action-font-size: .875rem;
 $action-font-weight: $font-weight-medium;
 $paragraph-font-size: .875rem;
 $paragraph-font-weight: $font-weight-regular;
 
-
-// Buttons
-$btn-height: 2.5rem;
-$btn-main-bg-color: $smartdok-yellow;
-$btn-main-fg-color: $almost-black;
-$btn-secondary-bg-color: $whiteish;
-$btn-secondary-fg-color: $almost-black;
-$btn-secondary-border-color: $gray;
-
-// Inputs
-$input-bg-color: $white;
-$input-fg-color: $almost-black;
-$input-border-color: $gray;
-$input-padding: 8px;
+// Transition
+$duration-normal: .3s;

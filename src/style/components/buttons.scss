@@ -1,5 +1,12 @@
-%ui-btn {
-  @include font-action;
+$btn-height: 2.5rem;
+$btn-main-bg-color: $smartdok-yellow;
+$btn-main-fg-color: $almost-black;
+$btn-secondary-bg-color: $whiteish;
+$btn-secondary-fg-color: $almost-black;
+$btn-secondary-border-color: $gray;
+
+.ui-btn {
+  @include action-font;
 
   padding: 0 16px;
 
@@ -12,48 +19,43 @@
 }
 
 .ui-btn--main {
-  @extend %ui-btn;
-
   border: none;
   background-color: $btn-main-bg-color;
   color: $btn-main-fg-color;
 
-  &:hover {
+  &:not(.ui-btn--inactive):hover {
     background-color: lighten($btn-main-bg-color, 10%);
   }
 
-  &:active {
+  &:not(.ui-btn--inactive):active {
     background-color: darken($btn-main-bg-color, 10%);
   }
 }
 
 .ui-btn--secondary {
-  @extend %ui-btn;
-
   // border: 1px solid
   border: none;
   box-shadow: inset 0 0 0 1px $btn-secondary-border-color;
   background-color: $btn-secondary-bg-color;
   color: $btn-secondary-fg-color;
 
-  &:hover {
+  &:not(.ui-btn--inactive):hover {
     background-color: lighten($btn-secondary-bg-color, 10%);
   }
 
-  &:active {
+  &:not(.ui-btn--inactive):active {
     background-color: darken($btn-secondary-bg-color, 10%);
   }
 }
 
 .ui-btn--inactive {
-  @extend %ui-btn;
   border: none;
 
   background-color: $gray;
   color: $grayer;
 }
 
-// XXX Not in the design system
 .ui-btn--small {
-  height: 2.0em;
+  height: 1.5em;
+  padding: 0 8px;
 }
