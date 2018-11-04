@@ -2,11 +2,11 @@
   <div class="container">
     <div class="options">
 
-      <label>Data source:</label>
-      <ui-select v-model="source" :items="Object.values(sources)" label="Data source" />
+      <label>Data source:</label>&nbsp;
+      <ui-select v-model="source" :items="Object.values(sources)" label="Data source" />&nbsp;
 
-      <ui-checkbox v-model="draggable">Draggable columns</ui-checkbox>
-      <ui-checkbox v-model="condensed">Condensed</ui-checkbox>
+      <ui-checkbox v-model="draggable">Draggable columns</ui-checkbox>&nbsp;
+      <ui-checkbox v-model="condensed">Condensed</ui-checkbox>&nbsp;
     </div>
 
     <ui-data-table :data-source="source" :draggable="draggable" :condensed="condensed" >
@@ -157,7 +157,7 @@ export default Vue.extend({
   data() {
     return {
       source: DataSources.users,
-      draggable: true,
+      draggable: false,
       condensed: false,
       sources: DataSources,
     };

@@ -30,7 +30,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import UiButton from './UiButton.vue';
-import DataTableInternal from './internal/DataTableInternal.vue';
+import DataTableInternal from './internal/DataTableInternal';
 import { IDataSource, ISortState, IItem } from './types';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';

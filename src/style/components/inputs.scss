@@ -15,14 +15,14 @@ $input-padding: 8px;
   margin-bottom: .25rem;
   height: 2.5rem;
 
-  &.ui-input--focus,
-  &:hover {
+  &--focus,
+  &:hover:not(.ui-input--inactive) {
     border: 1px solid $color-edit;
     // box-shadow: inset 0 0 0 0.0625 $color-edit;
     // box-shadow: inset 0 0 0 0.125em $color-edit;
   }
 
-  &.ui-input--inactive {
+  &--inactive {
     background-color: $almost-gray;
 
     .ui-input__label,
@@ -44,7 +44,7 @@ $input-padding: 8px;
   transform-origin: $input-padding 0;
   transition: transform .3s;
 
-  &.ui-input__label--aside {
+  &--aside {
     transform: scale((12 / 14)) translate(0, -.5rem);
   }
 }

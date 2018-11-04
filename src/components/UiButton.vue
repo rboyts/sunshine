@@ -1,7 +1,10 @@
 <template>
-  <button :class="classes" :disabled="inactive" v-on="$listeners">
-    <slot />
-    <span style="float: right">
+  <button :class="buttonClass" :disabled="inactive" v-on="$listeners">
+    <span :class="contentClass" tabindex="-1">
+      <slot name="left" />
+      <span style="flex: 1">
+        <slot />
+      </span>
       <slot name="right" />
     </span>
   </button>
@@ -9,6 +12,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { generate } from '@/lib/utils';
 
 export default Vue.extend({
   name: 'ui-button',
@@ -30,14 +34,18 @@ export default Vue.extend({
   },
 
   computed: {
-    classes(): any {
-      return {
-        'ui-btn': true,
-        'ui-btn--main': this.primary,
-        'ui-btn--secondary': !this.primary,
-        'ui-btn--inactive': this.inactive,
-        'ui-btn--small': this.small,
-      };
+    buttonClass(): object {
+      return generate('ui-btn').gen({ small: this.small });
+    },
+
+    contentClass(): object {
+      return generate('ui-btn')
+        .elem('content')
+        .gen({
+          main: this.primary,
+          secondary: !this.primary,
+          inactive: this.inactive,
+        });
     },
   },
 });

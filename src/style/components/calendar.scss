@@ -1,0 +1,51 @@
+$inner-border-width: 1px;
+$inner-border: $inner-border-width solid #ccc;
+
+.ui-calendar {
+  display: grid;
+
+  border-radius: 3px;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: auto;
+  grid-auto-rows: 100px;
+
+  > span {
+    padding: 8px;
+
+    // Ensures that columns are always equally wide
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    border: $inner-border;
+    margin-right: -$inner-border-width;
+    margin-bottom: -$inner-border-width;
+  }
+}
+
+.ui-calendar__header {
+  background-color: $whiteish;
+  color: $almost-black;
+}
+
+.ui-calendar__day {
+  background-color: #fff;
+
+  &--weekend {
+    background-color: #efefef;
+  }
+
+  &--other-month {
+    background-color: #efefef;
+  }
+}
+
+.ui-calendar__date {
+  float: right;
+  @include action-font;
+
+  &--sunday {
+    color: red;
+  }
+}

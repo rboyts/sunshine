@@ -1,6 +1,6 @@
-<script lang="ts">
 import Vue, { VNode, VNodeChildrenArrayContents } from 'vue';
 import { IColumn, IItem, ISortState } from '../types';
+import { classHelper } from '@/lib/utils';
 
 interface IDragState {
   dragColumnIndex: number;
@@ -13,14 +13,6 @@ interface IDragState {
 }
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
-
-const classHelper = (name: string, options: {[key: string]: boolean}): {[key: string]: boolean} => {
-  let res = { [name]: true };
-  for (let key of Object.keys(options)) {
-    res[`${name}--${key}`] = options[key];
-  }
-  return res;
-}
 
 export default Vue.extend({
   name: 'data-table-internal',
@@ -300,10 +292,7 @@ export default Vue.extend({
         }),
         on,
       },
-      children
-      // [
-      //   h('div', { class: 'th-flex' }, children),
-      // ]
+      children,
       );
     },
 
@@ -412,4 +401,3 @@ export default Vue.extend({
     );
   },
 });
-</script>

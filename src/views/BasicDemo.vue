@@ -2,7 +2,7 @@
   <div>
     <h2>Buttons</h2>
 
-    <ui-button primary>Primary action</ui-button>&nbsp;
+    <ui-button primary @click="onPrimary">Primary action</ui-button>&nbsp;
     <ui-button>Secondary action</ui-button>&nbsp;
     <ui-button primary inactive>Primary inactive</ui-button>&nbsp;
     <ui-button inactive>Secondary inactive</ui-button>&nbsp;
@@ -38,13 +38,24 @@
     -->
 
     <h2>Checkbox</h2>
-    <ui-checkbox v-model="checked">{{ checked }}</ui-checkbox>
 
-    <!--
-      TODO
-      Styling
-      Radio button
-    -->
+    <div>
+      <ui-checkbox v-model="checked">Checkbox</ui-checkbox>
+    </div>
+    <div>
+      <ui-checkbox inactive>Inactive</ui-checkbox>
+    </div>
+
+    <h2>Radio buttons</h2>
+
+    <label>
+      <input type="radio" name="foo" value="1" />
+      Foo 1
+    </label>
+    <input type="radio" name="foo" value="2">Foo 2</input>
+    <input type="radio" name="bar" value="1">Bar 1</input>
+    <input type="radio" name="bar" value="2">Bar 2</input>
+
 
     <h2>Select</h2>
 
@@ -89,6 +100,12 @@ export default Vue.extend({
       ],
       country: null,
     };
+  },
+
+  methods: {
+    onPrimary() {
+      this.name += '!';
+    },
   },
 });
 </script>

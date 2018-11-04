@@ -19,7 +19,7 @@ export default Vue.extend({
       let children: VNode[] = [];
       for (let d = start; d < end; d = d.add(1, 'day')) {
         children.push(h('span', {
-            class: 'weekday',
+            class: 'ui-calendar__header',
           },
           weekdays[d.day()]));
       }
@@ -46,16 +46,16 @@ export default Vue.extend({
       const text = date.format('LLLL');
       return h('span', {
         class: {
-          'day': true,
-          'weekend': date.day() === 6 || date.day() === 0,
-          'other-month': date.month() !== this.date.month(),
+          'ui-calendar__day': true,
+          'ui-calendar__day--weekend': date.day() === 6 || date.day() === 0,
+          'ui-calendar__day--other-month': date.month() !== this.date.month(),
         },
       },
       [
         h('span', {
           class: {
-            date: true,
-            sunday: date.day() === 0,
+            'ui-calendar__date': true,
+            'ui-calendar__date--sunday': date.day() === 0,
           },
         }, d),
       ]);
@@ -64,70 +64,10 @@ export default Vue.extend({
 
   render(): VNode {
     const h = this.$createElement;
-    return h('div', {class: 'calendar'}, [
+    return h('div', {class: 'ui-calendar'}, [
       this.renderHeader(),
       this.renderMonth(),
     ]);
   },
 });
 </script>
-
-
-<style lang="scss" scoped>
-
-$inner-border-width: 1px;
-$inner-border: $inner-border-width solid #ccc;
-
-.calendar {
-  display: grid;
-
-  border-radius: 3px;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: auto;
-  grid-auto-rows: 100px;
-
-  > span {
-    padding: 8px;
-
-    // Ensures that columns are always equally wide
-    min-width: 0;
-
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    border: $inner-border;
-    margin-right: -$inner-border-width;
-    margin-bottom: -$inner-border-width;
-  }
-}
-
-.weekday {
-  background-color: #efefef;
-}
-
-.date {
-  float: right;
-  font-size: .9em;
-  // font-weight: bold;
-}
-
-.text {
-  font-size: .7em;
-}
-
-.day {
-  background-color: #fff;
-}
-
-.weekend .date {
-  // background-color: #efefef;
-}
-
-.sunday {
-  color: red;
-}
-
-.other-month {
-  background-color: #efefef;
-}
-</style>

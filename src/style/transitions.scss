@@ -17,3 +17,20 @@
     transform: scaleY(1);
   }
 }
+
+.fade-enter-active {
+  animation: fade .2s;
+}
+
+.fade-leave-active {
+  animation: fade .2s reverse;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
