@@ -224,7 +224,7 @@ export default Vue.extend({
         this.drag.curScrollX = element.scrollLeft;
       }
 
-      if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      if (element.scrollTop > 0 && element.scrollTop > element.scrollHeight - element.clientHeight - 1) {
         this.$emit('scroll-bottom');
       }
     },

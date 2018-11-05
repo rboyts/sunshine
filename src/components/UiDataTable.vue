@@ -6,7 +6,7 @@
       :columns="dataSource.columns"
       :sorting="sorting"
       @sort="onSort"
-      @scroll-bottom="fetchMore"
+      @scroll-bottom="onScrollBottom"
 
       v-bind="$attrs"
     >
@@ -57,17 +57,28 @@ export default Vue.extend({
         reverse: false,
       } as ISortState,
       items: [] as IItem[],
+      isLoading: false,
     };
   },
 
   methods: {
     async load() {
+      this.isLoading = true;
       this.items = await this.dataSource.fetch(0, this.sorting);
+      this.isLoading = false;
     },
 
     async fetchMore() {
+      this.isLoading = true;
       let items = await this.dataSource.fetch(this.items.length, this.sorting);
       this.items = this.items.concat(items);
+      this.isLoading = false;
+    },
+
+    onScrollBottom() {
+      if (!this.isLoading) {
+        this.fetchMore();
+      }
     },
 
     onSort(event: MouseEvent, key: string) {

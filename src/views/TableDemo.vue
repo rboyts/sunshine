@@ -109,6 +109,21 @@ const DataSources: {[key: string]: IDataSource} = {
     }),
   },
 
+  'reqres.in': {
+    title: 'reqres.in',
+    columns: [
+      { key: 'id', title: 'Id' },
+      { key: 'first_name', title: 'First name' },
+      { key: 'last_name', title: 'Lase name' },
+      { key: 'avatar', title: 'Avatar' },
+    ],
+    fetch: async (skip = 0, sorting: ISortState): Promise<IItem[]> => {
+      let page = Math.floor(skip / 10) + 1;
+      let res = await fetch(`https://reqres.in/api/users?per_page=10&page=${page}`);
+      return (await res.json()).data as IItem[];
+    },
+  },
+
   'github-repos': {
     title: 'Github Repos',
     columns: [
@@ -127,8 +142,8 @@ const DataSources: {[key: string]: IDataSource} = {
       let sort = sorting.key;
       if (sort === 'created_at') sort = 'created';
       if (sort === 'updated_at') sort = 'updated';
-      const page = Math.floor(skip / 50);
-      let query = `sort=${sort}&direction=${direction}&page=${page}&per_page=50`;
+      const page = Math.floor(skip / 30) + 1;
+      let query = `sort=${sort}&direction=${direction}&page=${page}&per_page=30`;
       const res = await fetch(`https://api.github.com/users/vuejs/repos?${query}`);
       return await res.json() as IItem[];
     },
