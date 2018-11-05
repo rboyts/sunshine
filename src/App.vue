@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="main-layout">
     <h1>Components demo page</h1>
 
     <ui-tabs v-if="tabs">
@@ -10,7 +10,9 @@
       <ui-tab to="/calendar">Calendar</ui-tab>
     </ui-tabs>
 
-    <router-view/>
+    <div class="main">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -35,10 +37,17 @@ export default Vue.extend({
 </script>
 
 
-<style lang="scss">
-#app {
+<style lang="scss" scoped>
+.main-layout {
   box-sizing: border-box;
-  padding: 10px 60px;
-  height: calc(100vh - 80px);
+  padding: 10px 60px 25px 60px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  overflow: auto;
 }
 </style>
