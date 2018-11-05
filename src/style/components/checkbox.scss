@@ -26,6 +26,8 @@ $checkbox-spacing: .375rem;
 .ui-checkbox__box {
   position: relative;
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   border: 1px solid $gray;
   background-color: $white;

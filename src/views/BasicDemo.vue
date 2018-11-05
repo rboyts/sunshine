@@ -2,10 +2,14 @@
   <div>
     <h2>Buttons</h2>
 
-    <ui-button primary @click="onPrimary">Primary action</ui-button>&nbsp;
-    <ui-button>Secondary action</ui-button>&nbsp;
+    <ui-button primary @click="text = 'Primary action'">Primary action</ui-button>&nbsp;
+    <ui-button @click="text = 'Secondary action'">Secondary action</ui-button>&nbsp;
     <ui-button primary inactive>Primary inactive</ui-button>&nbsp;
     <ui-button inactive>Secondary inactive</ui-button>&nbsp;
+
+    <p>
+      <span class="value">{{ text }}</span>
+    </p>
 
 
     <h3>Smaller version</h3>
@@ -48,14 +52,16 @@
 
     <h2>Radio buttons</h2>
 
-    <label>
-      <input type="radio" name="foo" value="1" />
-      Foo 1
-    </label>
-    <input type="radio" name="foo" value="2">Foo 2</input>
-    <input type="radio" name="bar" value="1">Bar 1</input>
-    <input type="radio" name="bar" value="2">Bar 2</input>
+    <!-- Container group is needed -->
 
+    <ui-radio-group v-model="option">
+      <div>
+        <ui-radio-button name="option" value="1">Option 1</ui-radio-button>
+      </div>
+      <div>
+        <ui-radio-button name="option" value="2">Option 2</ui-radio-button>
+      </div>
+    </ui-radio-group>
 
     <h2>Select</h2>
 
@@ -77,6 +83,8 @@ import UiTextField from '@/components/UiTextField.vue';
 import UiButton from '@/components/UiButton.vue';
 import UiCheckbox from '@/components/UiCheckbox.vue';
 import UiSelect from '@/components/UiSelect.vue';
+import UiRadioGroup from '@/components/UiRadioGroup.vue';
+import UiRadioButton from '@/components/UiRadioButton.vue';
 
 export default Vue.extend({
   name: 'InputsDemo',
@@ -86,11 +94,14 @@ export default Vue.extend({
     UiButton,
     UiCheckbox,
     UiSelect,
+    UiRadioGroup,
+    UiRadioButton,
   },
 
   data() {
     return {
       checked: false,
+      text: '-',
       name: '',
       number: '',
       countries: [
@@ -99,13 +110,9 @@ export default Vue.extend({
         {title: 'England'},
       ],
       country: null,
+      option1: true,
+      option2: false,
     };
-  },
-
-  methods: {
-    onPrimary() {
-      this.name += '!';
-    },
   },
 });
 </script>

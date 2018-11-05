@@ -1,0 +1,59 @@
+$radio-button-height: 1rem;
+$radio-button-border-radius: $radio-button-height / 2;
+$radio-button-spacing: .375rem;
+
+.ui-radio-button {
+  @include paragraph-font;
+
+  display: inline-flex;
+  height: $radio-button-height;
+  line-height: $radio-button-height;
+
+  &--focus,
+  &:hover:not(.ui-radio-button--inactive) {
+    .ui-radio-button__box {
+      border-color: $color-edit;
+    }
+  }
+
+  &--inactive {
+    .ui-radio-button__box {
+      background-color: $almost-gray;
+    }
+  }
+}
+
+.ui-radio-button__box {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid $gray;
+  background-color: $white;
+  height: $radio-button-height;
+  width: $radio-button-height;
+  border-radius: $radio-button-border-radius;
+  margin-right: $radio-button-spacing;
+
+  > span {
+    user-select: none;
+    position: absolute;
+    width: calc(1rem - 2px);
+    text-align: center;
+  }
+
+  // Hides the native radio-button, so that we can provide our own styled
+  // version. We're using opacity rather than other methods for making
+  // it invisible, because we want it to behave as if it's visible (e.g.
+  // accept tab focus).
+  > input {
+    // opacity: 0;
+    position: absolute;
+    margin: 0;
+    left: 0;
+    z-index: 100;
+    width: $radio-button-height;
+    height: $radio-button-height;
+  }
+}
