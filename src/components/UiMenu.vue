@@ -1,11 +1,11 @@
 <template>
-  <span ref="activator" class="menu-wrap">
+  <span ref="activator" class="ui-menu">
     <span @click="onClick">
       <slot name="activator"></slot>
     </span>
 
     <transition name="dropdown">
-      <div v-if="value" class="menu-popup" :style="style">
+      <div v-if="value" class="ui-menu__popup" :style="style">
         <slot name="content"></slot>
       </div>
     </transition>
@@ -14,6 +14,15 @@
 
 <script lang="ts">
 import Vue from 'vue';
+
+// Close active menu when clicking anywhere outside
+let activeMenu: Vue | null = null;
+window.addEventListener('click', (event: MouseEvent) => {
+  if (activeMenu) {
+    activeMenu.$emit('input', false);
+  }
+  activeMenu = null;
+});
 
 export default Vue.extend({
   name: 'ui-menu',
@@ -31,6 +40,7 @@ export default Vue.extend({
   watch: {
     value(val) {
       if (val) {
+        activeMenu = this;
         let activator = this.$refs.activator as HTMLElement;
         this.style = {
           top: `${activator.offsetHeight}px`,
@@ -48,24 +58,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.menu-wrap {
-  position: relative;
-  display: inline-block;
-}
-
-.menu-popup {
-  position: absolute;
-  min-height: 16px;
-  min-width: 100px;
-  z-index: 1000;
-
-  background-color: #fff;
-  border: 1px solid #999;
-  border-radius: 3px;
-
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-</style>
-

@@ -45,7 +45,7 @@ export default Vue.extend({
 
   computed: {
     classes(): object {
-      return classHelper('ui-checkbox', {
+      return classHelper('ui-checkbox').apply({
         focus: this.hasFocus,
         inactive: this.inactive,
       });

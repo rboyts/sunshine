@@ -287,9 +287,11 @@ export default Vue.extend({
       }
 
       return h('th', {
-        class: classHelper('ui-data-table__header', {
-          sortable: !!column.sortable,
-        }),
+        class: classHelper('ui-data-table')
+          .elem('header')
+          .apply({
+            sortable: !!column.sortable,
+          }),
         on,
       },
       children,
@@ -319,9 +321,11 @@ export default Vue.extend({
       let rotate = sorting.key === key ? sorting.reverse ? '180deg' : '0' : '0';
 
       return h('span', {
-        class: classHelper('ui-data-table__header__sort', {
-          reverse: sorting.reverse,
-        }),
+        class: classHelper('ui-data-table')
+          .elem('header')
+          .elem('sort').apply({
+            reverse: sorting.reverse,
+          }),
         style: {
           transform: `rotate(${rotate})`,
         },
@@ -355,16 +359,20 @@ export default Vue.extend({
     getColumnClass(index: number): { [key: string]: boolean } {
       if (this.drag && this.drag.startX !== 0) {
         let isDragging = index === this.drag.dragColumnIndex;
-        return classHelper('ui-data-table__column', {
-          dragging: isDragging,
-          notransition: isDragging || this.notransition,
-        });
+        return classHelper('ui-data-table')
+          .elem('column')
+          .apply({
+            dragging: isDragging,
+            notransition: isDragging || this.notransition,
+          });
       }
 
-      return classHelper('ui-data-table__column', {
-        'last-dragged': index === this.lastDragged,
-        'notransition': this.notransition || !!this.drag && this.drag.startX === 0,
-      });
+      return classHelper('ui-data-table')
+        .elem('column')
+        .apply({
+          'last-dragged': index === this.lastDragged,
+          'notransition': this.notransition || !!this.drag && this.drag.startX === 0,
+        });
     },
   },
 

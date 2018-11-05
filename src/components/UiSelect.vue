@@ -13,11 +13,11 @@
       <span slot="right">&#x2bc6;</span>
     </ui-button>
     <div slot="content">
-      <ul class="select-list" style="white-space: nowrap">
+      <ul class="ui-select__list">
         <li v-for="item in items"
-          class="select-item"
+          class="ui-select__list__item"
           :key="item.key"
-          :class="{'select-item-selected': item === value}"
+          :class="{'ui-select__list__item--selected': item === value}"
         >
           <a href="#" @click.prevent="onClick(item)">{{ item[labelKey] }}</a>
         </li>
@@ -106,29 +106,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-$item-height: 32px;
-
-.select-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.select-item > a {
-  display: block;
-  padding: 0 8px;
-  height: $item-height;
-  line-height: $item-height;
-
-  text-decoration: none;
-  color: #111;
-}
-
-.select-item > a:hover,
-.select-item-selected > a {
-  background-color: #e8e8e8;
-}
-</style>
-

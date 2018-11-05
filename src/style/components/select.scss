@@ -1,0 +1,27 @@
+
+$item-height: 32px;
+
+.ui-select__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+}
+
+.ui-select__list__item {
+
+  > a {
+    display: block;
+    padding: 0 8px;
+    height: $item-height;
+    line-height: $item-height;
+
+    text-decoration: none;
+    color: #111;
+  }
+
+  > a:hover,
+  &--selected > a {
+    background-color: #e8e8e8;
+  }
+}

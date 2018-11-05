@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { generate } from '@/lib/utils';
+import { classHelper } from '@/lib/utils';
 
 export default Vue.extend({
   name: 'ui-button',
@@ -35,13 +35,13 @@ export default Vue.extend({
 
   computed: {
     buttonClass(): object {
-      return generate('ui-btn').gen({ small: this.small });
+      return classHelper('ui-btn').apply({ small: this.small });
     },
 
     contentClass(): object {
-      return generate('ui-btn')
+      return classHelper('ui-btn')
         .elem('content')
-        .gen({
+        .apply({
           main: this.primary,
           secondary: !this.primary,
           inactive: this.inactive,
