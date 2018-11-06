@@ -63,6 +63,8 @@
       </div>
     </ui-radio-group>
 
+    <p class="value">Selected: {{ option }}</p>
+
     <h2>Select</h2>
 
     <ui-select v-model="country" :items="countries" label="Primary" primary />&nbsp;
@@ -110,8 +112,7 @@ export default Vue.extend({
         {title: 'England'},
       ],
       country: null,
-      option1: true,
-      option2: false,
+      option: '1',
     };
   },
 });

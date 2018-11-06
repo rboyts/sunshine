@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
 
 export default Vue.extend({
@@ -16,16 +16,47 @@ export default Vue.extend({
     };
   },
 
+  props: {
+    value: String,
+  },
+
+  watch: {
+    value: 'updateValues',
+  },
+
   methods: {
-    register(this: any, radio: Vue) {
+    register(radio) {
       this.$_radios.push(radio);
 
-      console.log(this.$_radios);
+      const handler = () => {
+        this.$emit('input', radio.value);
+      };
+
+      radio.$on('change', handler);
+
+      // Returns unregister callback
+      return () => {
+        radio.$off('change', handler);
+        let index = this.$_radios.indexOf(radio);
+        if (index !== -1) {
+          this.$_radios.splice(index, 1);
+        }
+      };
+    },
+
+    updateValues() {
+      for (let radio of this.$_radios) {
+        radio.checked = radio.value === this.value;
+      }
     },
   },
 
-  created(this: any) {
+  created() {
     this.$_radios = [];
-  }
+  },
+
+  mounted() {
+    Vue.nextTick(() => this.updateValues());
+  },
 });
 </script>

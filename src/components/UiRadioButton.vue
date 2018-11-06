@@ -18,20 +18,15 @@
   </label>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
 import { classHelper } from '@/lib/utils';
 
 export default Vue.extend({
   name: 'ui-radio-button',
 
-  model: {
-    prop: 'checked',
-    event: 'change',
-  },
-
   props: {
-    checked: Boolean,
+    value: String,
     name: {
       type: String,
       default: '',
@@ -48,12 +43,13 @@ export default Vue.extend({
 
   data() {
     return {
+      checked: false,
       hasFocus: false,
     };
   },
 
   computed: {
-    classes(): object {
+    classes() {
       return classHelper('ui-radio-button').apply({
         focus: this.hasFocus,
         inactive: this.inactive,
@@ -62,14 +58,18 @@ export default Vue.extend({
   },
 
   methods: {
-    onChange(this: any, event: any) {
+    onChange(event) {
       this.$emit('change', event.target.checked);
     },
   },
 
-  created(this: any) {
-    this.group.register(this);
-  }
+  mounted() {
+    this.unregister = this.group.register(this);
+  },
+
+  beforeDestroy() {
+    this.unregister();
+  },
 });
 </script>
 

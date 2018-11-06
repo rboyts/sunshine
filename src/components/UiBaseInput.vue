@@ -1,24 +1,15 @@
 <template>
-  <span
-    class="ui-input"
-    :class="{
-      'ui-input--focus': hasFocus,
-      'ui-input--inactive': inactive,
-    }"
-  >
-    <span
-      class="ui-input__label"
-      :class="{'ui-input__label--aside': hasFocus || !isEmpty}"
-    >
+  <span :class="inputClass">
+    <span :class="labelClass">
       {{ label }}
     </span>
-
     <slot />
   </span>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import { classHelper } from '@/lib/utils';
 
 export default Vue.extend({
   name: 'ui-base-input',
@@ -36,6 +27,21 @@ export default Vue.extend({
     inactive: {
       type: Boolean,
       default: false,
+    },
+  },
+
+  computed: {
+    inputClass(): object {
+      return classHelper('ui-input').apply({
+        focus: this.hasFocus,
+        inactive: this.inactive,
+      });
+    },
+
+    labelClass(): object {
+      return classHelper('ui-input').elem('label').apply({
+        aside: this.hasFocus || !this.isEmpty,
+      });
     },
   },
 

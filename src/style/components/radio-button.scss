@@ -41,6 +41,10 @@ $radio-button-spacing: .375rem;
     position: absolute;
     width: calc(1rem - 2px);
     text-align: center;
+
+    // HACK to make the bullet look decent, until we get a proper icon
+    top: -2px;
+    font-size: 1rem;
   }
 
   // Hides the native radio-button, so that we can provide our own styled
@@ -48,7 +52,7 @@ $radio-button-spacing: .375rem;
   // it invisible, because we want it to behave as if it's visible (e.g.
   // accept tab focus).
   > input {
-    // opacity: 0;
+    opacity: 0;
     position: absolute;
     margin: 0;
     left: 0;
