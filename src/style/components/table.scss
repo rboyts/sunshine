@@ -30,6 +30,9 @@ $table-condensed-row-height: 1.5rem;
   border-collapse: separate;
   border-spacing: 0;
 
+  // XXX Use when adjusting column width
+  table-layout: fixed;
+
   opacity: 1;
 
   &--dragging {
@@ -70,20 +73,24 @@ $table-condensed-row-height: 1.5rem;
     padding: 0 $table-padding;
     height: $table-normal-row-height;
     line-height: $table-normal-row-height;
-    border-bottom: $inner-border;
+    // border-bottom: $inner-border;
   }
 
   &:not(:last-child) {
     // border-right: $inner-border;
   }
-
 }
 
 .ui-data-table--condensed .ui-data-table__column {
+  tr {
+    height: $table-condensed-row-height;
+  }
+
   th, td {
     padding: 0 $table-condensed-padding;
     height: $table-condensed-row-height;
     line-height: $table-condensed-row-height;
+    overflow-y: hidden;
   }
 }
 
@@ -93,10 +100,10 @@ $table-condensed-row-height: 1.5rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
 
-.ui-data-table__header--sortable {
-  cursor: pointer;
+  &--sortable {
+    cursor: pointer;
+  }
 }
 
 .ui-data-table__header__sort {

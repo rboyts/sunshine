@@ -3,12 +3,15 @@
     <data-table-internal
       class="flex-grow"
       :items="items"
-      :columns="dataSource.columns"
+      :total="total"
+      :skip="skip"
+      :columns="columns"
       :sorting="sorting"
       @sort="onSort"
       @scroll-bottom="onScrollBottom"
 
       v-bind="$attrs"
+      v-on="$listeners"
     >
 
       <!-- Pass on all named slots -->
@@ -31,18 +34,48 @@
 import Vue from 'vue';
 import UiButton from './UiButton.vue';
 import DataTableInternal from './internal/DataTableInternal';
-import { IDataSource, ISortState, IItem } from './types';
+import { ISortState, IItem, IColumn } from './types';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-export { IDataSource, IColumn, ISortState, IItem, FetchData } from './types';
+export { IColumn, ISortState, IItem, FetchData } from './types';
+
+
+// API
+//
+// Props:
+//   columns: Ordered list of column objects (model?, sync?)
+//   items: Loaded data
+//   total: Total number of rows in data-set (null means unknown/unbound)
+//   skip: Current offset in the data-set of the first row (default: 0)
+//
+// Events:
+//   update:columns ?
+//   sort -- request data to be sorted (scroll to top?)
+//   scroll -- (firstItem, lastItem)
+
 
 export default Vue.extend({
   name: 'ui-data-table',
   inheritAttrs: false,
 
   props: {
-    dataSource: Object as () => IDataSource,
+    // dataSource: Object as () => IDataSource,
+
+    columns: Array as () => IColumn[],
+    items: Array as () => IItem[],
+
+    isLoading: Boolean,
+
+    total: {
+      type: Number as () => number | null,
+      default: null,
+    },
+
+    skip: {
+      type: Number,
+      default: null,
+    },
   },
 
   components: {
@@ -56,25 +89,10 @@ export default Vue.extend({
         key: null,
         reverse: false,
       } as ISortState,
-      items: [] as IItem[],
-      isLoading: false,
     };
   },
 
   methods: {
-    async load() {
-      this.isLoading = true;
-      this.items = await this.dataSource.fetch(0, this.sorting);
-      this.isLoading = false;
-    },
-
-    async fetchMore() {
-      this.isLoading = true;
-      let items = await this.dataSource.fetch(this.items.length, this.sorting);
-      this.items = this.items.concat(items);
-      this.isLoading = false;
-    },
-
     onScrollBottom() {
       if (!this.isLoading) {
         this.fetchMore();
@@ -93,46 +111,35 @@ export default Vue.extend({
     },
 
     async pdfExport() {
-      let src = this.dataSource;
-      let columns = src.columns
-        .filter((c: any) => c.export !== false)
-        .map(({key, title}: any) => ({
-          dataKey: key,
-          title,
-        }));
+      // let src = this.dataSource;
+      // let columns = src.columns
+      //   .filter((c: any) => c.export !== false)
+      //   .map(({key, title}: any) => ({
+      //     dataKey: key,
+      //     title,
+      //   }));
 
-      let items: IItem[] = [];
-      while (true) {
-        let more = await src.fetch(items.length, this.sorting);
-        if (more.length === 0)
-          break;
-        items = items.concat(more);
-      }
+      // let items: IItem[] = [];
+      // while (true) {
+      //   let more = await src.fetch(items.length, this.sorting);
+      //   if (more.length === 0)
+      //     break;
+      //   items = items.concat(more);
+      // }
 
-      let doc = new jsPDF({
-        orientation: 'landscape',
-      });
+      // let doc = new jsPDF({
+      //   orientation: 'landscape',
+      // });
 
-      (doc as any).autoTable(columns, items, {
-        margin: 5,
-      });
+      // (doc as any).autoTable(columns, items, {
+      //   margin: 5,
+      // });
 
-      doc.save('table.pdf');
+      // doc.save('table.pdf');
     },
 
     async excelExport() {
       console.warn('Oink oink');
-    },
-  },
-
-  watch: {
-    dataSource: {
-      handler() {
-        this.sorting = {key: null, reverse: false};
-        this.items = [];
-        this.load();
-      },
-      immediate: true,
     },
   },
 });

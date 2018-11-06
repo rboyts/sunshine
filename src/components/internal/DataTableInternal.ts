@@ -1,6 +1,9 @@
 import Vue, { VNode, VNodeChildrenArrayContents } from 'vue';
+import debounce from 'debounce';
 import { IColumn, IItem, ISortState } from '../types';
 import { classHelper } from '@/lib/utils';
+
+const SCROLL_DEBOUNCE = 250;
 
 interface IDragState {
   dragColumnIndex: number;
@@ -20,6 +23,8 @@ export default Vue.extend({
   props: {
     columns: Array as () => IColumn[],
     items: Array as () => IItem[],
+    total: Number as () => number | null,
+    skip: Number,
     sorting: Object as () => ISortState,
     draggable: Boolean,
     condensed: Boolean,
@@ -224,10 +229,22 @@ export default Vue.extend({
         this.drag.curScrollX = element.scrollLeft;
       }
 
+      // XXX Coupled to CSS
+      let rowHeight = this.condensed ? 24 : 40;
+
+      let firstRow = Math.floor(element.scrollTop / rowHeight);
+      let lastRow = Math.ceil((element.scrollTop + element.clientHeight) / rowHeight);
+
+      this.emitVisible({firstRow, lastRow});
+
       if (element.scrollTop > 0 && element.scrollTop > element.scrollHeight - element.clientHeight - 1) {
         this.$emit('scroll-bottom');
       }
     },
+
+    emitVisible: debounce(function(this: Vue, args: object) {
+      this.$emit('visible-rows', args);
+    }, SCROLL_DEBOUNCE),
 
     clearSelection() {
       if (window.getSelection) {
@@ -255,11 +272,32 @@ export default Vue.extend({
           ]),
         ]),
         h('tbody', [
+          this.renderTopSpacer(),
           this.items.map((item) => h('tr', [
             this.renderContentCell(item, column),
           ])),
+          this.renderBottomSpacer(),
         ]),
       ]);
+    },
+
+    renderTopSpacer() {
+      console.log('render', this.skip);
+      return this.renderSpacer(this.skip);
+    },
+
+    renderBottomSpacer() {
+      let rows = this.total == null ? 1 : this.total - (this.skip + this.items.length);
+      return this.renderSpacer(rows);
+    },
+
+    renderSpacer(rows: number) {
+      const h = this.$createElement;
+
+      let rowHeight = this.condensed ? 1.5 : 2.5;
+      let height = `${rows * rowHeight}rem`;
+
+      return h('tr', {style: {height}}, [h('tr')]);
     },
 
     renderHeaderCell(column: IColumn, index: number): VNode {

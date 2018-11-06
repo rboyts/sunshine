@@ -20,4 +20,5 @@ export interface IDataSource {
   title: string;
   columns: IColumn[];
   fetch: FetchData;
+  count: number | null;
 }
