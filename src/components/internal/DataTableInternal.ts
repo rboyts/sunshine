@@ -297,7 +297,7 @@ export default Vue.extend({
       let rowHeight = this.condensed ? 1.5 : 2.5;
       let height = `${rows * rowHeight}rem`;
 
-      return h('tr', {style: {height}}, [h('tr')]);
+      return h('tr', {style: {height}}, []);
     },
 
     renderHeaderCell(column: IColumn, index: number): VNode {

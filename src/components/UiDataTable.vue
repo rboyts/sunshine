@@ -94,9 +94,9 @@ export default Vue.extend({
 
   methods: {
     onScrollBottom() {
-      if (!this.isLoading) {
-        this.fetchMore();
-      }
+      // if (!this.isLoading) {
+      //   this.fetchMore();
+      // }
     },
 
     onSort(event: MouseEvent, key: string) {
@@ -107,7 +107,8 @@ export default Vue.extend({
         this.sorting.reverse = false;
       }
 
-      this.load();
+      // TODO Unbreak sorting
+      // this.load();
     },
 
     async pdfExport() {
