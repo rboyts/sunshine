@@ -90,7 +90,7 @@ export default Vue.extend({
   methods: {
     async load() {
       this.isLoading = true;
-      this.items = await this.dataSource.fetch(0, this.sorting);
+      this.items = await this.dataSource.fetch(0, 50, this.sorting);
       this.total = this.dataSource.count;
       this.isLoading = false;
     },
@@ -104,18 +104,51 @@ export default Vue.extend({
     },
 
     async onVisibleRows(args: any) {
-      console.log(args);
-      if (this.skip <= args.firstRow && this.skip + this.items.length >= args.lastRow)
+      type Range = [number, number];
+
+      let has: Range = [this.skip, this.skip + this.items.length];
+      let needs: Range = [args.firstRow, args.lastRow + 1];
+
+      if (has[0] <= needs[0] && has[1] >= needs[1])
         return;
 
-      const pageSize = 25;
+      const chunkSize = 50;
+
+      let needChunks = [Math.floor(needs[0] / chunkSize) * chunkSize, Math.ceil(needs[1] / chunkSize) * chunkSize];
+
+      let prepend: Range | null = null;
+      let append: Range | null = null;
+      if (needs[0] < has[0]) {
+        prepend = [needChunks[0], has[0]];
+      }
+      if (needs[1] > has[1]) {
+        append = [has[1], needChunks[1]];
+      }
+
+      console.log('has', has[0], has[1]);
+      console.log('needs', needs[0], needs[1]);
+      if (prepend !== null) console.log('prepend', prepend[0], prepend[1]);
+      if (append !== null) console.log('append', append[0], append[1]);
 
       this.isLoading = true;
-      let skip = Math.floor(args.firstRow / pageSize) * pageSize;
-      console.log('fetching', args, skip);
-      this.items = await this.dataSource.fetch(skip, this.sorting);
+
+      if (prepend !== null) {
+        let skip = prepend[0];
+        let take = prepend[1] - prepend[0];
+        let newItems = await this.dataSource.fetch(skip, take, this.sorting);
+        this.skip = skip;
+        this.items = newItems.concat(this.items);
+      }
+
+      if (append !== null) {
+        let skip = append[0];
+        let take = append[1] - append[0];
+        // skip = Math.max(skip, this.skip + this.items.length);
+        let newItems = await this.dataSource.fetch(skip, take, this.sorting);
+        this.items = this.items.concat(newItems);
+      }
+
       this.total = this.dataSource.count;
-      this.skip = skip;
       this.isLoading = false;
     },
 

@@ -14,7 +14,7 @@ export interface IItem {
   [key: string]: any;
 }
 
-export type FetchData = (skip: number, sorting: ISortState) => Promise<IItem[]>;
+export type FetchData = (skip: number, take: number, sorting: ISortState) => Promise<IItem[]>;
 
 export interface IDataSource {
   title: string;

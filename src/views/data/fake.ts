@@ -49,10 +49,10 @@ export default (title: string, count: number | null = null) => ({
 
   count,
 
-  fetch: async (skip = 0, sorting: ISortState): Promise<IItem[]> => {
+  fetch: async (skip = 0, take = 0, sorting: ISortState): Promise<IItem[]> => {
     const items: IItem[] = [];
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < take; i++) {
       let id = skip + i;
       if (count && id >= count) break;
 

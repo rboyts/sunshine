@@ -2,7 +2,7 @@ import { ISortState, IItem, FetchData } from '@/components/types';
 type BasicFetch = () => Promise<IItem[]>;
 
 export default (next: BasicFetch): FetchData => (
-  async (skip: number, sorting: ISortState) => {
+  async (skip: number, take: number, sorting: ISortState) => {
     if (skip > 0) return [];
 
     let items: IItem[] = await next();
