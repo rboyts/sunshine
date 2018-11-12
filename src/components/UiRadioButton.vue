@@ -22,6 +22,8 @@
 import Vue from 'vue';
 import { classHelper } from '@/lib/utils';
 
+const radioButtonClassHelper = classHelper('ui-radio-button');
+
 export default Vue.extend({
   name: 'ui-radio-button',
 
@@ -50,7 +52,7 @@ export default Vue.extend({
 
   computed: {
     classes() {
-      return classHelper('ui-radio-button').apply({
+      return radioButtonClassHelper({
         focus: this.hasFocus,
         inactive: this.inactive,
       });

@@ -5,6 +5,10 @@ import { classHelper } from '@/lib/utils';
 
 const SCROLL_DEBOUNCE = 250;
 
+const columnClassHelper = classHelper('ui-data-table', 'column');
+const headerClassHelper = classHelper('ui-data-table', 'header');
+const sortClassHelper = classHelper('ui-data-table', 'header', 'sort');
+
 interface IDragState {
   dragColumnIndex: number;
   startX: number;
@@ -325,9 +329,7 @@ export default Vue.extend({
       }
 
       return h('th', {
-        class: classHelper('ui-data-table')
-          .elem('header')
-          .apply({
+        class: headerClassHelper({
             sortable: !!column.sortable,
           }),
         on,
@@ -359,11 +361,9 @@ export default Vue.extend({
       let rotate = sorting.key === key ? sorting.reverse ? '180deg' : '0' : '0';
 
       return h('span', {
-        class: classHelper('ui-data-table')
-          .elem('header')
-          .elem('sort').apply({
-            reverse: sorting.reverse,
-          }),
+        class: sortClassHelper({
+          reverse: sorting.reverse,
+        }),
         style: {
           transform: `rotate(${rotate})`,
         },
@@ -397,20 +397,17 @@ export default Vue.extend({
     getColumnClass(index: number): { [key: string]: boolean } {
       if (this.drag && this.drag.startX !== 0) {
         let isDragging = index === this.drag.dragColumnIndex;
-        return classHelper('ui-data-table')
-          .elem('column')
-          .apply({
-            dragging: isDragging,
-            notransition: isDragging || this.notransition,
-          });
+
+        return columnClassHelper({
+          dragging: isDragging,
+          notransition: isDragging || this.notransition,
+        });
       }
 
-      return classHelper('ui-data-table')
-        .elem('column')
-        .apply({
-          'last-dragged': index === this.lastDragged,
-          'notransition': this.notransition || !!this.drag && this.drag.startX === 0,
-        });
+      return columnClassHelper({
+        'last-dragged': index === this.lastDragged,
+        'notransition': this.notransition || !!this.drag && this.drag.startX === 0,
+      });
     },
   },
 

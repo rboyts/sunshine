@@ -1,14 +1,11 @@
 
-interface ClassObj {
+interface IClasses {
   [key: string]: boolean;
 }
 
-interface IClassHelper {
-  elem: (elementName: string) => IClassHelper;
-  apply: (options: ClassObj) => ClassObj;
-}
+type Generate = (options: IClasses) => IClasses;
 
-const apply = (name: string, options: ClassObj) => {
+const apply = (name: string, options: IClasses): IClasses => {
   let res = { [name]: true };
   for (let key of Object.keys(options)) {
     res[`${name}--${key}`] = options[key];
@@ -16,7 +13,7 @@ const apply = (name: string, options: ClassObj) => {
   return res;
 };
 
-export const classHelper = (name: string): IClassHelper => ({
-  elem: (elementName: string) => classHelper(`${name}__${elementName}`),
-  apply: (options: ClassObj) => apply(name, options),
-});
+export const classHelper = (...name: string[]): Generate => {
+  const fullName = name.join('__');
+  return (options: IClasses) => apply(fullName, options);
+};

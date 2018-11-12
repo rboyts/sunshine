@@ -21,6 +21,8 @@
 import Vue from 'vue';
 import { classHelper } from '@/lib/utils';
 
+const checkboxClassHelper = classHelper('ui-checkbox');
+
 export default Vue.extend({
   name: 'ui-checkbox',
 
@@ -45,7 +47,7 @@ export default Vue.extend({
 
   computed: {
     classes(): object {
-      return classHelper('ui-checkbox').apply({
+      return checkboxClassHelper({
         focus: this.hasFocus,
         inactive: this.inactive,
       });

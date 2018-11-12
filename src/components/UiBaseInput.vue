@@ -11,6 +11,9 @@
 import Vue from 'vue';
 import { classHelper } from '@/lib/utils';
 
+const inputClassHelper = classHelper('ui-input');
+const labelClassHelper = classHelper('ui-input', 'label');
+
 export default Vue.extend({
   name: 'ui-base-input',
 
@@ -32,14 +35,14 @@ export default Vue.extend({
 
   computed: {
     inputClass(): object {
-      return classHelper('ui-input').apply({
+      return inputClassHelper({
         focus: this.hasFocus,
         inactive: this.inactive,
       });
     },
 
     labelClass(): object {
-      return classHelper('ui-input').elem('label').apply({
+      return labelClassHelper({
         aside: this.hasFocus || !this.isEmpty,
       });
     },

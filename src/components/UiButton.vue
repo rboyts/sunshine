@@ -14,6 +14,9 @@
 import Vue from 'vue';
 import { classHelper } from '@/lib/utils';
 
+const buttonClassHelper = classHelper('ui-btn');
+const contentClassHelper = classHelper('ui-btn', 'content');
+
 export default Vue.extend({
   name: 'ui-button',
   inheritAttrs: true,
@@ -35,17 +38,17 @@ export default Vue.extend({
 
   computed: {
     buttonClass(): object {
-      return classHelper('ui-btn').apply({ small: this.small });
+      return buttonClassHelper({
+        small: this.small,
+      });
     },
 
     contentClass(): object {
-      return classHelper('ui-btn')
-        .elem('content')
-        .apply({
-          main: this.primary,
-          secondary: !this.primary,
-          inactive: this.inactive,
-        });
+      return contentClassHelper({
+        main: this.primary,
+        secondary: !this.primary,
+        inactive: this.inactive,
+      });
     },
   },
 });
