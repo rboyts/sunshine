@@ -1,6 +1,12 @@
 <template>
   <div :class="classes">
-    <slot />
+    <div class="ui-alert__main">
+      <slot />
+    </div>
+
+    <div class="ui-alert__buttons">
+      <slot name="buttons" />
+    </div>
   </div>
 </template>
 
@@ -38,6 +44,6 @@ export default Vue.extend({
       });
     },
   },
-})
+});
 </script>
 

@@ -7,6 +7,9 @@ $alert-border-width: .5rem;
 .ui-alert {
   @include paragraph-font;
 
+  display: flex;
+  white-space: nowrap;
+
   height: $alert-height;
   line-height: $alert-height;
   background-color: $white;
@@ -28,5 +31,32 @@ $alert-border-width: .5rem;
 
   &--error {
     border-color: $color-bad;
+  }
+
+  .ui-icon {
+    display: inline-block;
+    font-size: 1.2rem;
+    height: $alert-height;
+    line-height: $alert-height;
+
+    // Alt. 1: Left-aligned
+    width: $alert-height - $alert-padding;
+    text-align: left;
+
+    // Alt. 2: Center icon inside square
+    // width: $alert-height;
+    // text-align: center;
+    // margin-left: -$alert-padding;
+  }
+}
+
+.ui-alert__main {
+  flex: 1;
+}
+
+.ui-alert__buttons {
+
+  .ui-btn {
+    margin-left: .5rem;
   }
 }
