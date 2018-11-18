@@ -1,0 +1,32 @@
+@import '../tools.scss';
+
+$alert-height: 3rem;
+$alert-padding: 1rem;
+$alert-border-width: .5rem;
+
+.ui-alert {
+  @include paragraph-font;
+
+  height: $alert-height;
+  line-height: $alert-height;
+  background-color: $white;
+  padding: 0 $alert-padding;
+
+  // XXX Not sure if components should enforce surrounding layout
+  margin-bottom: 1rem;
+
+  border: 0;
+  border-left: $alert-border-width solid $color-edit;
+
+  &--success {
+    border-color: $color-good;
+  }
+
+  &--warning {
+    border-color: $color-oops;
+  }
+
+  &--error {
+    border-color: $color-bad;
+  }
+}

@@ -4,6 +4,7 @@
 
     <ui-tabs v-if="tabs">
       <ui-tab to="/">{{ home }}</ui-tab>
+      <ui-tab to="/alerts">Alerts</ui-tab>
       <ui-tab to="/accordion">Accordion</ui-tab>
       <ui-tab to="/table">DataTable</ui-tab>
       <ui-tab to="/chart">DataChart</ui-tab>
