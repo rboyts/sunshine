@@ -15,13 +15,15 @@ export default
       { key: 'description', title: 'Description' },
     ],
     count: null,
-    fetch: async (skip = 0, sorting: ISortState): Promise<IItem[]> => {
+    fetch: async (skip = 0, take: number, sorting: ISortState): Promise<IItem[]> => {
+      if (skip % take !== 0)
+        console.warn(`Expected skip (${skip}) to be a multiple of take (${take})`);
       let direction = sorting.reverse ? 'desc' : 'asc';
       let sort = sorting.key;
       if (sort === 'created_at') sort = 'created';
       if (sort === 'updated_at') sort = 'updated';
-      const page = Math.floor(skip / 30) + 1;
-      let query = `sort=${sort}&direction=${direction}&page=${page}&per_page=30`;
+      const page = Math.floor(skip / take) + 1;
+      let query = `sort=${sort}&direction=${direction}&page=${page}&per_page=${take}`;
       const res = await fetch(`https://api.github.com/users/vuejs/repos?${query}`);
       return await res.json() as IItem[];
     },

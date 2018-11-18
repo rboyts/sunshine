@@ -10,9 +10,10 @@ export default
       { key: 'avatar', title: 'Avatar' },
     ],
     count: null,
-    fetch: async (skip = 0, sorting: ISortState): Promise<IItem[]> => {
+    fetch: async (skip: number, take: number, sorting: ISortState): Promise<IItem[]> => {
       let page = Math.floor(skip / 10) + 1;
-      let res = await fetch(`https://reqres.in/api/users?per_page=10&page=${page}`);
-      return (await res.json()).data as IItem[];
+      let res = await fetch(`https://reqres.in/api/users?per_page=${take}&page=${page}`);
+      let content = await res.json();
+      return content.data as IItem[];
     },
   };

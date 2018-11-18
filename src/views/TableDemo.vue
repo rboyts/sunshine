@@ -33,7 +33,7 @@
       <!-- Override cell to show a button -->
       <td slot="~actions" slot-scope="{ item }">
         <div>
-          <ui-button small v-on:click="onEdit(item)">Edit</ui-button>
+          <ui-button small @click="onEdit(item)">Edit</ui-button>
         </div>
       </td>
 
@@ -91,14 +91,6 @@ export default Vue.extend({
     async load() {
       this.isLoading = true;
       this.items = await this.dataSource.fetch(0, 50, this.sorting);
-      this.total = this.dataSource.count;
-      this.isLoading = false;
-    },
-
-    async fetchMore() {
-      this.isLoading = true;
-      let items = await this.dataSource.fetch(this.items.length, this.sorting);
-      this.items = this.items.concat(items);
       this.total = this.dataSource.count;
       this.isLoading = false;
     },
