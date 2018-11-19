@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`UiAlert renders button 1`] = `
+<div class="ui-alert ui-alert--warning">
+  <div class="ui-alert__main">Warning message</div>
+  <div class="ui-alert__buttons">
+    <ui-button-stub small="">Foo</ui-button-stub>
+  </div>
+</div>
+`;
+
 exports[`UiAlert renders error alert 1`] = `
 <div class="ui-alert ui-alert--error">
   <div class="ui-alert__main">Error message</div>

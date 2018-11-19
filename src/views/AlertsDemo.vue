@@ -24,10 +24,10 @@
       <ui-icon name="password"></ui-icon>
       Your password has not been changed in 2 months.
 
-      <div slot="buttons">
+      <template slot="buttons">
         <ui-button small>Remind me later</ui-button>
         <ui-button small primary>Change now</ui-button>
-      </div>
+      </template>
     </ui-alert>
 
   </div>

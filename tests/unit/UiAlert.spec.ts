@@ -31,4 +31,18 @@ describe('UiAlert', () => {
     });
     expect(wrapper.html()).toMatchSnapshot();
   });
+
+  it('renders button', () => {
+    const wrapper = mount(UiAlert, {
+      propsData: { warning: true },
+      stubs: ['ui-button'],
+      slots: {
+        default: 'Warning message',
+        buttons: `
+          <ui-button small>Foo</ui-button>
+        `,
+      },
+    });
+    expect(wrapper.html()).toMatchSnapshot();
+  });
 });
