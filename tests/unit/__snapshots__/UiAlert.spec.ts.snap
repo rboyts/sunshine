@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UiAlert renders error alert 1`] = `
+<div class="ui-alert ui-alert--error">
+  <div class="ui-alert__main">Error message</div>
+  <div class="ui-alert__buttons"></div>
+</div>
+`;
+
+exports[`UiAlert renders successful alert 1`] = `
+<div class="ui-alert ui-alert--success">
+  <div class="ui-alert__main">Success message</div>
+  <div class="ui-alert__buttons"></div>
+</div>
+`;
+
+exports[`UiAlert renders warning alert 1`] = `
+<div class="ui-alert ui-alert--warning">
+  <div class="ui-alert__main">Warning message</div>
+  <div class="ui-alert__buttons"></div>
+</div>
+`;

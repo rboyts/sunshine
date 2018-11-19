@@ -12,7 +12,8 @@
     "baseUrl": ".",
     "types": [
       "webpack-env",
-      "dom-inputevent"
+      "dom-inputevent",
+      "jest"
     ],
     "paths": {
       "@/*": [
