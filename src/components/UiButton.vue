@@ -1,8 +1,8 @@
 <template>
   <button :class="buttonClass" :disabled="inactive" v-on="$listeners">
-    <span :class="contentClass" tabindex="-1">
+    <span class="inline-flex" :class="contentClass" tabindex="-1">
       <slot name="left" />
-      <span style="flex: 1">
+      <span class="flex-grow">
         <slot />
       </span>
       <slot name="right" />
