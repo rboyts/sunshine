@@ -7,7 +7,7 @@
       @click="onClick"
     >
       <slot name="heading" />
-      <span :class="chevronClass">&or;</span>
+      <span :class="chevronClass" />
     </a>
 
     <div
