@@ -20,6 +20,7 @@ $btn-secondary-border-color: $gray;
   padding: 0;
 
   height: $btn-normal-height;
+  border-radius: ($btn-normal-height / 2);
   min-width: 10rem;
 
   &--small {

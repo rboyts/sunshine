@@ -59,9 +59,12 @@ export default Vue.extend({
     },
   },
 
+  // TODO: We may need to handle resize events here,
+  // to re-calculate height
+
   computed: {
     showBody(): boolean {
-      return this.height !== 0 || this.transitioning;
+      return this.open || this.transitioning;
     },
 
     chevronClass(): object {
