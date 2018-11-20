@@ -1,7 +1,10 @@
 $input-bg-color: $white;
 $input-fg-color: $almost-black;
 $input-border-color: $gray;
-$input-padding: 8px;
+$input-padding: .5rem;
+$input-height: 2.5rem;
+$input-line-height: calc(2.5rem - 2px);  // subtract border
+$input-font-size: .875rem;
 
 .ui-input {
   position: relative;
@@ -13,7 +16,7 @@ $input-padding: 8px;
   min-width: 150px;
   max-width: 250px;
   margin-bottom: .25rem;
-  height: 2.5rem;
+  height: $input-height;
 
   &--focus,
   &:hover:not(.ui-input--inactive) {
@@ -37,26 +40,39 @@ $input-padding: 8px;
   color: $grayest;
   padding: 0 $input-padding;
   pointer-events: none;
-  font-size: .875rem;
+  font-size: $input-font-size;
 
-  line-height: calc(2.5rem - 2px);  // subtract border
+  line-height: $input-line-height;
 
   transform-origin: $input-padding 0;
   transition: transform .3s;
 
   &--aside {
-    transform: scale((12 / 14)) translate(0, -.5rem);
+    transform: scale((12 / 14)) translate(0, -$input-padding);
   }
 }
 
 .ui-input__input {
+  position: relative;
   width: 100%;
   height: 100%;
-  font-size: .875rem;
+  font-size: $input-font-size;
   border: none;
   outline: none;
   background-color: transparent;
   color: $almost-black;
 
+  padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+  z-index: 1;
+}
+
+.ui-input__format {
+  position: absolute;
+  display: block;
+  color: $gray;
+  top: 0;
+  left: 0;
+  height: $input-height;
+  font-size: $input-font-size;
   padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
 }

@@ -27,6 +27,20 @@
     </div>
 
     <div>
+      <ui-text-field v-model="email" email label="Email" /> <span class="value"> {{ email }}</span>
+    </div>
+
+    <div>
+      <ui-text-field v-model="password" password label="Password" /> <span class="value"> {{ password }}</span>
+    </div>
+
+    <div>
+      <ui-text-field v-model="time" format="00:00" label="Expected format" /> <span class="value"> {{ time }}</span>
+    </div>
+
+
+
+    <div>
       <ui-text-field label="Inactive Input" inactive />
     </div>
 
@@ -106,6 +120,9 @@ export default Vue.extend({
       text: '-',
       name: '',
       number: '',
+      email: '',
+      password: '',
+      time: '',
       countries: [
         {title: 'Norge'},
         {title: 'Sverige'},

@@ -16,6 +16,15 @@
       @focus="hasFocus = true"
       @blur="hasFocus = false"
     />
+
+    <!-- expected format -->
+    <span
+      v-if="hasFocus && format"
+      class="ui-input__format"
+    >
+      <span style="visibility: hidden">{{ value }}</span>{{ remainingFormat }}
+    </span>
+
   </ui-base-input>
 </template>
 
@@ -39,6 +48,18 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    password: {
+      type: Boolean,
+      default: false,
+    },
+    email: {
+      type: Boolean,
+      default: false,
+    },
+    format: {
+      type: String,
+      default: null,
+    },
     inactive: {
       type: Boolean,
       default: false,
@@ -57,11 +78,21 @@ export default Vue.extend({
     },
 
     type(): string {
-      if (this.phone) {
-        return 'tel';
-      } else {
-        return 'text';
+      switch (true) {
+        case this.phone:
+          return 'tel';
+        case this.password:
+          return 'password';
+        case this.email:
+          return 'email';
+        default:
+          return 'text';
       }
+    },
+
+    remainingFormat(): string {
+      if (!this.format) return '';
+      return this.format.substring(this.value.length);
     },
   },
 
