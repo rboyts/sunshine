@@ -11,14 +11,26 @@
   border-top: 1px solid $gray;
   text-decoration: none;
   color: inherit;
+}
 
-  .right {
-    float: right;
-    margin-right: 8px;
-    transition: .3s;
+.ui-accordion__chevron {
+  float: right;
+  margin-right: 8px;
+  transition: .3s;
 
-    &.open {
-      transform: rotate(180deg);
-    }
+  &--open {
+    transform: rotate(180deg);
   }
+}
+
+.ui-accordion__body {
+  position: relative;
+  overflow: hidden;
+
+  transition: height $duration-normal;
+}
+
+.ui-accordion__content {
+  position: absolute;
+  bottom: 0;
 }

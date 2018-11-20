@@ -7,19 +7,29 @@
       @click="onClick"
     >
       <slot name="heading" />
-      <span class="right" :class="{open: open}">&or;</span>
+      <span :class="chevronClass">&or;</span>
     </a>
 
-    <transition name="dropdown">
-      <div v-show="open" class="ui-accordion__body">
+    <div
+      v-show="showBody"
+      :class="bodyClass"
+      :style="{height: `${height}px`}"
+      @transitionend="onTransitionEnd"
+    >
+      <div ref="inner" :class="contentClass">
         <slot />
       </div>
-    </transition>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import { classHelper } from '@/lib/utils';
+
+const chevronClassHelper = classHelper('ui-accordion', 'chevron');
+const bodyClassHelper = classHelper('ui-accordion', 'body');
+const contentClassHelper = classHelper('ui-accordion', 'content');
 
 export default Vue.extend({
   name: 'ui-accordion-item',
@@ -28,14 +38,53 @@ export default Vue.extend({
   data() {
     return {
       open: false,
+      height: 0,
+      transitioning: false,
     };
+  },
+
+  watch: {
+    async open(val) {
+      this.transitioning = true;
+
+      // Need to wait for height to be correct
+      await Vue.nextTick();
+
+      if (val) {
+        const inner = this.$refs.inner as HTMLElement;
+        this.height = inner.offsetHeight;
+      } else {
+        this.height = 0;
+      }
+    },
+  },
+
+  computed: {
+    showBody(): boolean {
+      return this.height !== 0 || this.transitioning;
+    },
+
+    chevronClass(): object {
+      return chevronClassHelper({open: this.open});
+    },
+
+    bodyClass(): object {
+      return bodyClassHelper({open: this.open});
+    },
+
+    contentClass(): object {
+      return contentClassHelper({});
+    },
   },
 
   methods: {
     onClick() {
       this.open = !this.open;
     },
-  },
 
+    onTransitionEnd() {
+      this.transitioning = false;
+    },
+  },
 });
 </script>

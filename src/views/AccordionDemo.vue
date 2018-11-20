@@ -1,32 +1,55 @@
 <template>
-  <ui-accordion>
+  <div>
+    <ui-accordion>
 
-    <ui-accordion-item>
-      <template slot="heading">Basic settings</template>
+      <ui-accordion-item>
+        <template slot="heading">Basic settings</template>
 
-      Basic settings here
+        Basic settings here
 
-      <p>
-        <ui-button>Foo</ui-button>
-      </p>
-    </ui-accordion-item>
+        <p>
+          <ui-button>Foo</ui-button>
+        </p>
+        <p>
+          <ui-button>Foo</ui-button>
+        </p>
+        <p>
+          <ui-button>Foo</ui-button>
+        </p>
+        <p>
+          <ui-button>Foo</ui-button>
+        </p>
+        <p>
+          <ui-button>Foo</ui-button>
+        </p>
+      </ui-accordion-item>
 
-    <ui-accordion-item>
-      <template slot="heading">Other settings</template>
+      <ui-accordion-item>
+        <template slot="heading">Other settings</template>
 
-<template>
-      <inner-component inline-template>
+        <template>
+          <inner-component inline-template>
+            <div>
+              Other settings here
+              <p>
+                <ui-select>Bar</ui-select>
+              </p>
+            </div>
+          </inner-component>
+        </template>
+      </ui-accordion-item>
+
+      <ui-accordion-item>
+        <template slot="heading">Comment</template>
+
         <div>
-          Other settings here
-          <p>
-            <ui-select>Bar</ui-select>
-          </p>
+          <ui-text-field label="Project name" />
         </div>
-      </inner-component>
-</template>
-    </ui-accordion-item>
+      </ui-accordion-item>
+    </ui-accordion>
 
-  </ui-accordion>
+    <p class="below">Some content below</p>
+  </div>
 </template>
 
 <script lang="ts">
@@ -35,6 +58,7 @@ import UiAccordion from '@/components/UiAccordion.vue';
 import UiAccordionItem from '@/components/UiAccordionItem.vue';
 import UiButton from '@/components/UiButton.vue';
 import UiSelect from '@/components/UiSelect.vue';
+import UiTextField from '@/components/UiTextField.vue';
 
 const InnerComponent = {
   name: 'inner-component',
@@ -59,8 +83,18 @@ export default Vue.extend({
     UiAccordionItem,
     UiButton,
     UiSelect,
+    UiTextField,
     InnerComponent,
   },
 
 });
 </script>
+
+<style lang="scss" scoped>
+@import '../style/tools.scss';
+
+.below {
+  @include paragraph-font;
+  color: $grayer;
+}
+</style>
