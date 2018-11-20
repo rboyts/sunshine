@@ -24,7 +24,7 @@ h3 {
 }
 
 body {
-  font-family: 'Avenir', 'Nunito', sans-serif;
+  font-family: $base-font-family;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
