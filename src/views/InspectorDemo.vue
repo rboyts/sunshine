@@ -18,8 +18,9 @@
             <ui-text-field inactive label="Timer" value="7,5" />
           </div>
 
-          Dette er en kommentar
-
+          <p>
+            Dette er en kommentar
+          </p>
         </ui-accordion-item>
 
         <ui-accordion-item>
@@ -37,13 +38,17 @@
         <ui-accordion-item>
           <template slot="heading">Lønn og tillegg</template>
 
-          Lønn og tillegg
+          <p>
+            Lønn og tillegg
+          </p>
         </ui-accordion-item>
 
         <ui-accordion-item>
           <template slot="heading">Maskintimer</template>
 
-          Maskintimer
+          <p>
+            Maskintimer
+          </p>
         </ui-accordion-item>
 
       </ui-accordion>

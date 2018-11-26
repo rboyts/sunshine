@@ -4,6 +4,7 @@ $inspector-padding: 1.5rem;
 
 .ui-inspector {
   position: fixed;
+  z-index: 1000;
   right: 0;
   top: 0;
   bottom: 0;
