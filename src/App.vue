@@ -46,7 +46,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .main-layout {
   box-sizing: border-box;
-  padding: 10px 60px 25px 60px;
+  padding: 10px 420px 25px 60px;
   height: 100vh;
   display: flex;
   flex-direction: column;
