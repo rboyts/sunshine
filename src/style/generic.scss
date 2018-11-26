@@ -1,4 +1,12 @@
+html {
+  box-sizing: border-box;
+}
+
 *, *::after, *::before {
   box-sizing: inherit;
   font-family: inherit;
+}
+
+::-ms-clear {
+  display:none;
 }
