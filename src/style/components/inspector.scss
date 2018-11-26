@@ -1,0 +1,35 @@
+@import '../tools.scss';
+
+$inspector-padding: 1.5rem;
+
+.ui-inspector {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 360px;
+  background-color: $white;
+  padding: $inspector-padding;
+}
+
+.ui-inspector__heading {
+  margin-bottom: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  grid-gap: 1rem;
+}
+
+.col4 {
+  grid-column: 1 / 5;
+}
+
+.col12 {
+  grid-column: 1 / 3;
+}
+
+.col34 {
+  grid-column: 3 / 5;
+}

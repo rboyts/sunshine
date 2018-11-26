@@ -14,6 +14,9 @@
     <div class="main">
       <router-view/>
     </div>
+
+    <InspectorDemo />
+
   </div>
 </template>
 
@@ -21,11 +24,13 @@
 import Vue from 'vue';
 import UiTabs from '@/components/UiTabs.vue';
 import UiTab from '@/components/UiTab.vue';
+import InspectorDemo from './views/InspectorDemo.vue';
 
 export default Vue.extend({
   components: {
     UiTabs,
     UiTab,
+    InspectorDemo,
   },
 
   data() {

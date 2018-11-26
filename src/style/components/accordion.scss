@@ -2,7 +2,7 @@ $accordion-header-height: 3rem;
 $accordion-chevron-size: .5rem;
 
 .ui-accordion {
-  width: 400px;
+  max-width: 400px;
   // border: 1px solid $gray;
 }
 
@@ -41,4 +41,6 @@ $accordion-chevron-size: .5rem;
 
 .ui-accordion__content {
   position: absolute;
+  padding-top: .5rem;
+  padding-bottom: 1.5rem;
 }
