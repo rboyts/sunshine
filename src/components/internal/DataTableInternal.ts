@@ -286,7 +286,6 @@ export default Vue.extend({
     },
 
     renderTopSpacer() {
-      console.log('render', this.skip);
       return this.renderSpacer(this.skip);
     },
 

@@ -22,9 +22,5 @@ export default Vue.extend({
       immediate: true,
     },
   },
-
-  mounted() {
-    console.log('tab mounted');
-  },
 });
 </script>
