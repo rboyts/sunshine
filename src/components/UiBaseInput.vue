@@ -1,8 +1,6 @@
 <template>
   <span :class="inputClass">
-    <span :class="labelClass">
-      {{ label }}
-    </span>
+    <span :class="labelClass">{{ label }}</span>
     <slot />
   </span>
 </template>
