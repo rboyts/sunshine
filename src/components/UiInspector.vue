@@ -1,10 +1,21 @@
 <template>
   <div class="ui-inspector">
-    <div class="ui-inspector__heading">
-      <slot name="heading" />
-    </div>
+    <div class="flex flex-column">
+      <div class="ui-inspector__header">
+        <slot name="header">
+        </slot>
+      </div>
 
-    <slot />
+      <div class="ui-inspector__main flex-grow">
+        <slot />
+      </div>
+
+      <div class="ui-inspector__footer">
+        <slot name="footer">
+          Default footer
+        </slot>
+      </div>
+    </div>
   </div>
 </template>
 

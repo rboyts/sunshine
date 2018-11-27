@@ -1,9 +1,33 @@
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .inline-flex {
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
+.flex-column {
+  flex-direction: column;
+  height: 100%;
+  align-items: stretch;
+}
+
 .flex-grow {
   flex: 1;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: 1rem;
+}
+
+@for $i from 1 through 12 {
+  .grid-item--span-#{$i} {
+    grid-column: span $i;
+  }
 }
