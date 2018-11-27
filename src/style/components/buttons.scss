@@ -41,6 +41,8 @@ $btn-secondary-border-color: $gray;
   padding: 0 $btn-normal-padding;
   border-radius: ($btn-normal-height / 2);
   outline: none;
+  user-select: none;
+  cursor: default;
 
   &--main {
     border: none;
