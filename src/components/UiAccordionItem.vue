@@ -13,7 +13,7 @@
     <div
       v-show="showBody"
       :class="bodyClass"
-      :style="{height: `${height}px`}"
+      :style="bodyStyle"
       @transitionend="onTransitionEnd"
     >
       <div ref="inner" :class="contentClass">
@@ -77,6 +77,13 @@ export default Vue.extend({
 
     contentClass(): object {
       return contentClassHelper({});
+    },
+
+    bodyStyle(): object {
+      return {
+        height: `${this.height}px`,
+        opacity: this.height === 0 ? 0 : 1,
+      };
     },
   },
 
