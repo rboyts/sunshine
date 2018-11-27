@@ -22,7 +22,7 @@
       v-if="hasFocus && format"
       class="ui-input__format"
     >
-      <span style="visibility: hidden">{{ value }}</span>{{ remainingFormat }}
+      <span class="ui-input__value">{{ value }}</span><span class="ui-input__format__remaining">{{ remainingFormat }}</span>
     </span>
 
   </ui-base-input>

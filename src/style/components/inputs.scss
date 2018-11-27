@@ -5,11 +5,12 @@ $input-padding: .5rem;
 $input-height: 2.5rem;
 $input-line-height: calc(2.5rem - 2px);  // subtract border
 $input-font-size: .875rem;
+$input-border-width: 1px;
 
 .ui-input {
   position: relative;
   display: inline-block;
-  border: 1px solid $input-border-color;
+  border: $input-border-width solid $input-border-color;
   border-radius: 4px;  // 4% / 2% gives no visible radius
   background-color: $input-bg-color;
   color: $input-fg-color;
@@ -18,10 +19,11 @@ $input-font-size: .875rem;
   margin-bottom: .25rem;
   height: $input-height;
   overflow: hidden;
+  vertical-align: bottom;
 
   &--focus,
   &:hover:not(.ui-input--inactive) {
-    border: 1px solid $color-edit;
+    border: $input-border-width solid $color-edit;
     // box-shadow: inset 0 0 0 0.0625 $color-edit;
     // box-shadow: inset 0 0 0 0.125em $color-edit;
   }
@@ -69,6 +71,7 @@ $input-font-size: .875rem;
   color: $almost-black;
 
   padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+
   z-index: 1;
 }
 
@@ -76,9 +79,18 @@ $input-font-size: .875rem;
   position: absolute;
   display: block;
   color: $gray;
-  top: 0;
+  white-space: nowrap;
+  top: -$input-border-width;
   left: 0;
-  height: $input-height;
+  width: 100%;
+  height: 100%;
   font-size: $input-font-size;
   padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ui-input__value {
+  color: transparent;
 }
