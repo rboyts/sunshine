@@ -1,6 +1,10 @@
 <template>
+  <div>
+    <div class="toggle" @click="open = !open">
+      <span v-if="open">&gt;</span><span v-else>&lt;</span>
+    </div>
 
-    <ui-inspector>
+    <ui-inspector v-model="open">
       <div slot="header">
         <h1>25.08.2018</h1>
         Tor Erik Olsen
@@ -62,6 +66,7 @@
 
       </ui-accordion>
     </ui-inspector>
+  </div>
 </template>
 
 <script lang="ts">
@@ -85,6 +90,7 @@ export default Vue.extend({
 
   data() {
     return {
+      open: false,
       from: '09:00',
       to: '16:00',
       pause: '30',
@@ -97,3 +103,21 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+@import '../style/settings.scss';
+
+.toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 2.5rem;
+  width: 2.5rem;
+  line-height: 2.5rem;
+  background-color: $white;
+  text-align: center;
+  z-index: 10000;
+  cursor: pointer;
+}
+</style>
+

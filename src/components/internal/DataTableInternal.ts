@@ -4,19 +4,17 @@ import { IColumn, IItem, ISortState } from '../types';
 import { classHelper } from '@/lib/utils';
 
 const SCROLL_DEBOUNCE = 250;
+const MOVE_TIMEOUT = 500;
 
-const columnClassHelper = classHelper('ui-data-table', 'column');
+const columnClassHelper = classHelper('ui-data-table', 'col');
 const headerClassHelper = classHelper('ui-data-table', 'header');
 const sortClassHelper = classHelper('ui-data-table', 'header', 'sort');
 
 interface IDragState {
   dragColumnIndex: number;
-  startX: number;
-  curX: number;
-  startScrollX: number;
-  curScrollX: number;
+  left: number;
   widths: number[];
-  wrapperWidth: number;
+  height: number;
 }
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
@@ -37,8 +35,7 @@ export default Vue.extend({
   data() {
     return {
       drag: null as IDragState | null,
-      lastDragged: null as number | null,
-      notransition: false,
+      moveTimeoutId: undefined as number | undefined,
     };
   },
 
@@ -52,10 +49,8 @@ export default Vue.extend({
       let total = 0;
 
       widths.forEach((w, i) => {
-        if (i !== dragColumnIndex) {
-          res.push(total + w / 2);
-          total += w;
-        }
+        res.push(total + w / 2);
+        total += w;
       });
 
       // Add sentinel value to simplify logic
@@ -64,174 +59,88 @@ export default Vue.extend({
       return res;
     },
 
-    originalX(): number {
-      if (!this.drag) return 0;
-      let { dragColumnIndex, widths } = this.drag;
-      return sum(widths.slice(0, dragColumnIndex));
-    },
-
-    currentOffsetX(): number {
-      if (!this.drag) return 0;
-      let { curX, startX, curScrollX, startScrollX } = this.drag;
-      return curX - startX + curScrollX - startScrollX;
-    },
-
     currentDropIndex(): number {
-      if (!this.drag) return 0;
+      if (!this.drag) return -1;
+      let { drag } = this;
+      let index = this.thresholds.findIndex(t => t > drag.left);
 
-      let { startX, dragColumnIndex } = this.drag;
-      if (startX === 0) return dragColumnIndex;
-
-      let pos = this.originalX + this.currentOffsetX;
-      return this.thresholds.findIndex(t => t > pos);
-    },
-
-    // How many pixels each column is shifted horizontally when dragging
-    shiftValues(): number[] | null {
-      if (!this.drag) return null;
-
-      let { widths, dragColumnIndex } = this.drag;
-
-      let dc = dragColumnIndex;
-      let shift = widths[dc];
-      let dropIndex = this.currentDropIndex;
-
-      return widths.map((w, index) => {
-        switch (true) {
-          case (index === dc):
-            return this.currentOffsetX;
-          case (index < dc && index >= dropIndex):
-            return shift;
-          case (index > dc && index <= dropIndex):
-            return -shift;
-          default:
-            return 0;
-        }
-      });
+      return index;
     },
   },
 
   methods: {
-    async onDrop(event: DragEvent) {
+    onMouseDown(event: PointerEvent, index: number) {
       event.preventDefault();
+
+      clearTimeout(this.moveTimeoutId);
+      this.moveTimeoutId = setTimeout(() => {
+        let el = event.target as HTMLElement;
+        el.setPointerCapture(event.pointerId);
+
+        let tr = el.closest('tr') as HTMLElement;
+        if (tr === null) return;
+
+        let root = tr.closest('.ui-data-table') as HTMLElement;
+        if (root === null) return;
+
+        let height = root.scrollHeight;
+        let widths: number[] = [];
+        for (let c of tr.children) {
+          widths.push((c as HTMLElement).offsetWidth);
+        }
+
+        let rect = tr.getBoundingClientRect();
+
+        this.drag = {
+          dragColumnIndex: index,
+          left: event.x - rect.left,
+          widths,
+          height,
+        };
+      }, MOVE_TIMEOUT);
+    },
+
+    onMouseUp(event: PointerEvent) {
+      clearTimeout(this.moveTimeoutId);
 
       if (!this.drag) return;
 
-      let { dragColumnIndex, widths } = this.drag;
+      event.preventDefault();
+
+      let { dragColumnIndex } = this.drag;
 
       let from = dragColumnIndex;
       let to = this.currentDropIndex;
 
-      // Prevent sliding animations when re-positioning columns
-      this.notransition = true;
-
-      // Wait one tick for the transitions to be disabled
-      await Vue.nextTick();
-
-      // XXX: Mutating props is perhaps not a good idea!
-      if (from !== to) {
-        const moved = this.columns.splice(from, 1);
-        this.columns.splice(to, 0, ...moved);
-      }
-
-      // Need to be a little bit clever here, to get a smooth animation into the new place
-      let offset = this.currentOffsetX;
-      if (from < to) {
-        offset = offset - sum(widths.slice(from + 1, to + 1));
-      }
-      if (from > to) {
-        offset = offset + sum(widths.slice(to, from));
-      }
-
-      this.lastDragged = to;
-      this.drag = {
-        dragColumnIndex: to,
-        startX: 0,
-        curX: offset,
-        startScrollX: 0,
-        curScrollX: 0,
-        widths,
-        wrapperWidth: 0,
-      };
-
-      // Give the columns one tick to settle in the new spot, before enabling
-      // animations, and letting them slide back into place
-      await Vue.nextTick();
-
-      this.lastDragged = to;
       this.drag = null;
-      this.notransition = false;
+
+      if (to > from) to--;
+      if (to === from) return null;
+
+      this.moveColumn(from, to);
     },
 
-    onDragEnd(event: DragEvent) {
-      event.preventDefault();
-
-      // Need to delay resetting the state until the current state is rendered,
-      // for animations to be correct
-      // Vue.nextTick(() => {
-      //   // window.requestAnimationFrame(() => {
-      //     this.notransition = false;
-      //     if (this.drag)
-      //       this.lastDragged = this.drag.dragColumnIndex;
-
-      //     this.drag = null;
-      //   // });
-      // });
-    },
-
-    onDragStart(event: DragEvent, index: number) {
-      let element = event.currentTarget as HTMLElement;
-      if (element === null) return;
-
-      this.clearSelection();
-
-      let viewport = element.closest('.ui-data-table__wrapper');
-      if (viewport === null) return;
-
-      let root = viewport.closest('.ui-data-table');
-      if (root === null) return;
-
-      let widths: number[] = [];
-      for (let c of viewport.children) {
-        widths.push((c as HTMLElement).offsetWidth);
-      }
-
-      this.lastDragged = null;
-      this.drag = {
-        dragColumnIndex: index, startX: event.clientX,
-        curX: event.clientX,
-        startScrollX: root.scrollLeft,
-        curScrollX: root.scrollLeft,
-        widths,
-        wrapperWidth: viewport.scrollWidth,
-      };
-
-      if (event.dataTransfer) {
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setDragImage(new Image(), 0, 0);
-      }
-    },
-
-    onDragOver(event: DragEvent) {
-      event.preventDefault();
-    },
-
-    onDrag(event: DragEvent) {
-      event.preventDefault();
-
+    onPointerMove(event: PointerEvent) {
       if (!this.drag) return;
-      if (event.clientX === 0) return;
 
-      this.drag.curX = event.clientX;
+      let el = event.target as HTMLElement;
+      let tr = el.closest('tr') as HTMLElement;
+      let rect = tr.getBoundingClientRect();
+
+      this.drag.left = event.x - rect.left;
+    },
+
+    onPointerOut(event: PointerEvent) {
+      clearTimeout(this.moveTimeoutId);
     },
 
     onScroll(event: UIEvent) {
       let element = event.target as HTMLElement;
       if (element === null) return;
 
-      if (this.drag) {
-        this.drag.curScrollX = element.scrollLeft;
-      }
+      // if (this.drag) {
+      //   this.drag.curScrollX = element.scrollLeft;
+      // }
 
       // XXX Coupled to CSS
       let rowHeight = this.condensed ? 24 : 40;
@@ -246,6 +155,13 @@ export default Vue.extend({
       }
     },
 
+    moveColumn(from: number, to: number) {
+      // XXX: Mutating props is not a good idea!
+
+      const moved = this.columns.splice(from, 1);
+      this.columns.splice(to, 0, ...moved);
+    },
+
     emitVisible: debounce(function(this: Vue, args: object) {
       this.$emit('visible-rows', args);
     }, SCROLL_DEBOUNCE),
@@ -256,33 +172,41 @@ export default Vue.extend({
       }
     },
 
-    renderTable(): VNode[] {
-      const h = this.$createElement;
-
-      return this.columns.map((column, index) => this.renderColumn(column, index));
-    },
-
-    renderColumn(column: IColumn, index: number) {
+    renderTable(): VNode {
       const h = this.$createElement;
 
       return h('table', {
-          key: column.key,
-          class: this.getColumnClass(index),
-          style: this.getColumnStyle(index),
+          class: 'ui-data-table__table',
         }, [
-        h('thead', [
-          h('tr', [
-            this.renderHeaderCell(column, index),
-          ]),
-        ]),
-        h('tbody', [
+          this.renderHeader(),
+          this.renderBody(),
+        ],
+      );
+    },
+
+    renderHeader(): VNode {
+      const h = this.$createElement;
+
+      return h('thead', [
+        h('tr',
+          this.columns.map((column, index) => this.renderHeaderCell(column, index)),
+        ),
+      ]);
+    },
+
+    renderBody(): VNode {
+      const h = this.$createElement;
+
+      return h('tbody', [
           this.renderTopSpacer(),
-          this.items.map((item) => h('tr', [
-            this.renderContentCell(item, column),
+          this.items.map((item, rowIndex) => h('tr', {
+            key: rowIndex,
+          }, [
+            this.columns.map((column, index) =>
+              this.renderContentCell(item, column, index))
           ])),
           this.renderBottomSpacer(),
-        ]),
-      ]);
+        ]);
     },
 
     renderTopSpacer() {
@@ -310,15 +234,11 @@ export default Vue.extend({
 
       children.push(column.title);
 
-      if (column.sortable) {
-        children.push(this.renderSortArrows(column.key));
-      }
-
       // spacer
       children.push(h('span', {style: {flex: 1}}));
 
-      if (this.draggable) {
-        children.push(this.renderDragHandle(index));
+      if (column.sortable) {
+        children.push(this.renderSortArrows(column.key));
       }
 
       let on: { [key: string]: any } = {};
@@ -327,25 +247,38 @@ export default Vue.extend({
         on.click = (event: MouseEvent) => this.$emit('sort', event, column.key);
       }
 
+      if (this.draggable) {
+        on.pointerdown = (event: PointerEvent) => this.onMouseDown(event, index);
+        on.pointerup = this.onMouseUp;
+        on.pointermove = this.onPointerMove;
+        on.pointerout = this.onPointerOut;
+      }
+
       return h('th', {
-        class: headerClassHelper({
-            sortable: !!column.sortable,
-          }),
-        on,
-      },
-      children,
-      );
+          key: column.key,
+          class: this.getColumnClass(index),
+        }, [
+          h('div', {
+            class: headerClassHelper({
+                sortable: !!column.sortable,
+              }),
+            on,
+          },
+          children,
+        ),
+      ]);
     },
 
-    renderContentCell(item: IItem, column: IColumn): VNode | string | VNodeChildrenArrayContents {
+    renderContentCell(item: IItem, column: IColumn, index: number): VNode | string | VNodeChildrenArrayContents {
       const h = this.$createElement;
       let { key } = column;
       let value = item[key];
       let slot = this.$scopedSlots[`~${key}`];
+
       if (slot) {
         return slot({value, item});
       } else if (value) {
-        return h('td', value);
+        return h('td', {class: this.getColumnClass(index)}, value);
       } else {
         return h('td', {domProps: {innerHTML: '&nbsp;'}});
       }
@@ -369,54 +302,51 @@ export default Vue.extend({
       }, arrow);
     },
 
-    renderDragHandle(index: number): VNode {
+    renderMoveCursor(): VNode {
       const h = this.$createElement;
-      return h('span',
-        {
-          class: 'ui-data-table__header__handle',
-          attrs: {
-            draggable: true,
+
+      let children = [];
+
+      if (this.drag != null) {
+        let { drag, currentDropIndex } = this;
+
+        let width = 6;
+        if (currentDropIndex === drag.dragColumnIndex + 1)
+          currentDropIndex = drag.dragColumnIndex;
+
+        let pos = sum(drag.widths.slice(0, currentDropIndex));
+        if (currentDropIndex === drag.dragColumnIndex) {
+          width = drag.widths[drag.dragColumnIndex];
+        } else if (currentDropIndex === drag.widths.length) {
+          pos -= width;
+        } else if (currentDropIndex > 0) {
+          pos -= width / 2;
+        }
+
+        children.push(h('div', {
+          class: 'ui-data-table__move-cursor',
+          style: {
+            left: `${pos}px`,
+            width: `${width}px`,
           },
-          on: {
-            dragstart: (event: DragEvent) => this.onDragStart(event, index),
-            click: (event: MouseEvent) => event.stopPropagation(),
-          },
-        },
-        '\u21d4',
-      );
-    },
-
-    getColumnStyle(index: number) {
-      if (!this.shiftValues) return undefined;
-      return {
-        transform: `translateX(${this.shiftValues[index]}px)`,
-      };
-    },
-
-    getColumnClass(index: number): { [key: string]: boolean } {
-      if (this.drag && this.drag.startX !== 0) {
-        let isDragging = index === this.drag.dragColumnIndex;
-
-        return columnClassHelper({
-          dragging: isDragging,
-          notransition: isDragging || this.notransition,
-        });
+        }));
       }
 
-      return columnClassHelper({
-        'last-dragged': index === this.lastDragged,
-        'notransition': this.notransition || !!this.drag && this.drag.startX === 0,
-      });
+      return h('div', {class: 'ui-data-table__move-overlay'}, children);
+    },
+
+    getColumnClass(index: number) {
+      return columnClassHelper({ dragging: this.isDragging(index) });
+    },
+
+    isDragging(index: number) {
+      let di = this.currentDropIndex;
+      if (di === index + 1) di = index;
+      return this.drag != null && index === this.drag.dragColumnIndex && di !== index;
     },
   },
 
   render(h): VNode {
-
-    let style: any = {};
-    if (this.drag && this.drag.wrapperWidth !== 0) {
-      style.width = `${this.drag.wrapperWidth}px`;
-    }
-
     return h('div',
       {
         class: {
@@ -424,22 +354,21 @@ export default Vue.extend({
           'ui-data-table--condensed': this.condensed,
         },
         on: {
-          drag: this.onDrag,
-          dragenter: this.onDragOver,
-          dragover: this.onDragOver,
-          drop: this.onDrop,
-          dragend: this.onDragEnd,
           scroll: this.onScroll,
         },
       },
       [
+        this.renderMoveCursor(),
         h('div', {
           class: 'ui-data-table__wrapper',
-          style,
         }, [
           this.renderTable(),
         ]),
       ],
     );
+  },
+
+  beforeDestroy(this: any) {
+    clearTimeout(this.moveTimeoutId);
   },
 });

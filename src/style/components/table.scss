@@ -2,6 +2,7 @@
 
 $outer-border : 1px solid $gray;
 $inner-border : 1px solid $almost-gray;
+$th-inner-border : 1px solid $gray;
 
 $table-padding: 1rem;
 $table-condensed-padding: .5rem;
@@ -12,6 +13,8 @@ $table-condensed-row-height: 1.5rem;
 .ui-data-table {
   @include paragraph-font;
 
+  position: relative;
+
   border-top: $outer-border;
   border-bottom: $outer-border;
 
@@ -21,44 +24,17 @@ $table-condensed-row-height: 1.5rem;
   margin-bottom: 8px;
 }
 
-.ui-data-table__wrapper {
-  display: flex;
-}
-
-.ui-data-table__column {
-  flex: 1;
+.ui-data-table__table {
   border-collapse: separate;
   border-spacing: 0;
 
   // XXX Use when adjusting column width
   table-layout: fixed;
 
-  opacity: 1;
-
-  &--dragging {
-    // border-left: $inner-border;
-    // border-right: $inner-border;
-    opacity: .7;
-  }
-
-  &--dragging,
-  &--last-dragged {
-    z-index: 1;
-
-    th {
-      z-index: 3;
-    }
-  }
-
-  &:not(.ui-data-table__column--notransition) {
-    transition: transform $duration-normal, opacity $duration-normal;
-  }
-
-  transition: opacity $duration-normal;
-
   td {
     background-color: $white;
-    z-index: 0;
+    padding: 0 $table-padding;
+    // z-index: 0;
   }
 
   th {
@@ -68,29 +44,48 @@ $table-condensed-row-height: 1.5rem;
     z-index: 2;
   }
 
-  th, td {
-    white-space: nowrap;
-    padding: 0 $table-padding;
-    height: $table-normal-row-height;
-    line-height: $table-normal-row-height;
-    // border-bottom: $inner-border;
+  // XXX Hard-coded sticky column
+  th:first-child,
+  td:first-child {
+    position: sticky;
+    left: 0;
   }
 
-  &:not(:last-child) {
-    // border-right: $inner-border;
+  th:first-child {
+    z-index: 3;
+    border-right: $th-inner-border;
+  }
+
+  td:first-child {
+    z-index: 1;
+    border-right: $inner-border;
+  }
+
+  .ui-data-table__col {
+    &--dragging {
+      opacity: .5;
+    }
+  }
+
+  th, td {
+    white-space: nowrap;
+    height: $table-normal-row-height;
+    line-height: $table-normal-row-height;
+
+    transition: opacity $duration-normal;
   }
 }
 
-.ui-data-table--condensed .ui-data-table__column {
-  tr {
-    // height: $table-condensed-row-height;
-  }
-
+.ui-data-table--condensed .ui-data-table__table {
   th, td {
-    padding: 0 $table-condensed-padding;
     height: $table-condensed-row-height;
     line-height: $table-condensed-row-height;
     overflow-y: hidden;
+  }
+
+  td,
+  .ui-data-table__header {
+    padding: 0 $table-condensed-padding;
   }
 }
 
@@ -100,19 +95,31 @@ $table-condensed-row-height: 1.5rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding: 0 $table-padding;
 
-  &--sortable {
-    cursor: pointer;
-  }
+  cursor: pointer;
 }
 
 .ui-data-table__header__sort {
-  margin-left: 8px;
   transition: transform $duration-normal;
 }
 
-.ui-data-table__header__handle {
-  cursor: move;
-  margin-left: 8px;
-  color: #666;
+.ui-data-table__move-overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.ui-data-table__move-cursor {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  height: 100%;
+  background-color: $color-edit;
+  opacity: .5;
+
+  transition: all .2s;
+  transition-property: left, width;
 }

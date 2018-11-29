@@ -34,3 +34,20 @@
     opacity: 1;
   }
 }
+
+.slide-in-enter-active {
+  animation: slide .2s;
+}
+
+.slide-in-leave-active {
+  animation: slide .2s reverse;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(400px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
