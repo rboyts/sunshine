@@ -8,10 +8,9 @@
       :columns="columns"
       :sorting="sorting"
       @sort="onSort"
-      @scroll-bottom="onScrollBottom"
+      @visible-rows="onVisibleRows"
 
       v-bind="$attrs"
-      v-on="$listeners"
     >
 
       <!-- Pass on all named slots -->
@@ -93,10 +92,8 @@ export default Vue.extend({
   },
 
   methods: {
-    onScrollBottom() {
-      // if (!this.isLoading) {
-      //   this.fetchMore();
-      // }
+    onVisibleRows(args: any) {
+      this.$emit('visible-rows', args);
     },
 
     onSort(event: MouseEvent, key: string) {
@@ -107,8 +104,7 @@ export default Vue.extend({
         this.sorting.reverse = false;
       }
 
-      // TODO Unbreak sorting
-      // this.load();
+      this.$emit('sort', this.sorting);
     },
 
     async pdfExport() {

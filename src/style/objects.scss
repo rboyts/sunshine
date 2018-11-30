@@ -31,3 +31,13 @@
     grid-column: span $i;
   }
 }
+
+.ui-link {
+  @include action-font;
+  color: $almost-black;
+  text-decoration: none;
+
+  &:hover {
+    border-bottom: 2px solid $smartdok-yellow;
+  }
+}

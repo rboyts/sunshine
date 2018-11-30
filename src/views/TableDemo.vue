@@ -7,6 +7,7 @@
 
       <ui-checkbox v-model="draggable">Draggable columns</ui-checkbox>&nbsp;
       <ui-checkbox v-model="condensed">Condensed</ui-checkbox>&nbsp;
+      <ui-checkbox v-model="stickyColumn">Sticky first column</ui-checkbox>&nbsp;
     </div>
 
     <ui-data-table
@@ -16,18 +17,20 @@
       :skip="skip"
       :draggable="draggable"
       :condensed="condensed"
+      :sticky-column="stickyColumn"
       @visible-rows="onVisibleRows"
+      @sort="onSort"
     >
 
 
       <!-- Override cell to show email address as link -->
       <td slot="~email" slot-scope="{ value }">
-        <a :href="'mailto:' + value">{{ value }}</a>
+        <a class="ui-link" :href="'mailto:' + value">{{ value }}</a>
       </td>
 
       <!-- Override cell to show website as link -->
       <td slot="~website" slot-scope="{ value }">
-        <a :href="'http://' + value">{{ value }}</a>
+        <a class="ui-link" :href="'http://' + value">{{ value }}</a>
       </td>
 
       <!-- Override cell to show a button -->
@@ -73,8 +76,9 @@ export default Vue.extend({
   data() {
     return {
       dataSource: DataSources[0],
-      draggable: false,
+      draggable: true,
       condensed: false,
+      stickyColumn: false,
       sources: DataSources,
       items: [] as IItem[],
       total: null as number | null,
@@ -98,7 +102,9 @@ export default Vue.extend({
     async onVisibleRows(args: any) {
       type Range = [number, number];
 
-      let has: Range = [this.skip, this.skip + this.items.length];
+      let items = args.clear ? [] : this.items;
+
+      let has: Range = [this.skip, this.skip + items.length];
       let needs: Range = [args.firstRow, args.lastRow + 1];
 
       if (has[0] <= needs[0] && has[1] >= needs[1])
@@ -129,7 +135,7 @@ export default Vue.extend({
         let take = prepend[1] - prepend[0];
         let newItems = await this.dataSource.fetch(skip, take, this.sorting);
         this.skip = skip;
-        this.items = newItems.concat(this.items);
+        this.items = newItems.concat(items);
       }
 
       if (append !== null) {
@@ -137,11 +143,17 @@ export default Vue.extend({
         let take = append[1] - append[0];
         // skip = Math.max(skip, this.skip + this.items.length);
         let newItems = await this.dataSource.fetch(skip, take, this.sorting);
-        this.items = this.items.concat(newItems);
+        this.items = items.concat(newItems);
       }
 
       this.total = this.dataSource.count;
       this.isLoading = false;
+    },
+
+    onSort(sorting: ISortState) {
+      this.sorting = sorting;
+      this.isLoading = true;
+      this.onVisibleRows({firstRow: 0, lastRow: 100, clear: true});
     },
 
     onEdit(item: IItem) {

@@ -6,6 +6,7 @@ import { classHelper } from '@/lib/utils';
 const SCROLL_DEBOUNCE = 250;
 const MOVE_TIMEOUT = 500;
 
+const tableClassHelper = classHelper('ui-data-table');
 const columnClassHelper = classHelper('ui-data-table', 'col');
 const headerClassHelper = classHelper('ui-data-table', 'header');
 const sortClassHelper = classHelper('ui-data-table', 'header', 'sort');
@@ -30,6 +31,11 @@ export default Vue.extend({
     sorting: Object as () => ISortState,
     draggable: Boolean,
     condensed: Boolean,
+
+    stickyColumn: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -75,7 +81,6 @@ export default Vue.extend({
       clearTimeout(this.moveTimeoutId);
       this.moveTimeoutId = setTimeout(() => {
         let el = event.target as HTMLElement;
-        el.setPointerCapture(event.pointerId);
 
         let tr = el.closest('tr') as HTMLElement;
         if (tr === null) return;
@@ -97,6 +102,8 @@ export default Vue.extend({
           widths,
           height,
         };
+
+        el.setPointerCapture(event.pointerId);
       }, MOVE_TIMEOUT);
     },
 
@@ -150,9 +157,9 @@ export default Vue.extend({
 
       this.emitVisible({firstRow, lastRow});
 
-      if (element.scrollTop > 0 && element.scrollTop > element.scrollHeight - element.clientHeight - 1) {
-        this.$emit('scroll-bottom');
-      }
+      // if (element.scrollTop > 0 && element.scrollTop > element.scrollHeight - element.clientHeight - 1) {
+      //   this.$emit('scroll-bottom');
+      // }
     },
 
     moveColumn(from: number, to: number) {
@@ -332,11 +339,14 @@ export default Vue.extend({
         }));
       }
 
-      return h('div', {class: 'ui-data-table__move-overlay'}, children);
+      return h('div', children);
     },
 
     getColumnClass(index: number) {
-      return columnClassHelper({ dragging: this.isDragging(index) });
+      return columnClassHelper({
+        sticky: index === 0 && this.stickyColumn,
+        dragging: this.isDragging(index),
+      });
     },
 
     isDragging(index: number) {
@@ -349,10 +359,10 @@ export default Vue.extend({
   render(h): VNode {
     return h('div',
       {
-        class: {
-          'ui-data-table': true,
-          'ui-data-table--condensed': this.condensed,
-        },
+        class: tableClassHelper({
+          condensed: this.condensed,
+          dragging: this.drag != null,
+        }),
         on: {
           scroll: this.onScroll,
         },
