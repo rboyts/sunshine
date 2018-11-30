@@ -22,7 +22,8 @@
 
     </data-table-internal>
 
-    <div class="flex-row flex-end">
+    <!-- XXX Hard-coded height here, because there is some unresolved flexbox issue -->
+    <div class="flex-row flex-end" style="min-height: 24px">
       <ui-button small @click="pdfExport">PDF</ui-button>
         &nbsp;
       <ui-button small @click="excelExport">XLS</ui-button>
@@ -161,25 +162,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-
-<style lang="scss" scoped>
-.flex-column {
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.flex-grow {
-  flex: 1
-}
-
-.flex-end {
-  justify-content: flex-end;
-}
-</style>
-

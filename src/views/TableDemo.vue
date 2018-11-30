@@ -183,6 +183,5 @@ export default Vue.extend({
 .container {
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 </style>

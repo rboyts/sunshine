@@ -1,7 +1,9 @@
-$btn-normal-height: 2.5rem;
-$btn-normal-padding: 1rem;
-$btn-small-height: 1.5rem;
-$btn-small-padding: .5rem;
+$btn-normal-height: base-spacing(5);
+$btn-normal-padding: base-spacing(2);
+$btn-normal-min-width: base-spacing(10);
+$btn-small-height: base-spacing(3);
+$btn-small-padding: base-spacing(2);
+$btn-small-min-width: base-spacing(5);
 
 $btn-main-bg-color: $smartdok-yellow;
 $btn-main-fg-color: $almost-black;
@@ -21,11 +23,11 @@ $btn-secondary-border-color: $gray;
 
   height: $btn-normal-height;
   border-radius: ($btn-normal-height / 2);
-  min-width: 10rem;
+  min-width: $btn-normal-min-width;
 
   &--small {
     height: $btn-small-height;
-    min-width: 5rem;
+    min-width: $btn-small-min-width;
 
     > .ui-btn__content {
       padding: 0 $btn-small-padding;

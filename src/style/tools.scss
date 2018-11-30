@@ -9,3 +9,7 @@
   font-size: $paragraph-font-size;
   font-weight: $paragraph-font-weight;
 }
+
+@function base-spacing($amount: 1) {
+  @return $amount * $base-spacing-unit;
+}

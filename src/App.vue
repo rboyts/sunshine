@@ -54,5 +54,8 @@ export default Vue.extend({
 .main {
   flex: 1;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+  // height: 100%;
 }
 </style>

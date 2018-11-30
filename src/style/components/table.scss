@@ -20,8 +20,13 @@ $table-condensed-row-height: 1.5rem;
 
   background-color: $almost-gray;
 
-  overflow: auto;
   margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ui-data-table__wrapper {
+  overflow: auto;
 }
 
 .ui-data-table__table {

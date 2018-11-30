@@ -1,6 +1,7 @@
-$checkbox-height: 1rem;
+$checkbox-height: base-spacing(2);
 $checkbox-border-radius: 3px;
-$checkbox-spacing: .375rem;
+$checkbox-spacing: base-spacing();
+$checkbox-border-width: 1px;
 
 .ui-checkbox {
   @include paragraph-font;
@@ -29,7 +30,7 @@ $checkbox-spacing: .375rem;
   align-items: center;
   justify-content: center;
 
-  border: 1px solid $gray;
+  border: $checkbox-border-width solid $gray;
   background-color: $white;
   height: $checkbox-height;
   width: $checkbox-height;
@@ -39,7 +40,7 @@ $checkbox-spacing: .375rem;
   > span {
     user-select: none;
     position: absolute;
-    width: calc(1rem - 2px);
+    width: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
     text-align: center;
   }
 

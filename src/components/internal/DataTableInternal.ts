@@ -16,6 +16,7 @@ interface IDragState {
   left: number;
   widths: number[];
   height: number;
+  scrollX: number;
 }
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
@@ -85,7 +86,7 @@ export default Vue.extend({
         let tr = el.closest('tr') as HTMLElement;
         if (tr === null) return;
 
-        let root = tr.closest('.ui-data-table') as HTMLElement;
+        let root = tr.closest('.ui-data-table__wrapper') as HTMLElement;
         if (root === null) return;
 
         let height = root.scrollHeight;
@@ -101,6 +102,7 @@ export default Vue.extend({
           left: event.x - rect.left,
           widths,
           height,
+          scrollX: root.scrollLeft,
         };
 
         el.setPointerCapture(event.pointerId);
@@ -314,7 +316,7 @@ export default Vue.extend({
         if (currentDropIndex === drag.dragColumnIndex + 1)
           currentDropIndex = drag.dragColumnIndex;
 
-        let pos = sum(drag.widths.slice(0, currentDropIndex));
+        let pos = sum(drag.widths.slice(0, currentDropIndex)) - drag.scrollX;
         if (currentDropIndex === drag.dragColumnIndex) {
           width = drag.widths[drag.dragColumnIndex];
         } else if (currentDropIndex === drag.widths.length) {
@@ -356,14 +358,14 @@ export default Vue.extend({
           condensed: this.condensed,
           dragging: this.drag != null,
         }),
-        on: {
-          scroll: this.onScroll,
-        },
       },
       [
         this.renderMoveCursor(),
         h('div', {
           class: 'ui-data-table__wrapper',
+          on: {
+            scroll: this.onScroll,
+          },
         }, [
           this.renderTable(),
         ]),
