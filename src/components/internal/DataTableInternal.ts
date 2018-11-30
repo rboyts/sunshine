@@ -124,7 +124,7 @@ export default Vue.extend({
       if (to > from) to--;
       if (to === from) return null;
 
-      this.moveColumn(from, to);
+      this.$emit('move-column', {from, to});
     },
 
     onPointerMove(event: PointerEvent) {
@@ -160,13 +160,6 @@ export default Vue.extend({
       // if (element.scrollTop > 0 && element.scrollTop > element.scrollHeight - element.clientHeight - 1) {
       //   this.$emit('scroll-bottom');
       // }
-    },
-
-    moveColumn(from: number, to: number) {
-      // XXX: Mutating props is not a good idea!
-
-      const moved = this.columns.splice(from, 1);
-      this.columns.splice(to, 0, ...moved);
     },
 
     emitVisible: debounce(function(this: Vue, args: object) {
@@ -285,9 +278,9 @@ export default Vue.extend({
       if (slot) {
         return slot({value, item});
       } else if (value) {
-        return h('td', {class: this.getColumnClass(index)}, value);
+        return h('td', {key: column.key, class: this.getColumnClass(index)}, value);
       } else {
-        return h('td', {domProps: {innerHTML: '&nbsp;'}});
+        return h('td', {key: column.key, domProps: {innerHTML: '&nbsp;'}});
       }
     },
 

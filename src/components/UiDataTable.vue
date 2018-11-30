@@ -5,10 +5,11 @@
       :items="items"
       :total="total"
       :skip="skip"
-      :columns="columns"
+      :columns="activeColumns"
       :sorting="sorting"
       @sort="onSort"
       @visible-rows="onVisibleRows"
+      @move-column="onMoveColumn"
 
       v-bind="$attrs"
     >
@@ -88,7 +89,27 @@ export default Vue.extend({
         key: null,
         reverse: false,
       } as ISortState,
+      visibleColumns: [] as string[],
     };
+  },
+
+  computed: {
+    activeColumns(): IColumn[] {
+      return this.visibleColumns.map(key => {
+        let col = this.columns.find(c => c.key === key);
+        if (!col) throw new Error('Column not found');
+        return col;
+      });
+    },
+  },
+
+  watch: {
+    columns: {
+      handler() {
+        this.visibleColumns = this.columns.map(c => c.key);
+      },
+      immediate: true,
+    },
   },
 
   methods: {
@@ -107,32 +128,31 @@ export default Vue.extend({
       this.$emit('sort', this.sorting);
     },
 
+    onMoveColumn({from, to}: {from: number, to: number}) {
+      const moved = this.visibleColumns.splice(from, 1);
+      this.visibleColumns.splice(to, 0, ...moved);
+    },
+
     async pdfExport() {
-      // let src = this.dataSource;
-      // let columns = src.columns
-      //   .filter((c: any) => c.export !== false)
-      //   .map(({key, title}: any) => ({
-      //     dataKey: key,
-      //     title,
-      //   }));
+      let columns = this.activeColumns
+        .filter((c: any) => c.export !== false)
+        .map(({key, title}: any) => ({
+          dataKey: key,
+          title,
+        }));
 
-      // let items: IItem[] = [];
-      // while (true) {
-      //   let more = await src.fetch(items.length, this.sorting);
-      //   if (more.length === 0)
-      //     break;
-      //   items = items.concat(more);
-      // }
+      // FIXME: For this to work properly, we would need to force loading the entire table here.
+      // It's probably a better idea to do all exports server-side.
 
-      // let doc = new jsPDF({
-      //   orientation: 'landscape',
-      // });
+      let doc = new jsPDF({
+        orientation: 'landscape',
+      });
 
-      // (doc as any).autoTable(columns, items, {
-      //   margin: 5,
-      // });
+      (doc as any).autoTable(columns, this.items, {
+        margin: 5,
+      });
 
-      // doc.save('table.pdf');
+      doc.save('table.pdf');
     },
 
     async excelExport() {
