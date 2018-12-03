@@ -1,4 +1,4 @@
-import { ISortState, IItem } from '@/components/types';
+import { ISortState, IItem, IItemData } from '@/components/types';
 
 export default
   {
@@ -25,6 +25,8 @@ export default
       const page = Math.floor(skip / take) + 1;
       let query = `sort=${sort}&direction=${direction}&page=${page}&per_page=${take}`;
       const res = await fetch(`https://api.github.com/users/vuejs/repos?${query}`);
-      return await res.json() as IItem[];
+      const repos = await res.json() as IItemData[];
+
+      return repos.map(data => ({data, _children: []}));
     },
   };

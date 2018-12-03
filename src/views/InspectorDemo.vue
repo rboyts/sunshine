@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="toggle" @click="open = !open">
-      <span v-if="open">&gt;</span><span v-else>&lt;</span>
+      <i class="fas fa-bars" />
     </div>
 
     <ui-inspector v-model="open">

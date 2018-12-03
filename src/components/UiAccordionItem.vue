@@ -7,7 +7,8 @@
       @click="onClick"
     >
       <slot name="heading" />
-      <span :class="chevronClass" />
+      <i :class="chevronClass"
+        class="fas fa-chevron-down" />
     </a>
 
     <div

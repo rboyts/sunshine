@@ -57,17 +57,20 @@ export default (title: string, count: number | null = null) => ({
       if (count && id >= count) break;
 
       items[i] = {
-        id: id + 1,
-        number: id * 100 + id + 1,
-        name: data.names[id % data.names.length],
-        company: data.companies[id * 3 % data.companies.length],
-        phone: data.phones[id * 5 % data.phones.length],
-        email: data.emails[id * 7 % data.emails.length],
-        street: data.streets[id * 11 % data.emails.length],
-        suite: data.suites[id * 13 % data.suites.length],
-        zipcode: data.zipcodes[id * 3 % data.zipcodes.length],
-        city: data.cities[id * 17 % data.suites.length],
-        website: data.websites[id * 7 % data.zipcodes.length],
+        data: {
+          id: id + 1,
+          number: id * 100 + id + 1,
+          name: data.names[id % data.names.length],
+          company: data.companies[id * 3 % data.companies.length],
+          phone: data.phones[id * 5 % data.phones.length],
+          email: data.emails[id * 7 % data.emails.length],
+          street: data.streets[id * 11 % data.emails.length],
+          suite: data.suites[id * 13 % data.suites.length],
+          zipcode: data.zipcodes[id * 3 % data.zipcodes.length],
+          city: data.cities[id * 17 % data.suites.length],
+          website: data.websites[id * 7 % data.zipcodes.length],
+        },
+        _children: [],
       };
     }
 

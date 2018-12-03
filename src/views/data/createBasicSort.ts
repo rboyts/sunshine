@@ -12,7 +12,7 @@ export default (next: BasicFetch): FetchData => (
 
     const { key, reverse } = sorting;
 
-    const keyFunc = (item: IItem) => item[key];
+    const keyFunc = (item: IItem) => item.data[key];
     const sortFunc = (a: IItem, b: IItem) => {
       let keyA = keyFunc(a);
       let keyB = keyFunc(b);

@@ -1,10 +1,14 @@
 import Vue, { VNode, VNodeChildrenArrayContents } from 'vue';
 import debounce from 'debounce';
-import { IColumn, IItem, ISortState } from '../types';
+import { IColumn, IItem, IItemData, ISortState } from '../types';
 import { classHelper } from '@/lib/utils';
 
 const SCROLL_DEBOUNCE = 250;
 const MOVE_TIMEOUT = 500;
+
+const NORMAL_ROW_HEIGHT = 40;
+const CONDENSED_ROW_HEIGHT = 24;
+const OUTLINE_WIDTH = 24;   // Must correspond to CSS
 
 const tableClassHelper = classHelper('ui-data-table');
 const columnClassHelper = classHelper('ui-data-table', 'col');
@@ -17,6 +21,14 @@ interface IDragState {
   widths: number[];
   height: number;
   scrollX: number;
+}
+
+interface INode {
+  key: string;
+  item: IItem;
+  parent: INode | null;
+  children: INode[];
+  isLastChild: boolean;
 }
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
@@ -47,10 +59,23 @@ export default Vue.extend({
   },
 
   computed: {
+    nodes(): INode[] {
+      return this.getNodes(null, this.items);
+    },
+
+    firstContentColumn(): number {
+      return 1;
+    },
+
+    rowHeight(): number {
+      // XXX Coupled to CSS
+      return this.condensed ? CONDENSED_ROW_HEIGHT : NORMAL_ROW_HEIGHT;
+    },
+
     thresholds(): number[] {
       if (!this.drag) return [];
 
-      let { dragColumnIndex, widths } = this.drag;
+      let { widths } = this.drag;
 
       let res: number[] = [];
       let total = 0;
@@ -68,10 +93,11 @@ export default Vue.extend({
 
     currentDropIndex(): number {
       if (!this.drag) return -1;
-      let { drag } = this;
-      let index = this.thresholds.findIndex(t => t > drag.left);
+      let { drag, firstContentColumn } = this;
+      let index = Math.max(firstContentColumn,
+        this.thresholds.findIndex(t => t > drag.left));
 
-      return index;
+      return index - firstContentColumn;
     },
   },
 
@@ -96,7 +122,6 @@ export default Vue.extend({
         }
 
         let rect = tr.getBoundingClientRect();
-
         this.drag = {
           dragColumnIndex: index,
           left: event.x - rect.left,
@@ -151,11 +176,8 @@ export default Vue.extend({
       //   this.drag.curScrollX = element.scrollLeft;
       // }
 
-      // XXX Coupled to CSS
-      let rowHeight = this.condensed ? 24 : 40;
-
-      let firstRow = Math.floor(element.scrollTop / rowHeight);
-      let lastRow = Math.ceil((element.scrollTop + element.clientHeight) / rowHeight);
+      let firstRow = Math.floor(element.scrollTop / this.rowHeight);
+      let lastRow = Math.ceil((element.scrollTop + element.clientHeight) / this.rowHeight);
 
       this.emitVisible({firstRow, lastRow});
 
@@ -190,9 +212,10 @@ export default Vue.extend({
       const h = this.$createElement;
 
       return h('thead', [
-        h('tr',
+        h('tr', [
+          h('th', [h('i', {class: 'fas fa-ellipsis-h'})]),
           this.columns.map((column, index) => this.renderHeaderCell(column, index)),
-        ),
+        ]),
       ]);
     },
 
@@ -201,30 +224,177 @@ export default Vue.extend({
 
       return h('tbody', [
           this.renderTopSpacer(),
-          this.items.map((item, rowIndex) => h('tr', {
-            key: rowIndex,
-          }, [
-            this.columns.map((column, index) =>
-              this.renderContentCell(item, column, index))
-          ])),
+          this.renderNodes(this.nodes),
           this.renderBottomSpacer(),
         ]);
     },
 
-    renderTopSpacer() {
+    getNodes(parent: INode | null, items: IItem[]): INode[] {
+      const prefix = parent != null ? parent.key : '';
+      return items.map((item: IItem, i: number): INode => {
+        const node: INode = {
+          key: `${prefix}:${i}`,
+          parent,
+          item,
+          isLastChild: i === items.length - 1,
+          children: [],
+        };
+
+        node.children = this.getNodes(node, item._children);
+        return node;
+      });
+    },
+
+    renderNodes(nodes: INode[]): any[] {
+      return nodes.map((node: INode) => this.renderNode(node));
+    },
+
+    renderNode(node: INode): any[] {
+      const h = this.$createElement;
+      const el = h('tr', {
+          key: node.key,
+        }, [
+          this.renderChevron(node),
+          this.columns.map((column, index) =>
+            this.renderContentCell(node, column, index)),
+        ],
+      );
+      return [el].concat(this.renderNodes(node.children));
+    },
+
+    renderChevron(node: INode): VNode {
+      const h = this.$createElement;
+
+      let children = [];
+      if (node.children.length) {
+        children.push(h('i', {class: 'fas fa-chevron-down'}));
+      } else {
+        children.push(h('i', {domProps: {innerHTML: '&nbsp;'}}));
+      }
+
+      return h('td', children);
+    },
+
+    renderOutline(node: INode): VNode {
+      const h = this.$createElement;
+
+      let children = [];
+
+      // Draw outline for this item, if it is a child item. This line will
+      // connect to the line of the line above.
+      if (node.parent != null) {
+        children.push(h('span', {class: 'ui-data-table__outline__section'}, [
+          this.renderAngle(!node.isLastChild),
+        ]));
+      }
+
+      // Render icon and start line that child items will connect to, if any.
+      children.push(h('span', {class: 'ui-data-table__outline__section'}, [
+        node.children.length ? this.renderTail() : '',
+        node.item.icon ? h('i', {class: [node.item.icon, 'ui-data-table__icon']}) : '',
+      ]));
+
+      // Render nested children with correct indentation, and connect lines between
+      // grandparents and remaining items, at any level. Unlimited number of levels are
+      // supported, by traversing the parent hierarchy, and inserting sections
+      // to the beginning of the array.
+      let p = node.parent;
+      while (p != null) {
+        if (p.parent) {
+          children.unshift(h('span', {class: 'ui-data-table__outline__section'}, [
+            !p.isLastChild ? this.renderLine() : '',
+          ]));
+        }
+        p = p.parent;
+      }
+
+      return h('span', {class: 'ui-data-table__outline'}, children);
+    },
+
+    renderLine(): VNode {
+      const h = this.$createElement;
+
+      return h('svg', {
+        attrs: {
+          width: OUTLINE_WIDTH,
+          height: this.rowHeight,
+        },
+      },
+      [
+        h('line', {
+          attrs: {
+            x1: OUTLINE_WIDTH / 2,
+            x2: OUTLINE_WIDTH / 2,
+            y1: 0,
+            y2: this.rowHeight,
+          },
+        }),
+      ]);
+    },
+
+    renderAngle(continues: boolean): VNode {
+      const h = this.$createElement;
+
+      return h('svg', {
+        attrs: {
+          width: OUTLINE_WIDTH,
+          height: this.rowHeight,
+        },
+      },
+      [
+        h('line', {
+          attrs: {
+            x1: OUTLINE_WIDTH / 2,
+            x2: OUTLINE_WIDTH / 2,
+            y1: 0,
+            y2: continues ? this.rowHeight : this.rowHeight / 2,
+          },
+        }),
+        h('line', {
+          attrs: {
+            x1: OUTLINE_WIDTH / 2,
+            x2: OUTLINE_WIDTH,
+            y1: this.rowHeight / 2,
+            y2: this.rowHeight / 2,
+          },
+        }),
+      ]);
+    },
+
+    renderTail(): VNode {
+      const h = this.$createElement;
+
+      return h('svg', {
+        attrs: {
+          width: OUTLINE_WIDTH,
+          height: this.rowHeight,
+        },
+      },
+      [
+        h('line', {
+          attrs: {
+            x1: OUTLINE_WIDTH / 2,
+            x2: OUTLINE_WIDTH / 2,
+            y1: this.rowHeight / 2 + 12,
+            y2: this.rowHeight,
+          },
+        }),
+      ]);
+    },
+
+    renderTopSpacer(): VNode {
       return this.renderSpacer(this.skip);
     },
 
-    renderBottomSpacer() {
+    renderBottomSpacer(): VNode {
       let rows = this.total == null ? 1 : this.total - (this.skip + this.items.length);
       return this.renderSpacer(rows);
     },
 
-    renderSpacer(rows: number) {
+    renderSpacer(rows: number): VNode {
       const h = this.$createElement;
 
-      let rowHeight = this.condensed ? 1.5 : 2.5;
-      let height = `${rows * rowHeight}rem`;
+      let height = `${rows * this.rowHeight}px`;
 
       return h('tr', {style: {height}}, []);
     },
@@ -271,16 +441,19 @@ export default Vue.extend({
       ]);
     },
 
-    renderContentCell(item: IItem, column: IColumn, index: number): VNode | string | VNodeChildrenArrayContents {
+    renderContentCell(node: INode, column: IColumn, index: number): VNode | string | VNodeChildrenArrayContents {
       const h = this.$createElement;
       let { key } = column;
-      let value = item[key];
+      let value = node.item.data[key];
       let slot = this.$scopedSlots[`~${key}`];
 
       if (slot) {
-        return slot({value, item});
-      } else if (value) {
-        return h('td', {key: column.key, class: this.getColumnClass(index)}, value);
+        return slot({value, node});
+      } else if (`${value}`.trim().length) {
+        return h('td', {key: column.key, class: this.getColumnClass(index)}, [
+          index === 0 ? this.renderOutline(node) : null,
+          value,
+        ]);
       } else {
         return h('td', {key: column.key, domProps: {innerHTML: '&nbsp;'}});
       }
@@ -310,18 +483,20 @@ export default Vue.extend({
       let children = [];
 
       if (this.drag != null) {
-        let { drag, currentDropIndex } = this;
+        let { drag, firstContentColumn, currentDropIndex } = this;
 
         let width = 6;
         if (currentDropIndex === drag.dragColumnIndex + 1)
           currentDropIndex = drag.dragColumnIndex;
 
-        let pos = sum(drag.widths.slice(0, currentDropIndex)) - drag.scrollX;
+        let widthIndex = firstContentColumn + currentDropIndex;
+
+        let pos = sum(drag.widths.slice(0, widthIndex)) - drag.scrollX;
         if (currentDropIndex === drag.dragColumnIndex) {
-          width = drag.widths[drag.dragColumnIndex];
-        } else if (currentDropIndex === drag.widths.length) {
+          width = drag.widths[widthIndex];
+        } else if (widthIndex === drag.widths.length) {
           pos -= width;
-        } else if (currentDropIndex > 0) {
+        } else if (widthIndex > 0) {
           pos -= width / 2;
         }
 

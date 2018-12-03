@@ -157,7 +157,7 @@ export default Vue.extend({
     },
 
     onEdit(item: IItem) {
-      console.log('edit', item.name);
+      console.log('edit', item);
     },
   },
 

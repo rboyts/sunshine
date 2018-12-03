@@ -107,6 +107,26 @@ $table-condensed-row-height: 1.5rem;
   cursor: pointer;
 }
 
+.ui-data-table__outline {
+  margin-right: base-spacing();
+  svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    stroke: $gray;
+    stroke-width: 1.5;
+  }
+}
+
+.ui-data-table__outline__section {
+  display: inline-block;
+  text-align: center;
+  height: 100%;
+  width: base-spacing(3);
+  vertical-align: bottom;
+  position: relative;
+}
+
 .ui-data-table__header__sort {
   transition: transform $duration-normal;
 }

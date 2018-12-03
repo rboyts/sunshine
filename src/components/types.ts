@@ -10,8 +10,15 @@ export interface IColumn {
   export?: boolean;
 }
 
-export interface IItem {
+export interface IItemData {
   [key: string]: any;
+}
+
+export interface IItem {
+  _children: IItem[];
+  icon?: string;
+
+  data: IItemData;
 }
 
 export type FetchData = (skip: number, take: number, sorting: ISortState) => Promise<IItem[]>;

@@ -20,11 +20,7 @@ $accordion-chevron-size: .5rem;
 .ui-accordion__chevron {
   margin-right: $accordion-chevron-size;
 
-  border: 0;
-  border-left: $accordion-chevron-size / 2 solid transparent;
-  border-right: $accordion-chevron-size / 2 solid transparent;
-  border-bottom: $accordion-chevron-size solid $almost-black;
-
+  transform-origin: 50% 45%;
   transition: transform $duration-normal;
 
   &--open {
