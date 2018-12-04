@@ -1,8 +1,8 @@
 <template>
   <div class="ui-tabs">
     <slot />
-    <div class="ui-tabs--border">
-      <div v-if="highlight.width !== '-1'" class="ui-tabs--highlight" :style="highlight" />
+    <div class="ui-tabs__border">
+      <div v-if="highlight.width !== '-1'" class="ui-tabs__highlight" :style="highlight" />
     </div>
   </div>
 </template>

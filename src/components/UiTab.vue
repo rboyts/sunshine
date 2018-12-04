@@ -1,5 +1,5 @@
 <template>
-  <router-link class="ui-tab--link" :to="to"><slot /></router-link>
+  <router-link class="ui-tab__link" :to="to"><slot /></router-link>
 </template>
 
 <script lang="ts">
