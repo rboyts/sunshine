@@ -16,6 +16,8 @@ export default
     ],
     count: 3,
     fetch: async (skip: number, take: number, sorting: ISortState): Promise<IItem[]> => {
+      if (skip > 0) return [];
+
       return [
         {
           icon: 'fas fa-suitcase',
