@@ -108,6 +108,8 @@ $table-condensed-row-height: 1.5rem;
 }
 
 .ui-data-table__outline {
+  display: inline-block;
+  height: 100%;
   margin-right: base-spacing();
   svg {
     position: absolute;
