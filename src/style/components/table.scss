@@ -23,6 +23,20 @@ $table-condensed-row-height: 1.5rem;
   margin-bottom: 8px;
   display: flex;
   flex-direction: column;
+
+  &--condensed {
+    .ui-data-table__toggle {
+      margin-left: -$table-condensed-padding;
+    }
+  }
+
+  // XXX Use when adjusting column width
+  &--fixed {
+    .ui-data-table__table {
+      width: 0;
+    }
+  }
+
 }
 
 .ui-data-table__wrapper {
@@ -32,12 +46,12 @@ $table-condensed-row-height: 1.5rem;
 .ui-data-table__table {
   border-collapse: separate;
   border-spacing: 0;
-
-  // XXX Use when adjusting column width
   table-layout: fixed;
 
   th, td {
     white-space: nowrap;
+    text-overflow: ellipsis;
+
     height: $table-normal-row-height;
     line-height: $table-normal-row-height;
 
@@ -47,6 +61,7 @@ $table-condensed-row-height: 1.5rem;
   td {
     background-color: $white;
     padding: 0 $table-padding;
+    overflow: hidden;
     z-index: 1;
   }
 
@@ -80,6 +95,14 @@ $table-condensed-row-height: 1.5rem;
       z-index: 1;
       border-right: $inner-border;
     }
+
+    &--right {
+      text-align: right;
+    }
+
+    &--center {
+      text-align: center;
+    }
   }
 }
 
@@ -105,6 +128,28 @@ $table-condensed-row-height: 1.5rem;
   padding: 0 $table-padding;
 
   cursor: pointer;
+}
+
+.ui-data-table__toggle {
+  display: inline-block;
+  height: 100%;
+  width: base-spacing(5);
+  text-align: left;
+  cursor: pointer;
+
+  margin-left: -$table-padding;
+  text-align: center;
+
+  .fas {
+    transform-origin: 50% 45%;
+    transition: transform $duration-normal;
+  }
+
+  &--open {
+    .fas {
+      transform: rotate(180deg);
+    }
+  }
 }
 
 .ui-data-table__outline {

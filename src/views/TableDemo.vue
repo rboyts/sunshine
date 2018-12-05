@@ -8,11 +8,14 @@
       <ui-checkbox v-model="draggable">Draggable columns</ui-checkbox>&nbsp;
       <ui-checkbox v-model="condensed">Condensed</ui-checkbox>&nbsp;
       <ui-checkbox v-model="stickyColumn">Sticky first column</ui-checkbox>&nbsp;
+
     </div>
 
     <ui-data-table
       :columns="dataSource.columns"
       :items="items"
+      :outline="dataSource.outline"
+      :fixed="dataSource.fixed"
       :total="total"
       :skip="skip"
       :draggable="draggable"
@@ -22,23 +25,24 @@
       @sort="onSort"
     >
 
-
       <!-- Override cell to show email address as link -->
-      <td slot="~email" slot-scope="{ value }">
+      <template slot="~email" slot-scope="{ value }">
         <a class="ui-link" :href="'mailto:' + value">{{ value }}</a>
-      </td>
+      </template>
 
       <!-- Override cell to show website as link -->
-      <td slot="~website" slot-scope="{ value }">
+      <template slot="~website" slot-scope="{ value }">
         <a class="ui-link" :href="'http://' + value">{{ value }}</a>
-      </td>
+      </template>
 
       <!-- Override cell to show a button -->
-      <td slot="~actions" slot-scope="{ item }">
-        <div>
-          <ui-button small @click="onEdit(item)">Edit</ui-button>
-        </div>
-      </td>
+      <template slot="~actions" slot-scope="{ item }">
+        <ui-button small @click="onEdit(item)">Edit</ui-button>
+      </template>
+
+      <template slot="~ue_code" slot-scope="{ value }">
+        <a class="ui-link" href="#">{{ value }}</a>
+      </template>
 
       <!-- Override content to show when there is no data -->
       <div slot="empty">
@@ -53,6 +57,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import UiButton from '@/components/UiButton.vue';
+import UiMenu from '@/components/UiMenu.vue';
 import UiCheckbox from '@/components/UiCheckbox.vue';
 import UiSelect from '@/components/UiSelect.vue';
 import UiDataTable, {
@@ -68,6 +73,7 @@ export default Vue.extend({
 
   components: {
     UiButton,
+    UiMenu,
     UiCheckbox,
     UiSelect,
     UiDataTable,
@@ -75,6 +81,7 @@ export default Vue.extend({
 
   data() {
     return {
+      menuOpen: false,
       dataSource: DataSources[0],
       draggable: true,
       condensed: false,
@@ -95,6 +102,7 @@ export default Vue.extend({
     async load() {
       this.isLoading = true;
       this.items = await this.dataSource.fetch(0, 50, this.sorting);
+      this.skip = 0;
       this.total = this.dataSource.count;
       this.isLoading = false;
     },
@@ -153,7 +161,7 @@ export default Vue.extend({
     onSort(sorting: ISortState) {
       this.sorting = sorting;
       this.isLoading = true;
-      this.onVisibleRows({firstRow: 0, lastRow: 100, clear: true});
+      this.load();
     },
 
     onEdit(item: IItem) {

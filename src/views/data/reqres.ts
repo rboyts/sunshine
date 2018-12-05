@@ -14,6 +14,6 @@ export default
       let page = Math.floor(skip / 10) + 1;
       let res = await fetch(`https://reqres.in/api/users?per_page=${take}&page=${page}`);
       let content = await res.json();
-      return content.data.map((data: IItemData) => ({data, _children: []}));
+      return content.data.map((data: IItemData) => ({data}));
     },
   };

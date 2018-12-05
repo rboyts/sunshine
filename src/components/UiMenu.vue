@@ -5,7 +5,7 @@
     </span>
 
     <transition name="dropdown">
-      <div v-if="value" class="ui-menu__popup" :style="style">
+      <div v-if="value" class="ui-menu__popup" :style="style" @click.stop="onContentClick">
         <slot name="content"></slot>
       </div>
     </transition>
@@ -16,10 +16,10 @@
 import Vue from 'vue';
 
 // Close active menu when clicking anywhere outside
-let activeMenu: Vue | null = null;
+let activeMenu: any = null;
 window.addEventListener('click', (event: MouseEvent) => {
   if (activeMenu) {
-    activeMenu.$emit('input', false);
+    activeMenu.hide();
   }
   activeMenu = null;
 });
@@ -52,8 +52,28 @@ export default Vue.extend({
   },
 
   methods: {
+    toggle(val: boolean) {
+      this.$emit('input', val);
+    },
+
+    hide() {
+      this.toggle(false);
+    },
+
     onClick(event: MouseEvent) {
-      this.$emit('input', !this.value);
+      // This relies on the watcher for the value prop being invoked after the
+      // event has propagated to the window
+
+      this.toggle(!this.value);
+
+      if (activeMenu === this) {
+        activeMenu = null;
+        event.stopPropagation();
+      }
+    },
+
+    onContentClick(event: MouseEvent) {
+      // ignore
     },
   },
 });

@@ -1,10 +1,11 @@
-import Vue, { VNode, VNodeChildrenArrayContents } from 'vue';
+import Vue, { VNode, VNodeChildrenArrayContents, CreateElement } from 'vue';
 import debounce from 'debounce';
 import { IColumn, IItem, IItemData, ISortState } from '../types';
 import { classHelper } from '@/lib/utils';
+import UiMenu from '../UiMenu.vue';
 
 const SCROLL_DEBOUNCE = 250;
-const MOVE_TIMEOUT = 500;
+const MOVE_TIMEOUT = 350;
 
 const NORMAL_ROW_HEIGHT = 40;
 const CONDENSED_ROW_HEIGHT = 24;
@@ -14,6 +15,7 @@ const tableClassHelper = classHelper('ui-data-table');
 const columnClassHelper = classHelper('ui-data-table', 'col');
 const headerClassHelper = classHelper('ui-data-table', 'header');
 const sortClassHelper = classHelper('ui-data-table', 'header', 'sort');
+const toggleClassHelper = classHelper('ui-data-table', 'toggle');
 
 interface IDragState {
   dragColumnIndex: number;
@@ -36,6 +38,10 @@ const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
 export default Vue.extend({
   name: 'data-table-internal',
 
+  components: {
+    UiMenu,
+  },
+
   props: {
     columns: Array as () => IColumn[],
     items: Array as () => IItem[],
@@ -45,6 +51,16 @@ export default Vue.extend({
     draggable: Boolean,
     condensed: Boolean,
 
+    outline: {
+      type: Boolean,
+      default: false,
+    },
+
+    fixed: {
+      type: Boolean,
+      default: false,
+    },
+
     stickyColumn: {
       type: Boolean,
       default: false,
@@ -53,6 +69,7 @@ export default Vue.extend({
 
   data() {
     return {
+      menuOpen: false,
       drag: null as IDragState | null,
       moveTimeoutId: undefined as number | undefined,
     };
@@ -64,7 +81,8 @@ export default Vue.extend({
     },
 
     firstContentColumn(): number {
-      return 1;
+      // XXX Need this if toggle/outline is in separate column
+      return 0;
     },
 
     rowHeight(): number {
@@ -202,10 +220,27 @@ export default Vue.extend({
       return h('table', {
           class: 'ui-data-table__table',
         }, [
+          this.renderColgroup(),
           this.renderHeader(),
           this.renderBody(),
         ],
       );
+    },
+
+    renderColgroup(): VNode {
+      const h = this.$createElement;
+
+      const defaultWidth = this.fixed ? '150px' : 'auto';
+
+      return h('colgroup', [
+        this.columns.map(column =>
+          h('col', {
+            style: {
+              width: column.width != null ? `${column.width}px` : defaultWidth,
+            },
+          }),
+        ),
+      ]);
     },
 
     renderHeader(): VNode {
@@ -213,7 +248,6 @@ export default Vue.extend({
 
       return h('thead', [
         h('tr', [
-          h('th', [h('i', {class: 'fas fa-ellipsis-h'})]),
           this.columns.map((column, index) => this.renderHeaderCell(column, index)),
         ]),
       ]);
@@ -240,7 +274,7 @@ export default Vue.extend({
           children: [],
         };
 
-        node.children = this.getNodes(node, item._children);
+        node.children = item.children ? this.getNodes(node, item.children) : [];
         return node;
       });
     },
@@ -254,15 +288,19 @@ export default Vue.extend({
       const el = h('tr', {
           key: node.key,
         }, [
-          this.renderChevron(node),
           this.columns.map((column, index) =>
             this.renderContentCell(node, column, index)),
         ],
       );
-      return [el].concat(this.renderNodes(node.children));
+
+      if (node.item.isOpen) {
+        return [el].concat(this.renderNodes(node.children));
+      } else {
+        return [el];
+      }
     },
 
-    renderChevron(node: INode): VNode {
+    renderToggle(node: INode): VNode {
       const h = this.$createElement;
 
       let children = [];
@@ -272,7 +310,14 @@ export default Vue.extend({
         children.push(h('i', {domProps: {innerHTML: '&nbsp;'}}));
       }
 
-      return h('td', children);
+      const item = node.item;
+
+      return h('span', {
+        class: toggleClassHelper({open: item.isOpen === true}),
+        on: {
+          click: () => Vue.set(item, 'isOpen', !item.isOpen),
+        },
+      }, children);
     },
 
     renderOutline(node: INode): VNode {
@@ -290,7 +335,7 @@ export default Vue.extend({
 
       // Render icon and start line that child items will connect to, if any.
       children.push(h('span', {class: 'ui-data-table__outline__section'}, [
-        node.children.length ? this.renderTail() : '',
+        node.children.length && node.item.isOpen ? this.renderTail() : '',
         node.item.icon ? h('i', {class: [node.item.icon, 'ui-data-table__icon']}) : '',
       ]));
 
@@ -312,74 +357,55 @@ export default Vue.extend({
     },
 
     renderLine(): VNode {
-      const h = this.$createElement;
-
-      return h('svg', {
-        attrs: {
-          width: OUTLINE_WIDTH,
-          height: this.rowHeight,
+      return this.renderGraph([
+        {
+          x1: OUTLINE_WIDTH / 2,
+          x2: OUTLINE_WIDTH / 2,
+          y1: 0,
+          y2: this.rowHeight,
         },
-      },
-      [
-        h('line', {
-          attrs: {
-            x1: OUTLINE_WIDTH / 2,
-            x2: OUTLINE_WIDTH / 2,
-            y1: 0,
-            y2: this.rowHeight,
-          },
-        }),
       ]);
     },
 
     renderAngle(continues: boolean): VNode {
-      const h = this.$createElement;
-
-      return h('svg', {
-        attrs: {
-          width: OUTLINE_WIDTH,
-          height: this.rowHeight,
+      return this.renderGraph([
+        {
+          x1: OUTLINE_WIDTH / 2,
+          x2: OUTLINE_WIDTH / 2,
+          y1: 0,
+          y2: continues ? this.rowHeight : this.rowHeight / 2,
         },
-      },
-      [
-        h('line', {
-          attrs: {
-            x1: OUTLINE_WIDTH / 2,
-            x2: OUTLINE_WIDTH / 2,
-            y1: 0,
-            y2: continues ? this.rowHeight : this.rowHeight / 2,
-          },
-        }),
-        h('line', {
-          attrs: {
-            x1: OUTLINE_WIDTH / 2,
-            x2: OUTLINE_WIDTH,
-            y1: this.rowHeight / 2,
-            y2: this.rowHeight / 2,
-          },
-        }),
+        {
+          x1: OUTLINE_WIDTH / 2,
+          x2: OUTLINE_WIDTH,
+          y1: this.rowHeight / 2,
+          y2: this.rowHeight / 2,
+        },
       ]);
     },
 
     renderTail(): VNode {
+      return this.renderGraph([
+        {
+          x1: OUTLINE_WIDTH / 2,
+          x2: OUTLINE_WIDTH / 2,
+          y1: this.rowHeight / 2 + 12,
+          y2: this.rowHeight,
+        },
+      ]);
+    },
+
+    renderGraph(lines: object[]): VNode {
       const h = this.$createElement;
 
       return h('svg', {
-        attrs: {
-          width: OUTLINE_WIDTH,
-          height: this.rowHeight,
-        },
-      },
-      [
-        h('line', {
           attrs: {
-            x1: OUTLINE_WIDTH / 2,
-            x2: OUTLINE_WIDTH / 2,
-            y1: this.rowHeight / 2 + 12,
-            y2: this.rowHeight,
+            width: OUTLINE_WIDTH,
+            height: this.rowHeight,
           },
-        }),
-      ]);
+        },
+        lines.map(attrs => h('line', { attrs })),
+      );
     },
 
     renderTopSpacer(): VNode {
@@ -403,6 +429,37 @@ export default Vue.extend({
       const h = this.$createElement;
 
       const children: Array<string | VNode> = [];
+
+      if (this.outline && index === 0) {
+        children.push(
+          h('span', {
+            class: toggleClassHelper({})
+          }, [
+            h('ui-menu', {
+              props: {
+                value: this.menuOpen,
+              },
+              on: {
+                input: (val: any) => {
+                  this.menuOpen = val
+                },
+              },
+              scopedSlots: {
+                activator: (): VNode => {
+                  return h('div', {style: {width: '2.5rem'}}, [
+                    h('i', {class: 'fas fa-ellipsis-h'})
+                  ]);
+                },
+                content: (): VNode => {
+                  return h('div', this.$slots.menu);
+                },
+              },
+            })
+          ],
+        ));
+        // <span slot="activator" class="ui-data-table__toggle"><i class=""/></span>
+        // children.splice(children.length - 1, 0, ...this.$slots.menu);
+      }
 
       children.push(column.title);
 
@@ -428,9 +485,9 @@ export default Vue.extend({
 
       return h('th', {
           key: column.key,
-          class: this.getColumnClass(index),
+          class: this.getColumnClass(column, index),
         }, [
-          h('div', {
+          h('span', {
             class: headerClassHelper({
                 sortable: !!column.sortable,
               }),
@@ -444,19 +501,32 @@ export default Vue.extend({
     renderContentCell(node: INode, column: IColumn, index: number): VNode | string | VNodeChildrenArrayContents {
       const h = this.$createElement;
       let { key } = column;
-      let value = node.item.data[key];
-      let slot = this.$scopedSlots[`~${key}`];
 
-      if (slot) {
-        return slot({value, node});
-      } else if (`${value}`.trim().length) {
-        return h('td', {key: column.key, class: this.getColumnClass(index)}, [
-          index === 0 ? this.renderOutline(node) : null,
-          value,
-        ]);
-      } else {
-        return h('td', {key: column.key, domProps: {innerHTML: '&nbsp;'}});
+      let children = [];
+
+      if (this.outline && index === 0) {
+        children.push(this.renderToggle(node));
+        children.push(this.renderOutline(node));
       }
+
+      let value = node.item.data[key];
+      if (column.filter) {
+        value = column.filter(value);
+      }
+
+      let slot = this.$scopedSlots[`~${key}`];
+      if (slot) {
+        children.push(slot({value, item: node.item}));
+      } else {
+        children.push(value);
+      }
+
+      return h('td', {
+          key,
+          class: this.getColumnClass(column, index),
+        },
+        children,
+      );
     },
 
     renderSortArrows(key: string): VNode {
@@ -512,10 +582,12 @@ export default Vue.extend({
       return h('div', children);
     },
 
-    getColumnClass(index: number) {
+    getColumnClass(column: IColumn, index: number) {
       return columnClassHelper({
         sticky: index === 0 && this.stickyColumn,
         dragging: this.isDragging(index),
+        right: column.align === 'right',
+        center: column.align === 'center',
       });
     },
 
@@ -531,6 +603,7 @@ export default Vue.extend({
       {
         class: tableClassHelper({
           condensed: this.condensed,
+          fixed: this.fixed,
           dragging: this.drag != null,
         }),
       },

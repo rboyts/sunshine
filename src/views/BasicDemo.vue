@@ -16,6 +16,17 @@
     <ui-button small primary>Primary</ui-button>&nbsp;
     <ui-button small>Secondary</ui-button>
 
+    <h2>Select</h2>
+
+    <ui-select v-model="country" :items="countries" label="Primary" primary />&nbsp;
+
+    <ui-select v-model="country" :items="countries" label="Secondary" />
+
+    <!--
+      TODO
+      Keyboard mapping
+    -->
+
     <h2>Text field</h2>
 
     <div>
@@ -78,17 +89,6 @@
     </ui-radio-group>
 
     <p class="value">Selected: {{ option }}</p>
-
-    <h2>Select</h2>
-
-    <ui-select v-model="country" :items="countries" label="Primary" primary />&nbsp;
-
-    <ui-select v-model="country" :items="countries" label="Secondary" />
-
-    <!--
-      TODO
-      Keyboard mapping
-    -->
 
   </div>
 </template>

@@ -14,6 +14,12 @@
       v-bind="$attrs"
     >
 
+      <div slot="menu" style="padding: .5rem; white-space: nowrap">
+        <div v-for="oc in orderedColumns" :key="oc.key" >
+          <ui-checkbox v-model="oc.visible">{{ oc.key }}</ui-checkbox>
+        </div>
+      </div>
+
       <!-- Pass on all named slots -->
       <slot v-for="slot in Object.keys($slots)" :name="slot" :slot="slot"/>
 
@@ -28,12 +34,15 @@
         &nbsp;
       <ui-button small @click="excelExport">XLS</ui-button>
     </div>
+
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import UiMenu from './UiMenu.vue';
 import UiButton from './UiButton.vue';
+import UiCheckbox from './UiCheckbox.vue';
 import DataTableInternal from './internal/DataTableInternal';
 import { ISortState, IItem, IColumn } from './types';
 import jsPDF from 'jspdf';
@@ -50,15 +59,44 @@ export { IColumn, ISortState, IItem, FetchData } from './types';
 //   total: Total number of rows in data-set (null means unknown/unbound)
 //   skip: Current offset in the data-set of the first row (default: 0)
 //
+// `available columns`:
+//   - As prop
+//   - Default order
+//   - [optional] Default visible/hidden
+// `ordered columns`:
+//   - Must contain all available, even hidden
+//   - Array of keys only?
+// `visible map`:
+//   - Object with key -> bool pairs
+// `visible columns`:
+//   - Ordered list of only currently visible
+//   - Column objects
+//   - Computed from all of the above
+//
 // Events:
 //   update:columns ?
 //   sort -- request data to be sorted (scroll to top?)
 //   scroll -- (firstItem, lastItem)
+//
+// Data structure:
+// items: [
+//   {
+//     // key / values
+//     children: ...
+//   },
+// ]
 
 
 export default Vue.extend({
   name: 'ui-data-table',
   inheritAttrs: false,
+
+  components: {
+    UiMenu,
+    UiButton,
+    UiCheckbox,
+    DataTableInternal,
+  },
 
   props: {
     // dataSource: Object as () => IDataSource,
@@ -79,35 +117,39 @@ export default Vue.extend({
     },
   },
 
-  components: {
-    UiButton,
-    DataTableInternal,
-  },
-
   data() {
     return {
+      menuOpen: false,
       sorting: {
         key: null,
         reverse: false,
       } as ISortState,
-      visibleColumns: [] as string[],
+
+      orderedColumns: [] as Array<{key: string, visible: boolean}>,
+      visibleColumns: {} as {[key: string]: boolean},
     };
   },
 
   computed: {
     activeColumns(): IColumn[] {
-      return this.visibleColumns.map(key => {
-        let col = this.columns.find(c => c.key === key);
-        if (!col) throw new Error('Column not found');
-        return col;
-      });
+      return this.orderedColumns
+        .filter(oc => oc.visible)
+        .map(oc => {
+          let col = this.columns.find(c => c.key === oc.key);
+          if (!col) throw new Error('Column not found');
+          return col;
+        });
     },
   },
 
   watch: {
     columns: {
       handler() {
-        this.visibleColumns = this.columns.map(c => c.key);
+        this.orderedColumns = this.columns.map(c => ({key: c.key, visible: true}));
+        // this.visibleColumns = this.columns.reduce((obj: {[key: string]: boolean}, col: IColumn) => {
+        //   obj[col.key] = true;
+        //   return obj;
+        // }, {});
       },
       immediate: true,
     },
@@ -130,8 +172,19 @@ export default Vue.extend({
     },
 
     onMoveColumn({from, to}: {from: number, to: number}) {
-      const moved = this.visibleColumns.splice(from, 1);
-      this.visibleColumns.splice(to, 0, ...moved);
+      const fromKey = this.activeColumns[from].key;
+      const fromIndex = this.orderedColumns.findIndex(oc => oc.key === fromKey);
+
+      let toIndex: number;
+      if (to === 0) {
+        toIndex = 0;
+      } else {
+        const afterKey = this.activeColumns[to - 1].key;
+        toIndex = this.orderedColumns.findIndex(oc => oc.key === afterKey) + 1;
+      }
+
+      const moved = this.orderedColumns.splice(fromIndex, 1);
+      this.orderedColumns.splice(toIndex, 0, ...moved);
     },
 
     async pdfExport() {
@@ -149,7 +202,9 @@ export default Vue.extend({
         orientation: 'landscape',
       });
 
-      (doc as any).autoTable(columns, this.items, {
+      let data = this.items.map(i => i.data);
+
+      (doc as any).autoTable(columns, data, {
         margin: 5,
       });
 

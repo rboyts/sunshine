@@ -8,10 +8,10 @@ export default
       { key: 'created_at', title: 'Created', sortable: true },
       { key: 'updated_at', title: 'Updated', sortable: true },
       { key: 'name', title: 'Name' },
-      { key: 'stargazers_count', title: 'Stars' },
-      { key: 'language', title: 'Language' },
+      { key: 'stargazers_count', title: 'Stars', align: 'right' },
+      { key: 'language', title: 'Language', align: 'center' },
       { key: 'homepage', title: 'Homepage' },
-      { key: 'size', title: 'Size' },
+      { key: 'size', title: 'Size', align: 'right' },
       { key: 'description', title: 'Description' },
     ],
     count: null,
@@ -27,6 +27,6 @@ export default
       const res = await fetch(`https://api.github.com/users/vuejs/repos?${query}`);
       const repos = await res.json() as IItemData[];
 
-      return repos.map(data => ({data, _children: []}));
+      return repos.map(data => ({data}));
     },
   };

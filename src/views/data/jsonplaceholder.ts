@@ -27,7 +27,6 @@ export default
           ...u.address,
           company: u.company.name,
         },
-        _children: [],
       }));
     }),
   };

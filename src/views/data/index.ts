@@ -2,12 +2,14 @@ import { IDataSource } from '@/components/types';
 
 import jsonplaceholder from './jsonplaceholder';
 import projects from './projects';
+import smartdok from './smartdok';
 import reqres from './reqres';
 import github from './github';
 import fake from './fake';
 import empty from './empty';
 
 const DataSources: IDataSource[] = [
+  smartdok,
   projects,
   jsonplaceholder,
   reqres,

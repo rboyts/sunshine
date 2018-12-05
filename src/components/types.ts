@@ -8,6 +8,9 @@ export interface IColumn {
   title: string;
   sortable?: boolean;
   export?: boolean;
+  width?: number;
+  align?: string;
+  filter?: (value: any) => any;
 }
 
 export interface IItemData {
@@ -15,8 +18,9 @@ export interface IItemData {
 }
 
 export interface IItem {
-  _children: IItem[];
+  children?: IItem[];
   icon?: string;
+  isOpen?: boolean;
 
   data: IItemData;
 }
@@ -25,6 +29,8 @@ export type FetchData = (skip: number, take: number, sorting: ISortState) => Pro
 
 export interface IDataSource {
   title: string;
+  outline?: boolean;
+  fixed?: boolean;
   columns: IColumn[];
   fetch: FetchData;
   count: number | null;

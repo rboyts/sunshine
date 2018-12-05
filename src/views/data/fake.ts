@@ -70,7 +70,6 @@ export default (title: string, count: number | null = null) => ({
           city: data.cities[id * 17 % data.suites.length],
           website: data.websites[id * 7 % data.zipcodes.length],
         },
-        _children: [],
       };
     }
 

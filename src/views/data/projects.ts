@@ -1,18 +1,25 @@
 import { ISortState, IItem } from '@/components/types';
 
+const fmt = new Intl.NumberFormat('nb-NO', { style: 'currency', currency: 'NOK' });
+const kroner = (value: any) =>
+  value == null ? null : fmt.format(value);
+
+
 export default
   {
     title: 'Project list',
+    outline: true,
     columns: [
-      { key: 'name', title: 'Name' },
-      { key: 'number', title: 'Number' },
+      { key: 'name', title: 'Name', width: 300 },
+      { key: 'number', title: 'Number', width: 150 },
       { key: 'place', title: 'Place' },
       { key: 'department', title: 'Department' },
       { key: 'responsible', title: 'Responsible' },
       { key: 'ue_code', title: 'UE-code' },
-      { key: 'calculated', title: 'Calculated' },
-      { key: 'hours', title: 'Hours' },
-      { key: 'invoiced', title: 'Invoiced' },
+      { key: 'calculated', title: 'Calculated', align: 'right' },
+      { key: 'hours', title: 'Hours', align: 'right' },
+      { key: 'invoiced', title: 'Invoiced', align: 'right' },
+      { key: 'cost', title: 'Calculated cost', align: 'right', filter: kroner },
     ],
     count: 3,
     fetch: async (skip: number, take: number, sorting: ISortState): Promise<IItem[]> => {
@@ -31,9 +38,10 @@ export default
             calculated: 2000,
             hours: 1234,
             invoiced: 760,
+            cost: 123412,
           },
 
-          _children: [
+          children: [
             {
               icon: 'far fa-folder',
               data: {
@@ -46,9 +54,10 @@ export default
                 calculated: 800,
                 hours: 450,
                 invoiced: 250,
+                cost: 0,
               },
 
-              _children: [
+              children: [
                 {
                   icon: 'far fa-circle',
                   data: {
@@ -61,9 +70,8 @@ export default
                     calculated: 0,
                     hours: 0,
                     invoiced: 0,
+                    cost: 4500,
                   },
-
-                  _children: [],
                 },
 
                 {
@@ -78,9 +86,8 @@ export default
                     calculated: 0,
                     hours: 0,
                     invoiced: 0,
+                    cost: 15000,
                   },
-
-                  _children: [],
                 },
               ],
             },
@@ -96,9 +103,10 @@ export default
                 calculated: 1200,
                 hours: 700,
                 invoiced: 400,
+                cost: 1575.50,
               },
 
-              _children: [
+              children: [
                 {
                   icon: 'far fa-circle',
                   data: {
@@ -111,11 +119,9 @@ export default
                     calculated: 0,
                     hours: 0,
                     invoiced: 0,
+                    cost: 999.999999,
                   },
-
-                  _children: [],
                 },
-
               ],
             },
           ],
@@ -133,9 +139,10 @@ export default
             calculated: 4300,
             hours: 2330,
             invoiced: 0,
+            cost: 100 / 3,
           },
 
-          _children: [
+          children: [
             {
               icon: 'far fa-folder',
               data: {
@@ -149,8 +156,6 @@ export default
                 hours: 0,
                 invoiced: 0,
               },
-
-              _children: [],
             },
           ],
         },
@@ -167,9 +172,8 @@ export default
             calculated: 1200,
             hours: 500,
             invoiced: 200,
+            cost: 15500,
           },
-
-          _children: [],
         },
       ];
     },
