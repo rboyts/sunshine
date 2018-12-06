@@ -1,4 +1,4 @@
-import { ISortState, IItem } from '@/components/types';
+import { ISortState, IItem, IDataSource } from '@/components/types';
 
 const BASEURL = 'https://web.trackthebox.com:5559/smartapi/';
 
@@ -63,7 +63,7 @@ const fetchProjects = async (): Promise<IItem[]> => {
   }));
 };
 
-export default {
+const source: IDataSource = {
   title: 'SmartDok',
   fixed: true,
   outline: true,
@@ -84,3 +84,5 @@ export default {
     return await fetchProjects();
   },
 };
+
+export default source;

@@ -1,4 +1,4 @@
-import { ISortState, IItem } from '@/components/types';
+import { ISortState, IItem, IDataSource } from '@/components/types';
 
 const data = {
   names: ['Leanne Graham', 'Ervin Howell', 'Clementine Bauch', 'Patricia Lebsack',
@@ -31,7 +31,7 @@ const data = {
     'ambrose.net'],
 };
 
-export default (title: string, count: number | null = null) => ({
+export default (title: string, count: number | null = null): IDataSource => ({
   title,
   columns: [
     { key: 'id', title: '#' },

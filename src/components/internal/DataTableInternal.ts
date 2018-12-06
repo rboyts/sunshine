@@ -2,7 +2,6 @@ import Vue, { VNode, VNodeChildrenArrayContents, CreateElement } from 'vue';
 import debounce from 'debounce';
 import { IColumn, IItem, IItemData, ISortState } from '../types';
 import { classHelper } from '@/lib/utils';
-import UiMenu from '../UiMenu.vue';
 
 const SCROLL_DEBOUNCE = 250;
 const MOVE_TIMEOUT = 350;
@@ -37,10 +36,6 @@ const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
 
 export default Vue.extend({
   name: 'data-table-internal',
-
-  components: {
-    UiMenu,
-  },
 
   props: {
     columns: Array as () => IColumn[],
@@ -430,35 +425,10 @@ export default Vue.extend({
 
       const children: Array<string | VNode> = [];
 
-      if (this.outline && index === 0) {
+      if (index === 0 && this.$slots.menu) {
         children.push(
-          h('span', {
-            class: toggleClassHelper({})
-          }, [
-            h('ui-menu', {
-              props: {
-                value: this.menuOpen,
-              },
-              on: {
-                input: (val: any) => {
-                  this.menuOpen = val
-                },
-              },
-              scopedSlots: {
-                activator: (): VNode => {
-                  return h('div', {style: {width: '2.5rem'}}, [
-                    h('i', {class: 'fas fa-ellipsis-h'})
-                  ]);
-                },
-                content: (): VNode => {
-                  return h('div', this.$slots.menu);
-                },
-              },
-            })
-          ],
-        ));
-        // <span slot="activator" class="ui-data-table__toggle"><i class=""/></span>
-        // children.splice(children.length - 1, 0, ...this.$slots.menu);
+          h('span', {class: toggleClassHelper({})}, this.$slots.menu),
+        );
       }
 
       children.push(column.title);

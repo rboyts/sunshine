@@ -5,7 +5,7 @@
       :items="items"
       :total="total"
       :skip="skip"
-      :columns="activeColumns"
+      :columns="visibleColumns"
       :sorting="sorting"
       @sort="onSort"
       @visible-rows="onVisibleRows"
@@ -14,11 +14,19 @@
       v-bind="$attrs"
     >
 
-      <div slot="menu" style="padding: .5rem; white-space: nowrap">
-        <div v-for="oc in orderedColumns" :key="oc.key" >
-          <ui-checkbox v-model="oc.visible">{{ oc.key }}</ui-checkbox>
-        </div>
-      </div>
+      <template slot="menu">
+        <ui-menu v-model="menuOpen">
+          <div slot="activator" style="width: 2.5rem">
+            <i class="fas fa-ellipsis-h" />
+          </div>
+
+          <div slot="content" style="padding: .5rem; white-space: nowrap">
+            <div v-for="oc in orderedColumns" :key="oc.column.key" >
+              <ui-checkbox v-model="oc.visible">{{ oc.column.title }}</ui-checkbox>
+            </div>
+          </div>
+        </ui-menu>
+      </template>
 
       <!-- Pass on all named slots -->
       <slot v-for="slot in Object.keys($slots)" :name="slot" :slot="slot"/>
@@ -59,20 +67,6 @@ export { IColumn, ISortState, IItem, FetchData } from './types';
 //   total: Total number of rows in data-set (null means unknown/unbound)
 //   skip: Current offset in the data-set of the first row (default: 0)
 //
-// `available columns`:
-//   - As prop
-//   - Default order
-//   - [optional] Default visible/hidden
-// `ordered columns`:
-//   - Must contain all available, even hidden
-//   - Array of keys only?
-// `visible map`:
-//   - Object with key -> bool pairs
-// `visible columns`:
-//   - Ordered list of only currently visible
-//   - Column objects
-//   - Computed from all of the above
-//
 // Events:
 //   update:columns ?
 //   sort -- request data to be sorted (scroll to top?)
@@ -99,8 +93,6 @@ export default Vue.extend({
   },
 
   props: {
-    // dataSource: Object as () => IDataSource,
-
     columns: Array as () => IColumn[],
     items: Array as () => IItem[],
 
@@ -125,31 +117,22 @@ export default Vue.extend({
         reverse: false,
       } as ISortState,
 
-      orderedColumns: [] as Array<{key: string, visible: boolean}>,
-      visibleColumns: {} as {[key: string]: boolean},
+      orderedColumns: [] as Array<{column: IColumn, visible: boolean}>,
     };
   },
 
   computed: {
-    activeColumns(): IColumn[] {
+    visibleColumns(): IColumn[] {
       return this.orderedColumns
         .filter(oc => oc.visible)
-        .map(oc => {
-          let col = this.columns.find(c => c.key === oc.key);
-          if (!col) throw new Error('Column not found');
-          return col;
-        });
+        .map(oc => oc.column);
     },
   },
 
   watch: {
     columns: {
       handler() {
-        this.orderedColumns = this.columns.map(c => ({key: c.key, visible: true}));
-        // this.visibleColumns = this.columns.reduce((obj: {[key: string]: boolean}, col: IColumn) => {
-        //   obj[col.key] = true;
-        //   return obj;
-        // }, {});
+        this.orderedColumns = this.columns.map(column => ({column, visible: true}));
       },
       immediate: true,
     },
@@ -172,15 +155,15 @@ export default Vue.extend({
     },
 
     onMoveColumn({from, to}: {from: number, to: number}) {
-      const fromKey = this.activeColumns[from].key;
-      const fromIndex = this.orderedColumns.findIndex(oc => oc.key === fromKey);
+      const fromKey = this.visibleColumns[from].key;
+      const fromIndex = this.orderedColumns.findIndex(oc => oc.column.key === fromKey);
 
       let toIndex: number;
       if (to === 0) {
         toIndex = 0;
       } else {
-        const afterKey = this.activeColumns[to - 1].key;
-        toIndex = this.orderedColumns.findIndex(oc => oc.key === afterKey) + 1;
+        const afterKey = this.visibleColumns[to - 1].key;
+        toIndex = this.orderedColumns.findIndex(oc => oc.column.key === afterKey) + 1;
       }
 
       const moved = this.orderedColumns.splice(fromIndex, 1);
@@ -188,7 +171,7 @@ export default Vue.extend({
     },
 
     async pdfExport() {
-      let columns = this.activeColumns
+      let columns = this.visibleColumns
         .filter((c: any) => c.export !== false)
         .map(({key, title}: any) => ({
           dataKey: key,

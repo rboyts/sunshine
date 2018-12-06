@@ -9,7 +9,7 @@ export interface IColumn {
   sortable?: boolean;
   export?: boolean;
   width?: number;
-  align?: string;
+  align?: 'left' | 'right' | 'center';
   filter?: (value: any) => any;
 }
 
