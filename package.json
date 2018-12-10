@@ -12,22 +12,17 @@
   },
   "main": "./dist/fjellsol.common.js",
   "dependencies": {
-    "@types/d3": "^5.0.0",
     "d3": "^5.7.0",
     "debounce": "^1.2.0",
-    "jspdf": "^1.4.1",
-    "jspdf-autotable": "^2.3.5",
     "moment": "^2.22.2",
+    "vue": "^2.5.17",
     "vue-router": "^3.0.1"
   },
-  "peerDependencies": {
-    "vue": "^2.5.17"
-  },
   "devDependencies": {
+    "@types/d3": "^5.0.0",
     "@types/debounce": "^3.0.0",
     "@types/dom-inputevent": "^1.0.3",
     "@types/jest": "^23.1.4",
-    "@types/jspdf": "^1.1.31",
     "@vue/cli-plugin-babel": "^3.0.1",
     "@vue/cli-plugin-typescript": "^3.0.1",
     "@vue/cli-plugin-unit-jest": "^3.1.1",

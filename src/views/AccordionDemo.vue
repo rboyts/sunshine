@@ -50,22 +50,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import UiAccordion from '@/components/UiAccordion.vue';
-import UiAccordionItem from '@/components/UiAccordionItem.vue';
-import UiButton from '@/components/UiButton.vue';
-import UiSelect from '@/components/UiSelect.vue';
-import UiTextField from '@/components/UiTextField.vue';
 
 export default Vue.extend({
-
-  components: {
-    UiAccordion,
-    UiAccordionItem,
-    UiButton,
-    UiSelect,
-    UiTextField,
-  },
-
+  name: 'AccordionDemo',
 });
 </script>
 

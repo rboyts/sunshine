@@ -35,17 +35,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import UiAlert from '@/components/UiAlert.vue';
-import UiIcon from '@/components/UiIcon.vue';
-import UiButton from '@/components/UiButton.vue';
 
 export default Vue.extend({
   name: 'AlertsDemo',
-
-  components: {
-    UiAlert,
-    UiIcon,
-    UiButton,
-  },
 });
 </script>

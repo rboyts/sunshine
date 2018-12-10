@@ -53,8 +53,6 @@ import UiButton from './UiButton.vue';
 import UiCheckbox from './UiCheckbox.vue';
 import DataTableInternal from './internal/DataTableInternal';
 import { ISortState, IItem, IColumn } from './types';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 
 export { IColumn, ISortState, IItem, FetchData } from './types';
 
@@ -171,27 +169,7 @@ export default Vue.extend({
     },
 
     async pdfExport() {
-      let columns = this.visibleColumns
-        .filter((c: any) => c.export !== false)
-        .map(({key, title}: any) => ({
-          dataKey: key,
-          title,
-        }));
-
-      // FIXME: For this to work properly, we would need to force loading the entire table here.
-      // It's probably a better idea to do all exports server-side.
-
-      let doc = new jsPDF({
-        orientation: 'landscape',
-      });
-
-      let data = this.items.map(i => i.data);
-
-      (doc as any).autoTable(columns, data, {
-        margin: 5,
-      });
-
-      doc.save('table.pdf');
+      console.warn('Oink oink');
     },
 
     async excelExport() {

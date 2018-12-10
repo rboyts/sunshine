@@ -14,16 +14,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment from 'moment';
-import UiButton from '@/components/UiButton.vue';
-import UiCalendar from '@/components/UiCalendar.vue';
 
 export default Vue.extend({
   name: 'CalanderDemo',
-
-  components: {
-    UiButton,
-    UiCalendar,
-  },
 
   data() {
     let today = moment().startOf('day');

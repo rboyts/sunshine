@@ -95,24 +95,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import UiTextField from '@/components/UiTextField.vue';
-import UiButton from '@/components/UiButton.vue';
-import UiCheckbox from '@/components/UiCheckbox.vue';
-import UiSelect from '@/components/UiSelect.vue';
-import UiRadioGroup from '@/components/UiRadioGroup.vue';
-import UiRadioButton from '@/components/UiRadioButton.vue';
 
 export default Vue.extend({
   name: 'InputsDemo',
-
-  components: {
-    UiTextField,
-    UiButton,
-    UiCheckbox,
-    UiSelect,
-    UiRadioGroup,
-    UiRadioButton,
-  },
 
   data() {
     return {

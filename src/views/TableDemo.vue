@@ -56,28 +56,16 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import UiButton from '@/components/UiButton.vue';
-import UiMenu from '@/components/UiMenu.vue';
-import UiCheckbox from '@/components/UiCheckbox.vue';
-import UiSelect from '@/components/UiSelect.vue';
-import UiDataTable, {
+import {
   ISortState,
   IColumn,
   IItem,
-} from '@/components/UiDataTable.vue';
+} from '@/components/types';
 
 import DataSources from './data';
 
 export default Vue.extend({
   name: 'TableDemo',
-
-  components: {
-    UiButton,
-    UiMenu,
-    UiCheckbox,
-    UiSelect,
-    UiDataTable,
-  },
 
   data() {
     return {
