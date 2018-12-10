@@ -1,9 +1,9 @@
 {
-  "name": "smartdok-ui",
+  "name": "smartdok-sunshine",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "vue-cli-service build --target lib --name smartdok-ui ./src/components/index.ts",
+    "build": "vue-cli-service build --target lib --name smartdok-sunshine ./src/components/index.ts",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },
