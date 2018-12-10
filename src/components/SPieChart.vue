@@ -33,14 +33,14 @@ export default Vue.extend({
   },
 
   computed: {
-    pieGenerator(): d3.Pie<any, number | {valueOf(): number}> {
+    pieGenerator(): any {
       return d3
         .pie()
         .startAngle(0)
         .endAngle(Math.PI * 2);
     },
 
-    arcGenerator(): d3.Arc<any, d3.DefaultArcObject> {
+    arcGenerator(): any {
       return d3
         .arc()
         .innerRadius(0)

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`UiAlert renders button 1`] = `
+exports[`SAlert renders button 1`] = `
 <div class="s-alert s-alert--warning">
   <div class="s-alert__main">Warning message</div>
   <div class="s-alert__buttons">
@@ -9,21 +9,21 @@ exports[`UiAlert renders button 1`] = `
 </div>
 `;
 
-exports[`UiAlert renders error alert 1`] = `
+exports[`SAlert renders error alert 1`] = `
 <div class="s-alert s-alert--error">
   <div class="s-alert__main">Error message</div>
   <div class="s-alert__buttons"></div>
 </div>
 `;
 
-exports[`UiAlert renders successful alert 1`] = `
+exports[`SAlert renders successful alert 1`] = `
 <div class="s-alert s-alert--success">
   <div class="s-alert__main">Success message</div>
   <div class="s-alert__buttons"></div>
 </div>
 `;
 
-exports[`UiAlert renders warning alert 1`] = `
+exports[`SAlert renders warning alert 1`] = `
 <div class="s-alert s-alert--warning">
   <div class="s-alert__main">Warning message</div>
   <div class="s-alert__buttons"></div>
