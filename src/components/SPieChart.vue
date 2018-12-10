@@ -1,7 +1,7 @@
 <template>
   <div>
     <svg :width="size" :height="size">
-      <g :transform="`translate(${size / 2}, ${size / 2})`">
+      <g :transform="transform">
         <path v-for="(d, i) in arcs" :key="i" :fill="scheme[i % scheme.length]" :d="d" />
       </g>
     </svg>
@@ -18,14 +18,16 @@ interface IData {
 }
 
 export default Vue.extend({
-  name: 'data-chart',
+  name: 's-pie-chart',
 
   props: {
     data: Array as () => IData[],
+
     scheme: {
-      type: Array as () => string[],
+      type: Array as () => ReadonlyArray<string>,
       default: () => d3.schemeDark2,
     },
+
     size: {
       type: Number,
       default: 400,
@@ -33,6 +35,10 @@ export default Vue.extend({
   },
 
   computed: {
+    transform(): string {
+      return `translate(${this.size / 2}, ${this.size / 2})`;
+    },
+
     pieGenerator(): any {
       return d3
         .pie()
