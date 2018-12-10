@@ -2,7 +2,7 @@
   <div>
     <a
       href="#"
-      class="ui-accordion__heading"
+      class="s-accordion__heading"
       @_click="$emit('click')"
       @click="onClick"
     >
@@ -28,12 +28,12 @@
 import Vue from 'vue';
 import { classHelper } from '../lib/utils';
 
-const chevronClassHelper = classHelper('ui-accordion', 'chevron');
-const bodyClassHelper = classHelper('ui-accordion', 'body');
-const contentClassHelper = classHelper('ui-accordion', 'content');
+const chevronClassHelper = classHelper('s-accordion', 'chevron');
+const bodyClassHelper = classHelper('s-accordion', 'body');
+const contentClassHelper = classHelper('s-accordion', 'content');
 
 export default Vue.extend({
-  name: 'ui-accordion-item',
+  name: 's-accordion-item',
 
   // XXX parent should handle state
   data() {

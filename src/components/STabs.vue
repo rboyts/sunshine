@@ -1,8 +1,8 @@
 <template>
-  <div class="ui-tabs">
+  <div class="s-tabs">
     <slot />
-    <div class="ui-tabs__border">
-      <div v-if="highlight.width !== '-1'" class="ui-tabs__highlight" :style="highlight" />
+    <div class="s-tabs__border">
+      <div v-if="highlight.width !== '-1'" class="s-tabs__highlight" :style="highlight" />
     </div>
   </div>
 </template>
@@ -11,7 +11,7 @@
 import Vue, { VNode } from 'vue';
 
 export default Vue.extend({
-  name: 'ui-tabs',
+  name: 's-tabs',
 
   data() {
     return {

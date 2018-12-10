@@ -15,17 +15,17 @@
     >
 
       <template slot="menu">
-        <ui-menu v-model="menuOpen">
+        <s-menu v-model="menuOpen">
           <div slot="activator" style="width: 2.5rem">
             <i class="fas fa-ellipsis-h" />
           </div>
 
           <div slot="content" style="padding: .5rem; white-space: nowrap">
             <div v-for="oc in orderedColumns" :key="oc.column.key" >
-              <ui-checkbox v-model="oc.visible">{{ oc.column.title }}</ui-checkbox>
+              <s-checkbox v-model="oc.visible">{{ oc.column.title }}</s-checkbox>
             </div>
           </div>
-        </ui-menu>
+        </s-menu>
       </template>
 
       <!-- Pass on all named slots -->
@@ -38,9 +38,9 @@
 
     <!-- XXX Hard-coded height here, because there is some unresolved flexbox issue -->
     <div class="flex-row flex-end" style="min-height: 24px">
-      <ui-button small @click="pdfExport">PDF</ui-button>
+      <s-button small @click="pdfExport">PDF</s-button>
         &nbsp;
-      <ui-button small @click="excelExport">XLS</ui-button>
+      <s-button small @click="excelExport">XLS</s-button>
     </div>
 
   </div>
@@ -48,9 +48,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import UiMenu from './UiMenu.vue';
-import UiButton from './UiButton.vue';
-import UiCheckbox from './UiCheckbox.vue';
+import SMenu from './SMenu.vue';
+import SButton from './SButton.vue';
+import SCheckbox from './SCheckbox.vue';
 import DataTableInternal from './internal/DataTableInternal';
 import { ISortState, IItem, IColumn } from './types';
 
@@ -80,13 +80,13 @@ export { IColumn, ISortState, IItem, FetchData } from './types';
 
 
 export default Vue.extend({
-  name: 'ui-data-table',
+  name: 's-data-table',
   inheritAttrs: false,
 
   components: {
-    UiMenu,
-    UiButton,
-    UiCheckbox,
+    SMenu,
+    SButton,
+    SCheckbox,
     DataTableInternal,
   },
 

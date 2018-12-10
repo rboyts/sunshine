@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UiSelect renders select box 1`] = `
-<span class="ui-menu"><span><button class="ui-btn" style="text-align: left; min-width: 150px;"><span tabindex="-1" class="inline-flex ui-btn__content ui-btn__content--secondary"> <span class="flex-grow">
+<span class="s-menu"><span><button class="s-btn" style="text-align: left; min-width: 150px;"><span tabindex="-1" class="inline-flex s-btn__content s-btn__content--secondary"> <span class="flex-grow">
     Choose country
     </span> <span>⯆</span></span></button></span>
 <!----></span>

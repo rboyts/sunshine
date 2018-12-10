@@ -2,7 +2,7 @@
 
 $inspector-padding: 1.5rem;
 
-.ui-inspector {
+.s-inspector {
   position: fixed;
   z-index: 1000;
   right: 0;
@@ -13,15 +13,15 @@ $inspector-padding: 1.5rem;
   padding: $inspector-padding;
 }
 
-.ui-inspector__header {
+.s-inspector__header {
   margin-bottom: 2rem;
 }
 
-.ui-inspector__main {
+.s-inspector__main {
   overflow-y: auto;
 }
 
-.ui-inspector__footer {
+.s-inspector__footer {
   // position: sticky;
   margin-top: 1rem;
 }

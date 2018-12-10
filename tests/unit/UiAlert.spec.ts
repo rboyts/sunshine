@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
-import UiAlert from '@/components/UiAlert.vue';
+import SAlert from '@/components/SAlert.vue';
 
-describe('UiAlert', () => {
+describe('SAlert', () => {
   it('renders successful alert', () => {
-    const wrapper = mount(UiAlert, {
+    const wrapper = mount(SAlert, {
       propsData: { success: true },
       slots: {
         default: 'Success message',
@@ -13,7 +13,7 @@ describe('UiAlert', () => {
   });
 
   it('renders warning alert', () => {
-    const wrapper = mount(UiAlert, {
+    const wrapper = mount(SAlert, {
       propsData: { warning: true },
       slots: {
         default: 'Warning message',
@@ -23,7 +23,7 @@ describe('UiAlert', () => {
   });
 
   it('renders error alert', () => {
-    const wrapper = mount(UiAlert, {
+    const wrapper = mount(SAlert, {
       propsData: { error: true },
       slots: {
         default: 'Error message',
@@ -33,13 +33,13 @@ describe('UiAlert', () => {
   });
 
   it('renders button', () => {
-    const wrapper = mount(UiAlert, {
+    const wrapper = mount(SAlert, {
       propsData: { warning: true },
-      stubs: ['ui-button'],
+      stubs: ['s-button'],
       slots: {
         default: 'Warning message',
         buttons: `
-          <ui-button small>Foo</ui-button>
+          <s-button small>Foo</s-button>
         `,
       },
     });

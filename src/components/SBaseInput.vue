@@ -9,11 +9,11 @@
 import Vue from 'vue';
 import { classHelper } from '../lib/utils';
 
-const inputClassHelper = classHelper('ui-input');
-const labelClassHelper = classHelper('ui-input', 'label');
+const inputClassHelper = classHelper('s-input');
+const labelClassHelper = classHelper('s-input', 'label');
 
 export default Vue.extend({
-  name: 'ui-base-input',
+  name: 's-base-input',
 
   props: {
     label: String,

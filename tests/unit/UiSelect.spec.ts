@@ -1,11 +1,11 @@
 import { mount, config } from '@vue/test-utils';
-import UiSelect from '@/components/UiSelect.vue';
+import SSelect from '@/components/SSelect.vue';
 
 config.logModifiedComponents = false;
 
-describe('UiSelect', () => {
+describe('SSelect', () => {
   it('renders select box', () => {
-    const wrapper = mount(UiSelect, {
+    const wrapper = mount(SSelect, {
       propsData: {
         items: [
           {title: 'Norge'},

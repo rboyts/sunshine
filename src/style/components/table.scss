@@ -10,7 +10,7 @@ $table-condensed-padding: .5rem;
 $table-normal-row-height: 2.5rem;
 $table-condensed-row-height: 1.5rem;
 
-.ui-data-table {
+.s-data-table {
   @include paragraph-font;
 
   position: relative;
@@ -25,25 +25,25 @@ $table-condensed-row-height: 1.5rem;
   flex-direction: column;
 
   &--condensed {
-    .ui-data-table__toggle {
+    .s-data-table__toggle {
       margin-left: -$table-condensed-padding;
     }
   }
 
   // XXX Use when adjusting column width
   &--fixed {
-    .ui-data-table__table {
+    .s-data-table__table {
       width: 0;
     }
   }
 
 }
 
-.ui-data-table__wrapper {
+.s-data-table__wrapper {
   overflow: auto;
 }
 
-.ui-data-table__table {
+.s-data-table__table {
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -72,7 +72,7 @@ $table-condensed-row-height: 1.5rem;
     z-index: 2;
   }
 
-  .ui-data-table__col {
+  .s-data-table__col {
     &--sticky {
       position: sticky;
       left: 0;
@@ -83,14 +83,14 @@ $table-condensed-row-height: 1.5rem;
     }
   }
 
-  th.ui-data-table__col {
+  th.s-data-table__col {
     &--sticky {
       z-index: 3;
       border-right: $th-inner-border;
     }
   }
 
-  td.ui-data-table__col {
+  td.s-data-table__col {
     &--sticky {
       z-index: 1;
       border-right: $inner-border;
@@ -106,19 +106,19 @@ $table-condensed-row-height: 1.5rem;
   }
 }
 
-.ui-data-table--condensed .ui-data-table__table {
+.s-data-table--condensed .s-data-table__table {
   th, td {
     height: $table-condensed-row-height;
     line-height: $table-condensed-row-height;
   }
 
   td,
-  .ui-data-table__header {
+  .s-data-table__header {
     padding: 0 $table-condensed-padding;
   }
 }
 
-.ui-data-table__header {
+.s-data-table__header {
   @include action-font;
 
   display: flex;
@@ -129,7 +129,7 @@ $table-condensed-row-height: 1.5rem;
   cursor: pointer;
 }
 
-.ui-data-table__toggle {
+.s-data-table__toggle {
   display: inline-block;
   height: 100%;
   width: base-spacing(5);
@@ -151,7 +151,7 @@ $table-condensed-row-height: 1.5rem;
   }
 }
 
-.ui-data-table__outline {
+.s-data-table__outline {
   display: inline-block;
   height: 100%;
   margin-right: base-spacing();
@@ -164,7 +164,7 @@ $table-condensed-row-height: 1.5rem;
   }
 }
 
-.ui-data-table__outline__section {
+.s-data-table__outline__section {
   display: inline-block;
   text-align: center;
   height: 100%;
@@ -173,11 +173,11 @@ $table-condensed-row-height: 1.5rem;
   position: relative;
 }
 
-.ui-data-table__header__sort {
+.s-data-table__header__sort {
   transition: transform $duration-normal;
 }
 
-.ui-data-table__move-cursor {
+.s-data-table__move-cursor {
   position: absolute;
   z-index: 5;
   top: 0;

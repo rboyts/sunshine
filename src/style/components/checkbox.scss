@@ -3,7 +3,7 @@ $checkbox-border-radius: 3px;
 $checkbox-spacing: base-spacing();
 $checkbox-border-width: 1px;
 
-.ui-checkbox {
+.s-checkbox {
   @include paragraph-font;
 
   display: inline-flex;
@@ -11,20 +11,20 @@ $checkbox-border-width: 1px;
   line-height: $checkbox-height;
 
   &--focus,
-  &:hover:not(.ui-checkbox--inactive) {
-    .ui-checkbox__box {
+  &:hover:not(.s-checkbox--inactive) {
+    .s-checkbox__box {
       border-color: $color-edit;
     }
   }
 
   &--inactive {
-    .ui-checkbox__box {
+    .s-checkbox__box {
       background-color: $almost-gray;
     }
   }
 }
 
-.ui-checkbox__box {
+.s-checkbox__box {
   position: relative;
   display: inline-flex;
   align-items: center;

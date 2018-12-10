@@ -10,11 +10,11 @@ const NORMAL_ROW_HEIGHT = 40;
 const CONDENSED_ROW_HEIGHT = 24;
 const OUTLINE_WIDTH = 24;   // Must correspond to CSS
 
-const tableClassHelper = classHelper('ui-data-table');
-const columnClassHelper = classHelper('ui-data-table', 'col');
-const headerClassHelper = classHelper('ui-data-table', 'header');
-const sortClassHelper = classHelper('ui-data-table', 'header', 'sort');
-const toggleClassHelper = classHelper('ui-data-table', 'toggle');
+const tableClassHelper = classHelper('s-data-table');
+const columnClassHelper = classHelper('s-data-table', 'col');
+const headerClassHelper = classHelper('s-data-table', 'header');
+const sortClassHelper = classHelper('s-data-table', 'header', 'sort');
+const toggleClassHelper = classHelper('s-data-table', 'toggle');
 
 interface IDragState {
   dragColumnIndex: number;
@@ -125,7 +125,7 @@ export default Vue.extend({
         let tr = el.closest('tr') as HTMLElement;
         if (tr === null) return;
 
-        let root = tr.closest('.ui-data-table__wrapper') as HTMLElement;
+        let root = tr.closest('.s-data-table__wrapper') as HTMLElement;
         if (root === null) return;
 
         let height = root.scrollHeight;
@@ -213,7 +213,7 @@ export default Vue.extend({
       const h = this.$createElement;
 
       return h('table', {
-          class: 'ui-data-table__table',
+          class: 's-data-table__table',
         }, [
           this.renderColgroup(),
           this.renderHeader(),
@@ -323,15 +323,15 @@ export default Vue.extend({
       // Draw outline for this item, if it is a child item. This line will
       // connect to the line of the line above.
       if (node.parent != null) {
-        children.push(h('span', {class: 'ui-data-table__outline__section'}, [
+        children.push(h('span', {class: 's-data-table__outline__section'}, [
           this.renderAngle(!node.isLastChild),
         ]));
       }
 
       // Render icon and start line that child items will connect to, if any.
-      children.push(h('span', {class: 'ui-data-table__outline__section'}, [
+      children.push(h('span', {class: 's-data-table__outline__section'}, [
         node.children.length && node.item.isOpen ? this.renderTail() : '',
-        node.item.icon ? h('i', {class: [node.item.icon, 'ui-data-table__icon']}) : '',
+        node.item.icon ? h('i', {class: [node.item.icon, 's-data-table__icon']}) : '',
       ]));
 
       // Render nested children with correct indentation, and connect lines between
@@ -341,14 +341,14 @@ export default Vue.extend({
       let p = node.parent;
       while (p != null) {
         if (p.parent) {
-          children.unshift(h('span', {class: 'ui-data-table__outline__section'}, [
+          children.unshift(h('span', {class: 's-data-table__outline__section'}, [
             !p.isLastChild ? this.renderLine() : '',
           ]));
         }
         p = p.parent;
       }
 
-      return h('span', {class: 'ui-data-table__outline'}, children);
+      return h('span', {class: 's-data-table__outline'}, children);
     },
 
     renderLine(): VNode {
@@ -541,7 +541,7 @@ export default Vue.extend({
         }
 
         children.push(h('div', {
-          class: 'ui-data-table__move-cursor',
+          class: 's-data-table__move-cursor',
           style: {
             left: `${pos}px`,
             width: `${width}px`,
@@ -580,7 +580,7 @@ export default Vue.extend({
       [
         this.renderMoveCursor(),
         h('div', {
-          class: 'ui-data-table__wrapper',
+          class: 's-data-table__wrapper',
           on: {
             scroll: this.onScroll,
           },

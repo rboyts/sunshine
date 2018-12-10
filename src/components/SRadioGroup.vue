@@ -8,7 +8,7 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'ui-radio-group',
+  name: 's-radio-group',
 
   provide() {
     return {

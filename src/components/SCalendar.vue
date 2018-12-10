@@ -2,7 +2,7 @@
   <div>
     <transition :name="transition">
       <div class="month" :key="month">
-        <ui-calendar-internal :date="date" />
+        <s-calendar-internal :date="date" />
       </div>
     </transition>
   </div>
@@ -11,13 +11,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment from 'moment';
-import UiCalendarInternal from './internal/UiCalendarInternal.vue';
+import SCalendarInternal from './internal/SCalendarInternal.vue';
 
 export default Vue.extend({
-  name: 'ui-celendar',
+  name: 's-celendar',
 
   components: {
-    UiCalendarInternal,
+    SCalendarInternal,
   },
 
   data() {

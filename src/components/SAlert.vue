@@ -1,10 +1,10 @@
 <template>
   <div :class="classes">
-    <div class="ui-alert__main">
+    <div class="s-alert__main">
       <slot />
     </div>
 
-    <div class="ui-alert__buttons">
+    <div class="s-alert__buttons">
       <slot name="buttons" />
     </div>
   </div>
@@ -14,11 +14,11 @@
 import Vue from 'vue';
 import { classHelper } from '../lib/utils';
 
-const alertClassHelper = classHelper('ui-alert');
+const alertClassHelper = classHelper('s-alert');
 
 
 export default Vue.extend({
-  name: 'ui-alert',
+  name: 's-alert',
 
   props: {
     success: {

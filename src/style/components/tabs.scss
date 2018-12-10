@@ -8,19 +8,19 @@ $tabs-link-color: $grayer;
 $tabs-link-active-color: $almost-black;
 
 
-.ui-tabs {
+.s-tabs {
   position: relative;
   margin-bottom: $tabs-margin-bottom;
   white-space: nowrap;
 }
 
-.ui-tabs__border {
+.s-tabs__border {
   width: inherit;
   height: $tabs-border-width;
   background-color: $almost-gray;
 }
 
-.ui-tabs__highlight {
+.s-tabs__highlight {
   position: absolute;
   height: $tabs-border-width;
   bottom: 0;
@@ -29,7 +29,7 @@ $tabs-link-active-color: $almost-black;
   transition: $duration-normal;
 }
 
-.ui-tab__link {
+.s-tab__link {
   display: inline-block;
   height: $tabs-height;
   line-height: $tabs-line-height;

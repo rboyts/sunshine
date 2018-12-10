@@ -7,7 +7,7 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'ui-icon',
+  name: 's-icon',
 
   props: {
     name: {
@@ -18,7 +18,7 @@ export default Vue.extend({
 
   computed: {
     classes() {
-      return 'ui-icon';
+      return 's-icon';
     },
 
     icon() {

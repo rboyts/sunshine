@@ -1,12 +1,12 @@
 $accordion-header-height: 3rem;
 $accordion-chevron-size: .5rem;
 
-.ui-accordion {
+.s-accordion {
   max-width: 400px;
   // border: 1px solid $gray;
 }
 
-.ui-accordion__heading {
+.s-accordion__heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,7 +17,7 @@ $accordion-chevron-size: .5rem;
   color: inherit;
 }
 
-.ui-accordion__chevron {
+.s-accordion__chevron {
   margin-right: $accordion-chevron-size;
 
   transform-origin: 50% 45%;
@@ -28,7 +28,7 @@ $accordion-chevron-size: .5rem;
   }
 }
 
-.ui-accordion__body {
+.s-accordion__body {
   position: relative;
   overflow: hidden;
 
@@ -36,7 +36,7 @@ $accordion-chevron-size: .5rem;
   transition-property: height, opacity;
 }
 
-.ui-accordion__content {
+.s-accordion__content {
   position: absolute;
   padding-top: .5rem;
   padding-bottom: 1.5rem;

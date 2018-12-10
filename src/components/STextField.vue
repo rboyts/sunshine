@@ -1,5 +1,5 @@
 <template>
-  <ui-base-input
+  <s-base-input
     :inactive="inactive"
     :hasFocus="hasFocus"
     :isEmpty="isEmpty"
@@ -7,7 +7,7 @@
   >
 
     <input
-      class="ui-input__input"
+      class="s-input__input"
       :type="type"
       :value="value"
       :disabled="inactive"
@@ -20,23 +20,23 @@
     <!-- expected format -->
     <span
       v-if="hasFocus && format"
-      class="ui-input__format"
+      class="s-input__format"
     >
-      <span class="ui-input__value">{{ value }}</span><span class="ui-input__format__remaining">{{ remainingFormat }}</span>
+      <span class="s-input__value">{{ value }}</span><span class="s-input__format__remaining">{{ remainingFormat }}</span>
     </span>
 
-  </ui-base-input>
+  </s-base-input>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import UiBaseInput from './UiBaseInput.vue';
+import SBaseInput from './SBaseInput.vue';
 
 export default Vue.extend({
-  name: 'ui-text-field',
+  name: 's-text-field',
 
   components: {
-    UiBaseInput,
+    SBaseInput,
   },
 
   props: {

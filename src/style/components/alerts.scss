@@ -4,7 +4,7 @@ $alert-height: base-spacing(6);
 $alert-padding: base-spacing(2);
 $alert-border-width: base-spacing(1);
 
-.ui-alert {
+.s-alert {
   @include paragraph-font;
 
   display: flex;
@@ -33,7 +33,7 @@ $alert-border-width: base-spacing(1);
     border-color: $color-bad;
   }
 
-  .ui-icon {
+  .s-icon {
     display: inline-block;
     font-size: 1.2rem;
     height: $alert-height;
@@ -50,13 +50,13 @@ $alert-border-width: base-spacing(1);
   }
 }
 
-.ui-alert__main {
+.s-alert__main {
   flex: 1;
 }
 
-.ui-alert__buttons {
+.s-alert__buttons {
 
-  .ui-btn {
+  .s-btn {
     margin-left: .5rem;
   }
 }

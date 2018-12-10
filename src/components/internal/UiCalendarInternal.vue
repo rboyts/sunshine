@@ -3,7 +3,7 @@ import Vue, { VNode } from 'vue';
 import moment from 'moment';
 
 export default Vue.extend({
-  name: 'ui-calendar-internal',
+  name: 's-calendar-internal',
 
   props: {
     date: Object as () => moment.Moment,
@@ -19,7 +19,7 @@ export default Vue.extend({
       let children: VNode[] = [];
       for (let d = start; d < end; d = d.add(1, 'day')) {
         children.push(h('span', {
-            class: 'ui-calendar__header',
+            class: 's-calendar__header',
           },
           weekdays[d.day()]));
       }
@@ -46,16 +46,16 @@ export default Vue.extend({
       const text = date.format('LLLL');
       return h('span', {
         class: {
-          'ui-calendar__day': true,
-          'ui-calendar__day--weekend': date.day() === 6 || date.day() === 0,
-          'ui-calendar__day--other-month': date.month() !== this.date.month(),
+          's-calendar__day': true,
+          's-calendar__day--weekend': date.day() === 6 || date.day() === 0,
+          's-calendar__day--other-month': date.month() !== this.date.month(),
         },
       },
       [
         h('span', {
           class: {
-            'ui-calendar__date': true,
-            'ui-calendar__date--sunday': date.day() === 0,
+            's-calendar__date': true,
+            's-calendar__date--sunday': date.day() === 0,
           },
         }, d),
       ]);
@@ -64,7 +64,7 @@ export default Vue.extend({
 
   render(): VNode {
     const h = this.$createElement;
-    return h('div', {class: 'ui-calendar'}, [
+    return h('div', {class: 's-calendar'}, [
       this.renderHeader(),
       this.renderMonth(),
     ]);

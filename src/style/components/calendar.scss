@@ -1,7 +1,7 @@
 $inner-border-width: 1px;
 $inner-border: $inner-border-width solid #ccc;
 
-.ui-calendar {
+.s-calendar {
   display: grid;
 
   border-radius: 3px;
@@ -24,12 +24,12 @@ $inner-border: $inner-border-width solid #ccc;
   }
 }
 
-.ui-calendar__header {
+.s-calendar__header {
   background-color: $whiteish;
   color: $almost-black;
 }
 
-.ui-calendar__day {
+.s-calendar__day {
   background-color: #fff;
 
   &--weekend {
@@ -41,7 +41,7 @@ $inner-border: $inner-border-width solid #ccc;
   }
 }
 
-.ui-calendar__date {
+.s-calendar__date {
   float: right;
   @include action-font;
 

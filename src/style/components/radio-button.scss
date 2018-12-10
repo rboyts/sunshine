@@ -1,7 +1,7 @@
 $radio-button-height: base-spacing(2);
 $radio-button-spacing: base-spacing();
 
-.ui-radio-button {
+.s-radio-button {
   @include paragraph-font;
 
   display: inline-flex;
@@ -9,20 +9,20 @@ $radio-button-spacing: base-spacing();
   line-height: $radio-button-height;
 
   &--focus,
-  &:hover:not(.ui-radio-button--inactive) {
-    .ui-radio-button__box {
+  &:hover:not(.s-radio-button--inactive) {
+    .s-radio-button__box {
       border-color: $color-edit;
     }
   }
 
   &--inactive {
-    .ui-radio-button__box {
+    .s-radio-button__box {
       background-color: $almost-gray;
     }
   }
 }
 
-.ui-radio-button__box {
+.s-radio-button__box {
   position: relative;
   display: inline-flex;
   align-items: center;

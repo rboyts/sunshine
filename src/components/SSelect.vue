@@ -1,6 +1,6 @@
 <template>
-  <ui-menu v-model="show">
-    <ui-button
+  <s-menu v-model="show">
+    <s-button
       style="text-align: left; min-width: 150px"
       slot="activator"
       @keydown="onKeyPress"
@@ -9,34 +9,34 @@
     >
       {{ text }}
       <span slot="right">&#x2bc6;</span>
-    </ui-button>
+    </s-button>
     <div slot="content">
-      <ul class="ui-select__list">
+      <ul class="s-select__list">
         <li v-for="item in items"
-          class="ui-select__list__item"
+          class="s-select__list__item"
           :key="item.key"
-          :class="{'ui-select__list__item--selected': item === value}"
+          :class="{'s-select__list__item--selected': item === value}"
         >
           <a href="#" @click.prevent="onClick(item)">{{ item[labelKey] }}</a>
         </li>
       </ul>
     </div>
-  </ui-menu>
+  </s-menu>
 </template>
 
 
 <script lang="ts">
 import Vue from 'vue';
-import UiButton from './UiButton.vue';
-import UiMenu from './UiMenu.vue';
+import SButton from './SButton.vue';
+import SMenu from './SMenu.vue';
 
 export default Vue.extend({
-  name: 'ui-select',
+  name: 's-select',
   inheritAttrs: false,
 
   components: {
-    UiButton,
-    UiMenu,
+    SButton,
+    SMenu,
   },
 
   props: {

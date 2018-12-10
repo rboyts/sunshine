@@ -1,6 +1,6 @@
 <template>
   <label :class="classes">
-    <span class="ui-checkbox__box">
+    <span class="s-checkbox__box">
       <input
         type="checkbox"
         :checked="checked"
@@ -21,10 +21,10 @@
 import Vue from 'vue';
 import { classHelper } from '../lib/utils';
 
-const checkboxClassHelper = classHelper('ui-checkbox');
+const checkboxClassHelper = classHelper('s-checkbox');
 
 export default Vue.extend({
-  name: 'ui-checkbox',
+  name: 's-checkbox',
 
   model: {
     prop: 'checked',

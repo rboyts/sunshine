@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-accordion">
+  <div class="s-accordion">
     <slot />
   </div>
 </template>

@@ -1,31 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UiAlert renders button 1`] = `
-<div class="ui-alert ui-alert--warning">
-  <div class="ui-alert__main">Warning message</div>
-  <div class="ui-alert__buttons">
-    <ui-button-stub small="">Foo</ui-button-stub>
+<div class="s-alert s-alert--warning">
+  <div class="s-alert__main">Warning message</div>
+  <div class="s-alert__buttons">
+    <s-button-stub small="">Foo</s-button-stub>
   </div>
 </div>
 `;
 
 exports[`UiAlert renders error alert 1`] = `
-<div class="ui-alert ui-alert--error">
-  <div class="ui-alert__main">Error message</div>
-  <div class="ui-alert__buttons"></div>
+<div class="s-alert s-alert--error">
+  <div class="s-alert__main">Error message</div>
+  <div class="s-alert__buttons"></div>
 </div>
 `;
 
 exports[`UiAlert renders successful alert 1`] = `
-<div class="ui-alert ui-alert--success">
-  <div class="ui-alert__main">Success message</div>
-  <div class="ui-alert__buttons"></div>
+<div class="s-alert s-alert--success">
+  <div class="s-alert__main">Success message</div>
+  <div class="s-alert__buttons"></div>
 </div>
 `;
 
 exports[`UiAlert renders warning alert 1`] = `
-<div class="ui-alert ui-alert--warning">
-  <div class="ui-alert__main">Warning message</div>
-  <div class="ui-alert__buttons"></div>
+<div class="s-alert s-alert--warning">
+  <div class="s-alert__main">Warning message</div>
+  <div class="s-alert__buttons"></div>
 </div>
 `;

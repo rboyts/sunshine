@@ -1,6 +1,6 @@
 <template>
   <label :class="classes">
-    <span class="ui-radio-button__box">
+    <span class="s-radio-button__box">
       <input
         type="radio"
         :name="name"
@@ -22,10 +22,10 @@
 import Vue from 'vue';
 import { classHelper } from '../lib/utils';
 
-const radioButtonClassHelper = classHelper('ui-radio-button');
+const radioButtonClassHelper = classHelper('s-radio-button');
 
 export default Vue.extend({
-  name: 'ui-radio-button',
+  name: 's-radio-button',
 
   props: {
     value: String,

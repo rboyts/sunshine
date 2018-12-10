@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
-import UiButton from '@/components/UiButton.vue';
+import SButton from '@/components/SButton.vue';
 
-describe('UiButton', () => {
+describe('SButton', () => {
   it('renders normal button', () => {
-    const wrapper = mount(UiButton, {
+    const wrapper = mount(SButton, {
       slots: {
         default: 'Normal button',
       },
@@ -12,7 +12,7 @@ describe('UiButton', () => {
   });
 
   it('renders primary button', () => {
-    const wrapper = mount(UiButton, {
+    const wrapper = mount(SButton, {
       propsData: {
         primary: true,
       },
@@ -24,7 +24,7 @@ describe('UiButton', () => {
   });
 
   it('renders small button', () => {
-    const wrapper = mount(UiButton, {
+    const wrapper = mount(SButton, {
       propsData: {
         small: true,
       },

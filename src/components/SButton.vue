@@ -14,11 +14,11 @@
 import Vue from 'vue';
 import { classHelper } from '../lib/utils';
 
-const buttonClassHelper = classHelper('ui-btn');
-const contentClassHelper = classHelper('ui-btn', 'content');
+const buttonClassHelper = classHelper('s-btn');
+const contentClassHelper = classHelper('s-btn', 'content');
 
 export default Vue.extend({
-  name: 'ui-button',
+  name: 's-button',
   inheritAttrs: true,
 
   props: {

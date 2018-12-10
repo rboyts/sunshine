@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`UiButton renders normal button 1`] = `<button class="ui-btn"><span tabindex="-1" class="inline-flex ui-btn__content ui-btn__content--secondary"> <span class="flex-grow">Normal button</span> </span></button>`;
+exports[`UiButton renders normal button 1`] = `<button class="s-btn"><span tabindex="-1" class="inline-flex s-btn__content s-btn__content--secondary"> <span class="flex-grow">Normal button</span> </span></button>`;
 
-exports[`UiButton renders primary button 1`] = `<button class="ui-btn"><span tabindex="-1" class="inline-flex ui-btn__content ui-btn__content--main"> <span class="flex-grow">Primary button</span> </span></button>`;
+exports[`UiButton renders primary button 1`] = `<button class="s-btn"><span tabindex="-1" class="inline-flex s-btn__content s-btn__content--main"> <span class="flex-grow">Primary button</span> </span></button>`;
 
-exports[`UiButton renders small button 1`] = `<button class="ui-btn ui-btn--small"><span tabindex="-1" class="inline-flex ui-btn__content ui-btn__content--secondary"> <span class="flex-grow">Small button</span> </span></button>`;
+exports[`UiButton renders small button 1`] = `<button class="s-btn s-btn--small"><span tabindex="-1" class="inline-flex s-btn__content s-btn__content--secondary"> <span class="flex-grow">Small button</span> </span></button>`;

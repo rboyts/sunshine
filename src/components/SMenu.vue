@@ -1,11 +1,11 @@
 <template>
-  <span ref="activator" class="ui-menu">
+  <span ref="activator" class="s-menu">
     <span @click="onClick">
       <slot name="activator" />
     </span>
 
     <transition name="dropdown">
-      <div v-if="value" class="ui-menu__popup" :style="style" @click.stop="onContentClick">
+      <div v-if="value" class="s-menu__popup" :style="style" @click.stop="onContentClick">
         <slot name="content"></slot>
       </div>
     </transition>
@@ -25,7 +25,7 @@ window.addEventListener('click', (event: MouseEvent) => {
 });
 
 export default Vue.extend({
-  name: 'ui-menu',
+  name: 's-menu',
 
   props: {
     value: Boolean,
