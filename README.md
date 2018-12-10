@@ -1,4 +1,6 @@
-# SmartDok UI
+# SmartDok Sunshine
+
+UI component library for SmartDok.
 
 ## Project setup
 ```
