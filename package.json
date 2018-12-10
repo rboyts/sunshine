@@ -1,20 +1,20 @@
 {
-  "name": "grey-fish",
+  "name": "smartdok-ui",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "vue-cli-service build --target lib --name fjellsol ./src/components/index.ts",
+    "build": "vue-cli-service build --target lib --name smartdok-ui ./src/components/index.ts",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },
   "main": "src/index.ts",
   "dependencies": {
     "debounce": "^1.2.0",
-    "moment": "^2.22.2",
+    "moment": "^2.22.2"
   },
   "peerDependencies": {
     "d3": "^5.7.0",
-    "vue": "^2.5.17",
+    "vue": "^2.5.17"
   },
   "devDependencies": {
     "@types/d3": "^5.0.0",

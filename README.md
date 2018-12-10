@@ -1,4 +1,4 @@
-# data-table
+# SmartDok UI
 
 ## Project setup
 ```
@@ -18,4 +18,9 @@ yarn run build
 ### Lints and fixes files
 ```
 yarn run lint
+```
+
+### Runs tests
+```
+yarn test:unit
 ```
