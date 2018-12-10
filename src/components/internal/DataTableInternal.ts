@@ -1,7 +1,7 @@
 import Vue, { VNode, VNodeChildrenArrayContents, CreateElement } from 'vue';
 import debounce from 'debounce';
 import { IColumn, IItem, IItemData, ISortState } from '../types';
-import { classHelper } from '@/lib/utils';
+import { classHelper } from '../../lib/utils';
 
 const SCROLL_DEBOUNCE = 250;
 const MOVE_TIMEOUT = 350;

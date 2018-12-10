@@ -1,7 +1,5 @@
 <template>
-  <ui-menu
-    v-model="show"
-  >
+  <ui-menu v-model="show">
     <ui-button
       style="text-align: left; min-width: 150px"
       slot="activator"

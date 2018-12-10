@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { classHelper } from '@/lib/utils';
+import { classHelper } from '../lib/utils';
 
 const alertClassHelper = classHelper('ui-alert');
 

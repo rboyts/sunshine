@@ -1,7 +1,7 @@
 <template>
   <span ref="activator" class="ui-menu">
     <span @click="onClick">
-      <slot name="activator"></slot>
+      <slot name="activator" />
     </span>
 
     <transition name="dropdown">

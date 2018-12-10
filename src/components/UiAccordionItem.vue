@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { classHelper } from '@/lib/utils';
+import { classHelper } from '../lib/utils';
 
 const chevronClassHelper = classHelper('ui-accordion', 'chevron');
 const bodyClassHelper = classHelper('ui-accordion', 'body');

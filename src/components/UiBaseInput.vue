@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { classHelper } from '@/lib/utils';
+import { classHelper } from '../lib/utils';
 
 const inputClassHelper = classHelper('ui-input');
 const labelClassHelper = classHelper('ui-input', 'label');

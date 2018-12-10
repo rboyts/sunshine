@@ -20,7 +20,7 @@
 
 <script>
 import Vue from 'vue';
-import { classHelper } from '@/lib/utils';
+import { classHelper } from '../lib/utils';
 
 const radioButtonClassHelper = classHelper('ui-radio-button');
 
