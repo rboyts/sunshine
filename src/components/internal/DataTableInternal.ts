@@ -126,7 +126,7 @@ export default Vue.extend({
       event.preventDefault();
 
       clearTimeout(this.moveTimeoutId);
-      this.moveTimeoutId = setTimeout(() => {
+      this.moveTimeoutId = window.setTimeout(() => {
         let el = event.target as HTMLElement;
 
         let tr = el.closest('tr') as HTMLElement;
