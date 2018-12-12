@@ -48,8 +48,10 @@
   @include action-font;
   color: $almost-black;
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     border-bottom: 2px solid $smartdok-yellow;
+    text-decoration: none;
   }
 }
