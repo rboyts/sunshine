@@ -30,6 +30,7 @@ interface INode {
   parent: INode | null;
   children: INode[];
   isLastChild: boolean;
+  isOpen: boolean;
 }
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
@@ -67,14 +68,20 @@ export default Vue.extend({
       menuOpen: false,
       drag: null as IDragState | null,
       moveTimeoutId: undefined as number | undefined,
+      nodes: [] as INode[],
     };
   },
 
-  computed: {
-    nodes(): INode[] {
-      return this.getNodes(null, this.items);
+  watch: {
+    items: {
+      handler() {
+        this.nodes = this.getNodes(null, this.items);
+      },
+      immediate: true,
     },
+  },
 
+  computed: {
     firstContentColumn(): number {
       // XXX Need this if toggle/outline is in separate column
       return 0;
@@ -267,6 +274,7 @@ export default Vue.extend({
           item,
           isLastChild: i === items.length - 1,
           children: [],
+          isOpen: false,
         };
 
         node.children = item.children ? this.getNodes(node, item.children) : [];
@@ -288,7 +296,7 @@ export default Vue.extend({
         ],
       );
 
-      if (node.item.isOpen) {
+      if (node.isOpen) {
         return [el].concat(this.renderNodes(node.children));
       } else {
         return [el];
@@ -305,12 +313,12 @@ export default Vue.extend({
         children.push(h('i', {domProps: {innerHTML: '&nbsp;'}}));
       }
 
-      const item = node.item;
-
       return h('span', {
-        class: toggleClassHelper({open: item.isOpen === true}),
+        class: toggleClassHelper({open: node.isOpen === true}),
         on: {
-          click: () => Vue.set(item, 'isOpen', !item.isOpen),
+          click: () => {
+            node.isOpen = !node.isOpen;
+          },
         },
       }, children);
     },
@@ -330,7 +338,7 @@ export default Vue.extend({
 
       // Render icon and start line that child items will connect to, if any.
       children.push(h('span', {class: 's-data-table__outline__section'}, [
-        node.children.length && node.item.isOpen ? this.renderTail() : '',
+        node.children.length && node.isOpen ? this.renderTail() : '',
         node.item.icon ? h('i', {class: [node.item.icon, 's-data-table__icon']}) : '',
       ]));
 

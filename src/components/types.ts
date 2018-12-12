@@ -20,7 +20,6 @@ export interface IItemData {
 export interface IItem {
   children?: IItem[];
   icon?: string;
-  isOpen?: boolean;
 
   data: IItemData;
 }
