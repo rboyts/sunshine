@@ -41,8 +41,12 @@ export default Vue.extend({
 
   props: {
     value: {
-      type: String,
+      type: [String, Number],
       default: '',
+    },
+    number: {
+      type: Boolean,
+      default: false,
     },
     phone: {
       type: Boolean,
@@ -79,6 +83,8 @@ export default Vue.extend({
 
     type(): string {
       switch (true) {
+        case this.number:
+          return 'number';
         case this.phone:
           return 'tel';
         case this.password:
@@ -92,7 +98,7 @@ export default Vue.extend({
 
     remainingFormat(): string {
       if (!this.format) return '';
-      return this.format.substring(this.value.length);
+      return this.format.substring(`${this.value}`.length);
     },
   },
 
