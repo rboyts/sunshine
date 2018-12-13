@@ -1,3 +1,17 @@
+<!--
+
+Use cases:
+
+- Simple drop-down (no keyboard input, just select one of multiple available options)
+- Drop-down with search (use keyboard input only to filter available options, not possible to input arbitrary text)
+- Auto-complete (list is initially empty, only shows suggestions when partial text is entered)
+- Multi-select (items have checkbox, input shows comma separated list or "N items selected")
+- Multi-select with search
+- Search/create new when not found?
+
+-->
+
+
 <template>
   <s-menu :value="hasFocus">
     <s-base-input
