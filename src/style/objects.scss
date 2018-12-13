@@ -41,6 +41,11 @@
 @for $i from 1 through 12 {
   .grid-item--span-#{$i} {
     grid-column: span $i;
+
+    // TODO: Find out the proper way to make content fill item
+    > * {
+      width: 100%;
+    }
   }
 }
 
