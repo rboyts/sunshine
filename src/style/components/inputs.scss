@@ -9,7 +9,8 @@ $input-font-size: $paragraph-font-size;
 
 .s-input {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   border: $input-border-width solid $input-border-color;
   border-radius: 4px;  // 4% / 2% gives no visible radius
   background-color: $input-bg-color;

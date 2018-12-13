@@ -8,7 +8,9 @@
       v-on="$listeners"
     >
       {{ text }}
-      <span slot="right">&#x2bc6;</span>
+      <span slot="right">
+        <i class="fas fa-caret-down" />
+      </span>
     </s-button>
     <div slot="content">
       <ul class="s-select__list">
