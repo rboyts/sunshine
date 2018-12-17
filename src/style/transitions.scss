@@ -1,20 +1,22 @@
 
 .dropdown-enter-active {
   animation: drop-down .2s;
-  transform-origin: 0 0;
+
+  > div {
+    animation: fade 2s;
+  }
 }
 
 .dropdown-leave-active {
   animation: drop-down .2s reverse;
-  transform-origin: 0 0;
 }
 
 @keyframes drop-down {
-  0% {
-    transform: scaleY(0);
+  from {
+    height: 0;
   }
-  100% {
-    transform: scaleY(1);
+  to {
+    height: 100%;
   }
 }
 

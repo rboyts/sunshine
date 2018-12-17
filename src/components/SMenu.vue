@@ -4,11 +4,17 @@
       <slot name="activator" />
     </span>
 
-    <transition name="dropdown">
-      <div v-if="value" class="s-menu__popup" :style="style" @click.stop="onContentClick">
+    <div
+      v-if="showContent"
+      class="s-menu__popup"
+      :style="style"
+      @click.stop="onContentClick"
+      @transitionend="onTransitionEnd"
+    >
+      <div ref="content" class="s-menu__popup__content" :style="contentStyle">
         <slot name="content"></slot>
       </div>
-    </transition>
+    </div>
   </span>
 </template>
 
@@ -18,37 +24,78 @@ import Vue from 'vue';
 // Close active menu when clicking anywhere outside
 let activeMenu: any = null;
 window.addEventListener('click', (event: MouseEvent) => {
-  if (activeMenu) {
+  if (!activeMenu) return;
+
+  // Ignore clicks on the menu/activator itself
+  let el = activeMenu.$el as HTMLElement;
+  if (el.contains(event.target as HTMLElement)) return;
+
+  activeMenu.hide();
+  activeMenu = null;
+}, true);
+
+const setActive = (value: any) => {
+  if (activeMenu && activeMenu !== value) {
     activeMenu.hide();
   }
-  activeMenu = null;
-});
+  activeMenu = value;
+};
 
 export default Vue.extend({
   name: 's-menu',
 
   props: {
     value: Boolean,
+    toggleOnClick: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   data() {
     return {
-      style: {},
+      style: {} as {[key: string]: any},
+      contentStyle: {} as {[key: string]: any},
+      transitioning: false,
     };
   },
 
   watch: {
-    value(val) {
+    async value(val) {
+      this.transitioning = true;
+
       if (val) {
-        activeMenu = this;
+        setActive(this);
         let activator = this.$refs.activator as HTMLElement;
         this.style = {
           top: `${activator.offsetHeight}px`,
           minWidth: `${activator.offsetWidth}px`,
+          height: 0,
           left: 0,
         };
+        this.contentStyle = {
+          opacity: 0,
+        };
+
+        await Vue.nextTick();
+
+        const content = this.$refs.content as HTMLElement;
+        this.style.height = `${content.offsetHeight}px`;
+        this.contentStyle.opacity = 1;
+      } else {
+        if (activeMenu === this) {
+          setActive(null);
+        }
+        this.style.height = 0;
+        this.contentStyle.opacity = 0;
       }
     },
+  },
+
+  computed: {
+    showContent(): boolean {
+      return this.value || this.transitioning;
+    }
   },
 
   methods: {
@@ -61,19 +108,17 @@ export default Vue.extend({
     },
 
     onClick(event: MouseEvent) {
-      // This relies on the watcher for the value prop being invoked after the
-      // event has propagated to the window
-
-      this.toggle(!this.value);
-
-      if (activeMenu === this) {
-        activeMenu = null;
-        event.stopPropagation();
+      if (this.toggleOnClick) {
+        this.toggle(!this.value);
       }
     },
 
     onContentClick(event: MouseEvent) {
       // ignore
+    },
+
+    onTransitionEnd() {
+      this.transitioning = false;
     },
   },
 });

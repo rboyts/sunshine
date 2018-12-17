@@ -6,15 +6,26 @@
 
 .s-menu__popup {
   position: absolute;
-  min-height: 16px;
-  min-width: 100px;
   z-index: 1000;
   text-align: initial;
   line-height: initial;
+  overflow: hidden;
 
-  background-color: #fff;
-  border: 1px solid #999;
+  // XXX Hard-coded
+  min-width: 100px;
+  max-width: 300px;
+  max-height: 300px;
+  overflow: auto;
+
+  background-color: $white;
+  border: 1px solid $gray;
   border-radius: 3px;
 
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+  transition: height $duration-normal;
+}
+
+.s-menu__popup__content {
+  transition: opacity $duration-normal;
 }

@@ -1,5 +1,7 @@
 @import '../tools.scss';
 
+$list-item-height: base-spacing(4);
+
 .s-list {
   @include paragraph-font;
 
@@ -10,7 +12,12 @@
 
 .s-list__item {
   cursor: default;
-  padding: base-spacing();
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  height: $list-item-height;
+  padding: 0 base-spacing();
 
   &:hover {
     background-color: $color-editish;

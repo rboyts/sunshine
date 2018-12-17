@@ -1,30 +1,35 @@
 <template>
-  <label :class="classes">
-    <span class="s-checkbox__box">
-      <input
-        type="checkbox"
-        :checked="checked"
-        :disabled="inactive"
-        @change="$emit('change', $event.target.checked)"
-        @focus="hasFocus = true"
-        @blur="hasFocus = false"
-      />
-      <transition name="fade">
-        <span v-if="checked">&#x2714;</span>
-      </transition>
+  <label :class="classes"
+        @mousedown.native="$event.preventDefault()"
+  >
+    <input
+      type="checkbox"
+      :checked="checked"
+      :disabled="inactive"
+      @change="$emit('change', $event.target.checked)"
+      @focus="hasFocus = true"
+      @blur="hasFocus = false"
+    />
+    <s-checkable-internal :checked="checked" />
+    <span>
+      <slot />
     </span>
-    <slot/>
   </label>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import SCheckableInternal from './internal/CheckableInternal.vue';
 import { classHelper } from '../lib/utils';
 
 const checkboxClassHelper = classHelper('s-checkbox');
 
 export default Vue.extend({
   name: 's-checkbox',
+
+  components: {
+    SCheckableInternal,
+  },
 
   model: {
     prop: 'checked',

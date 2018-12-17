@@ -8,6 +8,11 @@ button {
   outline: none;
 }
 
+p {
+  margin-block-start: base-spacing();
+  margin-block-end: base-spacing();
+}
+
 h1 {
   font-size: $h1-font-size;
   font-weight: $h1-font-weight;

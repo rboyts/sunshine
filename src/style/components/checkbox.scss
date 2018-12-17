@@ -6,6 +6,7 @@ $checkbox-border-width: 1px;
 .s-checkbox {
   @include paragraph-font;
 
+  position: relative;
   display: inline-flex;
   height: $checkbox-height;
   line-height: $checkbox-height;
@@ -22,13 +23,24 @@ $checkbox-border-width: 1px;
       background-color: $almost-gray;
     }
   }
+
+  // Hides the native checkbox, so that we can provide our own styled
+  // version. We're using opacity rather than other methods for making
+  // it invisible, because we want it to behave as if it's visible (e.g.
+  // accept tab focus).
+  > input {
+    position: absolute;
+    opacity: 0;
+  }
 }
 
 .s-checkbox__box {
+  display: inline-block;
   position: relative;
-  display: inline-flex;
   align-items: center;
   justify-content: center;
+
+  vertical-align: baseline;
 
   border: $checkbox-border-width solid $gray;
   background-color: $white;
@@ -38,17 +50,14 @@ $checkbox-border-width: 1px;
   margin-right: $checkbox-spacing;
 
   > span {
-    user-select: none;
+    display: inline-block;
     position: absolute;
+    user-select: none;
+    pointer-events: none;
+    font-size: .675rem;
+    line-height: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
+    height: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
     width: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
     text-align: center;
-  }
-
-  // Hides the native checkbox, so that we can provide our own styled
-  // version. We're using opacity rather than other methods for making
-  // it invisible, because we want it to behave as if it's visible (e.g.
-  // accept tab focus).
-  > input {
-    opacity: 0;
   }
 }
