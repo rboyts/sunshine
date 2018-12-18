@@ -3,6 +3,6 @@
 exports[`SSelect renders select box 1`] = `
 <span class="s-menu"><span><button class="s-btn" style="text-align: left; min-width: 150px;"><span tabindex="-1" class="inline-flex s-btn__content s-btn__content--secondary"> <span class="flex-grow">
     Choose country
-    </span> <span>⯆</span></span></button></span>
+    </span> <span><i class="fas fa-caret-down"></i></span></span></button></span>
 <!----></span>
 `;

@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`STextField renders text field 1`] = `
+<span class="s-input" label="Text field"><span class="s-input__label s-input__label--aside">Text field</span> <input type="text" class="s-input__input">
+<!----></span>
+`;
