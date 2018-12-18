@@ -33,6 +33,6 @@ describe('STextField', () => {
     input.setValue('kokobaba');
     input.trigger('change');
 
-    expect(wrapper.emitted().input[0]).toEqual(['kokobaba']);
+    expect(wrapper.emitted('input')[0]).toEqual(['kokobaba']);
   });
 });

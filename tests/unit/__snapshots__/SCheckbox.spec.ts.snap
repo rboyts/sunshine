@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SCheckbox renders checkbox 1`] = `<label class="s-checkbox"><input type="checkbox"> <span class="s-checkbox__box"><span class="fas fa-check" name="fade"></span></span> <span>I am a checkbox</span></label>`;
