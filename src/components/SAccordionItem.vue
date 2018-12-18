@@ -73,7 +73,10 @@ export default Vue.extend({
     },
 
     bodyClass(): object {
-      return bodyClassHelper({open: this.open});
+      return bodyClassHelper({
+        open: this.open,
+        transitioning: this.transitioning,
+      });
     },
 
     contentClass(): object {
@@ -81,6 +84,8 @@ export default Vue.extend({
     },
 
     bodyStyle(): object {
+      if (!this.transitioning) return {};
+
       return {
         height: `${this.height}px`,
         opacity: this.height === 0 ? 0 : 1,

@@ -34,10 +34,15 @@ $accordion-chevron-size: .5rem;
 
   transition: all $duration-normal;
   transition-property: height, opacity;
+
+  &--transitioning {
+    .s-accordion__content {
+      position: absolute;
+    }
+  }
 }
 
 .s-accordion__content {
-  position: absolute;
   padding-top: .5rem;
   padding-bottom: 1.5rem;
 }
