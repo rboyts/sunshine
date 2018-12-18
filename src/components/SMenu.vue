@@ -1,5 +1,5 @@
 <template>
-  <span ref="activator" class="s-menu">
+  <span class="s-menu">
     <span @click="onClick">
       <slot name="activator" />
     </span>
@@ -66,7 +66,7 @@ export default Vue.extend({
 
       if (val) {
         setActive(this);
-        let activator = this.$refs.activator as HTMLElement;
+        let activator = this.$el as HTMLElement;
         this.style = {
           top: `${activator.offsetHeight}px`,
           minWidth: `${activator.offsetWidth}px`,
