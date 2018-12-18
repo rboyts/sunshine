@@ -36,13 +36,6 @@
 
     </data-table-internal>
 
-    <!-- XXX Hard-coded height here, because there is some unresolved flexbox issue -->
-    <div class="flex-row flex-end" style="min-height: 24px">
-      <s-button small @click="pdfExport">PDF</s-button>
-        &nbsp;
-      <s-button small @click="excelExport">XLS</s-button>
-    </div>
-
   </div>
 </template>
 
@@ -168,13 +161,6 @@ export default Vue.extend({
       this.orderedColumns.splice(toIndex, 0, ...moved);
     },
 
-    async pdfExport() {
-      console.warn('Oink oink');
-    },
-
-    async excelExport() {
-      console.warn('Oink oink');
-    },
   },
 });
 </script>
