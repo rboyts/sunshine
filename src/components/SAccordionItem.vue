@@ -51,9 +51,17 @@ export default Vue.extend({
       // Need to wait for height to be correct
       await Vue.nextTick();
 
+      // We read offsetHeight from the element, even in the case when
+      // we're setting height to 0, because accessing this property will
+      // actually force the browser to do a 'reflow', making sure the height
+      // is set to the initial value, before we change it. If we don't do this,
+      // the transition may not always occur.
+      // Ref: https://stackoverflow.com/a/16575811/137627
+      const inner = this.$refs.inner as HTMLElement;
+      const height = inner.offsetHeight;
+
       if (val) {
-        const inner = this.$refs.inner as HTMLElement;
-        this.height = inner.offsetHeight;
+        this.height = height;
       } else {
         this.height = 0;
       }
