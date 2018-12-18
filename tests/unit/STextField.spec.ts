@@ -2,7 +2,17 @@ import { mount } from '@vue/test-utils';
 import STextField from '@/components/STextField.vue';
 
 describe('STextField', () => {
-  it('renders text field', () => {
+  it('renders empty text field', () => {
+    const wrapper = mount(STextField, {
+      propsData: {
+        label: 'Text field',
+        value: '',
+      },
+    });
+    expect(wrapper.html()).toMatchSnapshot();
+  });
+
+  it('renders text field with text', () => {
     const wrapper = mount(STextField, {
       propsData: {
         label: 'Text field',
