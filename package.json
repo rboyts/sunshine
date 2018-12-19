@@ -10,7 +10,8 @@
   "main": "src/index.ts",
   "dependencies": {
     "debounce": "^1.2.0",
-    "moment": "^2.22.2"
+    "moment": "^2.22.2",
+    "vue-typed-mixins": "^0.1.0"
   },
   "peerDependencies": {
     "d3": "^5.7.0",

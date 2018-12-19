@@ -20,6 +20,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import mixins from 'vue-typed-mixins';
+import Watcher from './mixins/watcher';
 
 // Close active menu when clicking anywhere outside
 let activeMenu: any = null;
@@ -41,7 +43,7 @@ const setActive = (value: any) => {
   activeMenu = value;
 };
 
-export default Vue.extend({
+export default mixins(Watcher).extend({
   name: 's-menu',
 
   props: {
@@ -79,6 +81,7 @@ export default Vue.extend({
         };
 
         await Vue.nextTick();
+        this.startWatcher();
 
         const content = this.$refs.content as HTMLElement;
         this.style.height = `${content.offsetHeight}px`;
@@ -96,7 +99,7 @@ export default Vue.extend({
   computed: {
     showContent(): boolean {
       return this.value || this.transitioning;
-    }
+    },
   },
 
   methods: {
@@ -118,8 +121,21 @@ export default Vue.extend({
       // ignore
     },
 
+    onWatcher() {
+      let activator = this.$el as HTMLElement;
+      let rect = activator.getBoundingClientRect();
+      Object.assign(this.style, {
+        top: `${rect.bottom}px`,
+        left: `${rect.left}px`,
+        minWidth: `${rect.width}px`,
+      });
+    },
+
     onTransitionEnd() {
       this.transitioning = false;
+      if (!this.value) {
+        this.stopWatcher();
+      }
     },
   },
 });
