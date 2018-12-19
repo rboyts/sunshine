@@ -1,8 +1,8 @@
 <template>
-  <span :class="inputClass">
+  <div :class="inputClass">
     <span :class="labelClass">{{ label }}</span>
     <slot />
-  </span>
+  </div>
 </template>
 
 <script lang="ts">

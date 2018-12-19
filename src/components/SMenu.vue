@@ -1,8 +1,6 @@
 <template>
-  <span class="s-menu">
-    <span @click="onClick">
-      <slot name="activator" />
-    </span>
+  <div class="s-menu" @click="onClick">
+    <slot name="activator" />
 
     <div
       v-if="showContent"
@@ -15,7 +13,7 @@
         <slot name="content"></slot>
       </div>
     </div>
-  </span>
+  </div>
 </template>
 
 <script lang="ts">

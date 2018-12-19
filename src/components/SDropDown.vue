@@ -13,9 +13,10 @@ Use cases:
 
 
 <template>
-  <s-menu v-model="isOpen" :toggleOnClick="false">
+  <s-menu v-model="isOpen" class="s-drop-down" :toggleOnClick="false">
     <s-base-input
       slot="activator"
+      class="s-drop-down__input"
       :hasFocus="hasFocus"
       :isEmpty="text == ''"
       v-bind="$attrs"
