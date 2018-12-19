@@ -20,11 +20,13 @@
             <i class="fas fa-ellipsis-h" />
           </div>
 
-          <div slot="content" style="padding: .5rem; white-space: nowrap">
-            <div v-for="oc in orderedColumns" :key="oc.column.key" >
-              <s-checkbox v-model="oc.visible">{{ oc.column.title }}</s-checkbox>
-            </div>
-          </div>
+          <template slot="content">
+            <s-list>
+              <s-list-item checkable v-for="oc in orderedColumns" :key="oc.column.key" v-model="oc.visible">
+                {{ oc.column.title }}
+              </s-list-item>
+            </s-list>
+          </template>
         </s-menu>
       </template>
 
@@ -44,6 +46,8 @@ import Vue from 'vue';
 import SMenu from './SMenu.vue';
 import SButton from './SButton.vue';
 import SCheckbox from './SCheckbox.vue';
+import SList from './SList.vue';
+import SListItem from './SListItem.vue';
 import DataTableInternal from './internal/DataTableInternal';
 import { ISortState, IItem, IColumn } from './types';
 
@@ -79,6 +83,8 @@ export default Vue.extend({
   components: {
     SMenu,
     SButton,
+    SList,
+    SListItem,
     SCheckbox,
     DataTableInternal,
   },

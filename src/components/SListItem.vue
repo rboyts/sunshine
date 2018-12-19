@@ -36,7 +36,7 @@ export default Vue.extend({
   methods: {
     onClick() {
       if (this.checkable) {
-        this.$emit('input', !this.checked);
+        this.$emit('change', !this.checked);
       }
       this.$emit('click');
     },
