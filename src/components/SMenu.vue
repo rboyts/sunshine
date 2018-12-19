@@ -67,11 +67,12 @@ export default Vue.extend({
       if (val) {
         setActive(this);
         let activator = this.$el as HTMLElement;
+        let rect = activator.getBoundingClientRect();
         this.style = {
-          top: `${activator.offsetHeight}px`,
-          minWidth: `${activator.offsetWidth}px`,
+          top: `${rect.bottom}px`,
+          left: `${rect.left}px`,
+          minWidth: `${rect.width}px`,
           height: 0,
-          left: 0,
         };
         this.contentStyle = {
           opacity: 0,
