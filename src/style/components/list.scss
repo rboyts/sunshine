@@ -19,7 +19,12 @@ $list-item-height: base-spacing(4);
   height: $list-item-height;
   padding: 0 base-spacing();
 
+  // Invisible border, to prevent content moving on hover
+  border: 1px solid rgba(0, 0, 0, 0);
+
   &:hover {
     background-color: $color-editish;
+
+    border: 1px solid rgba(0, 0, 0, 0.05);
   }
 }
