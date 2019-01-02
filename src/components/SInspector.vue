@@ -1,19 +1,18 @@
 <template>
   <transition name="slide-in">
     <div v-show="value" class="s-inspector">
-      <div class="flex flex-column">
+      <div class="s-inspector__content">
         <div class="s-inspector__header">
           <slot name="header">
           </slot>
         </div>
 
-        <div class="s-inspector__main flex-grow">
+        <div class="s-inspector__main">
           <slot />
         </div>
 
         <div class="s-inspector__footer">
           <slot name="footer">
-            Default footer
           </slot>
         </div>
       </div>

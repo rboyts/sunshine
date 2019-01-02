@@ -1,6 +1,8 @@
 @import '../tools.scss';
 
-$inspector-padding: 1.5rem;
+$inspector-width: base-spacing(48);
+$inspector-padding: base-spacing(3);
+$inspector-header-margin: base-spacing(4);
 
 .s-inspector {
   position: fixed;
@@ -8,20 +10,26 @@ $inspector-padding: 1.5rem;
   right: 0;
   top: 0;
   bottom: 0;
-  width: 360px;
+  width: $inspector-width;
   background-color: $white;
   padding: $inspector-padding;
 }
 
+.s-inspector__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .s-inspector__header {
-  margin-bottom: 2rem;
+  margin-bottom: $inspector-header-margin;
 }
 
 .s-inspector__main {
   overflow-y: auto;
+  flex: 1;
 }
 
 .s-inspector__footer {
-  // position: sticky;
   margin-top: 1rem;
 }
