@@ -1,5 +1,5 @@
 <template>
-  <label :class="classes"
+  <label :class="classes(modifiers)"
         @mousedown.native="$event.preventDefault()"
   >
     <input
@@ -20,9 +20,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import SCheckableInternal from './internal/CheckableInternal.vue';
-import { classHelper } from '../lib/utils';
-
-const checkboxClassHelper = classHelper('s-checkbox');
 
 export default Vue.extend({
   name: 's-checkbox',
@@ -51,11 +48,11 @@ export default Vue.extend({
   },
 
   computed: {
-    classes(): object {
-      return checkboxClassHelper({
+    modifiers(): object {
+      return {
         focus: this.hasFocus,
         inactive: this.inactive,
-      });
+      };
     },
   },
 });

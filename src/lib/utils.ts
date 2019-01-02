@@ -1,3 +1,4 @@
+import Vue from 'vue';
 
 interface IClasses {
   [key: string]: boolean;
@@ -17,3 +18,18 @@ export const classHelper = (...name: string[]): Generate => {
   const fullName = name.join('__');
   return (options: IClasses) => apply(fullName, options);
 };
+
+export const ClassesMixin = Vue.extend({
+  methods: {
+    classes(...args: any[]): object {
+      let names: any[] = [this.$options.name].concat(args);
+      let options = {};
+      let last = names[names.length - 1];
+      if (typeof last === 'object') {
+        names = names.slice(0, names.length - 1);
+        options = last;
+      }
+      return classHelper(...names)(options);
+    },
+  },
+});

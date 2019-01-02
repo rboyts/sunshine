@@ -1,5 +1,5 @@
 <template>
-  <div class="s-accordion">
+  <div :class="classes()">
     <slot />
   </div>
 </template>
@@ -8,7 +8,7 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-
+  name: 's-accordion',
 });
 </script>
 

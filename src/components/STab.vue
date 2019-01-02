@@ -1,5 +1,5 @@
 <template>
-  <router-link class="s-tab__link" :to="to"><slot /></router-link>
+  <router-link :class="classes('link')" :to="to"><slot /></router-link>
 </template>
 
 <script lang="ts">

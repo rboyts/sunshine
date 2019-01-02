@@ -1,15 +1,15 @@
 <template>
-  <div class="s-menu" @click="onClick">
+  <div :class="classes()" @click="onClick">
     <slot name="activator" />
 
     <div
       v-if="showContent"
-      class="s-menu__popup"
+      :class="classes('popup')"
       :style="style"
       @click.stop="onContentClick"
       @transitionend="onTransitionEnd"
     >
-      <div ref="content" class="s-menu__popup__content" :style="contentStyle">
+      <div ref="content" :class="classes('popup', 'content')" :style="contentStyle">
         <slot name="content"></slot>
       </div>
     </div>

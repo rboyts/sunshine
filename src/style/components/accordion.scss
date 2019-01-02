@@ -6,7 +6,7 @@ $accordion-chevron-size: .5rem;
   // border: 1px solid $gray;
 }
 
-.s-accordion__heading {
+.s-accordion-item__heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,7 +17,7 @@ $accordion-chevron-size: .5rem;
   color: inherit;
 }
 
-.s-accordion__chevron {
+.s-accordion-item__chevron {
   margin-right: $accordion-chevron-size;
 
   transform-origin: 50% 45%;
@@ -28,7 +28,7 @@ $accordion-chevron-size: .5rem;
   }
 }
 
-.s-accordion__body {
+.s-accordion-item__body {
   position: relative;
   overflow: hidden;
 
@@ -36,7 +36,7 @@ $accordion-chevron-size: .5rem;
   transition-property: height, opacity;
 }
 
-.s-accordion__content {
+.s-accordion-item__content {
   padding-top: .5rem;
   padding-bottom: 1.5rem;
 }

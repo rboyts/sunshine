@@ -2,22 +2,22 @@
   <div>
     <a
       href="#"
-      class="s-accordion__heading"
+      :class="classes('heading')"
       @_click="$emit('click')"
       @click="onClick"
     >
       <slot name="heading" />
-      <i :class="chevronClass"
+      <i :class="classes('chevron', chevronOptions)"
         class="fas fa-chevron-down" />
     </a>
 
     <div
       v-show="showBody"
-      :class="bodyClass"
+      :class="classes('body', bodyOptions)"
       :style="bodyStyle"
       @transitionend="onTransitionEnd"
     >
-      <div ref="inner" :class="contentClass">
+      <div ref="inner" :class="classes('content')">
         <slot />
       </div>
     </div>
@@ -26,11 +26,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { classHelper } from '../lib/utils';
-
-const chevronClassHelper = classHelper('s-accordion', 'chevron');
-const bodyClassHelper = classHelper('s-accordion', 'body');
-const contentClassHelper = classHelper('s-accordion', 'content');
 
 export default Vue.extend({
   name: 's-accordion-item',
@@ -76,19 +71,15 @@ export default Vue.extend({
       return this.open || this.transitioning;
     },
 
-    chevronClass(): object {
-      return chevronClassHelper({open: this.open});
+    chevronOptions(): object {
+      return {open: this.open};
     },
 
-    bodyClass(): object {
-      return bodyClassHelper({
+    bodyOptions(): object {
+      return {
         open: this.open,
         transitioning: this.transitioning,
-      });
-    },
-
-    contentClass(): object {
-      return contentClassHelper({});
+      };
     },
 
     bodyStyle(): object {

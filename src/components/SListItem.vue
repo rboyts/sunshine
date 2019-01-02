@@ -1,5 +1,5 @@
 <template>
-  <li class="s-list__item" @click="onClick">
+  <li :class="classes()" @click="onClick">
     <s-checkable-internal v-if="checkable" :checked="checked" />
     <slot />
   </li>
@@ -37,8 +37,9 @@ export default Vue.extend({
     onClick() {
       if (this.checkable) {
         this.$emit('change', !this.checked);
+      } else {
+        this.$emit('click');
       }
-      this.$emit('click');
     },
   },
 });

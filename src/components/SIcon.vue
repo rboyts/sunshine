@@ -1,5 +1,5 @@
 <template>
-  <span :class="classes">{{ icon }}</span>
+  <span :class="classes()">{{ icon }}</span>
 </template>
 
 
@@ -17,10 +17,6 @@ export default Vue.extend({
   },
 
   computed: {
-    classes() {
-      return 's-icon';
-    },
-
     icon() {
       switch (this.name) {
         case 'hourglass':

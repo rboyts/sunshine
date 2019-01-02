@@ -1,5 +1,5 @@
 <template>
-  <div :class="classes">
+  <div :class="classes(alertOptions)">
     <div class="s-alert__main">
       <slot />
     </div>
@@ -12,10 +12,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { classHelper } from '../lib/utils';
-
-const alertClassHelper = classHelper('s-alert');
-
 
 export default Vue.extend({
   name: 's-alert',
@@ -36,12 +32,12 @@ export default Vue.extend({
   },
 
   computed: {
-    classes(): object {
-      return alertClassHelper({
+    alertOptions(): object {
+      return {
         success: this.success,
         warning: this.warning,
         error: this.error,
-      });
+      };
     },
   },
 });

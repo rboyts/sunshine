@@ -1,17 +1,17 @@
 <template>
   <transition name="slide-in">
-    <div v-show="value" class="s-inspector">
-      <div class="s-inspector__content">
-        <div class="s-inspector__header">
+    <div v-show="value" :class="classes()">
+      <div :class="classes('content')">
+        <div :class="classes('header')">
           <slot name="header">
           </slot>
         </div>
 
-        <div class="s-inspector__main">
+        <div :class="classes('main')">
           <slot />
         </div>
 
-        <div class="s-inspector__footer">
+        <div :class="classes('footer')">
           <slot name="footer">
           </slot>
         </div>

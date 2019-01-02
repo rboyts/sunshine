@@ -1,6 +1,6 @@
 <template>
-  <button :class="buttonClass" :disabled="inactive" v-on="$listeners">
-    <span class="inline-flex" :class="contentClass" tabindex="-1">
+  <button :class="classes(buttonOptions)" :disabled="inactive" v-on="$listeners">
+    <span class="inline-flex" :class="classes('content', contentOptions)" tabindex="-1">
       <slot name="left" />
       <span class="flex-grow">
         <slot />
@@ -12,10 +12,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { classHelper } from '../lib/utils';
-
-const buttonClassHelper = classHelper('s-btn');
-const contentClassHelper = classHelper('s-btn', 'content');
 
 export default Vue.extend({
   name: 's-button',
@@ -37,18 +33,18 @@ export default Vue.extend({
   },
 
   computed: {
-    buttonClass(): object {
-      return buttonClassHelper({
+    buttonOptions(): object {
+      return {
         small: this.small,
-      });
+      };
     },
 
-    contentClass(): object {
-      return contentClassHelper({
+    contentOptions(): object {
+      return {
         main: this.primary,
         secondary: !this.primary,
         inactive: this.inactive,
-      });
+      };
     },
   },
 });

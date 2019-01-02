@@ -13,10 +13,10 @@ Use cases:
 
 
 <template>
-  <s-menu v-model="isOpen" class="s-drop-down" :toggleOnClick="false">
+  <s-menu v-model="isOpen" :class="classes()" :toggleOnClick="false">
     <s-base-input
       slot="activator"
-      class="s-drop-down__input"
+      :class="classes('input')"
       :hasFocus="hasFocus"
       :isEmpty="text == ''"
       v-bind="$attrs"
@@ -33,7 +33,7 @@ Use cases:
         @input="onInput"
       />
 
-      <span :class="caretClass" @click="onCaretClick" @mousedown="$event.preventDefault()">
+      <span :class="classes('caret', caretModifiers)" @click="onCaretClick" @mousedown="$event.preventDefault()">
         <i class="fas fa-caret-down" />
       </span>
     </s-base-input>
@@ -45,7 +45,7 @@ Use cases:
           :key="i"
           :checkable="multiple"
           :checked="item.checked"
-          @input="onItemChecked(item.item, $event)"
+          @change="onItemChange(item.item, $event)"
           @click="onItemClick(item.item)"
         >
           {{ item.title }}
@@ -61,9 +61,6 @@ import SList from './SList.vue';
 import SListItem from './SListItem.vue';
 import SMenu from './SMenu.vue';
 import SBaseInput from './SBaseInput.vue';
-import { classHelper } from '../lib/utils';
-
-const caretClassHelper = classHelper('s-drop-down', 'caret');
 
 export default Vue.extend({
   name: 's-drop-down',
@@ -117,8 +114,8 @@ export default Vue.extend({
   },
 
   computed: {
-    caretClass(): object {
-      return caretClassHelper({open: this.isOpen});
+    caretModifiers(): object {
+      return {open: this.isOpen};
     },
 
     filteredItems(): object[] {
@@ -174,7 +171,8 @@ export default Vue.extend({
       event.stopPropagation();
     },
 
-    onItemChecked(item: any, checked: boolean) {
+    onItemChange(item: any, checked: boolean) {
+      console.log('onItemChange');
       if (!this.multiple) return;
 
       const currentValue = this.value as object[] || [];

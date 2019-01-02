@@ -1,8 +1,8 @@
 <template>
-  <div class="s-tabs">
+  <div :class="classes()">
     <slot />
-    <div class="s-tabs__border">
-      <div v-if="highlight.width !== '-1'" class="s-tabs__highlight" :style="highlight" />
+    <div :class="classes('border')">
+      <div v-if="highlight.width !== '-1'" :class="classes('highlight')" :style="highlight" />
     </div>
   </div>
 </template>

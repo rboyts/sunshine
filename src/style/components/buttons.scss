@@ -14,7 +14,7 @@ $btn-secondary-border-color: $gray;
 // Implements keyboard-only focus styling,
 // https://stackoverflow.com/a/45191208/137627
 
-.s-btn {
+.s-button {
   background: none;
   border: none;
   outline: none;
@@ -29,13 +29,13 @@ $btn-secondary-border-color: $gray;
     height: $btn-small-height;
     min-width: $btn-small-min-width;
 
-    > .s-btn__content {
+    > .s-button__content {
       padding: 0 $btn-small-padding;
     }
   }
 }
 
-.s-btn__content {
+.s-button__content {
   @include action-font;
 
   height: 100%;
@@ -51,13 +51,13 @@ $btn-secondary-border-color: $gray;
     background-color: $btn-main-bg-color;
     color: $btn-main-fg-color;
 
-    &:not(.s-btn__content--inactive):hover {
+    &:not(.s-button__content--inactive):hover {
       // XXX This is supposed to be a semi-transparent overlay
       // background-color: lighten($btn-main-bg-color, 10%);
       background-color: mix(#fff, $btn-main-bg-color, 30%);
     }
 
-    &:not(.s-btn__content--inactive):active {
+    &:not(.s-button__content--inactive):active {
       background-color: mix(#000, $btn-main-bg-color, 10%);
     }
   }
@@ -69,12 +69,12 @@ $btn-secondary-border-color: $gray;
     background-color: $btn-secondary-bg-color;
     color: $btn-secondary-fg-color;
 
-    &:not(.s-btn__content--inactive):hover {
+    &:not(.s-button__content--inactive):hover {
       // lighten($btn-secondary-bg-color, 10%);
       background-color: mix(#fff, $btn-secondary-bg-color, 30%);
     }
 
-    &:not(.s-btn__content--inactive):active {
+    &:not(.s-button__content--inactive):active {
       background-color: mix(#000, $btn-secondary-bg-color, 10%);
     }
   }
@@ -87,6 +87,6 @@ $btn-secondary-border-color: $gray;
   }
 }
 
-.s-btn:focus > .s-btn__content {
+.s-button:focus > .s-button__content {
   box-shadow: inset 0 0 0 0.125em $color-edit;
 }
