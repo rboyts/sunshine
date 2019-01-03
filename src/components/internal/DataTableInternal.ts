@@ -12,8 +12,7 @@ const OUTLINE_WIDTH = 24;   // Must correspond to CSS
 
 const tableClassHelper = classHelper('s-data-table');
 const columnClassHelper = classHelper('s-data-table', 'col');
-const headerClassHelper = classHelper('s-data-table', 'header');
-const sortClassHelper = classHelper('s-data-table', 'header', 'sort');
+const sortClassHelper = classHelper('s-data-table', 'sort');
 const toggleClassHelper = classHelper('s-data-table', 'toggle');
 
 interface IDragState {
@@ -435,17 +434,20 @@ export default Vue.extend({
 
       if (index === 0 && this.$slots.menu) {
         children.push(
-          h('span', {class: toggleClassHelper({})}, this.$slots.menu),
+          h('span', {
+            class: toggleClassHelper({}),
+            on: {
+              click: (event: PointerEvent) => { event.stopPropagation(); },
+            },
+          }, this.$slots.menu),
         );
       }
 
       children.push(column.title);
 
-      // spacer
-      children.push(h('span', {style: {flex: 1}}));
-
-      if (column.sortable) {
-        children.push(this.renderSortArrows(column.key));
+      let { sorting } = this;
+      if (sorting.key === column.key) {
+        children.push(this.renderSortArrows(sorting.reverse));
       }
 
       let on: { [key: string]: any } = {};
@@ -464,16 +466,10 @@ export default Vue.extend({
       return h('th', {
           key: column.key,
           class: this.getColumnClass(column, index),
-        }, [
-          h('span', {
-            class: headerClassHelper({
-                sortable: !!column.sortable,
-              }),
-            on,
-          },
-          children,
-        ),
-      ]);
+          on,
+        },
+        children,
+      );
     },
 
     renderContentCell(node: INode, column: IColumn, index: number): VNode | string | VNodeChildrenArrayContents {
@@ -507,22 +503,16 @@ export default Vue.extend({
       );
     },
 
-    renderSortArrows(key: string): VNode {
+    renderSortArrows(reverse: boolean): VNode {
       const h = this.$createElement;
 
-      let { sorting } = this;
-
-      let arrow = sorting.key === key ? '\u2191' : '\u2195';
-      let rotate = sorting.key === key ? sorting.reverse ? '180deg' : '0' : '0';
+      let arrow = '\u2191';
 
       return h('span', {
-        class: sortClassHelper({
-          reverse: sorting.reverse,
-        }),
-        style: {
-          transform: `rotate(${rotate})`,
-        },
-      }, arrow);
+        class: sortClassHelper({ reverse }),
+      }, [
+        h('span', { staticClass: 'fas fa-arrow-circle-up' }),
+      ]);
     },
 
     renderMoveCursor(): VNode {

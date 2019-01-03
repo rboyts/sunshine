@@ -130,6 +130,7 @@ export default Vue.extend({
     columns: {
       handler() {
         this.orderedColumns = this.columns.map(column => ({column, visible: true}));
+        this.sorting = { key: null, reverse: false };
       },
       immediate: true,
     },
