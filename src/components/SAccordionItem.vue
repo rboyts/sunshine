@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="classes()">
     <a
       href="#"
       :class="classes('heading')"
@@ -8,7 +8,7 @@
     >
       <slot name="heading" />
       <i :class="classes('chevron', chevronOptions)"
-        class="fas fa-chevron-down" />
+        class="fas fa-chevron-up" />
     </a>
 
     <div
@@ -72,7 +72,7 @@ export default Vue.extend({
     },
 
     chevronOptions(): object {
-      return {open: this.open};
+      return {rotate: !this.open};
     },
 
     bodyOptions(): object {

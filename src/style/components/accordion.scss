@@ -1,29 +1,42 @@
 $accordion-header-height: 3rem;
 $accordion-chevron-size: .5rem;
+$accordion-border: 1px solid $gray;
 
 .s-accordion {
   max-width: 400px;
-  // border: 1px solid $gray;
+}
+
+.s-accordion-item {
+  border-top: $accordion-border;
+
+  &:last-child {
+    border-bottom: $accordion-border;
+  }
 }
 
 .s-accordion-item__heading {
+  @include action-font;
+  color: $almost-black;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   line-height: $accordion-header-height;
   outline: none;
-  border-top: 1px solid $gray;
   text-decoration: none;
-  color: inherit;
+
+  &:hover {
+    // XXX Design system says, "Text opacity: 80%", but this looks a bit weird
+    opacity: .8;
+  }
 }
 
 .s-accordion-item__chevron {
   margin-right: $accordion-chevron-size;
 
-  transform-origin: 50% 45%;
   transition: transform $duration-normal;
 
-  &--open {
+  &--rotate {
     transform: rotate(180deg);
   }
 }
