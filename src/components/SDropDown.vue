@@ -196,7 +196,7 @@ export default Vue.extend({
     onInput(event: InputEvent) {
       const el = event.target as HTMLInputElement;
       this.filter = el.value;
-    }
+    },
   },
 });
 </script>

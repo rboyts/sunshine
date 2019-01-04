@@ -1,0 +1,41 @@
+$datepicker-height: 39rem;
+$datepicker-width: 39rem;
+$datepicker-chevron-size: .5rem;
+$datepicker-border: 1px solid $gray;
+
+.s-datepicker {
+    width: $datepicker-height;
+    height: $datepicker-width;
+    border: $datepicker-border;
+    padding: 2rem;
+    overflow-y: scroll;
+    position: relative;
+}
+
+.s-datepicker__grid {
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    list-style: none;
+}
+
+.s-datepicker__weeks {
+    position: absolute;
+    left: 6px;
+    margin: 0;
+    padding: 0;
+    color: darkgoldenrod
+}
+
+.s-datepicker__date, .s-datepicker__day, .s-datepicker__weeks__week {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.s-datepicker__date--current span {
+    color: darkcyan;
+}
