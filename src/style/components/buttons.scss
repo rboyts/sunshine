@@ -38,6 +38,10 @@ $btn-secondary-border-color: $gray;
 .s-button__content {
   @include action-font;
 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   height: 100%;
   width: 100%;
   padding: 0 $btn-normal-padding;
