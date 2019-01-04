@@ -195,19 +195,30 @@ export default Vue.extend({
       //   this.drag.curScrollX = element.scrollLeft;
       // }
 
-      let firstRow = Math.floor(element.scrollTop / this.rowHeight);
-      let lastRow = Math.ceil((element.scrollTop + element.clientHeight) / this.rowHeight);
+      let scrollTop = element.scrollTop;
+      let scrollBottom = element.scrollTop + element.clientHeight;
 
-      this.emitVisible({firstRow, lastRow});
+      // let firstRow = Math.floor(element.scrollTop / this.rowHeight);
+      // let lastRow = Math.ceil((element.scrollTop + element.clientHeight) / this.rowHeight);
 
-      // if (element.scrollTop > 0 && element.scrollTop > element.scrollHeight - element.clientHeight - 1) {
-      //   this.$emit('scroll-bottom');
-      // }
+      const bottomSpacer = this.$refs['bottom-spacer'] as HTMLElement;
+
+      if (!bottomSpacer) return;
+
+      const top = bottomSpacer.offsetTop;
+      if (top > scrollBottom) return;
+
+      const rows = Math.ceil((scrollBottom - top) / this.rowHeight);
+
+      let firstRow = this.nodes.length;
+      let lastRow = firstRow + rows;
+
+      const args = {firstRow, lastRow};
+      this.$emit('visible-rows', args);
     },
 
-    emitVisible: debounce(function(this: Vue, args: object) {
-      this.$emit('visible-rows', args);
-    }, SCROLL_DEBOUNCE),
+    // Placeholder for type safety
+    debounceOnScroll(event: UIEvent) { /* empty */ },
 
     clearSelection() {
       if (window.getSelection) {
@@ -410,21 +421,23 @@ export default Vue.extend({
       );
     },
 
-    renderTopSpacer(): VNode {
-      return this.renderSpacer(this.skip);
+    renderTopSpacer(): VNode | undefined {
+      return this.renderSpacer(this.skip, 'top-spacer');
     },
 
-    renderBottomSpacer(): VNode {
+    renderBottomSpacer(): VNode | undefined {
       let rows = this.total == null ? 1 : this.total - (this.skip + this.items.length);
-      return this.renderSpacer(rows);
+      return this.renderSpacer(rows, 'bottom-spacer');
     },
 
-    renderSpacer(rows: number): VNode {
+    renderSpacer(rows: number, ref: string): VNode | undefined {
+      if (rows === 0) return;
+
       const h = this.$createElement;
 
       let height = `${rows * this.rowHeight}px`;
 
-      return h('tr', {style: {height}}, []);
+      return h('tr', {ref, style: {height}}, []);
     },
 
     renderHeaderCell(column: IColumn, index: number): VNode {
@@ -438,6 +451,7 @@ export default Vue.extend({
             class: toggleClassHelper({}),
             on: {
               click: (event: PointerEvent) => { event.stopPropagation(); },
+              pointerdown: (event: PointerEvent) => { event.stopPropagation(); },
             },
           }, this.$slots.menu),
         );
@@ -580,13 +594,17 @@ export default Vue.extend({
         h('div', {
           class: 's-data-table__wrapper',
           on: {
-            scroll: this.onScroll,
+            scroll: this.debounceOnScroll,
           },
         }, [
           this.renderTable(),
         ]),
       ],
     );
+  },
+
+  created() {
+    this.debounceOnScroll = debounce(this.onScroll, SCROLL_DEBOUNCE);
   },
 
   beforeDestroy(this: any) {
