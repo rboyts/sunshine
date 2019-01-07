@@ -129,6 +129,7 @@ export default Vue.extend({
   watch: {
     columns: {
       handler() {
+        // TODO Be able to restore saved column order/selection
         this.orderedColumns = this.columns.map(column => ({column, visible: true}));
         this.sorting = { key: null, reverse: false };
       },

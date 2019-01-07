@@ -24,7 +24,12 @@ export interface IItem {
   data: IItemData;
 }
 
-export type FetchData = (skip: number, take: number, sorting: ISortState) => Promise<IItem[]>;
+export interface IFetchResult {
+  items: IItem[];
+  total: number | null;
+}
+
+export type FetchData = (skip: number, take: number, sorting: ISortState) => Promise<IFetchResult>;
 
 export interface IDataSource {
   title: string;
@@ -32,5 +37,23 @@ export interface IDataSource {
   fixed?: boolean;
   columns: IColumn[];
   fetch: FetchData;
-  count: number | null;
+}
+
+export interface IDataTableState {
+  // title: string,
+  // outline: boolean;
+  // fixed?: boolean;
+  isLoading: boolean;
+  skip: number;
+  sorting: ISortState;
+  columns: IColumn[];
+  items: IItem[];
+  total: number;
+}
+
+export interface IFetchItemsPayload {
+  firstRow: number;
+  lastRow: number;
+  clear: boolean;
+  sorting: ISortState;
 }
