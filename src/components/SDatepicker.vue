@@ -20,8 +20,9 @@
                 </ul>
                 <!--<span v-for="(blank, i) in firstDayOfMonth" :key="'Blank' + i">{{i}}</span>-->
                 <span class="s-datepicker__grid" v-for="(n) in getDaysInMonths(year)" :key="n.month + n">
-                    <span class="s-datepicker__date" v-for="x in n.firstDay" :key="'offset-'+n.month + n + x">{{x}}</span>
+                    <span class="s-datepicker__date" v-for="x in n.firstDay" :key="'offset-first-'+n.month + n + x">{{x}}</span>
                     <span class="s-datepicker__date" v-for="a in n.daysInMonth" :key="'date'+n.month + n + a">{{a}}</span>
+                    <span class="s-datepicker__date" v-for="x in (6 - n.lastDay)" :key="'offset-last-'+n.month + n + x">{{x}}</span>
                 </span>
             </div>
         </div>
