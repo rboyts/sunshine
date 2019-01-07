@@ -34,3 +34,10 @@ export interface IDataSource {
   fetch: FetchData;
   count: number | null;
 }
+
+export interface IMonth {
+  daysInMonth: number;
+  firstDay: number;
+  lastDay: number;
+  month: number;
+}

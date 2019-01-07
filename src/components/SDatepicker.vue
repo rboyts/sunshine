@@ -1,23 +1,29 @@
 <template>
-    <div :class="classes()">
-        <h2>{{ today.format('LLLL') }}</h2>
-        <div class="flex flex-even">
-            <i class="fa fa-fw fa-chevron-left" @click="subtractMonth"></i>
-            <h4>{{month + ' - ' + year}}</h4>
-            <i class="fa fa-fw fa-chevron-right" @click="addMonth"></i>
+    <div class="s-datepicker" style="margin: 0 auto;">
+        <!--<h2>{{ today.format('LLLL') }}</h2>-->
+        <div class="s-datepicker__header">
+            <div class="flex flex-even s-datepicker__navigation">
+                <i class="fa fa-fw fa-chevron-left" @click="subtractMonth"></i>
+                <h4>{{month + ' - ' + year}}</h4>
+                <i class="fa fa-fw fa-chevron-right" @click="addMonth"></i>
+            </div>
         </div>
-        <ul class="s-datepicker__grid">
-            <li class="s-datepicker__day" v-for="(day, i) in days" :key="'Day' + i">{{day}}</li>
-        </ul>
-        <div class="s-datepicker__grid">
-            <ul class="s-datepicker__weeks">
-                <li class="s-datepicker__weeks__week" v-for="(number, i) in weekNumbers" :key="'Week' + i">
-                    {{number}}
-                </li>
+        <div class="s-datepicker__scrollcontainer">
+            <ul class="s-datepicker__grid s-datepicker__days">
+                <li class="s-datepicker__day" v-for="(day, i) in days" :key="'Day' + i">{{day}}</li>
             </ul>
-            <span v-for="(blank, i) in firstDayOfMonth" :key="'Blank' + i">&nbsp;</span>
-            <span class="s-datepicker__day" v-for="n in getDaysInMonths(year)" :key="n.date">{{n.number}}</span>
-            
+            <div>
+                <ul class="s-datepicker__weeks">
+                    <li class="s-datepicker__weeks__week" v-for="(number, i) in weekNumbers" :key="'Week' + i">
+                        {{number}}
+                    </li>
+                </ul>
+                <!--<span v-for="(blank, i) in firstDayOfMonth" :key="'Blank' + i">{{i}}</span>-->
+                <span class="s-datepicker__grid" v-for="(n) in getDaysInMonths(year)" :key="n.month + n">
+                    <span class="s-datepicker__date" v-for="x in n.firstDay" :key="'offset-'+n.month + n + x">{{x}}</span>
+                    <span class="s-datepicker__date" v-for="a in n.daysInMonth" :key="'date'+n.month + n + a">{{a}}</span>
+                </span>
+            </div>
         </div>
     </div>
 </template>
@@ -25,6 +31,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment from 'moment';
+import {IMonth} from './types';
 
 moment.locale('nb');
 
@@ -37,6 +44,7 @@ export default Vue.extend({
             weekNumbers: moment().weeksInYear(),
             months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
             days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
+            monthsWithDates: [],
         };
     },
     computed: {
@@ -64,29 +72,61 @@ export default Vue.extend({
         },
         initialYear(): string {
             return this.today.format('Y');
-        }
+        },
     },
     methods: {
-        addMonth() {
-            // this.dateContext = moment(this.dateContext).add(1, 'month');
+        subtractMonth() {
+            // Skip to previous month
         },
-        subtractMonth() {
-            // this.dateContext = moment(this.dateContext).subtract(1, 'month');
+        addMonth() {
+            // Skip to next month
+        },
+        offsetStartDay(year: number, month: number) {
+            let monthString;
+            if (month <= 9) {
+                monthString = '0' + month;
+            } else {
+                monthString = '' + month;
+            }
+            return moment(year + '-' + month + '-01').startOf('month').weekday();
+        },
+        offsetEndDay(year: number, month: number) {
+            let monthString;
+            if (month <= 9) {
+                monthString = '0' + month;
+            } else {
+                monthString = '' + month;
+            }
+            return moment(year + '-' + month + '-01').endOf('month').weekday();
         },
         getDaysInMonths(year: number) {
-            let months: object[] = []
+            let months: IMonth[] = [];
             for (let a = 0, b = this.months.length; a < b; a++) {
-                for (let c = 1, d = moment(this.year + '-' + this.months[a]).daysInMonth(); c <= d; c++) {
-                    months.push({
-                        date: this.year + '-' + this.months[a] + '-' + c,
-                        number: c
-                    })
+                let month;
+                if (this.months[a] <= 9) {
+                    month = '0' + this.months[a];
+                } else {
+                    month = '' + this.months[a];
+                }
+                months.push({
+                    month: this.months[a],
+                    firstDay: this.offsetStartDay(year, this.months[a]),
+                    lastDay: this.offsetEndDay(year, this.months[a]),
+                    daysInMonth: moment(year + '-' + month).daysInMonth(),
+                });
+            }
+            this.addOverlapDays(months);
+            return months;
+        },
+        addOverlapDays(months: IMonth[]) {
+            for (let a = 0, b = months.length; a < b; a++) {
+                if (months[a].lastDay < 6) {
+                    // Add firstdays of next month
+                }
+                if (months[a].firstDay > 0) {
+                    // Add lastdays from previous month
                 }
             }
-            return months
-        },
-        getFirstDayOfMonth() {
-            console.log()
         },
     },
 });
