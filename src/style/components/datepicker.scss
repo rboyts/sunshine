@@ -37,18 +37,38 @@ $datepicker-border: 1px solid $gray;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
+.s-datepicker__grid__container {
+    position: relative;
+}
+
 .s-datepicker__grid {
-    padding: 0;
+    position: relative;
+    padding: 2rem 0 2rem 3rem;
     margin: 0;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     list-style: none;
-    padding-left: 3rem;
+}
+
+.s-datepicker__month {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 100%;
+    z-index: 0;
+    background: lightblue;
 }
 
 .s-datepicker__days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    list-style: none;
+    padding-left: 3rem;
+    margin: 0;
     position: sticky;
     top: 0;
+    z-index: 1;
     background: white;
     width: 100%;
 }
@@ -56,18 +76,26 @@ $datepicker-border: 1px solid $gray;
 .s-datepicker__weeks {
     position: absolute;
     left: 6px;
+    top: 2rem;
     z-index: -1;
     margin: 0;
     padding: 0;
-    color: darkgoldenrod
+    color: darkgoldenrod;
+    display: flex;
+    flex-direction: column;
 }
 
-.s-datepicker__date, .s-datepicker__day, .s-datepicker__weeks__week {
+
+.s-datepicker__date, .s-datepicker__day, .s-datepicker__weeks__week, .s-datepicker__date--overlapping {
     width: 2rem;
     height: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.s-datepicker__date--overlapping {
+    color: grey;
 }
 
 .s-datepicker__date--current span {

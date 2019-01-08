@@ -40,4 +40,6 @@ export interface IMonth {
   firstDay: number;
   lastDay: number;
   month: number;
+  previousMonthDays: number[];
+  weeksInMonth: number[];
 }
