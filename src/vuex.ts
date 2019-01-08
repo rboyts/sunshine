@@ -1,10 +1,35 @@
 import { Module } from 'vuex';
-import { IColumn, IDataTableState, FetchData, IFetchItemsPayload, ISortState } from './components/types';
+import { ICreateDataModuleOptions, IFetchItemsPayload, ISortState, IColumn, IItem } from './components/types';
+import { joinKeyPath } from './lib/utils';
 
-export interface ICreateDataModuleOptions {
+export interface IDataTableState {
+  isLoading: boolean;
+  skip: number;
+  sorting: ISortState;
   columns: IColumn[];
-  fetch: FetchData;
+  items: {[key: string]: IItem[]};
+  total: number | null;
 }
+
+export interface IShowSubItemsPayload {
+  keyPath: string[];
+}
+
+const getItems = (keyPath: string[], state: IDataTableState): IItem[] | null => {
+  const key = joinKeyPath(keyPath);
+  const items = state.items[key];
+  if (items == null) return null;
+
+  const nodes = items.map((item: IItem) => {
+    let itemKeyPath = keyPath.concat(item.key);
+    let children = item.totalChildren ? getItems(itemKeyPath, state) : [];
+    return {
+      ...item,
+      children,
+    };
+  });
+  return nodes;
+};
 
 export const createDataModule = <RootState = any>(options: ICreateDataModuleOptions):
     Module<IDataTableState, RootState> => ({
@@ -12,10 +37,10 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
 
   state: {
     skip: 0,
-    total: -1,
+    total: null,
     isLoading: false,
     columns: options.columns,
-    items: [],
+    items: {'': []},
     sorting: {
       key: null,
       reverse: false,
@@ -28,7 +53,7 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
     },
 
     items(state) {
-      return state.items;
+      return getItems([], state);
     },
 
     total(state) {
@@ -45,9 +70,20 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
       state.isLoading = false;
     },
 
-    fetchComplete: (state, {items, total}) => {
-      state.items = items;
+    fetchItemsComplete: (state, {items, total}) => {
+      state.items = {
+        ...state.items,
+        ['']: items,
+      };
       state.total = total;
+    },
+
+    fetchSubItemsComplete: (state, {keyPath, items, total}) => {
+      const key = joinKeyPath(keyPath);
+      state.items = {
+        ...state.items,
+        [key]: items,
+      };
     },
   },
 
@@ -55,7 +91,7 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
     async fetchItems({state, commit}, args: IFetchItemsPayload) {
       type Range = [number, number];
 
-      let items = args.clear ? [] : state.items;
+      let items = args.clear ? [] : state.items[''];
 
       let has: Range = [state.skip, state.skip + items.length];
       let needs: Range = [args.firstRow, args.lastRow + 1];
@@ -98,10 +134,21 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
         let result = await options.fetch(skip, take, state.sorting);
         items = items.concat(result.items);
 
-        commit('fetchComplete', {items, total: result.total});
+        console.log(`got ${result.items.length} of ${result.total}`);
+
+        commit('fetchItemsComplete', {items, total: result.total});
       }
 
       commit('fetchEnd');
+    },
+
+    async showSubItems({state, commit}, {keyPath}: IShowSubItemsPayload) {
+      // Already loaded?
+      if (joinKeyPath(keyPath) in state.items) return;
+
+      const result = await options.fetchChildren(keyPath);
+
+      commit('fetchSubItemsComplete', { keyPath, items: result.items, total: result.total });
     },
   },
 

@@ -1,7 +1,7 @@
-import Vue, { VNode, VNodeChildrenArrayContents, CreateElement } from 'vue';
+import Vue, { VNode, VNodeChildrenArrayContents } from 'vue';
 import debounce from 'debounce';
-import { IColumn, IItem, IItemData, ISortState } from '../types';
-import { classHelper } from '../../lib/utils';
+import { IColumn, IItem, ISortState } from '../types';
+import { classHelper, joinKeyPath } from '../../lib/utils';
 
 const SCROLL_DEBOUNCE = 250;
 const MOVE_TIMEOUT = 350;
@@ -23,13 +23,14 @@ interface IDragState {
   scrollX: number;
 }
 
-interface INode {
+// Internal representation of a data item, with added properties for correct rendering
+interface ITableNode {
   key: string;
+  keyPath: string[];
   item: IItem;
-  parent: INode | null;
-  children: INode[];
+  parent: ITableNode | null;
+  children: ITableNode[] | null;
   isLastChild: boolean;
-  isOpen: boolean;
 }
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
@@ -67,20 +68,15 @@ export default Vue.extend({
       menuOpen: false,
       drag: null as IDragState | null,
       moveTimeoutId: undefined as number | undefined,
-      nodes: [] as INode[],
+      openNodes: [] as string[],
     };
   },
 
-  watch: {
-    items: {
-      handler() {
-        this.nodes = this.getNodes(null, this.items);
-      },
-      immediate: true,
-    },
-  },
-
   computed: {
+    nodes(): ITableNode[] {
+      return this.getNodes(null, this.items);
+    },
+
     firstContentColumn(): number {
       // XXX Need this if toggle/outline is in separate column
       return 0;
@@ -121,6 +117,19 @@ export default Vue.extend({
   },
 
   methods: {
+    isOpen(node: ITableNode): boolean {
+      return this.openNodes.includes(node.key);
+    },
+
+    toggleOpen(node: ITableNode) {
+      if (this.isOpen(node)) {
+        this.openNodes = this.openNodes.filter(k => k !== node.key);
+      } else {
+        this.openNodes.push(node.key);
+        this.$emit('open-item', node.keyPath);
+      }
+    },
+
     onMouseDown(event: PointerEvent, index: number) {
       event.preventDefault();
 
@@ -275,28 +284,48 @@ export default Vue.extend({
         ]);
     },
 
-    getNodes(parent: INode | null, items: IItem[]): INode[] {
-      const prefix = parent != null ? parent.key : '';
-      return items.map((item: IItem, i: number): INode => {
-        const node: INode = {
-          key: `${prefix}:${i}`,
+    getNodes(parent: ITableNode | null, items: IItem[]): ITableNode[] {
+      const keyPath = parent != null ? parent.keyPath : [];
+      return items.map((item: IItem, i: number): ITableNode => {
+        const itemKeyPath = keyPath.concat(item.key);
+        const node: ITableNode = {
+          key: joinKeyPath(itemKeyPath),
+          keyPath: itemKeyPath,
           parent,
           item,
           isLastChild: i === items.length - 1,
-          children: [],
-          isOpen: false,
+          children: item.children === null ? null : [],
         };
 
-        node.children = item.children ? this.getNodes(node, item.children) : [];
+        if (item.children) {
+          node.children = this.getNodes(node, item.children);
+        }
         return node;
       });
     },
 
-    renderNodes(nodes: INode[]): any[] {
-      return nodes.map((node: INode) => this.renderNode(node));
+    renderNodes(nodes: ITableNode[] | null): VNode | any[] {
+      console.log('renderNodes', nodes);
+      if (nodes === null) {
+        console.log('render null');
+        return this.renderLoader();
+      }
+      return nodes.map((node: ITableNode) => this.renderNode(node));
     },
 
-    renderNode(node: INode): any[] {
+    renderLoader(): VNode {
+      const h = this.$createElement;
+      return h('tr', [
+        h('td', {
+          staticClass: 's-data-table__loader',
+          domProps: {
+            colSpan: this.columns.length,
+          },
+        }, [h('span')]),
+      ]);
+    },
+
+    renderNode(node: ITableNode): any[] {
       const h = this.$createElement;
       const el = h('tr', {
           key: node.key,
@@ -306,34 +335,34 @@ export default Vue.extend({
         ],
       );
 
-      if (node.isOpen) {
+      if (this.isOpen(node)) {
         return [el].concat(this.renderNodes(node.children));
       } else {
         return [el];
       }
     },
 
-    renderToggle(node: INode): VNode {
+    renderToggle(node: ITableNode): VNode {
       const h = this.$createElement;
 
       let children = [];
-      if (node.children.length) {
+      if (node.item.totalChildren) {
         children.push(h('i', {class: 'fas fa-chevron-down'}));
       } else {
         children.push(h('i', {domProps: {innerHTML: '&nbsp;'}}));
       }
 
       return h('span', {
-        class: toggleClassHelper({open: node.isOpen === true}),
+        class: toggleClassHelper({open: this.isOpen(node)}),
         on: {
           click: () => {
-            node.isOpen = !node.isOpen;
+            this.toggleOpen(node);
           },
         },
       }, children);
     },
 
-    renderOutline(node: INode): VNode {
+    renderOutline(node: ITableNode): VNode {
       const h = this.$createElement;
 
       let children = [];
@@ -348,7 +377,7 @@ export default Vue.extend({
 
       // Render icon and start line that child items will connect to, if any.
       children.push(h('span', {class: 's-data-table__outline__section'}, [
-        node.children.length && node.isOpen ? this.renderTail() : '',
+        (this.isOpen(node) && node.children) ? this.renderTail() : '',
         node.item.icon ? h('i', {class: [node.item.icon, 's-data-table__icon']}) : '',
       ]));
 
@@ -486,7 +515,7 @@ export default Vue.extend({
       );
     },
 
-    renderContentCell(node: INode, column: IColumn, index: number): VNode | string | VNodeChildrenArrayContents {
+    renderContentCell(node: ITableNode, column: IColumn, index: number): VNode | string | VNodeChildrenArrayContents {
       const h = this.$createElement;
       let { key } = column;
 

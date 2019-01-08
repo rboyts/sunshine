@@ -10,6 +10,7 @@
       @sort="onSort"
       @visible-rows="onVisibleRows"
       @move-column="onMoveColumn"
+      @open-item="onOpenItem"
 
       v-bind="$attrs"
     >
@@ -65,7 +66,7 @@ export { IColumn, ISortState, IItem, FetchData } from './types';
 // Events:
 //   update:columns ?
 //   sort -- request data to be sorted (scroll to top?)
-//   scroll -- (firstItem, lastItem)
+//   visible-rows -- (firstItem, lastItem)
 //
 // Data structure:
 // items: [
@@ -90,6 +91,8 @@ export default Vue.extend({
   },
 
   props: {
+    module: String,
+
     columns: Array as () => IColumn[],
     items: Array as () => IItem[],
 
@@ -140,6 +143,12 @@ export default Vue.extend({
   methods: {
     onVisibleRows(args: any) {
       this.$emit('visible-rows', args);
+    },
+
+    onOpenItem(keyPath: string) {
+      if (this.module) {
+        this.$store.dispatch(`${this.module}/showSubItems`, {keyPath});
+      }
     },
 
     onSort(event: MouseEvent, key: string) {

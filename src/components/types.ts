@@ -18,8 +18,10 @@ export interface IItemData {
 }
 
 export interface IItem {
-  children?: IItem[];
+  key: string;
   icon?: string;
+  totalChildren?: number;
+  children?: IItem[] | null;
 
   data: IItemData;
 }
@@ -30,25 +32,12 @@ export interface IFetchResult {
 }
 
 export type FetchData = (skip: number, take: number, sorting: ISortState) => Promise<IFetchResult>;
+export type FetchChildren = (keyPath: string[]) => Promise<IFetchResult>;
 
-export interface IDataSource {
-  title: string;
-  outline?: boolean;
-  fixed?: boolean;
+export interface ICreateDataModuleOptions {
   columns: IColumn[];
   fetch: FetchData;
-}
-
-export interface IDataTableState {
-  // title: string,
-  // outline: boolean;
-  // fixed?: boolean;
-  isLoading: boolean;
-  skip: number;
-  sorting: ISortState;
-  columns: IColumn[];
-  items: IItem[];
-  total: number;
+  fetchChildren: FetchChildren;
 }
 
 export interface IFetchItemsPayload {
