@@ -305,9 +305,7 @@ export default Vue.extend({
     },
 
     renderNodes(nodes: ITableNode[] | null): VNode | any[] {
-      console.log('renderNodes', nodes);
       if (nodes === null) {
-        console.log('render null');
         return this.renderLoader();
       }
       return nodes.map((node: ITableNode) => this.renderNode(node));
@@ -346,7 +344,7 @@ export default Vue.extend({
       const h = this.$createElement;
 
       let children = [];
-      if (node.item.totalChildren) {
+      if ((node.children && node.children.length) || (!node.children && node.item.totalChildren)) {
         children.push(h('i', {class: 'fas fa-chevron-down'}));
       } else {
         children.push(h('i', {domProps: {innerHTML: '&nbsp;'}}));
@@ -377,7 +375,7 @@ export default Vue.extend({
 
       // Render icon and start line that child items will connect to, if any.
       children.push(h('span', {class: 's-data-table__outline__section'}, [
-        (this.isOpen(node) && node.children) ? this.renderTail() : '',
+        (this.isOpen(node) && node.children && node.children.length) ? this.renderTail() : '',
         node.item.icon ? h('i', {class: [node.item.icon, 's-data-table__icon']}) : '',
       ]));
 

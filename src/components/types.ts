@@ -37,7 +37,7 @@ export type FetchChildren = (keyPath: string[]) => Promise<IFetchResult>;
 export interface ICreateDataModuleOptions {
   columns: IColumn[];
   fetch: FetchData;
-  fetchChildren: FetchChildren;
+  fetchChildren?: FetchChildren;
 }
 
 export interface IFetchItemsPayload {

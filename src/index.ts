@@ -28,6 +28,9 @@ import STab from './components/STab.vue';
 import STabs from './components/STabs.vue';
 import STextField from './components/STextField.vue';
 
+export { createDataModule } from './vuex';
+export * from './components/types';
+
 const plugin = {
   install: (Vue: VueConstructor) => {
     Vue.mixin(ClassesMixin);
