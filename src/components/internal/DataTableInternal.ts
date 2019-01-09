@@ -304,23 +304,8 @@ export default Vue.extend({
       });
     },
 
-    renderNodes(nodes: ITableNode[] | null): VNode | any[] {
-      if (nodes === null) {
-        return this.renderLoader();
-      }
+    renderNodes(nodes: ITableNode[]): VNode | any[] {
       return nodes.map((node: ITableNode) => this.renderNode(node));
-    },
-
-    renderLoader(): VNode {
-      const h = this.$createElement;
-      return h('tr', [
-        h('td', {
-          staticClass: 's-data-table__loader',
-          domProps: {
-            colSpan: this.columns.length,
-          },
-        }, [h('span')]),
-      ]);
     },
 
     renderNode(node: ITableNode): any[] {
@@ -333,7 +318,7 @@ export default Vue.extend({
         ],
       );
 
-      if (this.isOpen(node)) {
+      if (this.isOpen(node) && node.children) {
         return [el].concat(this.renderNodes(node.children));
       } else {
         return [el];
@@ -343,15 +328,26 @@ export default Vue.extend({
     renderToggle(node: ITableNode): VNode {
       const h = this.$createElement;
 
+      const hasChildren = node.children && node.children.length ||
+        node.item.totalChildren && node.item.totalChildren > 0;
+      const mayHaveChildren = !node.children && node.item.totalChildren === -1;
+      const isLoading = !node.children && this.isOpen(node);
+
       let children = [];
-      if ((node.children && node.children.length) || (!node.children && node.item.totalChildren)) {
+      if (isLoading) {
+        children.push(h('i', {class: 'fas fa-spinner'}));
+      } else if (hasChildren || mayHaveChildren) {
         children.push(h('i', {class: 'fas fa-chevron-down'}));
       } else {
         children.push(h('i', {domProps: {innerHTML: '&nbsp;'}}));
       }
 
       return h('span', {
-        class: toggleClassHelper({open: this.isOpen(node)}),
+        class: toggleClassHelper({
+          loading: isLoading,
+          open: !isLoading && this.isOpen(node),
+          unknown: !isLoading && mayHaveChildren,
+        }),
         on: {
           click: () => {
             this.toggleOpen(node);

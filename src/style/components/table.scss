@@ -109,48 +109,6 @@ $table-condensed-row-height: 1.5rem;
       border-right: $inner-border;
     }
   }
-
-  td.s-data-table__loader {
-    position: relative;
-    height: 4px;
-    line-height: 4px;
-    padding: 0;
-
-    span {
-      position: absolute;
-      height: 4px;
-      background-color: $color-editish;
-
-      animation-name: loading;
-      animation-timing-function: linear;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-
-    }
-  }
-}
-
-@keyframes loading {
-  from {
-    width: 0;
-    left: 0;
-  }
-  25% {
-    width: 50%;
-    left: 25%;
-  }
-  50% {
-    width: 0;
-    left: 100%;
-  }
-  75% {
-    width: 50%;
-    left: 25%;
-  }
-  to {
-    width: 0;
-    left: 0;
-  }
 }
 
 .s-data-table--condensed .s-data-table__table {
@@ -174,8 +132,11 @@ $table-condensed-row-height: 1.5rem;
   margin-left: -$table-padding;
   text-align: center;
 
+  &--unknown {
+    color: $gray;
+  }
+
   .fas {
-    transform-origin: 50% 45%;
     transition: transform $duration-normal;
   }
 
@@ -183,6 +144,24 @@ $table-condensed-row-height: 1.5rem;
     .fas {
       transform: rotate(180deg);
     }
+  }
+
+  &--loading {
+    .fas {
+      animation-name: spinning;
+      animation-timing-function: linear;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+    }
+  }
+}
+
+@keyframes spinning {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
