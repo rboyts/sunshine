@@ -444,23 +444,23 @@ export default Vue.extend({
       );
     },
 
-    renderTopSpacer(): VNode | undefined {
+    renderTopSpacer(): VNode[] {
       return this.renderSpacer(this.skip, 'top-spacer');
     },
 
-    renderBottomSpacer(): VNode | undefined {
+    renderBottomSpacer(): VNode[] {
       let rows = this.total == null ? 1 : this.total - (this.skip + this.items.length);
       return this.renderSpacer(rows, 'bottom-spacer');
     },
 
-    renderSpacer(rows: number, ref: string): VNode | undefined {
-      if (rows === 0) return;
+    renderSpacer(rows: number, ref: string): VNode[] {
+      if (rows === 0) return [];
 
       const h = this.$createElement;
 
       let height = `${rows * this.rowHeight}px`;
 
-      return h('tr', {ref, style: {height}}, []);
+      return [h('tr', {ref, style: {height}}, [])];
     },
 
     renderHeaderCell(column: IColumn, index: number): VNode {

@@ -5,8 +5,8 @@
       :items="items"
       :total="total"
       :skip="skip"
-      :columns="visibleColumns"
       :sorting="sorting"
+      :columns="visibleColumns"
       @sort="onSort"
       @visible-rows="onVisibleRows"
       @move-column="onMoveColumn"
@@ -55,28 +55,6 @@ import { ISortState, IItem, IColumn } from './types';
 export { IColumn, ISortState, IItem, FetchData } from './types';
 
 
-// API
-//
-// Props:
-//   columns: Ordered list of column objects (model?, sync?)
-//   items: Loaded data
-//   total: Total number of rows in data-set (null means unknown/unbound)
-//   skip: Current offset in the data-set of the first row (default: 0)
-//
-// Events:
-//   update:columns ?
-//   sort -- request data to be sorted (scroll to top?)
-//   visible-rows -- (firstItem, lastItem)
-//
-// Data structure:
-// items: [
-//   {
-//     // key / values
-//     children: ...
-//   },
-// ]
-
-
 export default Vue.extend({
   name: 's-data-table',
   inheritAttrs: false,
@@ -92,31 +70,11 @@ export default Vue.extend({
 
   props: {
     module: String,
-
-    columns: Array as () => IColumn[],
-    items: Array as () => IItem[],
-
-    isLoading: Boolean,
-
-    total: {
-      type: Number as () => number | null,
-      default: null,
-    },
-
-    skip: {
-      type: Number,
-      default: null,
-    },
   },
 
   data() {
     return {
       menuOpen: false,
-      sorting: {
-        key: null,
-        reverse: false,
-      } as ISortState,
-
       orderedColumns: [] as Array<{column: IColumn, visible: boolean}>,
     };
   },
@@ -127,6 +85,26 @@ export default Vue.extend({
         .filter(oc => oc.visible)
         .map(oc => oc.column);
     },
+
+    columns(): IColumn[] {
+      return this.getState('columns');
+    },
+
+    items(): IItem[] {
+      return this.getState('items');
+    },
+
+    skip(): number {
+      return this.getState('skip');
+    },
+
+    total(): number {
+      return this.getState('total');
+    },
+
+    sorting(): ISortState {
+      return this.getState('sorting');
+    },
   },
 
   watch: {
@@ -134,32 +112,34 @@ export default Vue.extend({
       handler() {
         // TODO Be able to restore saved column order/selection
         this.orderedColumns = this.columns.map(column => ({column, visible: true}));
-        this.sorting = { key: null, reverse: false };
+
+        this.tryDispatchAction('init');
       },
       immediate: true,
     },
   },
 
   methods: {
+    getState(key: string): any {
+      return this.$store.getters[`${this.module}/${key}`];
+    },
+
+    tryDispatchAction(name: string, payload?: any): boolean {
+      if (!this.module) return false;
+      this.$store.dispatch(`${this.module}/${name}`, payload);
+      return true;
+    },
+
     onVisibleRows(args: any) {
-      this.$emit('visible-rows', args);
+      this.tryDispatchAction('fetchItems', args);
     },
 
     onOpenItem(keyPath: string) {
-      if (this.module) {
-        this.$store.dispatch(`${this.module}/showSubItems`, {keyPath});
-      }
+      this.tryDispatchAction('showSubItems', {keyPath});
     },
 
     onSort(event: MouseEvent, key: string) {
-      if (this.sorting.key === key) {
-        this.sorting.reverse = !this.sorting.reverse;
-      } else {
-        this.sorting.key = key;
-        this.sorting.reverse = false;
-      }
-
-      this.$emit('sort', this.sorting);
+      this.tryDispatchAction('sort', key);
     },
 
     onMoveColumn({from, to}: {from: number, to: number}) {

@@ -56,12 +56,24 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
       return getItems([], state);
     },
 
+    skip(state) {
+      return state.skip;
+    },
+
     total(state) {
       return state.total;
+    },
+
+    sorting(state) {
+      return state.sorting;
     },
   },
 
   mutations: {
+    sorting: (state, sorting: ISortState) => {
+      state.sorting = sorting;
+    },
+
     fetchStart: state => {
       state.isLoading = true;
     },
@@ -88,6 +100,19 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
   },
 
   actions: {
+    sort({state, commit, dispatch}, key: string) {
+      const sorting = state.sorting.key === key ?
+        { ...state.sorting, reverse: !state.sorting.reverse } :
+        { key, reverse: false };
+
+      commit('sorting', sorting);
+      dispatch('init');
+    },
+
+    init({dispatch}) {
+      dispatch('fetchItems', {firstRow: 0, lastRow: 50, clear: true});
+    },
+
     async fetchItems({state, commit}, args: IFetchItemsPayload) {
       type Range = [number, number];
 
@@ -145,6 +170,8 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
     async showSubItems({state, commit}, {keyPath}: IShowSubItemsPayload) {
       // Already loaded?
       if (joinKeyPath(keyPath) in state.items) return;
+
+      if (!options.fetchChildren) return;
 
       const result = await options.fetchChildren(keyPath);
 
