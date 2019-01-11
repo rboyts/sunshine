@@ -1,11 +1,15 @@
 <template>
   <div :class="classes(alertOptions)">
-    <div class="s-alert__main">
-      <slot />
-    </div>
+    <div :class="classes('status', alertOptions)" />
 
-    <div class="s-alert__buttons">
-      <slot name="buttons" />
+    <div :class="classes('content')">
+      <div :class="classes('main')">
+        <slot />
+      </div>
+
+      <div :class="classes('buttons')">
+        <slot name="buttons" />
+      </div>
     </div>
   </div>
 </template>
