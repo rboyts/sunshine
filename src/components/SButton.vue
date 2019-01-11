@@ -38,14 +38,14 @@ export default mixins(ClassesMixin).extend({
     buttonClasses(): object {
       return this.classes({
         small: this.small,
+        main: this.primary,
+        secondary: !this.primary,
+        inactive: this.inactive,
       });
     },
 
     contentClasses(): object {
       return this.classes('content', {
-        main: this.primary,
-        secondary: !this.primary,
-        inactive: this.inactive,
       });
     },
   },
