@@ -1,12 +1,13 @@
 <template>
-  <span :class="classes()"><i :class="iconClasses" /></span>
+  <span :class="classes()"><i :class="iconClass" /></span>
 </template>
-
 
 <script lang="ts">
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../lib/utils';
+
+import '../icons/style.css';
 
 export default mixins(ClassesMixin).extend({
   name: 's-icon',
@@ -19,11 +20,8 @@ export default mixins(ClassesMixin).extend({
   },
 
   computed: {
-    iconClasses(): object {
-      return {
-        far: true,
-        [`fa-${this.name}`]: true,
-      };
+    iconClass(): string {
+      return `icon-${this.name}`;
     },
   },
 });

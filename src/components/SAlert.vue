@@ -3,6 +3,8 @@
     <div :class="classes('status', alertOptions)" />
 
     <div :class="classes('content')">
+      <s-icon v-if="icon" :name="icon" />
+
       <div :class="classes('main')">
         <slot />
       </div>
@@ -33,6 +35,8 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+
+    icon: String,
   },
 
   computed: {
