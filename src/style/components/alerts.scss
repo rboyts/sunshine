@@ -1,9 +1,11 @@
 @import '../tools.scss';
 
+$alert-background-color: $white;
 $alert-height: base-spacing(6);
 $alert-padding: base-spacing(2);
 $alert-status-width: base-spacing(1);
 $alert-border-radius: 2px;
+$alert-status-border: 1px solid rgba(0, 0, 0, .05);
 
 .s-alert {
   @include paragraph-font;
@@ -15,14 +17,6 @@ $alert-border-radius: 2px;
 
   // XXX Not sure if components should enforce surrounding layout
   margin-bottom: 1rem;
-
-  &--success, &--warning, &--error {
-    .s-alert__content {
-      border-left: none;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-  }
 
   .s-icon {
     display: inline-block;
@@ -42,25 +36,29 @@ $alert-border-radius: 2px;
 }
 
 .s-alert__status {
+  display: block;
+  min-width: $alert-status-width;
+  height: $alert-height;
+  border: $alert-status-border;
+  border-right: none;
+  border-top-left-radius: $alert-border-radius;
+  border-bottom-left-radius: $alert-border-radius;
+  background-color: $alert-background-color;
+
   &--success, &--warning, &--error {
-    display: block;
-    min-width: $alert-status-width;
-    height: $alert-height;
-    border: 1px solid rgba(0, 0, 0, .05);
-    border-top-left-radius: $alert-border-radius;
-    border-bottom-left-radius: $alert-border-radius;
+    border-right: $alert-status-border;
   }
 
   &--success {
-      background-color: $color-good;
+    background-color: $color-good;
   }
 
   &--warning {
-      background-color: $color-oops;
+    background-color: $color-oops;
   }
 
   &--error {
-      background-color: $color-bad;
+    background-color: $color-bad;
   }
 }
 
@@ -71,8 +69,10 @@ $alert-border-radius: 2px;
 
   padding: 0 $alert-padding;
   border: 1px solid $almost-gray;
-  border-radius: $alert-border-radius;
-  background-color: $white;
+  border-left: none;
+  border-top-right-radius: $alert-border-radius;
+  border-bottom-right-radius: $alert-border-radius;
+  background-color: $alert-background-color;
 }
 
 .s-alert__main {
