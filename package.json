@@ -12,6 +12,7 @@
   "dependencies": {
     "debounce": "^1.2.0",
     "moment": "^2.22.2",
+    "vue-scrollto": "^2.13.0",
     "vue-typed-mixins": "^0.1.0"
   },
   "peerDependencies": {
@@ -23,6 +24,7 @@
     "@types/debounce": "^3.0.0",
     "@types/dom-inputevent": "^1.0.3",
     "@types/jest": "^23.1.4",
+    "@types/vue-scrollto": "^2.7.2",
     "@vue/cli-plugin-babel": "^3.0.1",
     "@vue/cli-plugin-typescript": "^3.0.1",
     "@vue/cli-plugin-unit-jest": "^3.1.1",

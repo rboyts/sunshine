@@ -9,6 +9,7 @@ $datepicker-border: 1px solid $gray;
     height: $datepicker-width;
     border: $datepicker-border;
     overflow: hidden;
+    background: #fff;
 }
 
 .s-datepicker__header {
@@ -19,21 +20,26 @@ $datepicker-border: 1px solid $gray;
     z-index: 3;
     display: flex;
     flex-direction: column;
-    background: white;
+    background: #fff;
 }
 
 .s-datepicker__navigation {
     flex-direction: row;
 }
 
-.s-datepicker__scrollcontainer::-webkit-scrollbar { 
-    display: none; 
+.s-datepicker__navigation h4 {
+    margin: 1rem
 }
+
+/**.s-datepicker__scrollcontainer::-webkit-scrollbar { 
+    display: none; 
+}*/
+
 .s-datepicker__scrollcontainer {
     overflow-y: scroll;
     position: relative;
     height: 100%;
-    padding-top: 64px;
+    padding-top: 54px;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
@@ -43,7 +49,7 @@ $datepicker-border: 1px solid $gray;
 
 .s-datepicker__grid {
     position: relative;
-    padding: 2rem 0 2rem 3rem;
+    padding: 2rem 0 0 3rem;
     margin: 0;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -52,12 +58,12 @@ $datepicker-border: 1px solid $gray;
 
 .s-datepicker__month {
     position: absolute;
-    top: 0;
+    top: 0.5rem;
     left: 0;
     margin: 0;
+    padding-left: 1rem;
     width: 100%;
     z-index: 0;
-    background: lightblue;
 }
 
 .s-datepicker__days {
@@ -69,15 +75,15 @@ $datepicker-border: 1px solid $gray;
     position: sticky;
     top: 0;
     z-index: 1;
-    background: white;
     width: 100%;
+    background: #fff;
 }
 
 .s-datepicker__weeks {
     position: absolute;
     left: 6px;
     top: 2rem;
-    z-index: -1;
+    z-index: 0;
     margin: 0;
     padding: 0;
     color: darkgoldenrod;
