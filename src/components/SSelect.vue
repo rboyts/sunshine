@@ -8,9 +8,9 @@
       v-on="$listeners"
     >
       {{ text }}
-      <span slot="right">
-        <i class="fas fa-caret-down" />
-      </span>
+      <template slot="right">
+        <s-svg name="dropdownArrow" />
+      </template>
     </s-button>
     <div slot="content">
       <ul class="s-select__list">
@@ -31,6 +31,7 @@
 import Vue from 'vue';
 import SButton from './SButton.vue';
 import SMenu from './SMenu.vue';
+import SSvg from './internal/SSvg.vue';
 
 export default Vue.extend({
   name: 's-select',
@@ -39,6 +40,7 @@ export default Vue.extend({
   components: {
     SButton,
     SMenu,
+    SSvg,
   },
 
   props: {

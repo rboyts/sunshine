@@ -1,9 +1,7 @@
 @import '../tools.scss';
 
 .s-drop-down__caret {
-  width: base-spacing(3);
-  text-align: center;
-
+  display: inline-flex;
   transition: transform $duration-normal;
 
   &--open {
