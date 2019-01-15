@@ -27,6 +27,7 @@ import SSelect from './components/SSelect.vue';
 import STab from './components/STab.vue';
 import STabs from './components/STabs.vue';
 import STextField from './components/STextField.vue';
+import SDatepicker from './components/SDatepicker.vue';
 
 const plugin = {
   install: (Vue: VueConstructor) => {
@@ -55,6 +56,7 @@ const plugin = {
     Vue.component('s-tab', STab);
     Vue.component('s-tabs', STabs);
     Vue.component('s-text-field', STextField);
+    Vue.component('s-datepicker', SDatepicker);
   },
 };
 

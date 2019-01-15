@@ -1,0 +1,109 @@
+$datepicker-height: 29rem;
+$datepicker-width: 29rem;
+$datepicker-chevron-size: .5rem;
+$datepicker-border: 1px solid $gray;
+
+.s-datepicker {
+    position: relative;
+    width: $datepicker-height;
+    height: $datepicker-width;
+    border: $datepicker-border;
+    overflow: hidden;
+    background: #fff;
+}
+
+.s-datepicker__header {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+
+.s-datepicker__navigation {
+    flex-direction: row;
+}
+
+.s-datepicker__navigation h4 {
+    margin: 1rem
+}
+
+/**.s-datepicker__scrollcontainer::-webkit-scrollbar { 
+    display: none; 
+}*/
+
+.s-datepicker__scrollcontainer {
+    overflow-y: scroll;
+    position: relative;
+    height: 100%;
+    margin-top: 54px;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.s-datepicker__grid__container {
+    position: relative;
+}
+
+.s-datepicker__grid {
+    position: relative;
+    padding: 2rem 0 0 3rem;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    list-style: none;
+}
+
+.s-datepicker__month {
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+    margin: 0;
+    padding-left: 1rem;
+    width: 100%;
+    z-index: 0;
+}
+
+.s-datepicker__days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    list-style: none;
+    padding-left: 3rem;
+    margin: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+    background: #fff;
+}
+
+.s-datepicker__weeks {
+    position: absolute;
+    left: 6px;
+    top: 2rem;
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+    color: darkgoldenrod;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.s-datepicker__date, .s-datepicker__day, .s-datepicker__weeks__week, .s-datepicker__date--overlapping {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.s-datepicker__date--overlapping {
+    color: grey;
+}
+
+.s-datepicker__date--current span {
+    color: darkcyan;
+}
