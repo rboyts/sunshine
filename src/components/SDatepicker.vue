@@ -1,7 +1,7 @@
 <template>
     <div class="s-datepicker" style="margin: 0 auto;">
         <div class="s-datepicker__header">
-            <!--<div class="flex flex-even s-datepicker__navigation">
+            <div class="flex flex-even s-datepicker__navigation">
                 <i 
                     class="fa fa-fw fa-chevron-left" 
                     @click="subtractMonth"
@@ -18,83 +18,26 @@
                     }"
                 >
                 </i>
-            </div>-->
-            <button>previous year</button>
-            <button>next year</button>
+            </div>
         </div>
         <div 
-            id="scrollContainer" 
+            id="scrollContainer"
+            @scroll="onCalendarScroll"
             class="s-datepicker__scrollcontainer">
             <ul class="s-datepicker__days">
                 <li class="s-datepicker__day" v-for="(day, i) in days" :key="'Day' + i">{{day}}</li>
             </ul>
             <div class="s-datepicker__grid__container">
-
-                <!-- TODO: Move years into some kind of render loop -->
-
-                <!-- PREVIOUS YEAR -->
                 <span 
                     class="s-datepicker__grid" 
-                    v-for="(n, k) in previousYear"
-                    :ref="(Number(year) - 1)"
-                    :key="'previous-year-'+n.month + n" 
-                    :id="'month' + stringifyMonth(n.month) + '-' + (Number(year) - 1)"
-                >
-                    <h3 class="s-datepicker__month">{{translateMonthName(k)}} - {{Number(year) - 1}}</h3>
-                    <div class="s-datepicker__weeks">
-                        <span 
-                            class="s-datepicker__weeks__week" 
-                            v-for="w in n.weeksInMonth" 
-                            :key="'weeknumber-' + w + n">{{w}}</span>
-                    </div>
-                    <span 
-                        class="s-datepicker__date--overlapping" 
-                        v-for="x in n.previousMonthDays" 
-                        :key="'offset-first-'+n.month + n + x">{{x}}</span>
-                    <span 
-                        class="s-datepicker__date" 
-                        v-for="a in n.daysInMonth" 
-                        :key="'date'+n.month + n + a">{{a}}</span>
-                    <span class="s-datepicker__date--overlapping" v-for="x in (6 - n.lastDay)" :key="'offset-last-'+n.month + n + x">{{x}}</span>
-                </span>
-
-                <!-- CURRENT YEAR -->
-                <span 
-                    class="s-datepicker__grid" 
-                    v-for="(n, k) in currentYear" 
-                    :ref="(Number(year))"
-                    :key="'current-year-'+n.month + n" 
-                    :id="'month' + stringifyMonth(n.month) + '-' + year"
+                    v-for="(n, k) in getDaysInMonths(year)" 
+                    :ref="stringifyMonth(n.month) + '-' + year"
+                    :id="'month'+stringifyMonth(n.month) + '-' + year"
+                    :key="'current-year-'+n.month + n"
                 >
                     <h3 class="s-datepicker__month">
                         {{translateMonthName(k)}} - {{year}}
                     </h3>
-                    <div class="s-datepicker__weeks">
-                        <span 
-                            class="s-datepicker__weeks__week" 
-                            v-for="w in n.weeksInMonth" 
-                            :key="'weeknumber-' + w + n">{{w}}</span>
-                    </div>
-                    <span 
-                        class="s-datepicker__date--overlapping" 
-                        v-for="x in n.previousMonthDays" 
-                        :key="'offset-first-'+n.month + n + x">{{x}}</span>
-                    <span 
-                        class="s-datepicker__date" 
-                        v-for="a in n.daysInMonth" 
-                        :key="'date'+n.month + n + a">{{a}}</span>
-                    <span class="s-datepicker__date--overlapping" v-for="x in (6 - n.lastDay)" :key="'offset-last-'+n.month + n + x">{{x}}</span>
-                </span>
-
-                <!-- NEXT YEAR -->
-                <span 
-                    class="s-datepicker__grid" 
-                    v-for="(n, k) in nextYear" 
-                    :ref="(Number(year) + 1)"
-                    :key="'next-year-'+n.month + n" 
-                    :id="'month' + stringifyMonth(n.month) + '-' + (Number(year) + 1)"
-                >
-                    <h3 class="s-datepicker__month">{{translateMonthName(k)}} - {{Number(year) + 1}}</h3>
                     <div class="s-datepicker__weeks">
                         <span 
                             class="s-datepicker__weeks__week" 
@@ -124,50 +67,45 @@ const VueScrollTo = require('vue-scrollto');
 
 moment.locale('nb');
 
+ Vue.use(VueScrollTo, {
+    container: '#scrollContainer',
+    duration: 200,
+    easing: 'ease',
+    offset: 0,
+    force: true,
+    cancelable: true,
+    onStart: false,
+    onDone: false,
+    onCancel: false,
+    x: false,
+    y: true,
+});
+
 export default Vue.extend({
     name: 's-datepicker',
     data() {
         return {
-            flag: true,
             today: moment(),
             dateContext: moment(),
             weekNumbers: moment().weeksInYear(),
             months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
             days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
-            monthsWithDates: [],
+            monthXPositions: {} as any,
+            VueScrollTo: VueScrollTo,
         };
     },
     created() {
-        Vue.use(VueScrollTo, {
-            container: '#scrollContainer',
-            duration: 200,
-            easing: 'ease',
-            offset: 0,
-            force: true,
-            cancelable: true,
-            onStart: false,
-            onDone: false,
-            onCancel: false,
-            x: false,
-            y: true,
-        });
+       
     },
     mounted() {
-        VueScrollTo.scrollTo('#month01-2019', {offset: -70});
+        this.xPositionsOfMonths();
     },
     computed: {
         scrollContainer(): HTMLElement {
             return this.$el.querySelector('#scrollContainer') as HTMLElement;
         },
-        previousYear(): IMonth[] {
-            let prevYear = Number(this.year) - 1;
-            return this.getDaysInMonths(prevYear);
-        },
         currentYear(): IMonth[] {
             return this.getDaysInMonths(Number(this.year));
-        },
-        nextYear(): IMonth[] {
-            return this.getDaysInMonths(Number(this.year) + 1);
         },
         year(): string {
             return this.dateContext.format('Y');
@@ -197,27 +135,31 @@ export default Vue.extend({
         scrollToMonth(): string {
             return '#month' + this.dateContext.format('MM-YYYY');
         },
-        xPositionOfPreviousYear(): number {
-            let prevYear = this.$refs[Number(this.year) - 1] as HTMLElement[];
-            return prevYear[0].offsetTop;
-        },
-        xPositionOfActiveYear(): number {
-            let activeYear = this.$refs[Number(this.year)] as HTMLElement[];
-            return activeYear[0].offsetTop;
-        },
-        xPositionOfNextYear(): number {
-            let nextYear = this.$refs[Number(this.year) + 1] as HTMLElement[];
-            return nextYear[0].offsetTop
-        },
     },
     methods: {
+        xPositionsOfMonths() {
+            // Should be recalculated when year changes
+            let months: any = {};
+            for (let a = 0, b = this.months.length; a < b; a++) {
+                let element = this.$refs[this.stringifyMonth(this.months[a]) + '-' + this.year] as HTMLElement[];
+                this.monthXPositions[element[0].offsetTop] = this.stringifyMonth(this.months[a]) + '-01-' + this.year;
+            }
+        },
         subtractMonth() {
-            // this.dateContext = moment(this.dateContext).subtract(1, 'M');
-            console.log(this.dateContext.format('MM-YYYY'));
+            this.dateContext = moment(this.dateContext).subtract(1, 'M');
         },
         addMonth() {
-            // this.dateContext = moment(this.dateContext).add(1, 'M');
-            console.log(this.dateContext.format('MM-YYYY'));
+            this.dateContext = moment(this.dateContext).add(1, 'M');
+        },
+        onCalendarScroll() {
+            let array = Object.keys(this.monthXPositions);
+            let scrollX = this.scrollContainer.scrollTop;
+            let position = array.find(function(element) {
+                return scrollX <= Number(element) 
+            })
+            if (this.dateContext.format('MM-YYYY') !== this.monthXPositions[String(position)]) {
+                this.dateContext = moment(this.monthXPositions[String(position)]);
+            }
         },
         stringifyMonth(monthKey: number): string {
             let monthString;
@@ -229,7 +171,7 @@ export default Vue.extend({
             return monthString;
         },
         translateMonthName(monthKey: number) {
-            // return name oF month 0 - 11
+            // return name of month 0 - 11
             monthKey = monthKey + 1;
             return moment('2019-' + this.stringifyMonth(monthKey)).format('MMMM');
         },
@@ -253,8 +195,6 @@ export default Vue.extend({
             }
             this.addOverlapDays(months);
             this.addWeekNumbers(months, year);
-            console.log(year);
-            console.log(months);
             return months;
         },
         addOverlapDays(months: IMonth[]): IMonth[] {
