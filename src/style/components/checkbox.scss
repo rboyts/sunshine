@@ -11,19 +11,6 @@ $checkbox-border-width: 1px;
   height: $checkbox-height;
   line-height: $checkbox-height;
 
-  &--focus,
-  &:hover:not(.s-checkbox--inactive) {
-    .s-checkbox__box {
-      border-color: $color-edit;
-    }
-  }
-
-  &--inactive {
-    .s-checkbox__box {
-      background-color: $almost-gray;
-    }
-  }
-
   // Hides the native checkbox, so that we can provide our own styled
   // version. We're using opacity rather than other methods for making
   // it invisible, because we want it to behave as if it's visible (e.g.
@@ -32,9 +19,15 @@ $checkbox-border-width: 1px;
     position: absolute;
     opacity: 0;
   }
+
+  &:hover:not(.s-checkbox--inactive) {
+    .s-checkable {
+      border-color: $color-edit;
+    }
+  }
 }
 
-.s-checkbox__box {
+.s-checkable {
   display: inline-block;
   position: relative;
   align-items: center;
@@ -49,15 +42,25 @@ $checkbox-border-width: 1px;
   border-radius: $checkbox-border-radius;
   margin-right: $checkbox-spacing;
 
-  > span {
-    display: inline-block;
-    position: absolute;
-    user-select: none;
-    pointer-events: none;
-    font-size: .675rem;
-    line-height: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
-    height: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
-    width: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
-    text-align: center;
+  &--focus {
+    border-color: $color-edit;
   }
+
+  &--inactive {
+    background-color: $almost-gray;
+  }
+}
+
+.s-checkable__checkmark {
+  display: inline-block;
+  position: absolute;
+  top: -$checkbox-border-width;
+  left: -$checkbox-border-width;
+  user-select: none;
+  pointer-events: none;
+  font-size: .675rem;
+  line-height: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
+  height: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
+  width: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
+  text-align: center;
 }

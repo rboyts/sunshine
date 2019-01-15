@@ -1,13 +1,13 @@
 <template>
   <li :class="classes()" @click="onClick">
-    <s-checkable-internal v-if="checkable" :checked="checked" />
+    <s-checkable v-if="checkable" :checked="checked" />
     <slot />
   </li>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import SCheckableInternal from './internal/CheckableInternal.vue';
+import SCheckable from './SCheckable.vue';
 
 export default Vue.extend({
   name: 's-list-item',
@@ -18,7 +18,7 @@ export default Vue.extend({
   },
 
   components: {
-    SCheckableInternal,
+    SCheckable,
   },
 
   props: {

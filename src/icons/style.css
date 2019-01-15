@@ -3,8 +3,8 @@
     src:    url('fonts/icon54com.eot?uf6sbu');
     src:    url('fonts/icon54com.eot?uf6sbu#iefix') format('embedded-opentype'),
         url('fonts/icon54com.ttf?uf6sbu') format('truetype'),
-        url('fonts/icon54com.woff?uf6sbu') format('woff'),
-        url('fonts/icon54com.svg?uf6sbu#icon54com') format('svg');
+        url('fonts/icon54com.woff?uf6sbu') format('woff');
+        /* url('fonts/icon54com.svg?uf6sbu#icon54com') format('svg'); */
     font-weight: normal;
     font-style: normal;
 }

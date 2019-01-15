@@ -45,7 +45,6 @@
 import Vue from 'vue';
 import SMenu from './SMenu.vue';
 import SButton from './SButton.vue';
-import SCheckbox from './SCheckbox.vue';
 import SList from './SList.vue';
 import SListItem from './SListItem.vue';
 import DataTableInternal from './internal/DataTableInternal';
@@ -85,7 +84,6 @@ export default Vue.extend({
     SButton,
     SList,
     SListItem,
-    SCheckbox,
     DataTableInternal,
   },
 
