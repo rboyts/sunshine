@@ -1,8 +1,7 @@
 <template>
     <div class="s-datepicker" style="margin: 0 auto;">
-        <!--<h2>{{ today.format('LLLL') }}</h2>-->
         <div class="s-datepicker__header">
-            <div class="flex flex-even s-datepicker__navigation">
+            <!--<div class="flex flex-even s-datepicker__navigation">
                 <i 
                     class="fa fa-fw fa-chevron-left" 
                     @click="subtractMonth"
@@ -19,12 +18,13 @@
                     }"
                 >
                 </i>
-            </div>
+            </div>-->
+            <button>previous year</button>
+            <button>next year</button>
         </div>
         <div 
             id="scrollContainer" 
-            class="s-datepicker__scrollcontainer"
-            v-on:scroll="onScroll()">
+            class="s-datepicker__scrollcontainer">
             <ul class="s-datepicker__days">
                 <li class="s-datepicker__day" v-for="(day, i) in days" :key="'Day' + i">{{day}}</li>
             </ul>
@@ -66,9 +66,7 @@
                     :key="'current-year-'+n.month + n" 
                     :id="'month' + stringifyMonth(n.month) + '-' + year"
                 >
-                    <h3 
-                        class="s-datepicker__month" 
-                        :hidden="isCurrentMonth(stringifyMonth(n.month), year)">
+                    <h3 class="s-datepicker__month">
                         {{translateMonthName(k)}} - {{year}}
                     </h3>
                     <div class="s-datepicker__weeks">
@@ -122,7 +120,6 @@
 import Vue from 'vue';
 import moment,{ Moment } from 'moment';
 import {IMonth} from './types';
-// import VueScrollTo from 'vue-scrollto';
 const VueScrollTo = require('vue-scrollto');
 
 moment.locale('nb');
@@ -156,9 +153,7 @@ export default Vue.extend({
         });
     },
     mounted() {
-        console.log(this.dateContext.format('MM-YYYY'))
-        VueScrollTo.scrollTo('#month01-2019', {offset: -70})
-        this.yearPositionsOnXAxis();
+        VueScrollTo.scrollTo('#month01-2019', {offset: -70});
     },
     computed: {
         scrollContainer(): HTMLElement {
@@ -216,42 +211,6 @@ export default Vue.extend({
         },
     },
     methods: {
-        yearPositionsOnXAxis() {
-            // Does not work. Redo logic of loading in years in the past and future
-
-            console.log(this.$refs[Number(this.year) - 1]);
-            let prevYear = this.$refs[Number(this.year) - 1] as HTMLElement[];
-            console.log(prevYear[0].offsetTop);
-            
-            console.log(this.$refs[Number(this.year)]);
-            let activeYear = this.$refs[Number(this.year)] as HTMLElement[];
-            console.log(activeYear[0].offsetTop)
-
-            console.log(this.$refs[Number(this.year) + 1]);
-            let nextYear = this.$refs[Number(this.year) + 1] as HTMLElement[];
-            console.log(nextYear[0].offsetTop);
-        },
-        // TODO: Figure out how to move active month to header (animated?)
-        isCurrentMonth(month: string, year: string): boolean {
-            return (month + '-' + year) === (moment(this.dateContext).format('MM-YYYY'));
-        },
-        onScroll() {
-            // console.log('Scrolling ', this.scrollContainer.scrollTop);
-            let minScroll = 0;
-            let maxScroll = this.scrollContainer.scrollHeight - this.scrollContainer.clientHeight;
-            if (this.scrollContainer.scrollTop > this.xPositionOfPreviousYear &&
-                this.scrollContainer.scrollTop < this.xPositionOfActiveYear && this.flag) {
-                this.flag = false;
-                // scrolling inside previous year
-                console.log('Go back one year')
-                this.dateContext = moment(this.dateContext).subtract(1, 'year');
-                console.log(this.dateContext.format('MM-YYYY'))
-                this.dateContext = moment(this.dateContext).add(11, 'M');
-                console.log(this.dateContext.format('MM-YYYY'))
-            }
-            // set this.month when scrolling to month
-            // change this.year to the year being scrolled in
-        },
         subtractMonth() {
             // this.dateContext = moment(this.dateContext).subtract(1, 'M');
             console.log(this.dateContext.format('MM-YYYY'));
