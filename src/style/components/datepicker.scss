@@ -1,11 +1,14 @@
 $datepicker-height: 29rem;
 $datepicker-width: 29rem;
+$datepicker-menu-width: 11rem;
 $datepicker-chevron-size: .5rem;
 $datepicker-border: 1px solid $gray;
 
 .s-datepicker {
+    display: flex;
+    flex-direction: row;
     position: relative;
-    width: $datepicker-height;
+    width: $datepicker-height + $datepicker-menu-width;
     height: $datepicker-width;
     border: $datepicker-border;
     overflow: hidden;
@@ -14,7 +17,7 @@ $datepicker-border: 1px solid $gray;
 
 .s-datepicker__header {
     position: absolute;
-    width: 100%;
+    width: $datepicker-width;
     top: 0;
     left: 0;
     z-index: 3;
@@ -27,8 +30,16 @@ $datepicker-border: 1px solid $gray;
     flex-direction: row;
 }
 
-.s-datepicker__navigation h4 {
-    margin: 1rem
+.s-datepicker__navigation h4, .s-datepicker__navigation i {
+    padding: 1rem;
+    margin: 0;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.s-datepicker__menu {
+  background: #fafafa;
+  width: $datepicker-menu-width;
 }
 
 /**.s-datepicker__scrollcontainer::-webkit-scrollbar { 
@@ -39,7 +50,8 @@ $datepicker-border: 1px solid $gray;
     overflow-y: scroll;
     position: relative;
     height: 100%;
-    margin-top: 54px;
+    width: $datepicker-width;
+    padding-top: 95px;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
@@ -77,6 +89,7 @@ $datepicker-border: 1px solid $gray;
     z-index: 1;
     width: 100%;
     background: #fff;
+    border-bottom: 1px solid #fafafa;
 }
 
 .s-datepicker__weeks {
