@@ -7,8 +7,7 @@
       @click="onClick"
     >
       <slot name="heading" />
-      <i :class="classes('chevron', chevronOptions)"
-        class="fas fa-chevron-up" />
+      <s-svg :class="classes('chevron', chevronOptions)" name="arrow" />
     </a>
 
     <div
@@ -26,9 +25,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import SSvg from './internal/SSvg.vue';
 
 export default Vue.extend({
   name: 's-accordion-item',
+
+  components: {
+    SSvg,
+  },
 
   // XXX parent should handle state
   data() {

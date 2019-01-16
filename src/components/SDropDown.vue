@@ -33,9 +33,7 @@ Use cases:
         @input="onInput"
       />
 
-      <span :class="classes('caret', caretModifiers)" @click="onCaretClick" @mousedown="$event.preventDefault()">
-        <i class="fas fa-caret-down" />
-      </span>
+      <s-svg name="dropdownArrow" :class="classes('caret', caretModifiers)" @click="onCaretClick" @mousedown="$event.preventDefault()" />
     </s-base-input>
 
     <div slot="content" @mousedown="$event.preventDefault()">
@@ -61,6 +59,7 @@ import SList from './SList.vue';
 import SListItem from './SListItem.vue';
 import SMenu from './SMenu.vue';
 import SBaseInput from './SBaseInput.vue';
+import SSvg from './internal/SSvg.vue';
 
 export default Vue.extend({
   name: 's-drop-down',
@@ -70,6 +69,7 @@ export default Vue.extend({
     SListItem,
     SMenu,
     SBaseInput,
+    SSvg,
   },
 
   props: {
@@ -196,7 +196,7 @@ export default Vue.extend({
     onInput(event: InputEvent) {
       const el = event.target as HTMLInputElement;
       this.filter = el.value;
-    }
+    },
   },
 });
 </script>

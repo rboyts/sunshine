@@ -33,22 +33,6 @@ $btn-secondary-border-color: $gray;
       padding: 0 $btn-small-padding;
     }
   }
-}
-
-.s-button__content {
-  @include action-font;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  height: 100%;
-  width: 100%;
-  padding: 0 $btn-normal-padding;
-  border-radius: ($btn-normal-height / 2);
-  outline: none;
-  user-select: none;
-  cursor: default;
 
   &--main {
     border: none;
@@ -91,6 +75,23 @@ $btn-secondary-border-color: $gray;
   }
 }
 
-.s-button:focus > .s-button__content {
+.s-button__content {
+  @include action-font;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+  width: 100%;
+  padding: 0 $btn-normal-padding;
+  // border-radius: ($btn-normal-height / 2);
+  outline: none;
+  user-select: none;
+  cursor: default;
+
+}
+
+.s-button:focus {
   box-shadow: inset 0 0 0 0.125em $color-edit;
 }

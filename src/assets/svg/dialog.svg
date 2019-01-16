@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/24px/dialog@1,5x</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon/24px/dialog" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="bound" fill-rule="nonzero" x="0" y="0" width="24" height="24"></rect>
+        <path d="M17,5 L7,5 C5.346,5 4,6.28481818 4,7.86363636 L4,12.9545455 C4,14.5333636 5.346,15.8181818 7,15.8181818 L8.62533333,15.8181818 C9.16866667,15.8181818 9.67933333,16.0714545 9.99066667,16.4965455 L11.7266667,18.8638182 C11.7893333,18.9490909 11.8913333,19 12,19 C12.1086667,19 12.2106667,18.9490909 12.2733333,18.8644545 L14.0093333,16.4971818 C14.3206667,16.0714545 14.8313333,15.8181818 15.3746667,15.8181818 L17,15.8181818 C18.654,15.8181818 20,14.5333636 20,12.9545455 L20,7.86363636 C20,6.28481818 18.654,5 17,5 Z" id="Shape-Copy" fill="#1C1C1C" fill-rule="nonzero"></path>
+    </g>
+</svg>

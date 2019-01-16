@@ -46,3 +46,12 @@ export interface IFetchItemsPayload {
   clear: boolean;
   sorting: ISortState;
 }
+
+export interface IMonth {
+  daysInMonth: number;
+  firstDay: number;
+  lastDay: number;
+  month: number;
+  previousMonthDays: number[];
+  weeksInMonth: number[];
+}

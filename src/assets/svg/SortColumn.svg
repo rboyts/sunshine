@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/24px/SortColumn@1,5x</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon/24px/SortColumn" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="bound" fill-rule="nonzero" x="0" y="0" width="24" height="24"></rect>
+        <path d="M12,19 C8.13400675,19 5,15.8659932 5,12 C5,8.13400675 8.13400675,5 12,5 C15.8659932,5 19,8.13400675 19,12 C19,15.8659932 15.8659932,19 12,19 Z M11.2928932,14.2928932 C11.6834175,14.6834175 12.3165825,14.6834175 12.7071068,14.2928932 L15.2928932,11.7071068 C15.4804296,11.5195704 15.5857864,11.2652165 15.5857864,11 C15.5857864,10.4477153 15.1380712,10 14.5857864,10 L9.41421356,10 C9.14899707,10 8.89464316,10.1053568 8.70710678,10.2928932 C8.31658249,10.6834175 8.31658249,11.3165825 8.70710678,11.7071068 L11.2928932,14.2928932 Z" id="SortedByArrow" fill="#1C1C1C" fill-rule="nonzero"></path>
+    </g>
+</svg>

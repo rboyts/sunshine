@@ -32,6 +32,10 @@
   justify-content: flex-end;
 }
 
+.flex-even {
+  justify-content: space-evenly;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);

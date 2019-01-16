@@ -1,6 +1,6 @@
 <template>
   <label :class="classes(modifiers)"
-        @mousedown.native="$event.preventDefault()"
+    @mousedown.native="$event.preventDefault()"
   >
     <input
       type="checkbox"
@@ -10,7 +10,7 @@
       @focus="hasFocus = true"
       @blur="hasFocus = false"
     />
-    <s-checkable-internal :checked="checked" />
+    <s-checkable :inactive="inactive" :checked="checked" :hasFocus="hasFocus" />
     <span>
       <slot />
     </span>
@@ -19,13 +19,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import SCheckableInternal from './internal/CheckableInternal.vue';
+import SCheckable from './SCheckable.vue';
 
 export default Vue.extend({
   name: 's-checkbox',
 
   components: {
-    SCheckableInternal,
+    SCheckable,
   },
 
   model: {

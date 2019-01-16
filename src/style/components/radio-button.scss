@@ -1,5 +1,6 @@
 $radio-button-height: base-spacing(2);
 $radio-button-spacing: base-spacing();
+$radio-button-border-width: 1px;
 
 .s-radio-button {
   @include paragraph-font;
@@ -20,31 +21,6 @@ $radio-button-spacing: base-spacing();
       background-color: $almost-gray;
     }
   }
-}
-
-.s-radio-button__box {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid $gray;
-  background-color: $white;
-  height: $radio-button-height;
-  width: $radio-button-height;
-  border-radius: $radio-button-height / 2;
-  margin-right: $radio-button-spacing;
-
-  > span {
-    user-select: none;
-    position: absolute;
-    width: calc(1rem - 2px);
-    text-align: center;
-
-    // HACK to make the bullet look decent, until we get a proper icon
-    top: -2px;
-    font-size: 1rem;
-  }
 
   // Hides the native radio-button, so that we can provide our own styled
   // version. We're using opacity rather than other methods for making
@@ -59,4 +35,28 @@ $radio-button-spacing: base-spacing();
     width: $radio-button-height;
     height: $radio-button-height;
   }
+}
+
+.s-radio-button__box {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: $radio-button-border-width solid $gray;
+  background-color: $white;
+  height: $radio-button-height;
+  width: $radio-button-height;
+  border-radius: $radio-button-height / 2;
+  margin-right: $radio-button-spacing;
+}
+
+.s-radio-button__selected {
+  user-select: none;
+  position: absolute;
+  top: -$radio-button-border-width;
+  left: -$radio-button-border-width;
+  width: $radio-button-height;
+  height: $radio-button-height;
+  text-align: center;
 }

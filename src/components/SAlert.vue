@@ -1,11 +1,17 @@
 <template>
   <div :class="classes(alertOptions)">
-    <div class="s-alert__main">
-      <slot />
-    </div>
+    <div :class="classes('status', alertOptions)" />
 
-    <div class="s-alert__buttons">
-      <slot name="buttons" />
+    <div :class="classes('content')">
+      <s-icon v-if="icon" :name="icon" />
+
+      <div :class="classes('main')">
+        <slot />
+      </div>
+
+      <div :class="classes('buttons')">
+        <slot name="buttons" />
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +35,8 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+
+    icon: String,
   },
 
   computed: {

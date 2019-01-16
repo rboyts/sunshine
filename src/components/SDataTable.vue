@@ -17,8 +17,8 @@
 
       <template slot="menu">
         <s-menu v-model="menuOpen">
-          <div slot="activator" style="width: 2.5rem">
-            <i class="fas fa-ellipsis-h" />
+          <div slot="activator" :class="classes('more', {open: menuOpen})">
+            <s-svg name="more" />
           </div>
 
           <template slot="content">
@@ -46,9 +46,9 @@
 import Vue from 'vue';
 import SMenu from './SMenu.vue';
 import SButton from './SButton.vue';
-import SCheckbox from './SCheckbox.vue';
 import SList from './SList.vue';
 import SListItem from './SListItem.vue';
+import SSvg from './internal/SSvg.vue';
 import DataTableInternal from './internal/DataTableInternal';
 import { ISortState, IItem, IColumn } from './types';
 
@@ -64,7 +64,7 @@ export default Vue.extend({
     SButton,
     SList,
     SListItem,
-    SCheckbox,
+    SSvg,
     DataTableInternal,
   },
 
