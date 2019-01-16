@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
-    <title>icon/24px/dropdownArrow@1,5x</title>
-    <desc>Created with Sketch.</desc>
     <g id="icon/24px/dropdownArrow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <rect id="bound" fill-rule="nonzero" x="0" y="0" width="24" height="24"></rect>
         <path d="M12.7071068,10.7071068 L15.2928932,13.2928932 C15.6834175,13.6834175 15.6834175,14.3165825 15.2928932,14.7071068 C15.1053568,14.8946432 14.8510029,15 14.5857864,15 L9.41421356,15 C8.86192881,15 8.41421356,14.5522847 8.41421356,14 C8.41421356,13.7347835 8.5195704,13.4804296 8.70710678,13.2928932 L11.2928932,10.7071068 C11.6834175,10.3165825 12.3165825,10.3165825 12.7071068,10.7071068 Z" id="Rectangle-6-Copy-41" fill="#1C1C1C" fill-rule="nonzero" transform="translate(12.000000, 12.500000) rotate(-180.000000) translate(-12.000000, -12.500000) "></path>
