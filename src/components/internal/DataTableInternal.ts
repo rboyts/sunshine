@@ -2,6 +2,7 @@ import Vue, { VNode, VNodeChildrenArrayContents, CreateElement } from 'vue';
 import debounce from 'debounce';
 import { IColumn, IItem, IItemData, ISortState } from '../types';
 import { classHelper } from '../../lib/utils';
+import SIcon from '../SIcon.vue';
 
 const SCROLL_DEBOUNCE = 250;
 const MOVE_TIMEOUT = 350;
@@ -36,6 +37,10 @@ const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
 
 export default Vue.extend({
   name: 'data-table-internal',
+
+  components: {
+    SIcon,
+  },
 
   props: {
     columns: Array as () => IColumn[],
@@ -349,7 +354,7 @@ export default Vue.extend({
       // Render icon and start line that child items will connect to, if any.
       children.push(h('span', {class: 's-data-table__outline__section'}, [
         node.children.length && node.isOpen ? this.renderTail() : '',
-        node.item.icon ? h('i', {class: [node.item.icon, 's-data-table__icon']}) : '',
+        node.item.icon ? h('s-icon', {class: 's-data-table__icon', props: {name: node.item.icon}}) : '',
       ]));
 
       // Render nested children with correct indentation, and connect lines between
