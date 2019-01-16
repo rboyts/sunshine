@@ -10,7 +10,7 @@ $table-condensed-padding: .5rem;
 $table-normal-row-height: 2.5rem;
 $table-condensed-row-height: 1.5rem;
 
-$table-toggle-width: base-spacing(5);
+$table-toggle-width: base-spacing(4);
 
 .s-data-table {
   @include paragraph-font;
@@ -25,12 +25,6 @@ $table-toggle-width: base-spacing(5);
   margin-bottom: 8px;
   display: flex;
   flex-direction: column;
-
-  &--condensed {
-    .s-data-table__toggle {
-      margin-left: -$table-condensed-padding;
-    }
-  }
 
   // XXX Use when adjusting column width
   &--fixed {
@@ -50,13 +44,19 @@ $table-toggle-width: base-spacing(5);
   table-layout: fixed;
   min-width: 100%;
 
+  tr:hover {
+    td {
+      background-color: $whiteish;
+    }
+  }
+
   th, td {
     white-space: nowrap;
     text-overflow: ellipsis;
 
     height: $table-normal-row-height;
     line-height: $table-normal-row-height;
-    padding: 0 $table-padding;
+    padding: 0;
 
     transition: opacity $duration-normal;
   }
@@ -112,16 +112,30 @@ $table-toggle-width: base-spacing(5);
   }
 }
 
-.s-data-table__toggle {
-  display: inline-block;
-  height: $table-normal-row-height;
-  vertical-align: middle;
-  width: $table-toggle-width;
-  text-align: left;
-  cursor: pointer;
+.s-data-table__cell-wrapper {
+  display: flex;
+  align-items: stretch;
+}
 
-  margin-left: -$table-padding;
-  text-align: center;
+.s-data-table__cell-content {
+  height: $table-normal-row-height;
+  flex: 1;
+  padding: 0 $table-padding;
+  border-bottom: $inner-border;
+}
+
+.s-data-table__table tr:last-child {
+  .s-data-table__cell-content {
+    border-bottom: none;
+  }
+}
+
+.s-data-table__toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: $table-toggle-width;
+  cursor: pointer;
 
   &--unknown {
     color: $gray;
@@ -157,9 +171,11 @@ $table-toggle-width: base-spacing(5);
 }
 
 .s-data-table__more {
-  width: $table-normal-row-height;
-  height: $table-toggle-width;
-  padding: 8px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: $table-toggle-width;
+  height: $table-normal-row-height;
 
   &--open {
     svg path {
@@ -174,10 +190,10 @@ $table-toggle-width: base-spacing(5);
       height: $table-condensed-row-height;
       line-height: $table-condensed-row-height;
     }
+  }
 
-    th, td {
-      padding: 0 $table-condensed-padding;
-    }
+  .s-data-table__cell-content {
+    height: $table-condensed-row-height;
   }
 
   .s-data-table__toggle {
@@ -186,14 +202,24 @@ $table-toggle-width: base-spacing(5);
 
   .s-data-table__more {
     height: $table-condensed-row-height;
-    padding: 0;
   }
 }
 
 .s-data-table__outline {
+  display: flex;
+}
+
+.s-icon {
   display: inline-block;
-  height: 100%;
-  margin-right: base-spacing();
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.s-data-table__outline__section {
+  text-align: center;
+  width: base-spacing(3);
+  position: relative;
+
   svg {
     position: absolute;
     top: 0;
@@ -201,15 +227,6 @@ $table-toggle-width: base-spacing(5);
     stroke: $gray;
     stroke-width: 1.5;
   }
-}
-
-.s-data-table__outline__section {
-  display: inline-block;
-  text-align: center;
-  height: 100%;
-  width: base-spacing(3);
-  vertical-align: bottom;
-  position: relative;
 }
 
 .s-data-table__sort {

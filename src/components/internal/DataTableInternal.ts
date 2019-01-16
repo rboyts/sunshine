@@ -70,7 +70,6 @@ export default Vue.extend({
 
   data() {
     return {
-      menuOpen: false,
       drag: null as IDragState | null,
       moveTimeoutId: undefined as number | undefined,
       openNodes: [] as string[],
@@ -409,18 +408,19 @@ export default Vue.extend({
     },
 
     renderAngle(continues: boolean): VNode {
+      const mid = this.rowHeight / 2 - 1;
       return this.renderGraph([
         {
           x1: OUTLINE_WIDTH / 2,
           x2: OUTLINE_WIDTH / 2,
           y1: 0,
-          y2: continues ? this.rowHeight : this.rowHeight / 2,
+          y2: continues ? this.rowHeight : mid,
         },
         {
           x1: OUTLINE_WIDTH / 2,
           x2: OUTLINE_WIDTH,
-          y1: this.rowHeight / 2,
-          y2: this.rowHeight / 2,
+          y1: mid,
+          y2: mid,
         },
       ]);
     },
@@ -476,7 +476,6 @@ export default Vue.extend({
       if (index === 0 && this.$slots.menu) {
         children.push(
           h('span', {
-            class: toggleClassHelper({}),
             on: {
               click: (event: PointerEvent) => { event.stopPropagation(); },
               pointerdown: (event: PointerEvent) => { event.stopPropagation(); },
@@ -485,7 +484,7 @@ export default Vue.extend({
         );
       }
 
-      children.push(column.title);
+      children.push(h('span', {staticClass: 's-data-table__cell-content'}, column.title));
 
       let { sorting } = this;
       if (sorting.key === column.key) {
@@ -509,8 +508,11 @@ export default Vue.extend({
           key: column.key,
           class: this.getColumnClass(column, index),
           on,
-        },
-        children,
+        }, [
+          h('span', {staticClass: 's-data-table__cell-wrapper'}, [
+            children,
+          ]),
+        ],
       );
     },
 
@@ -531,17 +533,18 @@ export default Vue.extend({
       }
 
       let slot = this.$scopedSlots[`~${key}`];
-      if (slot) {
-        children.push(slot({value, item: node.item}));
-      } else {
-        children.push(value);
-      }
+      let content = slot ? slot({value, item: node.item}) : value;
+
+      children.push(h('span', {staticClass: 's-data-table__cell-content'}, [ content ]));
 
       return h('td', {
           key,
           class: this.getColumnClass(column, index),
-        },
-        children,
+        }, [
+          h('span', {staticClass: 's-data-table__cell-wrapper'}, [
+            children,
+          ]),
+        ],
       );
     },
 
