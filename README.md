@@ -1,5 +1,6 @@
-# SmartDok Sunshine
+[![Build Status](https://travis-ci.org/SmartDok/sunshine.svg?branch=master)](https://travis-ci.org/SmartDok/sunshine)
 
+# SmartDok Sunshine
 UI component library for SmartDok.
 
 ## Project setup
