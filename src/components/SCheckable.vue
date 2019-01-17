@@ -1,7 +1,7 @@
 <template>
   <span :class="classes(modifiers)">
     <transition name="fade">
-      <s-svg v-show="checked" name="checkMark" :class="classes('checkmark')" />
+      <s-svg v-if="iconName" :key="iconName" :name="iconName" :class="classes('checkmark')" />
     </transition>
   </span>
 </template>
@@ -39,6 +39,17 @@ export default mixins(ClassesMixin).extend({
         focus: this.hasFocus,
         inactive: this.inactive,
       };
+    },
+
+    iconName(): string | null {
+      switch (this.checked) {
+        case true:
+          return 'checkMark';
+        case null:
+          return 'checkMarkMultiple';
+        default:
+          return null;
+      }
     },
   },
 });

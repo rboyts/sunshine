@@ -1,5 +1,7 @@
 import Vue from 'vue';
 
+export const joinKeyPath = (keyPath: string[]) => keyPath.join(':');
+
 interface IClasses {
   [key: string]: boolean;
 }

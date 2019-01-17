@@ -18,21 +18,33 @@ export interface IItemData {
 }
 
 export interface IItem {
-  children?: IItem[];
+  key: string;
   icon?: string;
+  totalChildren?: number;
+  children?: IItem[] | null;
 
   data: IItemData;
 }
 
-export type FetchData = (skip: number, take: number, sorting: ISortState) => Promise<IItem[]>;
+export interface IFetchResult {
+  items: IItem[];
+  total: number | null;
+}
 
-export interface IDataSource {
-  title: string;
-  outline?: boolean;
-  fixed?: boolean;
+export type FetchData = (skip: number, take: number, sorting: ISortState) => Promise<IFetchResult>;
+export type FetchChildren = (keyPath: string[]) => Promise<IFetchResult>;
+
+export interface ICreateDataModuleOptions {
   columns: IColumn[];
   fetch: FetchData;
-  count: number | null;
+  fetchChildren?: FetchChildren;
+}
+
+export interface IFetchItemsPayload {
+  firstRow: number;
+  lastRow: number;
+  clear: boolean;
+  sorting: ISortState;
 }
 
 export interface IMonth {

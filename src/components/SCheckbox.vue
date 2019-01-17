@@ -4,7 +4,7 @@
   >
     <input
       type="checkbox"
-      :checked="checked"
+      :checked="checked || false"
       :disabled="inactive"
       @change="$emit('change', $event.target.checked)"
       @focus="hasFocus = true"

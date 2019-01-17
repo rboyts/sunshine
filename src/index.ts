@@ -29,6 +29,9 @@ import STabs from './components/STabs.vue';
 import STextField from './components/STextField.vue';
 import SDatepicker from './components/SDatepicker.vue';
 
+export { createDataModule } from './vuex';
+export * from './components/types';
+
 const plugin = {
   install: (Vue: VueConstructor) => {
     Vue.mixin(ClassesMixin);
