@@ -7,9 +7,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import mixins from 'vue-typed-mixins';
+import { ClassesMixin } from '../lib/utils';
 import SCheckable from './SCheckable.vue';
 
-export default Vue.extend({
+export default mixins(ClassesMixin).extend({
   name: 's-list-item',
 
   model: {
