@@ -3,7 +3,8 @@
 $tabs-height: 2.5rem;
 $tabs-line-height: $tabs-height - 0.5rem;
 $tabs-margin-bottom: 1.5rem;
-$tabs-border-width: 3px;
+$tabs-highlight-width: 3px;
+$tabs-border-width: 1px;
 $tabs-link-color: $grayer;
 $tabs-link-active-color: $almost-black;
 
@@ -22,7 +23,7 @@ $tabs-link-active-color: $almost-black;
 
 .s-tabs__highlight {
   position: absolute;
-  height: $tabs-border-width;
+  height: $tabs-highlight-width;
   bottom: 0;
   background-color: $smartdok-yellow;
 
