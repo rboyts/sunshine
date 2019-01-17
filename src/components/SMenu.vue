@@ -20,6 +20,7 @@
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import Watcher from './mixins/watcher';
+import { ClassesMixin } from '../lib/utils';
 
 // Close active menu when clicking anywhere outside
 let activeMenu: any = null;
@@ -41,7 +42,7 @@ const setActive = (value: any) => {
   activeMenu = value;
 };
 
-export default mixins(Watcher).extend({
+export default mixins(ClassesMixin, Watcher).extend({
   name: 's-menu',
 
   props: {

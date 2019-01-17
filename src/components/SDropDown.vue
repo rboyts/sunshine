@@ -55,13 +55,15 @@ Use cases:
 
 <script lang="ts">
 import Vue from 'vue';
+import mixins from 'vue-typed-mixins';
 import SList from './SList.vue';
 import SListItem from './SListItem.vue';
 import SMenu from './SMenu.vue';
 import SBaseInput from './SBaseInput.vue';
 import SSvg from './internal/SSvg.vue';
+import { ClassesMixin } from '../lib/utils';
 
-export default Vue.extend({
+export default mixins(ClassesMixin).extend({
   name: 's-drop-down',
 
   components: {

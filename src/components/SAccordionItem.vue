@@ -25,9 +25,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import mixins from 'vue-typed-mixins';
+import { ClassesMixin } from '../lib/utils';
 import SSvg from './internal/SSvg.vue';
 
-export default Vue.extend({
+export default mixins(ClassesMixin).extend({
   name: 's-accordion-item',
 
   components: {

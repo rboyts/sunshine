@@ -44,6 +44,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import mixins from 'vue-typed-mixins';
+import { ClassesMixin } from '../lib/utils';
 import SMenu from './SMenu.vue';
 import SButton from './SButton.vue';
 import SList from './SList.vue';
@@ -55,7 +57,7 @@ import { ISortState, IItem, IColumn } from './types';
 export { IColumn, ISortState, IItem, FetchData } from './types';
 
 
-export default Vue.extend({
+export default mixins(ClassesMixin).extend({
   name: 's-data-table',
   inheritAttrs: false,
 
