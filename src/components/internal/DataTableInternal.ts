@@ -3,6 +3,7 @@ import debounce from 'debounce';
 import { IColumn, IItem, ISortState } from '../types';
 import { classHelper, joinKeyPath } from '../../lib/utils';
 import SIcon from '../SIcon.vue';
+import SSvg from './SSvg.vue';
 
 const SCROLL_DEBOUNCE = 250;
 const MOVE_TIMEOUT = 350;
@@ -41,6 +42,7 @@ export default Vue.extend({
 
   components: {
     SIcon,
+    SSvg,
   },
 
   props: {
@@ -339,9 +341,9 @@ export default Vue.extend({
 
       let children = [];
       if (isLoading) {
-        children.push(h('i', {class: 'fas fa-spinner'}));
+        children.push(h('s-svg', {props: {name: 'progress'}}));
       } else if (hasChildren || mayHaveChildren) {
-        children.push(h('i', {class: 'fas fa-chevron-down'}));
+        children.push(h('s-svg', {props: {name: 'arrow'}}));
       } else {
         children.push(h('i', {domProps: {innerHTML: '&nbsp;'}}));
       }
