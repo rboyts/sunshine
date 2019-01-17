@@ -204,16 +204,22 @@ $table-toggle-width: base-spacing(4);
   .s-data-table__more {
     height: $table-condensed-row-height;
   }
+
+  .s-icon {
+    font-size: 1.2em;
+  }
 }
 
 .s-data-table__outline {
   display: flex;
 }
 
+// TODO: Scope or move to icons.scss
 .s-icon {
   display: inline-block;
   vertical-align: middle;
   line-height: 1;
+  font-size: 1.4em;
 }
 
 .s-data-table__outline__section {

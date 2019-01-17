@@ -420,7 +420,7 @@ export default Vue.extend({
         },
         {
           x1: OUTLINE_WIDTH / 2,
-          x2: OUTLINE_WIDTH,
+          x2: OUTLINE_WIDTH - 4,
           y1: mid,
           y2: mid,
         },
@@ -432,7 +432,7 @@ export default Vue.extend({
         {
           x1: OUTLINE_WIDTH / 2,
           x2: OUTLINE_WIDTH / 2,
-          y1: this.rowHeight / 2 + 12,
+          y1: this.rowHeight / 2 + 14,
           y2: this.rowHeight,
         },
       ]);
