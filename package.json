@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --name smartdok-sunshine ./src/index.ts",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "test": "yarn test:unit"
   },
   "main": "src/index.ts",
   "dependencies": {
