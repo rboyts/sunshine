@@ -21,6 +21,7 @@ Use cases:
       :isEmpty="text == ''"
       v-bind="$attrs"
       @click.native="onClick"
+      @keydown.native="onKeyDown"
     >
       <input
         ref="input"
@@ -43,6 +44,7 @@ Use cases:
           :key="i"
           :checkable="multiple"
           :checked="item.checked"
+          :selected="item.selected"
           @change="onItemChange(item.item, $event)"
           @click="onItemClick(item.item)"
         >
@@ -102,6 +104,7 @@ export default mixins(ClassesMixin).extend({
       hasFocus: false,
       isOpen: false,
       filter: null as string | null,
+      selected: null as object | null,
     };
   },
 
@@ -131,10 +134,12 @@ export default mixins(ClassesMixin).extend({
     itemValues(): object[] {
       return this.filteredItems.map(item => {
         let checked = this.multiple && this.value.includes(item);
+        let selected = this.selected === item;
         return {
           ...item,
           item,
           checked,
+          selected,
         };
       });
     },
@@ -168,6 +173,47 @@ export default mixins(ClassesMixin).extend({
       }
     },
 
+    onKeyDown(event: KeyboardEvent) {
+      let consumed = false;
+
+      switch (event.key) {
+        case 'ArrowUp':
+          consumed = this.trySelectPrevious();
+          break;
+        case 'ArrowDown':
+          consumed = this.trySelectNext();
+          break;
+        case 'Enter':
+          if (this.selected) {
+            this.setValue(this.selected);
+            this.isOpen = false;
+          }
+          consumed = true;
+          break;
+      }
+
+      if (consumed) {
+        event.preventDefault();
+      }
+    },
+
+    trySelectPrevious(): boolean {
+      let selectedIndex = this.selected == null ? -1 : this.filteredItems.indexOf(this.selected);
+      if (selectedIndex === -1) selectedIndex = this.filteredItems.length;
+      if (selectedIndex === 0) return true;
+
+      this.selected = this.filteredItems[selectedIndex - 1];
+      return true;
+    },
+
+    trySelectNext(): boolean {
+      let selectedIndex = this.selected == null ? -1 : this.filteredItems.indexOf(this.selected);
+      if (selectedIndex >= this.filteredItems.length - 1) return true;
+
+      this.selected = this.filteredItems[selectedIndex + 1];
+      return true;
+    },
+
     onCaretClick(event: PointerEvent) {
       this.isOpen = !this.isOpen;
       event.stopPropagation();
@@ -184,13 +230,13 @@ export default mixins(ClassesMixin).extend({
       } else {
         newValue = currentValue.filter(i => i !== item);
       }
-      this.$emit('input', newValue);
+      this.setValue(newValue);
       this.filter = null;
     },
 
     onItemClick(item: any) {
       if (this.multiple) return;
-      this.$emit('input', item);
+      this.setValue(item);
       this.filter = null;
       this.isOpen = false;
     },
@@ -198,6 +244,10 @@ export default mixins(ClassesMixin).extend({
     onInput(event: InputEvent) {
       const el = event.target as HTMLInputElement;
       this.filter = el.value;
+    },
+
+    setValue(value: any) {
+      this.$emit('input', value);
     },
   },
 });
