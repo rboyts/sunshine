@@ -2,7 +2,9 @@
 
 exports[`SDropDown renders dropdown list 1`] = `
 <div class="s-menu s-drop-down" label="Choose country">
-  <div class="s-input s-drop-down__input"><span class="s-input__label">Choose country</span> <input type="text" disabled="disabled" class="s-input__input"> <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="s-svg s-drop-down__caret s-drop-down__caret--open">
+  <div class="s-input s-input--focus s-drop-down__input"><span class="s-input__label">Choose country</span>
+    <!---->
+    <div tabindex="0" class="s-drop-down__spacer"></div> <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="s-svg s-drop-down__caret s-drop-down__caret--open">
       <g></g>
     </svg></div>
   <div class="s-menu__popup" style="top: 0px; left: 0px; min-width: 0px; height: 0px;">
@@ -30,7 +32,8 @@ exports[`SDropDown renders dropdown list 1`] = `
 
 exports[`SDropDown renders filtered list 1`] = `
 <div class="s-menu s-drop-down" label="Choose country">
-  <div class="s-input s-input--focus s-drop-down__input"><span class="s-input__label s-input__label--aside">Choose country</span> <input type="text" class="s-input__input"> <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="s-svg s-drop-down__caret s-drop-down__caret--open">
+  <div class="s-input s-input--focus s-drop-down__input"><span class="s-input__label s-input__label--aside">Choose country</span>
+    <!----> <input type="text" class="s-input__input"> <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="s-svg s-drop-down__caret s-drop-down__caret--open">
       <g></g>
     </svg></div>
   <div class="s-menu__popup" style="top: 0px; left: 0px; min-width: 0px; height: 0px;">
@@ -39,7 +42,15 @@ exports[`SDropDown renders filtered list 1`] = `
         <ul class="s-list">
           <li class="s-list-item">
             <!---->
+            Norge
+          </li>
+          <li class="s-list-item">
+            <!---->
             Sverige
+          </li>
+          <li class="s-list-item">
+            <!---->
+            England
           </li>
         </ul>
       </div>
