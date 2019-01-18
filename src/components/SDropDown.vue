@@ -18,20 +18,32 @@ Use cases:
       slot="activator"
       :class="classes('input')"
       :hasFocus="hasFocus"
-      :isEmpty="text == ''"
+      :isEmpty="textValue == '' && text == ''"
+      :readonly="!search"
       v-bind="$attrs"
       @click.native="onClick"
       @keydown.native="onKeyDown"
     >
+      <label v-if="textValue" :class="classes('label')">{{ textValue }}</label>
+
       <input
+        v-if="search"
         ref="input"
         class="s-input__input"
         type="text"
-        :disabled="!search"
-        :value="text"
+        :value="filter"
         @focus="hasFocus = true"
         @blur="hasFocus = false"
         @input="onInput"
+      />
+
+      <div
+        v-else
+        ref="input"
+        :class="classes('spacer')"
+        tabIndex="0"
+        @focus="hasFocus = true"
+        @blur="hasFocus = false"
       />
 
       <s-svg name="dropdownArrow" :class="classes('caret', caretModifiers)" @click="onCaretClick" @mousedown="$event.preventDefault()" />
@@ -40,8 +52,8 @@ Use cases:
     <div slot="content" @mousedown="$event.preventDefault()">
       <s-list>
         <s-list-item
-          v-for="(item, i) in itemValues"
-          :key="i"
+          v-for="item in itemValues"
+          :key="item.key"
           :checkable="multiple"
           :checked="item.checked"
           :selected="item.selected"
@@ -103,17 +115,35 @@ export default mixins(ClassesMixin).extend({
     return {
       hasFocus: false,
       isOpen: false,
-      filter: null as string | null,
+      filter: '',
       selected: null as object | null,
     };
   },
 
   watch: {
     hasFocus(val) {
-      if (val) {
-        this.isOpen = true;
-      } else {
-        this.filter = null;
+      if (!val) {
+        this.isOpen = false;
+      }
+    },
+
+    isOpen(val) {
+      if (!val) {
+        this.filter = '';
+        this.selected = null;
+      }
+    },
+
+    filteredItems(val) {
+      // Unselect if the selected item becomes hidden by filter
+      if (this.selected) {
+        if (val.indexOf(this.selected) === -1) {
+          this.selected = null;
+        }
+      }
+
+      if (this.isOpen && val.length && !this.selected) {
+        this.selected = val[0];
       }
     },
   },
@@ -124,7 +154,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     filteredItems(): object[] {
-      if (this.filter === null) return this.items;
+      if (!this.filter) return this.items;
       const flt = this.filter.toLocaleLowerCase();
       return this.items.filter((i: any) => i.title.toLocaleLowerCase().indexOf(flt) !== -1);
     },
@@ -145,8 +175,14 @@ export default mixins(ClassesMixin).extend({
     },
 
     text(): string {
-      if (this.filter !== null) return this.filter;
+      return this.filter || '';
+    },
+
+    textValue(): string {
       if (!this.value) return '';
+
+      // Hide when typing in single-select mode
+      if (!this.multiple && this.filter) return '';
 
       if (this.multiple) {
         if (this.value.length > this.maxSelectedShown) {
@@ -159,37 +195,106 @@ export default mixins(ClassesMixin).extend({
         return this.value.title;
       }
     },
+
+    labels(): string[] {
+      if (!this.multiple) return [];
+
+      if (this.value.length > this.maxSelectedShown) {
+        return [`${this.value.length} selected`];
+      } else {
+        return this.value.map((v: any) => v.title);
+      }
+    },
   },
 
   methods: {
     onClick(event: PointerEvent) {
-      const el = this.$refs.input as HTMLElement;
-      el.focus();
-
       if (this.isOpen && !this.search) {
-        this.isOpen = false;
+        // this.isOpen = false;
       } else {
         this.isOpen = true;
       }
+
+      const el = this.$refs.input as HTMLElement;
+      el.focus();
     },
 
     onKeyDown(event: KeyboardEvent) {
       let consumed = false;
 
-      switch (event.key) {
-        case 'ArrowUp':
-          consumed = this.trySelectPrevious();
-          break;
-        case 'ArrowDown':
-          consumed = this.trySelectNext();
-          break;
-        case 'Enter':
-          if (this.selected) {
-            this.setValue(this.selected);
-            this.isOpen = false;
-          }
-          consumed = true;
-          break;
+      if (this.isOpen) {
+        switch (event.key) {
+          case 'ArrowUp':
+            this.selectPrevious();
+            consumed = true;
+            break;
+          case 'ArrowDown':
+            this.selectNext();
+            consumed = true;
+            break;
+          case 'Enter':
+            if (this.selected) {
+              if (this.multiple) {
+                this.setChecked(this.selected, true);
+              } else {
+                this.setValue(this.selected);
+              }
+              this.isOpen = false;
+            }
+            consumed = true;
+            break;
+          case ' ':
+            if (this.selected) {
+              if (this.multiple) {
+                this.toggleChecked(this.selected);
+                this.filter = '';
+                consumed = true;
+              }
+            }
+            break;
+          case 'Backspace':
+            if (!this.filter) {
+              if (this.multiple) {
+                this.value.pop();
+                consumed = true;
+              }
+            }
+            break;
+          case 'Escape':
+            if (this.filter) {
+              this.filter = '';
+            } else {
+              this.isOpen = false;
+            }
+            consumed = true;
+        }
+      } else {
+        switch (event.key) {
+          case 'ArrowDown':
+            if (this.multiple) {
+              this.isOpen = true;
+              this.selectNext();
+            } else {
+              this.setValue(this.getNextItem(this.value));
+            }
+            consumed = true;
+            break;
+          case 'ArrowUp':
+            if (this.multiple) {
+              this.isOpen = true;
+              this.selectPrevious();
+            } else {
+              this.setValue(this.getPreviousItem(this.value));
+            }
+            consumed = true;
+            break;
+          case 'Enter':
+          case 'Backspace':
+          case ' ':
+            this.isOpen = true;
+            consumed = true;
+            break;
+        }
       }
 
       if (consumed) {
@@ -197,21 +302,23 @@ export default mixins(ClassesMixin).extend({
       }
     },
 
-    trySelectPrevious(): boolean {
-      let selectedIndex = this.selected == null ? -1 : this.filteredItems.indexOf(this.selected);
-      if (selectedIndex === -1) selectedIndex = this.filteredItems.length;
-      if (selectedIndex === 0) return true;
-
-      this.selected = this.filteredItems[selectedIndex - 1];
-      return true;
+    selectPrevious() {
+      this.selected = this.getPreviousItem(this.selected);
     },
 
-    trySelectNext(): boolean {
-      let selectedIndex = this.selected == null ? -1 : this.filteredItems.indexOf(this.selected);
-      if (selectedIndex >= this.filteredItems.length - 1) return true;
+    selectNext() {
+      this.selected = this.getNextItem(this.selected);
+    },
 
-      this.selected = this.filteredItems[selectedIndex + 1];
-      return true;
+    getPreviousItem(item: object | null): object {
+      let index = item == null ? -1 : this.filteredItems.indexOf(item);
+      if (index === -1) index = this.filteredItems.length;
+      return this.filteredItems[Math.max(0, index - 1)];
+    },
+
+    getNextItem(item: object | null): object {
+      let index = item == null ? -1 : this.filteredItems.indexOf(item);
+      return this.filteredItems[Math.min(index + 1, this.filteredItems.length - 1)];
     },
 
     onCaretClick(event: PointerEvent) {
@@ -220,30 +327,47 @@ export default mixins(ClassesMixin).extend({
     },
 
     onItemChange(item: any, checked: boolean) {
-      console.log('onItemChange');
       if (!this.multiple) return;
 
-      const currentValue = this.value as object[] || [];
-      let newValue: object[];
-      if (checked) {
-        newValue = currentValue.concat(item);
-      } else {
-        newValue = currentValue.filter(i => i !== item);
-      }
-      this.setValue(newValue);
-      this.filter = null;
+      this.setChecked(item, checked);
+      this.filter = '';
     },
 
     onItemClick(item: any) {
       if (this.multiple) return;
       this.setValue(item);
-      this.filter = null;
+      this.filter = '';
       this.isOpen = false;
     },
 
-    onInput(event: InputEvent) {
+    async onInput(event: InputEvent) {
       const el = event.target as HTMLInputElement;
-      this.filter = el.value;
+      const val = el.value;
+      if (val.length) {
+        this.isOpen = true;
+        await Vue.nextTick();
+      }
+      this.filter = val;
+    },
+
+    toggleChecked(item: any) {
+      if (!this.multiple) throw new Error('Expected multiple to be true');
+
+      const currentValue = this.value as object[] || [];
+      this.setChecked(item, currentValue.indexOf(item) === -1);
+    },
+
+    setChecked(item: any, checked: boolean) {
+      if (!this.multiple) throw new Error('Expected multiple to be true');
+
+      const currentValue = this.value as object[] || [];
+      let newValue: object[];
+      if (checked) {
+        newValue = (currentValue.indexOf(item) === -1) ? currentValue.concat(item) : currentValue;
+      } else {
+        newValue = currentValue.filter(i => i !== item);
+      }
+      this.setValue(newValue);
     },
 
     setValue(value: any) {
