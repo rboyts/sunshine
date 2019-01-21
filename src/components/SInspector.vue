@@ -22,8 +22,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import mixins from 'vue-typed-mixins';
+import { ClassesMixin } from '../lib/utils';
 
-export default Vue.extend({
+export default mixins(ClassesMixin).extend({
   name: 's-inspector',
 
   props: {

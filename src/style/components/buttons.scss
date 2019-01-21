@@ -5,11 +5,11 @@ $btn-small-height: base-spacing(3);
 $btn-small-padding: base-spacing(2);
 $btn-small-min-width: base-spacing(5);
 
-$btn-main-bg-color: $smartdok-yellow;
-$btn-main-fg-color: $almost-black;
-$btn-secondary-bg-color: rgba(0, 0, 0, 0.02);
-$btn-secondary-fg-color: $almost-black;
-$btn-secondary-border-color: $gray;
+$btn-primary-bg-color: $smartdok-yellow;
+$btn-primary-fg-color: $almost-black;
+$btn-normal-bg-color: rgba(0, 0, 0, 0.02);
+$btn-normal-fg-color: $almost-black;
+$btn-normal-border-color: $gray;
 
 // Implements keyboard-only focus styling,
 // https://stackoverflow.com/a/45191208/137627
@@ -33,49 +33,37 @@ $btn-secondary-border-color: $gray;
       padding: 0 $btn-small-padding;
     }
   }
-}
 
-.s-button__content {
-  @include action-font;
-
-  height: 100%;
-  width: 100%;
-  padding: 0 $btn-normal-padding;
-  border-radius: ($btn-normal-height / 2);
-  outline: none;
-  user-select: none;
-  cursor: default;
-
-  &--main {
+  &--normal {
+    // border: 1px solid
     border: none;
-    background-color: $btn-main-bg-color;
-    color: $btn-main-fg-color;
+    box-shadow: inset 0 0 0 1px $btn-normal-border-color;
+    background-color: $btn-normal-bg-color;
+    color: $btn-normal-fg-color;
 
     &:not(.s-button__content--inactive):hover {
-      // XXX This is supposed to be a semi-transparent overlay
-      // background-color: lighten($btn-main-bg-color, 10%);
-      background-color: mix(#fff, $btn-main-bg-color, 30%);
+      // lighten($btn-normal-bg-color, 10%);
+      background-color: mix(#fff, $btn-normal-bg-color, 30%);
     }
 
     &:not(.s-button__content--inactive):active {
-      background-color: mix(#000, $btn-main-bg-color, 10%);
+      background-color: mix(#000, $btn-normal-bg-color, 10%);
     }
   }
 
-  &--secondary {
-    // border: 1px solid
+  &--primary {
     border: none;
-    box-shadow: inset 0 0 0 1px $btn-secondary-border-color;
-    background-color: $btn-secondary-bg-color;
-    color: $btn-secondary-fg-color;
+    background-color: $btn-primary-bg-color;
+    color: $btn-primary-fg-color;
 
     &:not(.s-button__content--inactive):hover {
-      // lighten($btn-secondary-bg-color, 10%);
-      background-color: mix(#fff, $btn-secondary-bg-color, 30%);
+      // XXX This is supposed to be a semi-transparent overlay
+      // background-color: lighten($btn-primary-bg-color, 10%);
+      background-color: mix(#fff, $btn-primary-bg-color, 30%);
     }
 
     &:not(.s-button__content--inactive):active {
-      background-color: mix(#000, $btn-secondary-bg-color, 10%);
+      background-color: mix(#000, $btn-primary-bg-color, 10%);
     }
   }
 
@@ -87,6 +75,23 @@ $btn-secondary-border-color: $gray;
   }
 }
 
-.s-button:focus > .s-button__content {
+.s-button__content {
+  @include action-font;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+  width: 100%;
+  padding: 0 $btn-normal-padding;
+  // border-radius: ($btn-normal-height / 2);
+  outline: none;
+  user-select: none;
+  cursor: default;
+
+}
+
+.s-button:focus {
   box-shadow: inset 0 0 0 0.125em $color-edit;
 }

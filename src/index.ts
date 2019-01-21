@@ -2,8 +2,6 @@ import { VueConstructor } from 'vue';
 
 import './style/style.scss';
 
-import { ClassesMixin } from './lib/utils';
-
 import SAccordion from './components/SAccordion.vue';
 import SAccordionItem from './components/SAccordionItem.vue';
 import SAlert from './components/SAlert.vue';
@@ -29,10 +27,11 @@ import STabs from './components/STabs.vue';
 import STextField from './components/STextField.vue';
 import SDatepicker from './components/SDatepicker.vue';
 
+export { createDataModule } from './vuex';
+export * from './components/types';
+
 const plugin = {
   install: (Vue: VueConstructor) => {
-    Vue.mixin(ClassesMixin);
-
     Vue.component('s-button', SButton);
     Vue.component('s-accordion', SAccordion);
     Vue.component('s-accordion-item', SAccordionItem);

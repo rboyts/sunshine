@@ -1,17 +1,18 @@
 <template>
-  <label :class="classes">
-    <span class="s-radio-button__box">
-      <input
-        type="radio"
-        :name="name"
-        :checked="checked"
-        :disabled="inactive"
-        @change="onChange"
-        @focus="hasFocus = true"
-        @blur="hasFocus = false"
-      />
+  <label :class="classes(modifiers)">
+    <input
+      type="radio"
+      :name="name"
+      :checked="checked"
+      :disabled="inactive"
+      @change="onChange"
+      @focus="hasFocus = true"
+      @blur="hasFocus = false"
+    />
+
+    <span :class="classes('box')">
       <transition name="fade">
-        <span v-if="checked">&bull;</span>
+        <s-svg v-if="checked" name="radioButtonSelected" :class="classes('selected')" />
       </transition>
     </span>
     <slot/>
@@ -20,12 +21,16 @@
 
 <script>
 import Vue from 'vue';
-import { classHelper } from '../lib/utils';
+import mixins from 'vue-typed-mixins';
+import { ClassesMixin } from '../lib/utils';
+import SSvg from './internal/SSvg.vue';
 
-const radioButtonClassHelper = classHelper('s-radio-button');
-
-export default Vue.extend({
+export default mixins(ClassesMixin).extend({
   name: 's-radio-button',
+
+  components: {
+    SSvg,
+  },
 
   props: {
     value: String,
@@ -51,11 +56,11 @@ export default Vue.extend({
   },
 
   computed: {
-    classes() {
-      return radioButtonClassHelper({
+    modifiers() {
+      return {
         focus: this.hasFocus,
         inactive: this.inactive,
-      });
+      };
     },
   },
 

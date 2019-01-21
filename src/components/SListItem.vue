@@ -1,15 +1,17 @@
 <template>
-  <li :class="classes()" @click="onClick">
-    <s-checkable-internal v-if="checkable" :checked="checked" />
+  <li :class="classes({selected})" @click="onClick">
+    <s-checkable v-if="checkable" :checked="checked" />
     <slot />
   </li>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import SCheckableInternal from './internal/CheckableInternal.vue';
+import mixins from 'vue-typed-mixins';
+import { ClassesMixin } from '../lib/utils';
+import SCheckable from './SCheckable.vue';
 
-export default Vue.extend({
+export default mixins(ClassesMixin).extend({
   name: 's-list-item',
 
   model: {
@@ -18,7 +20,7 @@ export default Vue.extend({
   },
 
   components: {
-    SCheckableInternal,
+    SCheckable,
   },
 
   props: {
@@ -28,6 +30,11 @@ export default Vue.extend({
     },
 
     checked: {
+      type: Boolean,
+      default: false,
+    },
+
+    selected: {
       type: Boolean,
       default: false,
     },

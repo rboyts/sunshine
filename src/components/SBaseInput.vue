@@ -29,6 +29,13 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+
+    // If readonly, the label is shown full size even when the input has focus,
+    // when empty
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -41,7 +48,7 @@ export default Vue.extend({
 
     labelClass(): object {
       return labelClassHelper({
-        aside: this.hasFocus || !this.isEmpty,
+        aside: this.hasFocus && !this.readonly || !this.isEmpty,
       });
     },
   },

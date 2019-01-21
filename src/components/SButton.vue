@@ -1,6 +1,6 @@
 <template>
-  <button :class="classes(buttonOptions)" :disabled="inactive" v-on="$listeners">
-    <span class="inline-flex" :class="classes('content', contentOptions)" tabindex="-1">
+  <button :class="buttonClasses" :disabled="inactive" v-on="$listeners">
+    <span :class="contentClasses" tabindex="-1">
       <slot name="left" />
       <span class="flex-grow">
         <slot />
@@ -12,8 +12,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import mixins from 'vue-typed-mixins';
+import { ClassesMixin } from '../lib/utils';
 
-export default Vue.extend({
+export default mixins(ClassesMixin).extend({
   name: 's-button',
   inheritAttrs: true,
 
@@ -33,18 +35,18 @@ export default Vue.extend({
   },
 
   computed: {
-    buttonOptions(): object {
-      return {
+    buttonClasses(): object {
+      return this.classes({
         small: this.small,
-      };
+        normal: !this.primary,
+        primary: this.primary,
+        inactive: this.inactive,
+      });
     },
 
-    contentOptions(): object {
-      return {
-        main: this.primary,
-        secondary: !this.primary,
-        inactive: this.inactive,
-      };
+    contentClasses(): object {
+      return this.classes('content', {
+      });
     },
   },
 });

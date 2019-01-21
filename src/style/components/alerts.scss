@@ -1,41 +1,25 @@
 @import '../tools.scss';
 
+$alert-background-color: $white;
 $alert-height: base-spacing(6);
 $alert-padding: base-spacing(2);
-$alert-border-width: base-spacing(1);
+$alert-status-width: base-spacing(1);
+$alert-border-radius: 2px;
+$alert-status-border: 1px solid rgba(0, 0, 0, .05);
 
 .s-alert {
   @include paragraph-font;
 
   display: flex;
-  white-space: nowrap;
 
   height: $alert-height;
   line-height: $alert-height;
-  background-color: $white;
-  padding: 0 $alert-padding;
 
   // XXX Not sure if components should enforce surrounding layout
   margin-bottom: 1rem;
 
-  border: 0;
-  border-left: $alert-border-width solid $color-edit;
-
-  &--success {
-    border-color: $color-good;
-  }
-
-  &--warning {
-    border-color: $color-oops;
-  }
-
-  &--error {
-    border-color: $color-bad;
-  }
-
   .s-icon {
-    display: inline-block;
-    font-size: 1.2rem;
+    font-size: 1.5em;
     height: $alert-height;
     line-height: $alert-height;
 
@@ -50,13 +34,52 @@ $alert-border-width: base-spacing(1);
   }
 }
 
+.s-alert__status {
+  display: block;
+  min-width: $alert-status-width;
+  height: $alert-height;
+  border: $alert-status-border;
+  border-right: none;
+  border-top-left-radius: $alert-border-radius;
+  border-bottom-left-radius: $alert-border-radius;
+  background-color: $alert-background-color;
+
+  &--success, &--warning, &--error {
+    border-right: $alert-status-border;
+  }
+
+  &--success {
+    background-color: $color-good;
+  }
+
+  &--warning {
+    background-color: $color-oops;
+  }
+
+  &--error {
+    background-color: $color-bad;
+  }
+}
+
+.s-alert__content {
+  display: flex;
+  flex: 1;
+  white-space: nowrap;
+
+  padding: 0 $alert-padding;
+  border: 1px solid $almost-gray;
+  border-left: none;
+  border-top-right-radius: $alert-border-radius;
+  border-bottom-right-radius: $alert-border-radius;
+  background-color: $alert-background-color;
+}
+
 .s-alert__main {
   flex: 1;
 }
 
 .s-alert__buttons {
-
-  .s-btn {
+  .s-button {
     margin-left: .5rem;
   }
 }

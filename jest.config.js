@@ -13,7 +13,8 @@ module.exports = {
     '^.+\\.tsx?$': 'ts-jest'
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^html-loader!': '<rootDir>/__mocks__/htmlLoaderMock.js',
   },
   snapshotSerializers: [
     'jest-serializer-vue'

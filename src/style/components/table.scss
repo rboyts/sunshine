@@ -10,6 +10,8 @@ $table-condensed-padding: .5rem;
 $table-normal-row-height: 2.5rem;
 $table-condensed-row-height: 1.5rem;
 
+$table-toggle-width: base-spacing(4);
+
 .s-data-table {
   @include paragraph-font;
 
@@ -24,19 +26,12 @@ $table-condensed-row-height: 1.5rem;
   display: flex;
   flex-direction: column;
 
-  &--condensed {
-    .s-data-table__toggle {
-      margin-left: -$table-condensed-padding;
-    }
-  }
-
   // XXX Use when adjusting column width
   &--fixed {
     .s-data-table__table {
       width: 0;
     }
   }
-
 }
 
 .s-data-table__wrapper {
@@ -47,6 +42,13 @@ $table-condensed-row-height: 1.5rem;
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
+  min-width: 100%;
+
+  tr:hover {
+    td {
+      background-color: $whiteish;
+    }
+  }
 
   th, td {
     white-space: nowrap;
@@ -54,21 +56,25 @@ $table-condensed-row-height: 1.5rem;
 
     height: $table-normal-row-height;
     line-height: $table-normal-row-height;
+    padding: 0;
 
     transition: opacity $duration-normal;
   }
 
   td {
     background-color: $white;
-    padding: 0 $table-padding;
     overflow: hidden;
     z-index: 1;
   }
 
   th {
+    @include action-font;
+
+    text-align: left;
     background-color: $almost-gray;
     position: sticky;
     top: 0;
+    cursor: default;
     z-index: 2;
   }
 
@@ -80,6 +86,14 @@ $table-condensed-row-height: 1.5rem;
 
     &--dragging {
       opacity: .5;
+    }
+
+    &--right {
+      text-align: right;
+    }
+
+    &--center {
+      text-align: center;
     }
   }
 
@@ -95,66 +109,124 @@ $table-condensed-row-height: 1.5rem;
       z-index: 1;
       border-right: $inner-border;
     }
-
-    &--right {
-      text-align: right;
-    }
-
-    &--center {
-      text-align: center;
-    }
   }
 }
 
-.s-data-table--condensed .s-data-table__table {
-  th, td {
-    height: $table-condensed-row-height;
-    line-height: $table-condensed-row-height;
-  }
-
-  td,
-  .s-data-table__header {
-    padding: 0 $table-condensed-padding;
-  }
-}
-
-.s-data-table__header {
-  @include action-font;
-
+.s-data-table__cell-wrapper {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0 $table-padding;
+  align-items: stretch;
+}
 
-  cursor: pointer;
+.s-data-table__cell-content {
+  height: $table-normal-row-height;
+  flex: 1;
+  padding: 0 $table-padding;
+  border-bottom: $inner-border;
+}
+
+.s-data-table__table tr:last-child {
+  .s-data-table__cell-content {
+    border-bottom: none;
+  }
 }
 
 .s-data-table__toggle {
-  display: inline-block;
-  height: 100%;
-  width: base-spacing(5);
-  text-align: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: $table-toggle-width;
   cursor: pointer;
 
-  margin-left: -$table-padding;
-  text-align: center;
+  &--unknown {
+    color: $gray;
+  }
 
-  .fas {
-    transform-origin: 50% 45%;
+  .s-svg {
     transition: transform $duration-normal;
+    transform: rotate(180deg);
   }
 
   &--open {
-    .fas {
-      transform: rotate(180deg);
+    .s-svg {
+      transform: rotate(0);
     }
+  }
+
+  &--loading {
+    .s-svg {
+      animation-name: spinning;
+      animation-timing-function: linear;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+    }
+  }
+}
+
+@keyframes spinning {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.s-data-table__more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: $table-toggle-width;
+  height: $table-normal-row-height;
+
+  &--open {
+    svg path {
+      fill: $color-edit;
+    }
+  }
+}
+
+.s-data-table--condensed {
+  .s-data-table__table {
+    th, td {
+      height: $table-condensed-row-height;
+      line-height: $table-condensed-row-height;
+    }
+  }
+
+  .s-data-table__cell-content {
+    height: $table-condensed-row-height;
+  }
+
+  .s-data-table__toggle {
+    height: $table-condensed-row-height;
+  }
+
+  .s-data-table__more {
+    height: $table-condensed-row-height;
+  }
+
+  .s-icon {
+    font-size: 1.2em;
   }
 }
 
 .s-data-table__outline {
+  display: flex;
+}
+
+// TODO: Scope or move to icons.scss
+.s-icon {
   display: inline-block;
-  height: 100%;
-  margin-right: base-spacing();
+  vertical-align: middle;
+  line-height: 1;
+  font-size: 1.4em;
+}
+
+.s-data-table__outline__section {
+  text-align: center;
+  width: base-spacing(3);
+  position: relative;
+
   svg {
     position: absolute;
     top: 0;
@@ -164,17 +236,17 @@ $table-condensed-row-height: 1.5rem;
   }
 }
 
-.s-data-table__outline__section {
+.s-data-table__sort {
   display: inline-block;
-  text-align: center;
-  height: 100%;
-  width: base-spacing(3);
-  vertical-align: bottom;
-  position: relative;
-}
-
-.s-data-table__header__sort {
+  margin-left: base-spacing();
   transition: transform $duration-normal;
+
+  transform: rotate(0);
+  color: $color-edit;
+
+  &--reverse {
+    transform: rotate(180deg);
+  }
 }
 
 .s-data-table__move-cursor {

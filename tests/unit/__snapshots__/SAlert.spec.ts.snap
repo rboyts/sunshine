@@ -2,30 +2,46 @@
 
 exports[`SAlert renders button 1`] = `
 <div class="s-alert s-alert--warning">
-  <div class="s-alert__main">Warning message</div>
-  <div class="s-alert__buttons">
-    <s-button-stub small="">Foo</s-button-stub>
+  <div class="s-alert__status s-alert__status--warning"></div>
+  <div class="s-alert__content">
+    <!---->
+    <div class="s-alert__main">Warning message</div>
+    <div class="s-alert__buttons">
+      <s-button-stub small="">Foo</s-button-stub>
+    </div>
   </div>
 </div>
 `;
 
 exports[`SAlert renders error alert 1`] = `
 <div class="s-alert s-alert--error">
-  <div class="s-alert__main">Error message</div>
-  <div class="s-alert__buttons"></div>
+  <div class="s-alert__status s-alert__status--error"></div>
+  <div class="s-alert__content">
+    <!---->
+    <div class="s-alert__main">Error message</div>
+    <div class="s-alert__buttons"></div>
+  </div>
 </div>
 `;
 
 exports[`SAlert renders successful alert 1`] = `
 <div class="s-alert s-alert--success">
-  <div class="s-alert__main">Success message</div>
-  <div class="s-alert__buttons"></div>
+  <div class="s-alert__status s-alert__status--success"></div>
+  <div class="s-alert__content">
+    <!---->
+    <div class="s-alert__main">Success message</div>
+    <div class="s-alert__buttons"></div>
+  </div>
 </div>
 `;
 
 exports[`SAlert renders warning alert 1`] = `
 <div class="s-alert s-alert--warning">
-  <div class="s-alert__main">Warning message</div>
-  <div class="s-alert__buttons"></div>
+  <div class="s-alert__status s-alert__status--warning"></div>
+  <div class="s-alert__content">
+    <!---->
+    <div class="s-alert__main">Warning message</div>
+    <div class="s-alert__buttons"></div>
+  </div>
 </div>
 `;

@@ -1,9 +1,10 @@
 @import '../tools.scss';
 
-.s-drop-down__caret {
-  width: base-spacing(3);
-  text-align: center;
+// DRY
+$input-padding: base-spacing(1);
 
+.s-drop-down__caret {
+  display: inline-flex;
   transition: transform $duration-normal;
 
   &--open {
@@ -11,6 +12,26 @@
   }
 }
 
+.s-drop-down__label {
+  @include action-font;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: ($input-padding * 2) ($input-padding / 2) ($input-padding / 2) $input-padding;
+
+  // Remove padding of search input, when shown after label
+  margin-right: -$input-padding;
+}
+
 .s-drop-down__input {
   width: 100%;
+
+  .s-input__input {
+    cursor: default;
+  }
+}
+
+.s-drop-down__spacer {
+  flex: 1;
 }
