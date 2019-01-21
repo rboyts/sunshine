@@ -49,7 +49,7 @@ Use cases:
       <s-svg name="dropdownArrow" :class="classes('caret', caretModifiers)" @click="onCaretClick" @mousedown="$event.preventDefault()" />
     </s-base-input>
 
-    <template slot="content" @mousedown="$event.preventDefault()">
+    <div slot="content" @mousedown="$event.preventDefault()">
       <s-list>
         <s-list-item
           v-for="item in itemValues"
@@ -63,7 +63,7 @@ Use cases:
           {{ item.title }}
         </s-list-item>
       </s-list>
-    </template>
+    </div>
   </s-menu>
 </template>
 
