@@ -35,7 +35,7 @@
           <span
             class="s-datepicker__date"
             v-for="a in month.daysInMonth"
-            :class="{'s-datepicker__date--active': activeDate(a + '-' + month.month + '-' + month.monthYear)}"
+            :class="{'s-datepicker__date--active': activeDate(a + '-' + month.month + '-' + month.monthYear), 's-datepicker__date--today': isToday(a + '-' + month.month + '-' + month.monthYear), 's-datepicker__date--inRange': inSelectedRange(month.monthYear + '-' + month.month + '-' + a)}"
             :id="month.month + '-' + a + '-' + month.monthYear"
           >{{a}}</span>
           <span
@@ -49,6 +49,8 @@
     <div class="s-datepicker__menu">
       <p>active date</p>
       <span>{{this.dateContext.format('DD-MM-YYYY')}}</span>
+      <p>selected date</p>
+      <span v-if="this.selectedDate != null">{{this.selectedDate.format('DD-MM-YYYY') || null}}</span>
       <p>select week</p>
       <p>select month</p>
       <p>select year</p>
@@ -86,6 +88,11 @@ export default Vue.extend({
     return {
       today: moment(),
       dateContext: moment(),
+      selectedDate: null as any,
+      selectedRange: {
+        start: null as any,
+        end: null as any
+      },
       weekNumbers: moment().weeksInYear(),
       months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
@@ -143,8 +150,27 @@ export default Vue.extend({
 
   methods: {
 
+    isToday(date: string): boolean {
+      return this.today.format('D-M-YYYY') === date;
+    },
+
+    inSelectedRange(date: string): boolean {
+      if (this.selectedRange.start !== null && this.selectedRange.end !== null) {
+        // Figure out how to show first and last day in range
+        return (
+          moment(date).isBetween(this.selectedRange.start.format('YYYY-MM-DD'), this.selectedRange.end.format('YYYY-MM-DD'), 'day')
+        )
+      }
+
+      return false
+    },
+
     activeDate(date: string): boolean {
-      return this.dateContext.format('D-M-YYYY') == date;
+      if (this.selectedDate !== null) {
+        return this.selectedDate.format('D-M-YYYY') === date;
+      }
+
+      return false
     },
 
     selectDate(e: any) {
@@ -152,7 +178,21 @@ export default Vue.extend({
         return false;
       }
       let date = moment(e.target.id)
-      this.dateContext = date;
+      if (this.selectedDate !== null) {
+        // TODO
+        /**if (this.selectedDate.format('DD-MM-YYYY') === date.format('DD-MM-YYYY')) {
+          this.selectedDate = null;
+          this.selectedRange = {
+            start: null,
+            end: null
+          }
+        } else {
+          // Add one day so selected range shows correctly in display
+          this.selectedRange.end = date;
+        }*/
+      } else if (this.selectedDate === null) {
+        this.selectedDate = date;
+      }
     },
 
     xPositionsOfMonths() {
