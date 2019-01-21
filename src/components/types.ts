@@ -24,7 +24,11 @@ export interface IItem {
   data: IItemData;
 }
 
-export type FetchData = (skip: number, take: number, sorting: ISortState) => Promise<IItem[]>;
+export type FetchData = (
+  skip: number,
+  take: number,
+  sorting: ISortState,
+) => Promise<IItem[]>;
 
 export interface IDataSource {
   title: string;
@@ -42,4 +46,5 @@ export interface IMonth {
   month: number;
   previousMonthDays: number[];
   weeksInMonth: number[];
+  monthYear: number;
 }
