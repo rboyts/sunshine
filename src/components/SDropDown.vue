@@ -331,7 +331,7 @@ export default mixins(ClassesMixin).extend({
       if (!this.multiple) return;
 
       this.setChecked(item, checked);
-      this.filter = '';
+      this.selected = item;
     },
 
     onItemClick(item: any) {
