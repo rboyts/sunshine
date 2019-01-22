@@ -1,6 +1,8 @@
 <template>
-  <div :class="classes()" @click="onClick">
-    <slot name="activator" />
+  <div :class="classes()">
+    <span @click="onClick">
+      <slot name="activator" />
+    </span>
 
     <div
       v-if="showContent"
@@ -47,6 +49,8 @@ export default mixins(ClassesMixin, Watcher).extend({
 
   props: {
     value: Boolean,
+
+    // TODO default false?
     toggleOnClick: {
       type: Boolean,
       default: true,

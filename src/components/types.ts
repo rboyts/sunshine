@@ -38,6 +38,7 @@ export interface ICreateDataModuleOptions {
   columns: IColumn[];
   fetch: FetchData;
   fetchChildren?: FetchChildren;
+  chunkSize?: number;
 }
 
 export interface IFetchItemsPayload {

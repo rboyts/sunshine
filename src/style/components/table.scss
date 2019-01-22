@@ -236,6 +236,13 @@ $table-toggle-width: base-spacing(5);
   }
 }
 
+.s-data-table__cell-placeholder {
+  display: inline-block;
+  border-radius: 3px;
+  height: .5rem;
+  background-color: $almost-gray;
+}
+
 .s-data-table__sort {
   display: inline-block;
   margin-left: base-spacing();
