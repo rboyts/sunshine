@@ -1,7 +1,19 @@
+import { ActionContext } from 'vuex';
+
 export interface ISortState {
   key: string | null;
   reverse: boolean;
 }
+
+export interface IDataTableState {
+  isLoading: boolean;
+  offset: number;
+  sorting: ISortState;
+  columns: IColumn[];
+  items: {[key: string]: IItem[]};
+  total: number | null;
+}
+
 
 export interface IColumn {
   key: string;
@@ -31,12 +43,12 @@ export interface IFetchResult {
   total: number | null;
 }
 
-export type FetchData = (skip: number, take: number, sorting: ISortState) => Promise<IFetchResult>;
+export type FetchData<RootState> = (skip: number, take: number, sorting: ISortState, context: ActionContext<IDataTableState, RootState>) => Promise<IFetchResult>;
 export type FetchChildren = (keyPath: string[]) => Promise<IFetchResult>;
 
-export interface ICreateDataModuleOptions {
+export interface ICreateDataModuleOptions<RootState> {
   columns: IColumn[];
-  fetch: FetchData;
+  fetch: FetchData<RootState>;
   fetchChildren?: FetchChildren;
   chunkSize?: number;
 }

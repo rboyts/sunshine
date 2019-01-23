@@ -1,16 +1,13 @@
 import { Module } from 'vuex';
 import { Mutex } from 'async-mutex';
-import { ICreateDataModuleOptions, IFetchItemsPayload, ISortState, IColumn, IItem } from './components/types';
+import {
+  IDataTableState,
+  ICreateDataModuleOptions,
+  IFetchItemsPayload,
+  ISortState,
+  IItem,
+} from './components/types';
 import { joinKeyPath } from './lib/utils';
-
-export interface IDataTableState {
-  isLoading: boolean;
-  offset: number;
-  sorting: ISortState;
-  columns: IColumn[];
-  items: {[key: string]: IItem[]};
-  total: number | null;
-}
 
 export interface IShowSubItemsPayload {
   keyPath: string[];
@@ -32,7 +29,7 @@ const getItems = (keyPath: string[], state: IDataTableState): IItem[] | null => 
   return nodes;
 };
 
-export const createDataModule = <RootState = any>(options: ICreateDataModuleOptions):
+export const createDataModule = <RootState = any>(options: ICreateDataModuleOptions<RootState>):
     Module<IDataTableState, RootState> => {
 
   const mutex = new Mutex();
@@ -40,16 +37,18 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
   return {
     namespaced: true,
 
-    state: {
-      offset: 0,
-      total: null,
-      isLoading: false,
-      columns: options.columns,
-      items: {'': []},
-      sorting: {
-        key: null,
-        reverse: false,
-      } as ISortState,
+    state() {
+      return {
+        offset: 0,
+        total: null,
+        isLoading: false,
+        columns: options.columns,
+        items: {'': []},
+        sorting: {
+          key: null,
+          reverse: false,
+        } as ISortState,
+      };
     },
 
     getters: {
@@ -124,7 +123,9 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
         await mutex.runExclusive(() => dispatch('doFetchItems', args));
       },
 
-      async doFetchItems({state, commit}, args: IFetchItemsPayload) {
+      async doFetchItems(context, args: IFetchItemsPayload) {
+        const { state, commit } = context;
+
         // if (args.firstRow > 0) return;
         type Range = [number, number];
 
@@ -173,7 +174,7 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
         if (prepend !== null) {
           let skip = prepend[0];
           let take = prepend[1] - prepend[0];
-          let result = await options.fetch(skip, take, state.sorting);
+          let result = await options.fetch(skip, take, state.sorting, context);
           let offset = skip;
           items = result.items.concat(items);
           commit('fetchItemsComplete', {items, offset, total: result.total});
@@ -183,7 +184,7 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
           try {
             let skip = append[0];
             let take = append[1] - append[0];
-            let result = await options.fetch(skip, take, state.sorting);
+            let result = await options.fetch(skip, take, state.sorting, context);
             let offset = skip - items.length;
             items = items.concat(result.items);
 
