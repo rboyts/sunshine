@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SSelect renders select box 1`] = `
-<div class="s-menu"><button class="s-button s-button--normal" style="text-align: left; min-width: 150px;"><span tabindex="-1" class="s-button__content"> <span class="flex-grow">
+<div class="s-menu"><span><button class="s-button s-button--normal" style="text-align: left; min-width: 150px;"><span tabindex="-1" class="s-button__content"> <span class="flex-grow">
     Choose country
     </span> <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="s-svg">
-      <g></g>
-    </svg></span></button>
+    <g></g>
+  </svg></span></button></span>
   <!---->
 </div>
 `;
