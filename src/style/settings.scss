@@ -1,7 +1,7 @@
-
 // SmartDok brand color
 $smartdok-yellow: #ffdc59;
 $smartdok-light-yellow: #ffe67f;
+$smartdok-eggs-yellow: #fff9df;
 
 // Grays
 $almost-black: #1c1c1c;
@@ -23,25 +23,25 @@ $color-edit: #3eb0ff;
 $color-editish: #9ad3fb;
 
 // Layout
-$base-spacing-unit: .5rem;
+$base-spacing-unit: 0.5rem;
 
 // Typography
 $base-font-family: 'Avenir', 'Nunito Sans', sans-serif;
 $base-font-size: 16px;
-$font-weight-medium: 600;  // 500 is not available for Nunito
+$font-weight-medium: 600; // 500 is not available for Nunito
 $font-weight-regular: 400;
 
 $h1-font-size: 2rem;
 $h1-font-weight: $font-weight-medium;
 $h2-font-size: 1rem;
 $h2-font-weight: $font-weight-medium;
-$h3-font-size: .75rem;
+$h3-font-size: 0.75rem;
 $h3-font-weight: $font-weight-medium;
 
-$action-font-size: .875rem;
+$action-font-size: 0.875rem;
 $action-font-weight: $font-weight-medium;
-$paragraph-font-size: .875rem;
+$paragraph-font-size: 0.875rem;
 $paragraph-font-weight: $font-weight-regular;
 
 // Transition
-$duration-normal: .15s;
+$duration-normal: 0.15s;

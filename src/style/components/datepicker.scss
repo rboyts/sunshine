@@ -18,7 +18,7 @@ $datepicker-border: 1px solid $gray;
 }
 
 .s-datepicker__header {
-  position: absolute;
+  position: sticky;
   width: $datepicker-width;
   top: 0;
   left: 0;
@@ -55,7 +55,6 @@ $datepicker-border: 1px solid $gray;
   position: relative;
   height: 100%;
   width: $datepicker-width;
-  padding-top: 95px;
   -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
@@ -84,13 +83,10 @@ $datepicker-border: 1px solid $gray;
 
 .s-datepicker__days {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, 0fr);
   list-style: none;
   padding-left: 3rem;
   margin: 0;
-  position: sticky;
-  top: 0;
-  z-index: 1;
   width: 100%;
   background: #fff;
   border-bottom: 1px solid #fafafa;
@@ -111,7 +107,8 @@ $datepicker-border: 1px solid $gray;
 .s-datepicker__date,
 .s-datepicker__day,
 .s-datepicker__weeks__week,
-.s-datepicker__date--overlapping {
+.s-datepicker__date--overlapping,
+.s-datepicker__date .circle {
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -121,18 +118,19 @@ $datepicker-border: 1px solid $gray;
 
 .s-datepicker__date {
   cursor: pointer;
-  background: white;
+  background: transparent;
 }
 
 .s-datepicker__date:hover {
-  background: $smartdok-light-yellow;
+  border-radius: 50%;
+  background: $smartdok-eggs-yellow;
 }
 
-.s-datepicker__date--today {
+.s-datepicker__date.today {
   position: relative;
 }
 
-.s-datepicker__date--today:after {
+.s-datepicker__date.today:after {
   content: '';
   position: absolute;
   bottom: 7px;
@@ -141,13 +139,22 @@ $datepicker-border: 1px solid $gray;
   background: $grayer;
 }
 
-.s-datepicker__date--active {
+.s-datepicker__date.from {
+  background: linear-gradient(to right, #fff 50%, $smartdok-eggs-yellow 50%);
+}
+
+.s-datepicker__date.to {
+  background: linear-gradient(to left, #fff 50%, $smartdok-eggs-yellow 50%);
+}
+
+.s-datepicker__date .circle {
+  position: relative;
   background: $smartdok-yellow;
   border-radius: 50%;
 }
 
-.s-datepicker__date--inRange {
-  background: $smartdok-light-yellow;
+.s-datepicker__date.between {
+  background: $smartdok-eggs-yellow;
 }
 
 .s-datepicker__date--inRange:last-child {

@@ -1,130 +1,61 @@
 <template>
-  <div class="s-datepicker" style="margin: 0 auto;">
-
-    <div class="s-datepicker__header">
-      <div class="flex flex-even s-datepicker__navigation">
-        <i class="fa fa-fw fa-chevron-left" @click="subtractMonth"></i>
-        <h4>{{month + ' - ' + year}}</h4>
-        <i class="fa fa-fw fa-chevron-right" @click="addMonth"></i>
-      </div>
-      <ul class="s-datepicker__days">
-        <li class="s-datepicker__day" v-for="(day, i) in days" :key="'Day' + i">{{day}}</li>
-      </ul>
-    </div>
-  
-    <div id="scrollContainer" @scroll="onCalendarScroll" class="s-datepicker__scrollcontainer">
-      <div class="s-datepicker__grid__container">
-        <span
-          class="s-datepicker__grid"
-          v-for="(month, monthKey) in calendar"
-          :ref="stringifyMonth(month.month) + '-' + month.monthYear"
-          :id="'month' + stringifyMonth(month.month) + '-' + month.monthYear"
-          @click="selectDate"
-        >
-          <h3  class="s-datepicker__month">{{translateMonthName(month.month)}} - {{month.monthYear}}</h3>
-          <div class="s-datepicker__weeks">
-            <span
-              class="s-datepicker__weeks__week"
-              v-for="w in month.weeksInMonth"
-            >{{w}}</span>
-          </div>
-          <span
-            class="s-datepicker__date--overlapping"
-            v-for="x in month.previousMonthDays"
-          >{{x}}</span>
-          <span
-            class="s-datepicker__date"
-            v-for="a in month.daysInMonth"
-            :class="{'s-datepicker__date--active': activeDate(a + '-' + month.month + '-' + month.monthYear), 's-datepicker__date--today': isToday(a + '-' + month.month + '-' + month.monthYear), 's-datepicker__date--inRange': inSelectedRange(month.monthYear + '-' + month.month + '-' + a)}"
-            :id="month.month + '-' + a + '-' + month.monthYear"
-          >{{a}}</span>
-          <span
-            class="s-datepicker__date--overlapping"
-            v-for="x in (6 - month.lastDay)"
-          >{{x}}</span>
-        </span>
-      </div>
-    </div>
-    
-    <div class="s-datepicker__menu">
-      <p>active date</p>
-      <span>{{this.dateContext.format('DD-MM-YYYY')}}</span>
-      <p>selected date</p>
-      <span v-if="this.selectedDate != null">{{this.selectedDate.format('DD-MM-YYYY') || null}}</span>
-      <p>select week</p>
-      <p>select month</p>
-      <p>select year</p>
-    </div>
+  <div class="s-datepicker">
+    <s-datepicker-calendar 
+      :today="today.format('YYYY-MM-DD')"
+      :calendar="calendar"
+      :current-year="yearNum"
+      :current-month="monthKey + 1"
+      :selected-period="selectedPeriod"
+      @click="dateClicked"
+      @addMonth="addMonth"
+    />
+    <s-datepicker-menu />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { IMonth } from './types';
-const VueScrollTo = require('vue-scrollto');
+import SDatepickerCalendar from './internal/SDatepickerCalendar.vue';
+import SDatepickerMenu from './internal/SDatepickerMenu.vue';
 
 moment.locale('nb');
 
-Vue.use(VueScrollTo, {
-  test: 'foo',
-  container: '#scrollContainer',
-  duration: 200,
-  easing: 'ease',
-  offset: 0,
-  force: true,
-  cancelable: true,
-  onStart: false,
-  onDone: false,
-  onCancel: false,
-  x: false,
-  y: true,
-});
-
 export default Vue.extend({
   name: 's-datepicker',
-
+  components: {
+    SDatepickerCalendar,
+    SDatepickerMenu,
+  },
   data() {
     return {
+      calendar: [] as IMonth[],
       today: moment(),
       dateContext: moment(),
-      selectedDate: null as any,
-      selectedRange: {
-        start: null as any,
-        end: null as any
-      },
-      weekNumbers: moment().weeksInYear(),
       months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
-      vueScrollTo: VueScrollTo,
-      monthXPositions: {} as any,
-      monthOffset: -90,
-      dateClass: 's-datepicker__date',
+      selectedDate: null as Moment | null,
+      selectedPeriod: {
+        from: null as Moment | null ,
+        to: null as Moment | null,
+      },
     };
   },
-
-  mounted() {
-    // Save the offsetTop position of months for scrollcontainer
-    this.xPositionsOfMonths();
-    this.vueScrollTo.scrollTo('#month' + this.dateContext.format('MM-YYYY'), {offset: this.monthOffset});
-  },
-
   computed: {
-
-    calendar(): IMonth[] {
-      return this.getMonthsInYear(Number(this.year));
-    },
-
-    scrollContainer(): HTMLElement {
-      return this.$el.querySelector('#scrollContainer') as HTMLElement;
-    },
-
     year(): string {
       return this.dateContext.format('Y');
     },
 
+    yearNum(): number {
+      return this.dateContext.get('year');
+    },
+
     month(): string {
       return this.dateContext.format('MMMM');
+    },
+
+    monthKey(): number {
+      return this.dateContext.get('month');
     },
 
     daysInMonth(): number {
@@ -147,99 +78,91 @@ export default Vue.extend({
       return this.today.format('Y');
     },
   },
-
   methods: {
 
-    isToday(date: string): boolean {
-      return this.today.format('D-M-YYYY') === date;
-    },
-
-    inSelectedRange(date: string): boolean {
-      if (this.selectedRange.start !== null && this.selectedRange.end !== null) {
-        // Figure out how to show first and last day in range
-        return (
-          moment(date).isBetween(this.selectedRange.start.format('YYYY-MM-DD'), this.selectedRange.end.format('YYYY-MM-DD'), 'day')
-        )
-      }
-
-      return false
-    },
-
-    activeDate(date: string): boolean {
-      if (this.selectedDate !== null) {
-        return this.selectedDate.format('D-M-YYYY') === date;
-      }
-
-      return false
-    },
-
-    selectDate(e: any) {
-      if (!e.target.classList.contains(this.dateClass)) {
-        return false;
-      }
-      let date = moment(e.target.id)
-      if (this.selectedDate !== null) {
-        // TODO
-        /**if (this.selectedDate.format('DD-MM-YYYY') === date.format('DD-MM-YYYY')) {
-          this.selectedDate = null;
-          this.selectedRange = {
-            start: null,
-            end: null
-          }
-        } else {
-          // Add one day so selected range shows correctly in display
-          this.selectedRange.end = date;
-        }*/
-      } else if (this.selectedDate === null) {
-        this.selectedDate = date;
-      }
-    },
-
-    xPositionsOfMonths() {
-      // Should be recalculated when year changes
-      for (let a = 0, b = this.months.length; a < b; a++) {
-        let element = this.$refs[
-          this.stringifyMonth(this.months[a]) + '-' + this.year
-        ] as HTMLElement[];
-        this.monthXPositions[element[0].offsetTop] =
-          this.stringifyMonth(this.months[a]) + '-01-' + this.year;
-      }
-    },
-
-    subtractMonth() {
-      this.vueScrollTo.scrollTo(
-        '#month' +
-        moment(this.dateContext)
-          .subtract(1, 'M')
-          .format('MM-YYYY'),
-        { offset: this.monthOffset },
-      );
-    },
-
     addMonth() {
-      this.vueScrollTo.scrollTo(
-        '#month' +
-        moment(this.dateContext)
-          .add(1, 'M')
-          .format('MM-YYYY'),
-        { offset: this.monthOffset },
-      );
+      this.dateContext = moment(this.dateContext).add(1, 'M');
+      this.calendar = this.createMonths();
+      console.log(this.dateContext.format('YYYY-MM-DD'));
     },
 
-    onCalendarScroll() {
-      let array = Object.keys(this.monthXPositions);
-      let scrollX = this.scrollContainer.scrollTop;
+    addMonthItem(year: number, month: number): IMonth {
+      return {
+        month,
+        weeksInMonth: this.addWeekNumbers(year, month),
+        firstDay: this.offsetStartDay(year, month),
+        lastDay: this.offsetEndDay(year, month),
+        daysInMonth: moment(year + '-' + month).daysInMonth(),
+        previousMonthDays: this.addOverlapDays(year, month, this.offsetEndDay(year, month)),
+        year,
+      };
+    },
 
-      // TODO: Write a more accurate filter to find current month
-      let position = array.find(element => {
-        return scrollX >= Number(element) && scrollX <= Number(element) + 192;
-      });
-      if (
-        this.dateContext.format('MM-YYYY') !==
-        this.monthXPositions[String(position)]
-      ) {
-        this.dateContext = moment(this.monthXPositions[String(position)]);
+    addWeekNumbers(year: number, month: number) {
+      let weekNumbers = [] as number[];
+      for (let c = 0, d = (moment(year + '-' + month).daysInMonth() - 1); c <= d; c++) {
+        let week = moment(year + '-' + this.stringifyMonth(month) + '-' + (c + 1 )).week();
+        if (!weekNumbers.includes(week)) {
+          weekNumbers.push(week);
+        }
       }
+      return weekNumbers;
+    },
+
+    addOverlapDays(year: number, month: number, firstDay: number) {
+      let previousMonthDays: number[] = [];
+      let dateToSubtractFrom: number;
+      if (month === 1) {
+        // If january, get last day from previous years last month
+        let lastYear = year - 1;
+        dateToSubtractFrom = moment(lastYear + '-12').daysInMonth();
+      } else {
+        dateToSubtractFrom = moment(year + '-' + this.stringifyMonth(month - 1)).daysInMonth();
+      }
+      if (firstDay > 0) {
+        // Add lastdays from previous month
+        for (let c = firstDay - 1, d = 0; c >= d; c--) {
+          previousMonthDays.push(dateToSubtractFrom - c);
+        }
+      }
+      return previousMonthDays;
+    },
+
+    createMonths() {
+      const year = this.yearNum;
+      const present = this.monthKey + 1;
+      let past = [];
+      let future = [];
+      for (let a = 0, b = 12; a < b; a++) {
+        let tmpMonth: number;
+        let tmpYear: number;
+        // Add coming months including current
+        if ((present + a) > 12) {
+          tmpMonth  = (present + a) - 12;
+          tmpYear = year + 1;
+          future.push(this.addMonthItem(tmpYear, tmpMonth));
+        } else {
+          tmpMonth  = present + a;
+          tmpYear = year;
+          future.push(this.addMonthItem(tmpYear, tmpMonth));
+        }
+
+        // Add past months, skipping current
+        if ((present - a) <= 0 && (present - a) !== present) {
+          tmpMonth = (present - a) + 12;
+          tmpYear = year - 1;
+          past.push(this.addMonthItem(tmpYear, tmpMonth));
+        } else if ((present - a) !== present) {
+          tmpMonth = present - a;
+          tmpYear = year;
+          past.push(this.addMonthItem(tmpYear, tmpMonth));
+        }
+      }
+      past = past.reverse();
+      future.map(item => {
+        past.push(item);
+      });
+      return past;
     },
 
     stringifyMonth(monthKey: number): string {
@@ -251,10 +174,6 @@ export default Vue.extend({
         monthString = '' + monthKey;
       }
       return monthString;
-    },
-
-    translateMonthName(monthKey: number) {
-      return moment('2019-' + this.stringifyMonth(monthKey)).format('MMMM');
     },
 
     offsetStartDay(year: number, month: number) {
@@ -269,57 +188,32 @@ export default Vue.extend({
         .weekday();
     },
 
-    getMonthsInYear(year: number): IMonth[] {
-      let months: IMonth[] = [];
-      for (let a = 0, b = this.months.length; a < b; a++) {
-        months.push({
-          month: this.months[a],
-          weeksInMonth: [],
-          firstDay: this.offsetStartDay(year, this.months[a]),
-          lastDay: this.offsetEndDay(year, this.months[a]),
-          daysInMonth: moment(
-            year + '-' + this.stringifyMonth(this.months[a]),
-          ).daysInMonth(),
-          previousMonthDays: [],
-          monthYear: year,
-        });
-      }
-      this.addOverlapDays(months);
-      this.addWeekNumbers(months, year);
-      return months;
-    },
-
-    addOverlapDays(months: IMonth[]): IMonth[] {
-      for (let a = 0, b = months.length; a < b; a++) {
-        let dateToSubtractFrom: number;
-        if (a === 0) {
-          // If january, get last day from previous years last month
-          let lastYear = parseInt(this.year, 1) - 1;
-          dateToSubtractFrom = moment(lastYear + '-12').daysInMonth();
+    dateClicked(d: Moment) {
+      if (!moment.isMoment(this.selectedDate)) {
+        this.selectedDate = d;
+      } else {
+        if (moment(this.selectedDate).isBefore(d)) {
+          this.selectedPeriod = {
+            from: this.selectedDate,
+            to: d,
+          };
+          this.selectedDate = null;
         } else {
-          dateToSubtractFrom = months[a - 1].daysInMonth;
-        }
-        if (months[a].firstDay > 0) {
-          // Add lastdays from previous month
-          for (let c = months[a].firstDay - 1, d = 0; c >= d; c--) {
-            months[a].previousMonthDays.push(dateToSubtractFrom - c);
-          }
-        }
-      }
-
-      return months;
-    },
-
-    addWeekNumbers(months: IMonth[], year: number) {
-      for (let a = 0, b = months.length; a < b; a++) {
-        for (let c = 1, d = months[a].daysInMonth; c <= d; c++) {
-          let week = moment(year + '-' + (a + 1) + '-' + c).week();
-          if (!months[a].weeksInMonth.includes(week)) {
-            months[a].weeksInMonth.push(week);
-          }
+          this.selectedPeriod = {
+            from: d,
+            to: this.selectedDate,
+          };
+          this.selectedDate = null;
         }
       }
     },
+  },
+  created() {
+    this.selectedPeriod.from = moment('02-02-2019');
+    this.selectedPeriod.to = moment('02-28-2019');
+  },
+  mounted() {
+    this.calendar = this.createMonths();
   },
 });
 </script>

@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 export interface ISortState {
   key: string | null;
   reverse: boolean;
@@ -58,5 +60,10 @@ export interface IMonth {
   month: number;
   previousMonthDays: number[];
   weeksInMonth: number[];
-  monthYear: number;
+  year: number;
+}
+
+export interface ICalendarPeriod {
+  from: Moment;
+  to: Moment;
 }
