@@ -1,5 +1,3 @@
-import { ActionContext } from 'vuex';
-
 export interface ISortState {
   key: string | null;
   reverse: boolean;
@@ -12,7 +10,6 @@ export interface IDataTableState {
   items: {[key: string]: IItem[]};
   total: number | null;
 }
-
 
 export interface IColumn {
   key: string;
@@ -37,31 +34,24 @@ export interface IItem {
   data: IItemData;
 }
 
-export interface IFetchPayload {
+export interface ILoadItemsPayload {
   skip: number;
   take: number;
 }
 
-export interface IFetchResult {
+export interface ILoadSubItemsPayload extends ILoadItemsPayload {
+  keyPath: string[];
+}
+
+export interface ILoadResult {
   items: IItem[];
   total: number | null;
 }
 
-export type FetchData<RootState> = (skip: number, take: number, sorting: ISortState, context: ActionContext<IDataTableState, RootState>) => Promise<IFetchResult>;
-export type FetchChildren = (keyPath: string[]) => Promise<IFetchResult>;
-
-export interface ICreateDataModuleOptions<RootState> {
-  columns: IColumn[];
-  fetch: FetchData<RootState>;
-  fetchChildren?: FetchChildren;
-  chunkSize?: number;
-}
-
-export interface IFetchItemsPayload {
+export interface IRequestLoadItemsPayload {
   firstRow: number;
   lastRow: number;
-  clear: boolean;
-  sorting: ISortState;
+  clear?: boolean;
 }
 
 export interface IMonth {

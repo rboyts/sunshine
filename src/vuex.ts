@@ -2,8 +2,7 @@ import { Module } from 'vuex';
 import { Mutex } from 'async-mutex';
 import {
   IDataTableState,
-  ICreateDataModuleOptions,
-  IFetchItemsPayload,
+  IRequestLoadItemsPayload,
   ISortState,
   IItem,
 } from './components/types';
@@ -87,15 +86,15 @@ export const createDataModule = <ModuleState = {}, RootState = any>(options: Mod
         };
       },
 
-      fetchStart: state => {
+      loadStart: state => {
         state.isLoading = true;
       },
 
-      fetchEnd: state => {
+      loadEnd: state => {
         state.isLoading = false;
       },
 
-      fetchItemsComplete: (state, {items, offset, total}) => {
+      loadItemsComplete: (state, {items, offset, total}) => {
         state.items = {
           ...state.items,
           ['']: items,
@@ -104,7 +103,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(options: Mod
         state.total = total;
       },
 
-      fetchSubItemsComplete: (state, {keyPath, items, total}) => {
+      loadSubItemsComplete: (state, {keyPath, items, total}) => {
         const key = joinKeyPath(keyPath);
         state.items = {
           ...state.items,
@@ -116,35 +115,35 @@ export const createDataModule = <ModuleState = {}, RootState = any>(options: Mod
     },
 
     actions: {
-      sort({commit, dispatch}, key: string) {
+      async sort({commit, dispatch}, key: string) {
         commit('sorting', key);
-        dispatch('init');
+        await dispatch('init');
       },
 
-      init({dispatch}) {
-        dispatch('fetchItems', {firstRow: 0, lastRow: 50, clear: true});
+      async init({dispatch}) {
+        await dispatch('requestLoadItems', {firstRow: 0, lastRow: 49, clear: true});
       },
 
-      async fetchItems({dispatch}, args: IFetchItemsPayload) {
+      async requestLoadItems({dispatch}, payload: IRequestLoadItemsPayload) {
         // Wait until any previous requests are completed
-        await mutex.runExclusive(() => dispatch('doFetchItems', args));
+        await mutex.runExclusive(() => dispatch('_doRequestLoadItems', payload));
       },
 
-      async doFetchItems({state, commit, dispatch}, args: IFetchItemsPayload) {
+      async _doRequestLoadItems({state, commit, dispatch}, payload: IRequestLoadItemsPayload) {
         type Range = [number, number];
 
-        let items = args.clear ? [] : state.items[''];
+        let items = payload.clear ? [] : state.items[''];
 
         let has: Range = [state.offset, state.offset + items.length];
-        let needs: Range = [args.firstRow, args.lastRow + 1];
+        let needs: Range = [payload.firstRow, payload.lastRow + 1];
 
         if (has[0] <= needs[0] && has[1] >= needs[1]) {
-          console.info('Fetch not needed', args);
+          console.info('Loading not needed', payload);
           return;
         }
 
         if (state.isLoading) {
-          console.error('Store is already loading data', args);
+          console.error('Store is already loading data', payload);
           return;
         }
 
@@ -171,43 +170,48 @@ export const createDataModule = <ModuleState = {}, RootState = any>(options: Mod
         if (prepend !== null) console.log('prepend', prepend[0], prepend[1]);
         if (append !== null) console.log('append', append[0], append[1]);
 
-        commit('fetchStart');
+        commit('loadStart');
 
         if (prepend !== null) {
           let skip = prepend[0];
           let take = prepend[1] - prepend[0];
-          let result = await dispatch('fetch', {skip, take});
+          let result = await dispatch('loadItems', {skip, take});
           let offset = skip;
           items = result.items.concat(items);
-          commit('fetchItemsComplete', {items, offset, total: result.total});
+          commit('loadItemsComplete', {items, offset, total: result.total});
         }
 
         if (append !== null) {
           try {
             let skip = append[0];
             let take = append[1] - append[0];
-            let result = await dispatch('fetch', {skip, take});
+            let result = await dispatch('loadItems', {skip, take});
             let offset = skip - items.length;
             items = items.concat(result.items);
 
             // console.log(`got ${result.items.length} of ${result.total}`);
 
-            commit('fetchItemsComplete', {items, offset, total: result.total});
+            commit('loadItemsComplete', {items, offset, total: result.total});
           } catch (ex) {
-            console.error('Fetch failed', ex);
+            console.error('loadItems failed', ex);
           }
         }
 
-        commit('fetchEnd');
+        commit('loadEnd');
       },
 
-      async showSubItems({state, commit, dispatch}, {keyPath}: IShowSubItemsPayload) {
+      async requestLoadSubItems({dispatch}, payload: IShowSubItemsPayload) {
+        // Wait until any previous requests are completed
+        await mutex.runExclusive(() => dispatch('_doRequestLoadSubItems', payload));
+      },
+
+      async _doRequestLoadSubItems({state, commit, dispatch}, {keyPath}: IShowSubItemsPayload) {
         // Already loaded?
         if (joinKeyPath(keyPath) in state.items) return;
 
-        const result = await dispatch('fetchChildren', {keyPath});
+        const result = await dispatch('loadSubItems', {keyPath});
 
-        commit('fetchSubItemsComplete', { keyPath, items: result.items, total: result.total });
+        commit('loadSubItemsComplete', { keyPath, items: result.items, total: result.total });
       },
 
       ...options.actions,
