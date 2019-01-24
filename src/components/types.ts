@@ -9,7 +9,6 @@ export interface IDataTableState {
   isLoading: boolean;
   offset: number;
   sorting: ISortState;
-  columns: IColumn[];
   items: {[key: string]: IItem[]};
   total: number | null;
 }
@@ -36,6 +35,11 @@ export interface IItem {
   children?: IItem[] | null;
 
   data: IItemData;
+}
+
+export interface IFetchPayload {
+  skip: number;
+  take: number;
 }
 
 export interface IFetchResult {

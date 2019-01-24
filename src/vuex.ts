@@ -29,8 +29,9 @@ const getItems = (keyPath: string[], state: IDataTableState): IItem[] | null => 
   return nodes;
 };
 
-export const createDataModule = <RootState = any>(options: ICreateDataModuleOptions<RootState>):
-    Module<IDataTableState, RootState> => {
+
+export const createDataModule = <ModuleState = {}, RootState = any>(options: Module<ModuleState, RootState>):
+    Module<ModuleState & IDataTableState, RootState> => {
 
   const mutex = new Mutex();
 
@@ -38,24 +39,27 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
     namespaced: true,
 
     state() {
+      const moduleState = options.state instanceof Function ? options.state() : options.state;
+
       return {
         offset: 0,
         total: null,
         isLoading: false,
-        columns: options.columns,
         items: {'': []},
         sorting: {
           key: null,
           reverse: false,
         } as ISortState,
+
+        ...(moduleState || {} as ModuleState),
       };
     },
 
-    getters: {
-      columns(state) {
-        return state.columns;
-      },
+    modules: {
+      ...options.modules,
+    },
 
+    getters: {
       items(state) {
         return getItems([], state);
       },
@@ -71,11 +75,16 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
       sorting(state) {
         return state.sorting;
       },
+
+      ...options.getters,
     },
 
     mutations: {
-      sorting: (state, sorting: ISortState) => {
-        state.sorting = sorting;
+      sorting: (state, key: string) => {
+        state.sorting = {
+          key,
+          reverse: state.sorting.key === key ? !state.sorting.reverse : false,
+        };
       },
 
       fetchStart: state => {
@@ -102,15 +111,13 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
           [key]: items,
         };
       },
+
+      ...options.mutations,
     },
 
     actions: {
-      sort({state, commit, dispatch}, key: string) {
-        const sorting = state.sorting.key === key ?
-          { ...state.sorting, reverse: !state.sorting.reverse } :
-          { key, reverse: false };
-
-        commit('sorting', sorting);
+      sort({commit, dispatch}, key: string) {
+        commit('sorting', key);
         dispatch('init');
       },
 
@@ -123,18 +130,13 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
         await mutex.runExclusive(() => dispatch('doFetchItems', args));
       },
 
-      async doFetchItems(context, args: IFetchItemsPayload) {
-        const { state, commit } = context;
-
-        // if (args.firstRow > 0) return;
+      async doFetchItems({state, commit, dispatch}, args: IFetchItemsPayload) {
         type Range = [number, number];
 
         let items = args.clear ? [] : state.items[''];
 
         let has: Range = [state.offset, state.offset + items.length];
         let needs: Range = [args.firstRow, args.lastRow + 1];
-
-        console.log('args', args);
 
         if (has[0] <= needs[0] && has[1] >= needs[1]) {
           console.info('Fetch not needed', args);
@@ -146,7 +148,7 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
           return;
         }
 
-        const chunkSize = options.chunkSize || 50;
+        const chunkSize = 50;
 
         let needChunks = [Math.floor(needs[0] / chunkSize) * chunkSize, Math.ceil(needs[1] / chunkSize) * chunkSize];
 
@@ -174,7 +176,7 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
         if (prepend !== null) {
           let skip = prepend[0];
           let take = prepend[1] - prepend[0];
-          let result = await options.fetch(skip, take, state.sorting, context);
+          let result = await dispatch('fetch', {skip, take});
           let offset = skip;
           items = result.items.concat(items);
           commit('fetchItemsComplete', {items, offset, total: result.total});
@@ -184,7 +186,7 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
           try {
             let skip = append[0];
             let take = append[1] - append[0];
-            let result = await options.fetch(skip, take, state.sorting, context);
+            let result = await dispatch('fetch', {skip, take});
             let offset = skip - items.length;
             items = items.concat(result.items);
 
@@ -199,16 +201,16 @@ export const createDataModule = <RootState = any>(options: ICreateDataModuleOpti
         commit('fetchEnd');
       },
 
-      async showSubItems({state, commit}, {keyPath}: IShowSubItemsPayload) {
+      async showSubItems({state, commit, dispatch}, {keyPath}: IShowSubItemsPayload) {
         // Already loaded?
         if (joinKeyPath(keyPath) in state.items) return;
 
-        if (!options.fetchChildren) return;
-
-        const result = await options.fetchChildren(keyPath);
+        const result = await dispatch('fetchChildren', {keyPath});
 
         commit('fetchSubItemsComplete', { keyPath, items: result.items, total: result.total });
       },
+
+      ...options.actions,
     },
   };
 };
