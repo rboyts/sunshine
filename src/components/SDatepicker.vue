@@ -10,6 +10,7 @@
       @addMonth="addMonth"
     />
     <s-datepicker-menu />
+    <button @click="addMonth"></button>
   </div>
 </template>
 
@@ -81,9 +82,10 @@ export default Vue.extend({
   methods: {
 
     addMonth() {
-      this.dateContext = moment(this.dateContext).add(1, 'M');
-      this.calendar = this.createMonths();
-      console.log(this.dateContext.format('YYYY-MM-DD'));
+      let lastMonth = this.calendar[this.calendar.length - 1];
+      let lastMonthDate = moment(lastMonth.year + '-' + lastMonth.month + '-01');
+      let nextMonth = moment(lastMonthDate).add(1, 'months');
+      this.calendar.push(this.addMonthItem(nextMonth.get('year'), nextMonth.get('month') + 1));
     },
 
     addMonthItem(year: number, month: number): IMonth {

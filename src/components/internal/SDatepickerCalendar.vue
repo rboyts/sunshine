@@ -158,10 +158,8 @@ export default Vue.extend({
     shouldLoadAdditionalMonths(x: number) {
       if (x <= (this.scrollContainer.scrollHeight / 4)) {
         console.log('Load past months');
-        console.log((this.scrollContainer.scrollHeight / 4));
       } else if (x >= (this.scrollContainer.scrollHeight - (this.scrollContainer.scrollHeight / 4))) {
-        console.log('Load future months');
-        console.log((this.scrollContainer.scrollHeight - (this.scrollContainer.scrollHeight / 4)));
+        this.$emit('addMonth');
       }
     },
 
@@ -172,10 +170,6 @@ export default Vue.extend({
         }
       }
     },
-  },
-
-  updated() {
-    this.scrollToCurrentMonth();
   },
 });
 </script>
