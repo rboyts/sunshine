@@ -32,6 +32,10 @@ $datepicker-border: 1px solid $gray;
   flex-direction: row;
 }
 
+.s-datepicker__navigation h4 {
+  text-transform: uppercase;
+}
+
 .s-datepicker__navigation h4,
 .s-datepicker__navigation i {
   padding: 1rem;
