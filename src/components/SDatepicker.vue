@@ -104,8 +104,7 @@ export default Vue.extend({
         firstDay: this.offsetStartDay(year, month),
         lastDay: this.offsetEndDay(year, month),
         daysInMonth: moment(year + '-' + month).daysInMonth(),
-        // previousMonthDays: this.addOverlapDays(year, month, this.offsetEndDay(year, month)),
-        previousMonthDays: [],
+        previousMonthDays: this.addOverlapDays(year, month, this.offsetStartDay(year, month)),
         year,
       };
     },
@@ -141,8 +140,8 @@ export default Vue.extend({
     },
 
     createMonths() {
-      const year = this.yearNum;
-      const present = this.monthKey + 1;
+      let year = this.yearNum;
+      let present = this.monthKey + 1;
       let past = [];
       let future = [];
       for (let a = 0, b = 6; a < b; a++) {

@@ -1,7 +1,7 @@
 @import '../settings.scss';
 
 $datepicker-height: 29rem;
-$datepicker-width: 18rem;
+$datepicker-width: 19rem;
 $datepicker-menu-width: 11rem;
 $datepicker-chevron-size: 0.5rem;
 $datepicker-border: 1px solid $gray;
@@ -19,7 +19,7 @@ $datepicker-border: 1px solid $gray;
 
 .s-datepicker__header {
   position: sticky;
-  width: $datepicker-width;
+  width: 17rem;
   top: 0;
   left: 0;
   z-index: 3;
@@ -30,6 +30,7 @@ $datepicker-border: 1px solid $gray;
 
 .s-datepicker__navigation {
   flex-direction: row;
+  padding-left: 3rem;
 }
 
 .s-datepicker__navigation h4 {
@@ -38,7 +39,7 @@ $datepicker-border: 1px solid $gray;
 
 .s-datepicker__navigation h4,
 .s-datepicker__navigation i {
-  padding: 1rem;
+  padding: 0.5rem 0;
   margin: 0;
   flex-grow: 1;
   text-align: center;
@@ -50,9 +51,9 @@ $datepicker-border: 1px solid $gray;
   padding: 0 1rem;
 }
 
-.s-datepicker__scrollcontainer::-webkit-scrollbar {
+/* .s-datepicker__scrollcontainer::-webkit-scrollbar {
   display: none;
-}
+} */
 
 .s-datepicker__scrollcontainer {
   overflow-y: scroll;

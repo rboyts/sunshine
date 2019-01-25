@@ -1,5 +1,5 @@
 <template>
-  <div class="s-datepicker__scrollcontainer" ref="scrollcontainer" @scroll="debounceOnScroll">
+  <div class="s-datepicker__scrollcontainer" ref="scrollcontainer" @scroll="onCalendarScroll">
       <div class="s-datepicker__header">
         <div class="flex flex-even s-datepicker__navigation">
             <h4>{{translateMonthName(activeMonth, activeYear)}}</h4>
@@ -71,7 +71,7 @@ export default Vue.extend({
       dateContext: moment(),
       activeMonth: this.currentMonth,
       activeYear: this.currentYear,
-      monthYOffset: -190,
+      monthYOffset: -224,
     };
   },
   props: {
@@ -147,10 +147,9 @@ export default Vue.extend({
     onCalendarScroll() {
       let scrollX = this.scrollContainer.scrollTop;
       if (scrollX === 0) {
-        this.scrollContainer.scrollTop = 90;
+        this.scrollContainer.scrollTop = this.scrollContainer.scrollHeight / 4 + this.monthYOffset;
       }
       this.loadAdditionalMonths(scrollX);
-
       this.$nextTick(() => {
         let position = Object.keys(this.scrollPositionOfMonths).filter((a, b) => {
           if (scrollX >= Number(a) + (this.monthYOffset / 2)) {
@@ -192,7 +191,7 @@ export default Vue.extend({
     },
   },
   created() {
-    this.debounceOnScroll = debounce(this.onCalendarScroll, SCROLL_DEBOUNCE);
+    // this.debounceOnScroll = debounce(this.onCalendarScroll, SCROLL_DEBOUNCE);
     this.$nextTick(() => {
       this.scrollToCurrentMonth();
     });
