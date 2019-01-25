@@ -5,6 +5,14 @@ export interface ISortState {
   reverse: boolean;
 }
 
+export interface IDataTableState {
+  isLoading: boolean;
+  offset: number;
+  sorting: ISortState;
+  items: {[key: string]: IItem[]};
+  total: number | null;
+}
+
 export interface IColumn {
   key: string;
   title: string;
@@ -28,9 +36,9 @@ export interface IItem {
   data: IItemData;
 }
 
-export interface IFetchResult {
-  items: IItem[];
-  total: number | null;
+export interface ILoadItemsPayload {
+  skip: number;
+  take: number;
 }
 
 export type FetchData = (
@@ -40,17 +48,19 @@ export type FetchData = (
 ) => Promise<IFetchResult>;
 export type FetchChildren = (keyPath: string[]) => Promise<IFetchResult>;
 
-export interface ICreateDataModuleOptions {
-  columns: IColumn[];
-  fetch: FetchData;
-  fetchChildren?: FetchChildren;
+export interface ILoadSubItemsPayload extends ILoadItemsPayload {
+  keyPath: string[];
 }
 
-export interface IFetchItemsPayload {
+export interface ILoadResult {
+  items: IItem[];
+  total: number | null;
+}
+
+export interface IRequestLoadItemsPayload {
   firstRow: number;
   lastRow: number;
-  clear: boolean;
-  sorting: ISortState;
+  clear?: boolean;
 }
 
 export interface IMonth {

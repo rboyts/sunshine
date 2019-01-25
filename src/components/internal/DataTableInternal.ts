@@ -5,6 +5,7 @@ import { classHelper, joinKeyPath } from '../../lib/utils';
 import SIcon from '../SIcon.vue';
 import SSvg from './SSvg.vue';
 
+const MAX_PLACEHOLDER_ROWS = 50;
 const SCROLL_DEBOUNCE = 250;
 const MOVE_TIMEOUT = 350;
 
@@ -206,30 +207,47 @@ export default Vue.extend({
       let element = event.target as HTMLElement;
       if (element === null) return;
 
-      // if (this.drag) {
-      //   this.drag.curScrollX = element.scrollLeft;
-      // }
-
       let scrollTop = element.scrollTop;
       let scrollBottom = element.scrollTop + element.clientHeight;
 
-      // let firstRow = Math.floor(element.scrollTop / this.rowHeight);
-      // let lastRow = Math.ceil((element.scrollTop + element.clientHeight) / this.rowHeight);
-
       const bottomSpacer = this.$refs['bottom-spacer'] as HTMLElement;
+      if (bottomSpacer) {
+        const spacerPos = bottomSpacer.offsetTop;
+        if (spacerPos < scrollBottom) {
+          const spacerOffset = Math.max(0, scrollTop - spacerPos);
+          const rowOffset = Math.floor(spacerOffset / this.rowHeight);
 
-      if (!bottomSpacer) return;
+          const rows = Math.ceil((scrollBottom - spacerPos) / this.rowHeight) - rowOffset;
 
-      const top = bottomSpacer.offsetTop;
-      if (top > scrollBottom) return;
+          let firstRow = this.skip + this.nodes.length + rowOffset;
+          let lastRow = firstRow + rows;
 
-      const rows = Math.ceil((scrollBottom - top) / this.rowHeight);
+          const args = {firstRow, lastRow};
+          this.$emit('visible-rows', args);
+        }
+      }
 
-      let firstRow = this.nodes.length;
-      let lastRow = firstRow + rows;
+      const topSpacer = this.$refs['top-spacer'] as HTMLElement;
+      if (topSpacer) {
+        const spacerPos = topSpacer.offsetTop;
+        if (spacerPos > scrollTop) {
+          const spacerOffset = Math.max(0, spacerPos - scrollBottom);
+          const rowOffset = Math.floor(spacerOffset / this.rowHeight);
 
-      const args = {firstRow, lastRow};
-      this.$emit('visible-rows', args);
+          console.log('spacerOffset', spacerOffset);
+          console.log('rowOffste', rowOffset);
+
+          console.log('rows', Math.ceil((spacerPos - scrollTop) / this.rowHeight));
+
+          const rows = Math.ceil((spacerPos - scrollTop) / this.rowHeight) - rowOffset;
+
+          let lastRow = this.skip - rowOffset;
+          let firstRow = Math.floor(scrollTop / this.rowHeight);
+
+          const args = {firstRow, lastRow};
+          this.$emit('visible-rows', args);
+        }
+      }
     },
 
     // Placeholder for type safety
@@ -311,13 +329,13 @@ export default Vue.extend({
     },
 
     renderNodes(nodes: ITableNode[]): VNode | any[] {
-      return nodes.map((node: ITableNode) => this.renderNode(node));
+      return nodes.map((node: ITableNode, i: number) => this.renderNode(node, this.skip + i));
     },
 
-    renderNode(node: ITableNode): any[] {
+    renderNode(node: ITableNode, row: number): any[] {
       const h = this.$createElement;
       const el = h('tr', {
-          key: node.key,
+          key: row,
         }, [
           this.columns.map((column, index) =>
             this.renderContentCell(node, column, index)),
@@ -452,22 +470,86 @@ export default Vue.extend({
     },
 
     renderTopSpacer(): VNode[] {
-      return this.renderSpacer(this.skip, 'top-spacer');
+      let rows = this.skip;
+      if (rows === 0) return [];
+
+      const placeholderRows = Math.min(rows, MAX_PLACEHOLDER_ROWS);
+      const spacerRows = rows - placeholderRows;
+
+      let nodes: VNode[] = [];
+      nodes = nodes.concat(this.renderSpacer(spacerRows));
+      nodes = nodes.concat(this.renderPlaceholders(spacerRows, placeholderRows));
+      nodes.push(this.renderTracker('top-spacer'));
+      return nodes;
     },
 
     renderBottomSpacer(): VNode[] {
-      let rows = this.total == null ? 1 : this.total - (this.skip + this.items.length);
-      return this.renderSpacer(rows, 'bottom-spacer');
+      const startRow = this.skip + this.items.length;
+      let rows = this.total == null ? 1 : this.total - startRow;
+      if (rows === 0) return [];
+
+      const placeholderRows = Math.min(rows, MAX_PLACEHOLDER_ROWS);
+      const spacerRows = rows - placeholderRows;
+
+      let nodes: VNode[] = [];
+      nodes.push(this.renderTracker('bottom-spacer'));
+      nodes = nodes.concat(this.renderPlaceholders(startRow, placeholderRows));
+      nodes = nodes.concat(this.renderSpacer(spacerRows));
+      return nodes;
     },
 
-    renderSpacer(rows: number, ref: string): VNode[] {
+    renderPlaceholders(startRow: number, rows: number): VNode[] {
       if (rows === 0) return [];
 
       const h = this.$createElement;
 
-      let height = `${rows * this.rowHeight}px`;
+      const nodes: VNode[] = [];
 
-      return [h('tr', {ref, style: {height}}, [])];
+      // tslint:disable-next-line:no-bitwise
+      const hash = (x: number, y: number): number => mod(((x << 24) ^ (y << 8)), 41);
+      const mod = (x: number, m: number): number => ((x % m) + m) % m;
+
+      for (let i = 0; i < rows; i++) {
+        const row = startRow + i;
+        const el = h('tr', {
+            key: row,
+          }, [
+            this.columns.map((column, index) =>
+              h('td', {
+                  key: column.key,
+                  class: this.getColumnClass(column, index),
+                }, [
+                  h('span', {staticClass: 's-data-table__cell-wrapper'}, [
+                    h('span', {staticClass: 's-data-table__cell-content'}, [
+                      h('span', {
+                        staticClass: 's-data-table__cell-placeholder',
+                        style: {width: `${hash(row, index) + 20}px`},
+                      }),
+                    ]),
+                  ]),
+                ],
+              ),
+            ),
+          ],
+        );
+        nodes.push(el);
+      }
+
+      return nodes;
+    },
+
+    renderSpacer(rows: number): VNode[] {
+      const h = this.$createElement;
+      if (rows === 0) return [];
+
+      let height = `${rows * this.rowHeight}px`;
+      return [h('tr', {style: {height}})];
+    },
+
+    // This is used to track scroll position
+    renderTracker(ref: string): VNode {
+      const h = this.$createElement;
+      return h('tr', { ref, key: ref });
     },
 
     renderHeaderCell(column: IColumn, index: number): VNode {
