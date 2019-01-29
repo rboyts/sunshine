@@ -10,7 +10,7 @@ $table-condensed-padding: .5rem;
 $table-normal-row-height: 2.5rem;
 $table-condensed-row-height: 1.5rem;
 
-$table-toggle-width: base-spacing(4);
+$table-toggle-width: base-spacing(5);
 
 .s-data-table {
   @include paragraph-font;
@@ -234,6 +234,13 @@ $table-toggle-width: base-spacing(4);
     stroke: $gray;
     stroke-width: 1.5;
   }
+}
+
+.s-data-table__cell-placeholder {
+  display: inline-block;
+  border-radius: 3px;
+  height: .5rem;
+  background-color: $almost-gray;
 }
 
 .s-data-table__sort {

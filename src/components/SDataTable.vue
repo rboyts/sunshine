@@ -52,9 +52,9 @@ import SList from './SList.vue';
 import SListItem from './SListItem.vue';
 import SSvg from './internal/SSvg.vue';
 import DataTableInternal from './internal/DataTableInternal';
-import { ISortState, IItem, IColumn } from './types';
+import { ISortState, IItem, IColumn, IRequestLoadItemsPayload } from './types';
 
-export { IColumn, ISortState, IItem, FetchData } from './types';
+export { IColumn, ISortState, IItem } from './types';
 
 
 export default mixins(ClassesMixin).extend({
@@ -132,12 +132,12 @@ export default mixins(ClassesMixin).extend({
       return true;
     },
 
-    onVisibleRows(args: any) {
-      this.tryDispatchAction('fetchItems', args);
+    onVisibleRows(args: IRequestLoadItemsPayload) {
+      this.tryDispatchAction('requestLoadItems', args);
     },
 
     onOpenItem(keyPath: string) {
-      this.tryDispatchAction('showSubItems', {keyPath});
+      this.tryDispatchAction('requestLoadSubItems', {keyPath});
     },
 
     onSort(event: MouseEvent, key: string) {

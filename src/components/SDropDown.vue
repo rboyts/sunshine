@@ -23,6 +23,7 @@ Use cases:
       v-bind="$attrs"
       @click.native="onClick"
       @keydown.native="onKeyDown"
+      @mousedown.native="$event.preventDefault()"
     >
       <label v-if="textValue" :class="classes('label')">{{ textValue }}</label>
 
@@ -46,7 +47,7 @@ Use cases:
         @blur="hasFocus = false"
       />
 
-      <s-svg name="dropdownArrow" :class="classes('caret', caretModifiers)" @click="onCaretClick" @mousedown="$event.preventDefault()" />
+      <s-svg name="dropdownArrow" :class="classes('caret', caretModifiers)" @click.native="onCaretClick" />
     </s-base-input>
 
     <div slot="content" @mousedown="$event.preventDefault()">
@@ -210,7 +211,7 @@ export default mixins(ClassesMixin).extend({
   methods: {
     onClick(event: PointerEvent) {
       if (this.isOpen && !this.search) {
-        // this.isOpen = false;
+        this.isOpen = false;
       } else {
         this.isOpen = true;
       }
@@ -330,7 +331,7 @@ export default mixins(ClassesMixin).extend({
       if (!this.multiple) return;
 
       this.setChecked(item, checked);
-      this.filter = '';
+      this.selected = item;
     },
 
     onItemClick(item: any) {
