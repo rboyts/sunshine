@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="s-datepicker__calendar">
     <div class="s-datepicker__header">
       <div class="flex flex-even s-datepicker__navigation">
           <h4>{{translateMonthName(activeMonth, activeYear)}}</h4>
@@ -10,6 +10,7 @@
     </div>
     <div class="s-datepicker__grid__container">
       <virtual-list 
+        class="s-datepicker__virtuallist"
         :size="193" 
         :remain="2"
         :bench="bench"
