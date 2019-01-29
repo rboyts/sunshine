@@ -15,7 +15,8 @@
     "debounce": "^1.2.0",
     "moment": "^2.22.2",
     "vue-scrollto": "^2.13.0",
-    "vue-typed-mixins": "^0.1.0"
+    "vue-typed-mixins": "^0.1.0",
+    "vue-virtual-scroll-list": "^1.3.0"
   },
   "peerDependencies": {
     "d3": "^5.7.0",
@@ -41,7 +42,7 @@
     "typescript": "^3.0.0",
     "vue": "^2.5.17",
     "vue-template-compiler": "^2.5.17",
-    "vuex": "^3.0.1"
+    "vuex": "^3.1.0"
   },
   "postcss": {
     "plugins": {

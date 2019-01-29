@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 export interface ISortState {
   key: string | null;
   reverse: boolean;
@@ -39,6 +41,13 @@ export interface ILoadItemsPayload {
   take: number;
 }
 
+export type FetchData = (
+  skip: number,
+  take: number,
+  sorting: ISortState,
+) => Promise<IFetchResult>;
+export type FetchChildren = (keyPath: string[]) => Promise<IFetchResult>;
+
 export interface ILoadSubItemsPayload extends ILoadItemsPayload {
   keyPath: string[];
 }
@@ -61,4 +70,10 @@ export interface IMonth {
   month: number;
   previousMonthDays: number[];
   weeksInMonth: number[];
+  year: number;
+}
+
+export interface ICalendarPeriod {
+  from: Moment;
+  to: Moment;
 }
