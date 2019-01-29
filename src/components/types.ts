@@ -9,7 +9,7 @@ export interface IDataTableState {
   isLoading: boolean;
   offset: number;
   sorting: ISortState;
-  items: {[key: string]: IItem[]};
+  items: { [key: string]: IItem[] };
   total: number | null;
 }
 
@@ -45,8 +45,8 @@ export type FetchData = (
   skip: number,
   take: number,
   sorting: ISortState,
-) => Promise<IFetchResult>;
-export type FetchChildren = (keyPath: string[]) => Promise<IFetchResult>;
+) => Promise<ILoadResult>;
+export type FetchChildren = (keyPath: string[]) => Promise<ILoadResult>;
 
 export interface ILoadSubItemsPayload extends ILoadItemsPayload {
   keyPath: string[];
