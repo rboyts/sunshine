@@ -56,7 +56,7 @@ $datepicker-border: 1px solid $gray;
 } */
 
 .s-datepicker__scrollcontainer {
-  overflow-y: scroll;
+  // overflow-y: scroll;
   position: relative;
   height: 100%;
   width: $datepicker-width;

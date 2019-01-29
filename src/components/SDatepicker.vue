@@ -7,8 +7,8 @@
       :current-month="monthKey + 1"
       :selected-period="selectedPeriod"
       @click="dateClicked"
-      @addMonth="addMonth"
-      @subtractMonth="subtractMonth"
+      @addComingMonth="addComingMonth"
+      @addPreviousMonth="addPreviousMonth"
     />
     <s-datepicker-menu />
   </div>
@@ -81,16 +81,14 @@ export default Vue.extend({
   },
   methods: {
 
-    // TODO: clear calendar so it doesn't grow indefinitely
-    subtractMonth() {
+    addPreviousMonth() {
       let firstMonth = this.calendar[0];
       let firstMonthDate = moment(firstMonth.year + '-' + firstMonth.month + '-01');
       let previousMonth = moment(firstMonthDate).subtract(1, 'months');
       this.calendar.unshift(this.addMonthItem(previousMonth.get('year'), previousMonth.get('month') + 1));
     },
 
-    // TODO: clear calendar so it doesn't grow indefinitely
-    addMonth() {
+    addComingMonth() {
       let lastMonth = this.calendar[this.calendar.length - 1];
       let lastMonthDate = moment(lastMonth.year + '-' + lastMonth.month + '-01');
       let nextMonth = moment(lastMonthDate).add(1, 'months');

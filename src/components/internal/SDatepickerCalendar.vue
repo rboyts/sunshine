@@ -1,14 +1,22 @@
 <template>
-  <div class="s-datepicker__scrollcontainer" ref="scrollcontainer" @scroll="onCalendarScroll">
-      <div class="s-datepicker__header">
-        <div class="flex flex-even s-datepicker__navigation">
-            <h4>{{translateMonthName(activeMonth, activeYear)}}</h4>
-        </div>
-        <ul class="s-datepicker__days">
-          <li class="s-datepicker__day" v-for="(day, i) in days" :key="'Day' + i">{{day}}</li>
-        </ul>
+  <div>
+    <div class="s-datepicker__header">
+      <div class="flex flex-even s-datepicker__navigation">
+          <h4>{{translateMonthName(activeMonth, activeYear)}}</h4>
       </div>
-      <div class="s-datepicker__grid__container">
+      <ul class="s-datepicker__days">
+        <li class="s-datepicker__day" v-for="(day, i) in days" :key="'Day' + i">{{day}}</li>
+      </ul>
+    </div>
+    <div class="s-datepicker__grid__container">
+      <virtual-list 
+        :size="193" 
+        :remain="2"
+        :bench="bench"
+        :onscroll="onScroll"
+        :debounce="debounce"
+        ref="virtualList"
+      >    
         <span
           class="s-datepicker__grid"
           v-for="(month, monthKey) in calendar"
@@ -48,15 +56,17 @@
             v-for="x in (6 - month.lastDay)"
           >{{x}}</span>
         </span>
-      </div>
+      </virtual-list>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, {Component} from 'vue';
 import debounce from 'debounce';
 import { IMonth, ICalendarPeriod } from '../types';
 import moment, { Moment } from 'moment';
+import virtualList from 'vue-virtual-scroll-list';
 
 const SCROLL_DEBOUNCE = 250;
 const MOVE_TIMEOUT = 350;
@@ -65,13 +75,16 @@ moment.locale('nb');
 
 export default Vue.extend({
   name: 's-datepicker-calendar',
+  components: {'virtual-list': virtualList },
   data() {
     return {
+      bench: 6,
+      debounce: 350,
       days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
       dateContext: moment(),
       activeMonth: this.currentMonth,
       activeYear: this.currentYear,
-      monthYOffset: -224,
+      monthYOffset: 192,
     };
   },
   props: {
@@ -97,9 +110,11 @@ export default Vue.extend({
     initialMonth(): string {
       return this.currentMonth + '-' + this.currentYear;
     },
-    // TODO: Create interface
-    scrollPositionOfMonths(): any {
-      return this.yPositionsOfMonths();
+
+    scrollOffset(): number {
+      let element = this.$refs.virtualList as any;
+      element = element.$el as HTMLElement;
+      return element.scrollTop;
     },
   },
   methods: {
@@ -135,66 +150,40 @@ export default Vue.extend({
       this.$emit('click', date);
     },
 
-    yPositionsOfMonths() {
-      let elements = {} as any;
-      for (let a = 0, b = this.calendar.length; a < b; a++) {
-        let el = this.$refs[this.calendar[a].month + '-' + this.calendar[a].year] as HTMLElement[];
-        elements[el[0].offsetTop] = this.calendar[a].month + '-' + this.calendar[a].year;
-      }
-      return elements;
+/*
+    toBottom() {
+      this.$emit('addMonth');
     },
 
-    onCalendarScroll() {
-      let scrollX = this.scrollContainer.scrollTop;
-      if (scrollX === 0) {
-        this.scrollContainer.scrollTop = this.scrollContainer.scrollHeight / 4 + this.monthYOffset;
-      }
-      this.loadAdditionalMonths(scrollX);
-      this.$nextTick(() => {
-        let position = Object.keys(this.scrollPositionOfMonths).filter((a, b) => {
-          if (scrollX >= Number(a) + (this.monthYOffset / 2)) {
-            return 1;
-          } else {
-            return 0;
-          }
-          return -1;
-        });
-
-        if (
-          this.activeMonth !==
-          this.scrollPositionOfMonths[position[position.length - 1]]
-        ) {
-          let tmp = this.scrollPositionOfMonths[position[position.length - 1]].split('-');
-          this.activeMonth = tmp[0] as number;
-          this.activeYear = tmp[1] as number;
-        }
-      });
+    toTop() {
+      this.$emit('subtractMonth');
     },
-
-    loadAdditionalMonths(x: number) {
-      if (x <= (this.scrollContainer.scrollHeight / 4)) {
-        this.$emit('subtractMonth');
-      } else if (x >= (this.scrollContainer.scrollHeight - (this.scrollContainer.scrollHeight / 4))) {
-        this.$emit('addMonth');
+*/
+    onScroll(event: any, data: any) {
+      let element = this.$refs.virtualList as any;
+      element = element.$el as HTMLElement;
+      let direction: string;
+      if (element.scrollTop > this.scrollOffset) {
+        direction = 'down';
+      } else if (element.scrollTop < this.scrollOffset) {
+        direction = 'up';
+      } else {
+        direction = 'same';
       }
-    },
 
-    scrollToCurrentMonth() {
-      this.$nextTick(() => {
-        const currentMonthAndYear = String(this.currentMonth) + '-' + String(this.currentYear);
-        for (let value in this.scrollPositionOfMonths) {
-          if (this.scrollPositionOfMonths[value] === currentMonthAndYear) {
-            this.scrollContainer.scrollTop = Number(value);
-          }
-        }
-      });
+      if (element.scrollTop <= 0) {
+        element.scrollTop = 10;
+      }
+      if (data.offset <= (data.offsetAll / 4) && direction === 'up') {
+        this.$emit('addPreviousMonth');
+      } else if (data.offset >= (data.offsetAll - (data.offsetAll / 4)) && direction === 'down') {
+        this.$emit('addComingMonth');
+      }
     },
   },
-  created() {
-    // this.debounceOnScroll = debounce(this.onCalendarScroll, SCROLL_DEBOUNCE);
-    this.$nextTick(() => {
-      this.scrollToCurrentMonth();
-    });
+
+  mounted() {
+    console.log(this.$refs.virtualList);
   },
 });
-</script>
+</script> 
