@@ -18,74 +18,48 @@
         :debounce="debounce"
         ref="virtualList"
       >    
-        <span
+        <s-datepicker-month
           class="s-datepicker__grid"
           v-for="(month, monthKey) in calendar"
+          @click="selectDate"
+          :today="today"
+          :selected-period="selectedPeriod"
           :ref="month.month + '-' + month.year"
-          :id="'month' + month.month + '-' + month.year"
           :key="'month' + month.month + '-' + month.year"
+          :month="month"
         >
-          <h3  class="s-datepicker__month">{{translateMonthName(month.month, month.year)}}</h3>
-          <div class="s-datepicker__weeks">
-            <span
-              class="s-datepicker__weeks__week"
-              v-for="w in month.weeksInMonth"
-            >{{w}}</span>
-          </div>
-          <span
-            class="s-datepicker__date--overlapping"
-            v-for="x in month.previousMonthDays"
-          >{{x}}</span>
-          <span
-            class="s-datepicker__date"
-            v-for="a in month.daysInMonth"
-            :id="month.month + '-' + a + '-' + month.year"
-            @click="selectDate(month.month, a, month.year)"
-            :class="{
-              'today': isSameDate(month.month, a, month.year, today),
-              'from': isSameDate(month.month, a, month.year, fromDate), 
-              'to': isSameDate(month.month, a, month.year, toDate),
-              'between': isInPeriod(month.month, a, month.year, fromDate, toDate)
-              }"
-          >
-            <span v-if="isSameDate(month.month, a, month.year, fromDate)" class="circle">{{a}}</span>
-            <span v-else-if="isSameDate(month.month, a, month.year, toDate)" class="circle">{{a}}</span>
-            <span v-else>{{a}}</span>
-          </span>
-          <span
-            class="s-datepicker__date--overlapping"
-            v-for="x in (6 - month.lastDay)"
-          >{{x}}</span>
-        </span>
+        </s-datepicker-month>
       </virtual-list>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue, {Component} from 'vue';
+import Vue from 'vue';
 import debounce from 'debounce';
 import { IMonth, ICalendarPeriod } from '../types';
 import moment, { Moment } from 'moment';
 import virtualList from 'vue-virtual-scroll-list';
+import SDatepickerMonth from './SDatepickerMonth.vue';
 
 const SCROLL_DEBOUNCE = 250;
 const MOVE_TIMEOUT = 350;
+const PADDING_TOP = 60;
 
 moment.locale('nb');
 
 export default Vue.extend({
   name: 's-datepicker-calendar',
-  components: {'virtual-list': virtualList },
+  components: {'virtual-list': virtualList, SDatepickerMonth },
   data() {
     return {
       bench: 6,
-      debounce: 350,
+      debounce: SCROLL_DEBOUNCE,
       days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
       dateContext: moment(),
       activeMonth: this.currentMonth,
       activeYear: this.currentYear,
-      monthYOffset: 192,
+      lastScrollPosition: 0,
     };
   },
   props: {
@@ -96,32 +70,25 @@ export default Vue.extend({
     currentYear: Number,
   },
   computed: {
-    toDate(): string {
-      return moment(this.selectedPeriod.to).format('YYYY-MM-DD');
-    },
-
-    fromDate(): string {
-      return moment(this.selectedPeriod.from).format('YYYY-MM-DD');
-    },
-
-    scrollContainer(): HTMLElement {
-      return this.$refs.scrollcontainer as HTMLElement;
-    },
-
     initialMonth(): string {
       return this.currentMonth + '-' + this.currentYear;
     },
 
-    scrollOffset(): number {
+    scrollElement(): HTMLElement {
       let element = this.$refs.virtualList as any;
       element = element.$el as HTMLElement;
-      return element.scrollTop;
+      return element;
+    },
+
+    currentMonthElement(): HTMLElement {
+      return this.$refs[this.currentMonth + '-' + this.currentYear] as HTMLElement;
     },
   },
   methods: {
-
-    // Placeholder for type safety
-    debounceOnScroll(event: UIEvent) { /* empty */ },
+    selectDate(m: number, d: number, y: number) {
+      let date = moment(y + '-' + m + '-' + d);
+      this.$emit('click', date);
+    },
 
     stringifyMonth(monthKey: number): string {
       let monthString;
@@ -138,42 +105,19 @@ export default Vue.extend({
       return moment(year + '-' + monthKey).format('MMMM-YYYY');
     },
 
-    isSameDate(m: number, d: number, y: number, date: string) {
-      return moment(y + '-' + m + '-' + d).isSame(date);
-    },
-
-    isInPeriod(m: number, d: number, y: number, fromDate: string, toDate: string) {
-      return moment(y + '-' + m + '-' + d).isBetween(fromDate, toDate);
-    },
-
-    selectDate(m: number, d: number, y: number) {
-      let date = moment(y + '-' + m + '-' + d);
-      this.$emit('click', date);
-    },
-
-/*
-    toBottom() {
-      this.$emit('addMonth');
-    },
-
-    toTop() {
-      this.$emit('subtractMonth');
-    },
-*/
     onScroll(event: any, data: any) {
-      let element = this.$refs.virtualList as any;
-      element = element.$el as HTMLElement;
       let direction: string;
-      if (element.scrollTop > this.scrollOffset) {
+      if (this.scrollElement.scrollTop > this.lastScrollPosition) {
         direction = 'down';
-      } else if (element.scrollTop < this.scrollOffset) {
+        this.lastScrollPosition = this.scrollElement.scrollTop;
+      } else if (this.scrollElement.scrollTop < this.lastScrollPosition) {
         direction = 'up';
+        this.lastScrollPosition = this.scrollElement.scrollTop;
       } else {
         direction = 'same';
       }
-
-      if (element.scrollTop <= 0) {
-        element.scrollTop = 10;
+      if (this.scrollElement.scrollTop <= 0) {
+        this.scrollElement.scrollTop = PADDING_TOP;
       }
       if (data.offset <= (data.offsetAll / 4) && direction === 'up') {
         this.$emit('addPreviousMonth');
@@ -181,10 +125,20 @@ export default Vue.extend({
         this.$emit('addComingMonth');
       }
     },
-  },
 
-  mounted() {
-    console.log(this.$refs.virtualList);
+    setupVirtualScrollPosition() {
+      this.scrollElement.style.paddingTop = PADDING_TOP + 'px';
+      console.log(this.scrollElement);
+      console.log(this.$refs['1-2019']);
+      if (this.currentMonthElement !== undefined) {
+        this.scrollElement.scrollTop = this.currentMonthElement[0].offsetTop;
+      } else {
+        this.scrollElement.scrollTop = PADDING_TOP;
+      }
+    },
+  },
+  async mounted() {
+    await Vue.nextTick().then(() => this.setupVirtualScrollPosition());
   },
 });
 </script> 

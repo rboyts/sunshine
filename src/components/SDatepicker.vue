@@ -86,6 +86,8 @@ export default Vue.extend({
       let firstMonthDate = moment(firstMonth.year + '-' + firstMonth.month + '-01');
       let previousMonth = moment(firstMonthDate).subtract(1, 'months');
       this.calendar.unshift(this.addMonthItem(previousMonth.get('year'), previousMonth.get('month') + 1));
+      // Prevents scrollbar from jumping ahead of the natvie scroll when adding past months
+      this.calendar.pop();
     },
 
     addComingMonth() {
