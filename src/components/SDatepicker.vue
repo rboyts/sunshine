@@ -146,8 +146,7 @@ export default Vue.extend({
     createMonths() {
       let year = this.yearNum;
       let present = this.monthKey + 1;
-      let past = [];
-      let future = [];
+      let months = [];
       for (let a = 0, b = 6; a < b; a++) {
         let tmpMonth: number;
         let tmpYear: number;
@@ -155,29 +154,14 @@ export default Vue.extend({
         if ((present + a) > 12) {
           tmpMonth  = (present + a) - 12;
           tmpYear = year + 1;
-          future.push(this.addMonthItem(tmpYear, tmpMonth));
+          months.push(this.addMonthItem(tmpYear, tmpMonth));
         } else {
           tmpMonth  = present + a;
           tmpYear = year;
-          future.push(this.addMonthItem(tmpYear, tmpMonth));
-        }
-
-        // Add past months, skipping current
-        if ((present - a) <= 0 && (present - a) !== present) {
-          tmpMonth = (present - a) + 12;
-          tmpYear = year - 1;
-          //past.push(this.addMonthItem(tmpYear, tmpMonth));
-        } else if ((present - a) !== present) {
-          tmpMonth = present - a;
-          tmpYear = year;
-          //past.push(this.addMonthItem(tmpYear, tmpMonth));
+          months.push(this.addMonthItem(tmpYear, tmpMonth));
         }
       }
-      past = past.reverse();
-      future.map(item => {
-        past.push(item);
-      });
-      return past;
+      return months;
     },
 
     stringifyMonth(monthKey: number): string {
