@@ -13,12 +13,11 @@ $datepicker-border: 1px solid $gray;
   width: $datepicker-width + $datepicker-menu-width;
   height: $datepicker-height;
   border: $datepicker-border;
-  overflow: hidden;
+  //overflow: hidden;
   background: #fff;
 }
 
 .s-datepicker__calendar {
-  padding-right: 0.5rem;
   width: $datepicker-width;
 }
 
@@ -55,9 +54,9 @@ $datepicker-border: 1px solid $gray;
   padding: 0 1rem;
 }
 
-.s-datepicker__virtuallist::-webkit-scrollbar {
+/* .s-datepicker__virtuallist::-webkit-scrollbar {
   display: none;
-}
+} */
 
 .s-datepicker__grid__container {
   position: relative;
@@ -65,7 +64,7 @@ $datepicker-border: 1px solid $gray;
 
 .s-datepicker__grid {
   position: relative;
-  padding: 2rem 0 0 3rem;
+  padding: 2rem 0 0 2.5rem;
   margin: 0;
   display: grid;
   grid-template-columns: repeat(7, 0fr);
@@ -86,7 +85,7 @@ $datepicker-border: 1px solid $gray;
   display: grid;
   grid-template-columns: repeat(7, 0fr);
   list-style: none;
-  padding-left: 3rem;
+  padding-left: 2.5rem;
   margin: 0;
   width: 100%;
   background: #fff;
