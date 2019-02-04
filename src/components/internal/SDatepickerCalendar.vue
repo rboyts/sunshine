@@ -2,10 +2,24 @@
     <div class="s-datepicker__calendar">
       <div class="s-datepicker__header">
         <div class="flex flex-even s-datepicker__navigation">
+            <span class="s-datepicker__navigation-arrow back" @click="$emit('addPreviousMonth')" >
+              <s-svg name="arrow" />
+            </span>
             <h4>{{monthNameInHeader}}</h4>
+            <span class="s-datepicker__navigation-arrow forward" @click="$emit('addComingMonth')" >
+              <s-svg name="arrow" />
+            </span>
         </div>
         <ul class="s-datepicker__days">
-          <li class="s-datepicker__day" v-for="(day, i) in days" :key="'Day' + i">{{day}}</li>
+          <li 
+            class="s-datepicker__day" 
+            v-for="(day, i) in days" 
+            :key="'Day' + i"
+            :class="{
+              'saturday': (i === 5),
+              'sunday': (i === 6),
+            }"
+          >{{day}}</li>
         </ul>
       </div>
       <div class="s-datepicker__grid__container"
@@ -34,6 +48,7 @@ import debounce from 'debounce';
 import { IMonth, ICalendarPeriod } from '../types';
 import moment, { Moment } from 'moment';
 import vuewheel from 'vuewheel';
+import SSvg from './SSvg.vue';
 import SDatepickerMonth from './SDatepickerMonth.vue';
 
 const SCROLL_DEBOUNCE = 250;
@@ -46,7 +61,10 @@ Vue.use(vuewheel);
 
 export default Vue.extend({
   name: 's-datepicker-calendar',
-  components: {SDatepickerMonth },
+  components: {
+    SDatepickerMonth,
+    SSvg,
+  },
   data() {
     return {
       bench: 24,

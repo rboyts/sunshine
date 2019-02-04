@@ -10,7 +10,11 @@
       @addComingMonth="addComingMonth"
       @addPreviousMonth="addPreviousMonth"
     />
-    <s-datepicker-menu />
+    <s-datepicker-menu
+      :today="today"
+      :selected-period="selectedPeriod"
+      @setSelectedPeriod="dateClicked"
+     />
   </div>
 </template>
 
@@ -115,8 +119,9 @@ export default Vue.extend({
 
     addWeekNumbers(year: number, month: number) {
       let weekNumbers = [] as number[];
-      for (let c = 0, d = (moment(year + '-' + month).daysInMonth() - 1); c <= d; c++) {
-        let week = moment(year + '-' + this.stringifyMonth(month) + '-' + (c + 1 )).week();
+      for (let c = 0, d = (moment(year + '-' + this.stringifyMonth(month)).daysInMonth() - 1); c <= d; c++) {
+        // TODO: Fix moment complaining about "[date] not in a recognized RFC2822 or ISO format"
+        let week = moment(year + '-' + this.stringifyMonth(month) + '-' + (c + 1)).week();
         if (!weekNumbers.includes(week)) {
           weekNumbers.push(week);
         }
@@ -147,7 +152,7 @@ export default Vue.extend({
       let year = this.yearNum;
       let present = this.monthKey + 1;
       let months = [];
-      for (let a = 0, b = 6; a < b; a++) {
+      for (let a = 0, b = 2; a < b; a++) {
         let tmpMonth: number;
         let tmpYear: number;
         // Add coming months including current
@@ -176,13 +181,13 @@ export default Vue.extend({
     },
 
     offsetStartDay(year: number, month: number) {
-      return moment(year + '-' + this.stringifyMonth(month) + '-01')
+      return moment(year + '-' + this.stringifyMonth(month))
         .startOf('month')
         .weekday();
     },
 
     offsetEndDay(year: number, month: number) {
-      return moment(year + '-' + this.stringifyMonth(month) + '-01')
+      return moment(year + '-' + this.stringifyMonth(month))
         .endOf('month')
         .weekday();
     },
@@ -208,8 +213,8 @@ export default Vue.extend({
     },
   },
   created() {
-    this.selectedPeriod.from = moment('02-02-2019');
-    this.selectedPeriod.to = moment('02-28-2019');
+    this.selectedPeriod.from = moment('2019-02-02');
+    this.selectedPeriod.to = moment('2019-02-28');
   },
   mounted() {
     this.calendar = this.createMonths();
