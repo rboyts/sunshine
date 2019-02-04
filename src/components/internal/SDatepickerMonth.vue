@@ -42,13 +42,14 @@ export default Vue.extend({
   name: 's-datepicker-month',
   data() {
     return {
-
     };
   },
   props: {
     month: Object as () => IMonth,
     selectedPeriod: Object as () => ICalendarPeriod,
     today: String,
+    lastScrollPosition: Number,
+    scrollHeight: Number,
   },
   computed: {
     toDate(): string {

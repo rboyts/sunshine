@@ -85,6 +85,7 @@ export default Vue.extend({
       let firstMonth = this.calendar[0];
       let firstMonthDate = moment(firstMonth.year + '-' + firstMonth.month + '-01');
       let previousMonth = moment(firstMonthDate).subtract(1, 'months');
+      
       this.calendar.unshift(this.addMonthItem(previousMonth.get('year'), previousMonth.get('month') + 1));
       // Prevents scrollbar from jumping ahead of the natvie scroll when adding past months
       this.calendar.pop();
@@ -94,7 +95,10 @@ export default Vue.extend({
       let lastMonth = this.calendar[this.calendar.length - 1];
       let lastMonthDate = moment(lastMonth.year + '-' + lastMonth.month + '-01');
       let nextMonth = moment(lastMonthDate).add(1, 'months');
+      
       this.calendar.push(this.addMonthItem(nextMonth.get('year'), nextMonth.get('month') + 1));
+
+      this.calendar.shift();
     },
 
     addMonthItem(year: number, month: number): IMonth {
@@ -162,11 +166,11 @@ export default Vue.extend({
         if ((present - a) <= 0 && (present - a) !== present) {
           tmpMonth = (present - a) + 12;
           tmpYear = year - 1;
-          past.push(this.addMonthItem(tmpYear, tmpMonth));
+          //past.push(this.addMonthItem(tmpYear, tmpMonth));
         } else if ((present - a) !== present) {
           tmpMonth = present - a;
           tmpYear = year;
-          past.push(this.addMonthItem(tmpYear, tmpMonth));
+          //past.push(this.addMonthItem(tmpYear, tmpMonth));
         }
       }
       past = past.reverse();
