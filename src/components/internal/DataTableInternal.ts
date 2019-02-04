@@ -1,6 +1,6 @@
-import Vue, { VNode, VNodeChildrenArrayContents } from 'vue';
+import Vue, { VNode, VNodeChildrenArrayContents, CreateElement } from 'vue';
 import debounce from 'debounce';
-import { IColumn, IItem, ISortState } from '../types';
+import { IColumn, IItem, ISortState, IDataTableState } from '../types';
 import { classHelper, joinKeyPath } from '../../lib/utils';
 import SIcon from '../SIcon.vue';
 import SSvg from './SSvg.vue';
@@ -38,6 +38,201 @@ interface ITableNode {
 }
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
+
+const TableRow = Vue.extend({
+  name: 'data-table-row',
+
+  components: {
+    SIcon,
+    SSvg,
+  },
+
+  props: {
+    columns: Array as () => IColumn[],
+    stickyColumn: Boolean,
+    outline: Boolean,
+    row: Number,
+    rowHeight: Number,
+    node: Object as () => ITableNode,
+    isOpen: Boolean,
+  },
+
+  methods: {
+    toggleOpen() {
+      this.$emit('toggle');
+    },
+
+    renderContentCell(column: IColumn, index: number): VNode {
+      const h = this.$createElement;
+      const { node } = this;
+      let { key } = column;
+
+      let children = [];
+
+      if (this.outline && index === 0) {
+        children.push(this.renderToggle());
+        children.push(this.renderOutline());
+      }
+
+      let value = node.item.data[key];
+      if (column.filter) {
+        value = column.filter(value);
+      }
+
+      let slot = this.$scopedSlots[`~${key}`];
+      let content = slot ? slot({value, item: node.item}) : value;
+
+      children.push(h('span', {staticClass: 's-data-table__cell-content'}, [ content ]));
+
+      return h('td', {
+          key,
+          class: this.getColumnClass(column, index),
+        }, [
+          h('span', {staticClass: 's-data-table__cell-wrapper'}, [
+            children,
+          ]),
+        ],
+      );
+    },
+
+    renderToggle(): VNode {
+      const h = this.$createElement;
+      const { node } = this;
+
+      const hasChildren = node.children && node.children.length ||
+        node.item.totalChildren && node.item.totalChildren > 0;
+      const mayHaveChildren = !node.children && node.item.totalChildren === -1;
+      const isLoading = !node.children && this.isOpen;
+
+      let children = [];
+      if (isLoading) {
+        children.push(h('s-svg', {props: {name: 'progress'}}));
+      } else if (hasChildren || mayHaveChildren) {
+        children.push(h('s-svg', {props: {name: 'arrow'}}));
+      } else {
+        children.push(h('i', {domProps: {innerHTML: '&nbsp;'}}));
+      }
+
+      return h('span', {
+        class: toggleClassHelper({
+          loading: isLoading,
+          open: !isLoading && this.isOpen,
+          unknown: !isLoading && mayHaveChildren,
+        }),
+        on: {
+          click: this.toggleOpen,
+        },
+      }, children);
+    },
+
+    renderOutline(): VNode {
+      const h = this.$createElement;
+      const { node } = this;
+
+      let children = [];
+
+      // Draw outline for this item, if it is a child item. This line will
+      // connect to the line of the line above.
+      if (node.parent != null) {
+        children.push(h('span', {class: 's-data-table__outline__section'}, [
+          this.renderAngle(!node.isLastChild),
+        ]));
+      }
+
+      // Render icon and start line that child items will connect to, if any.
+      children.push(h('span', {class: 's-data-table__outline__section'}, [
+        (this.isOpen && node.children && node.children.length) ? this.renderTail() : '',
+        node.item.icon ? h('s-icon', {class: 's-data-table__icon', props: {name: node.item.icon}}) : '',
+      ]));
+
+      // Render nested children with correct indentation, and connect lines between
+      // grandparents and remaining items, at any level. Unlimited number of levels are
+      // supported, by traversing the parent hierarchy, and inserting sections
+      // to the beginning of the array.
+      let p = node.parent;
+      while (p != null) {
+        if (p.parent) {
+          children.unshift(h('span', {class: 's-data-table__outline__section'}, [
+            !p.isLastChild ? this.renderLine() : '',
+          ]));
+        }
+        p = p.parent;
+      }
+
+      return h('span', {class: 's-data-table__outline'}, children);
+    },
+
+    renderLine(): VNode {
+      const h = this.$createElement;
+      return this.renderGraph([
+        {
+          x1: OUTLINE_WIDTH / 2,
+          x2: OUTLINE_WIDTH / 2,
+          y1: 0,
+          y2: this.rowHeight,
+        },
+      ]);
+    },
+
+    renderAngle(continues: boolean): VNode {
+      const mid = this.rowHeight / 2 - 1;
+      return this.renderGraph([
+        {
+          x1: OUTLINE_WIDTH / 2,
+          x2: OUTLINE_WIDTH / 2,
+          y1: 0,
+          y2: continues ? this.rowHeight : mid,
+        },
+        {
+          x1: OUTLINE_WIDTH / 2,
+          x2: OUTLINE_WIDTH - 4,
+          y1: mid,
+          y2: mid,
+        },
+      ]);
+    },
+
+    renderTail(): VNode {
+      return this.renderGraph([
+        {
+          x1: OUTLINE_WIDTH / 2,
+          x2: OUTLINE_WIDTH / 2,
+          y1: this.rowHeight / 2 + 14,
+          y2: this.rowHeight,
+        },
+      ]);
+    },
+
+    renderGraph(lines: object[]): VNode {
+      const h = this.$createElement;
+
+      return h('svg', {
+          attrs: {
+            width: OUTLINE_WIDTH,
+            height: this.rowHeight,
+          },
+        },
+        lines.map(attrs => h('line', { attrs })),
+      );
+    },
+
+    getColumnClass(column: IColumn, index: number) {
+      return columnClassHelper({
+        sticky: index === 0 && this.stickyColumn,
+        // dragging: this.isDragging(index),
+        right: column.align === 'right',
+        center: column.align === 'center',
+      });
+    },
+  },
+
+  render(h): VNode {
+    console.log('render row');
+    return h('tr', [
+      this.columns.map((column, index) => this.renderContentCell(column, index)),
+    ]);
+  },
+});
 
 export default Vue.extend({
   name: 'data-table-internal',
@@ -83,6 +278,10 @@ export default Vue.extend({
   computed: {
     nodes(): ITableNode[] {
       return this.getNodes(null, this.items);
+    },
+
+    renderedBody(): VNode {
+      return this.renderBody();
     },
 
     firstContentColumn(): number {
@@ -299,9 +498,11 @@ export default Vue.extend({
     renderBody(): VNode {
       const h = this.$createElement;
 
+      console.log('renderBody');
+
       return h('tbody', [
           this.renderTopSpacer(),
-          this.renderNodes(this.nodes),
+          this.renderRows(this.nodes),
           this.renderBottomSpacer(),
         ]);
     },
@@ -326,22 +527,38 @@ export default Vue.extend({
       });
     },
 
-    renderNodes(nodes: ITableNode[]): VNode | any[] {
-      return nodes.map((node: ITableNode, i: number) => this.renderNode(node, this.skip + i));
+    renderRows(nodes: ITableNode[]): VNode | any[] {
+      return nodes.map((node: ITableNode, i: number) => this.renderRow(node, this.skip + i));
     },
 
-    renderNode(node: ITableNode, row: number): any[] {
+    renderRow(node: ITableNode, row: number): any[] {
       const h = this.$createElement;
-      const el = h('tr', {
-          key: row,
-        }, [
-          this.columns.map((column, index) =>
-            this.renderContentCell(node, column, index)),
-        ],
-      );
+      const el = h(TableRow, {
+        props: {
+          columns: this.columns,
+          stickyColumn: this.stickyColumn,
+          outline: this.outline,
+          row,
+          rowHeight: this.rowHeight,
+          node,
+          isOpen: this.isOpen(node),
+        },
+        scopedSlots: this.$scopedSlots,
+        on: {
+          toggle: () => this.toggleOpen(node),
+        },
+      });
+
+      // const el = h('tr', {
+      //     key: row,
+      //   }, [
+      //     this.columns.map((column, index) =>
+      //       this.renderContentCell(node, column, index)),
+      //   ],
+      // );
 
       if (this.isOpen(node) && node.children) {
-        return [el].concat(this.renderNodes(node.children));
+        return [el].concat(this.renderRows(node.children));
       } else {
         return [el];
       }
