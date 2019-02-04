@@ -16,6 +16,8 @@
       v-for="a in month.daysInMonth"
       @click="$emit('click', month.month, a, month.year)"
       :class="{
+        'saturday': isSaturday(month.month, a, month.year),
+        'sunday': isSunday(month.month, a, month.year),
         'today': isSameDate(month.month, a, month.year, today),
         'from': isSameDate(month.month, a, month.year, fromDate), 
         'to': isSameDate(month.month, a, month.year, toDate),
@@ -37,6 +39,8 @@
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
 import { IMonth, ICalendarPeriod } from '../types';
+
+moment.locale('nb');
 
 export default Vue.extend({
   name: 's-datepicker-month',
@@ -63,6 +67,14 @@ export default Vue.extend({
   methods: {
     translateMonthName(monthKey: number, year: number) {
       return moment(year + '-' + monthKey).format('MMMM-YYYY');
+    },
+
+    isSaturday(m: number, d: number, y: number) {
+      return moment(y + '-' + m + '-' + d).day() === 6
+    },
+
+    isSunday(m: number, d: number, y: number) {
+      return moment(y + '-' + m + '-' + d).day() === 0
     },
 
     isSameDate(m: number, d: number, y: number, date: string) {

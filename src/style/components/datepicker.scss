@@ -3,7 +3,7 @@
 $datepicker-height: 29rem;
 $datepicker-width: 18rem;
 $datepicker-menu-width: 14rem;
-$datepicker-chevron-size: 0.5rem;
+$datepicker-navigation-margin: 1.5rem;
 $datepicker-border: 1px solid $gray;
 
 .s-datepicker {
@@ -40,12 +40,25 @@ $datepicker-border: 1px solid $gray;
   text-transform: uppercase;
 }
 
-.s-datepicker__navigation h4,
-.s-datepicker__navigation i {
+.s-datepicker__navigation h4 {
   padding: 0.5rem 0;
   margin: 0;
   flex-grow: 1;
   text-align: center;
+}
+
+.s-datepicker__navigation-arrow {
+  cursor: pointer;
+}
+
+.s-datepicker__navigation-arrow.back {
+  transform: rotate(-90deg);
+  margin-left: $datepicker-navigation-margin;
+}
+
+.s-datepicker__navigation-arrow.forward {
+  transform: rotate(90deg);
+  margin-right: $datepicker-navigation-margin;
 }
 
 .s-datepicker__menu {
@@ -53,10 +66,6 @@ $datepicker-border: 1px solid $gray;
   width: $datepicker-menu-width;
   padding: 0 1rem;
 }
-
-/* .s-datepicker__virtuallist::-webkit-scrollbar {
-  display: none;
-} */
 
 .s-datepicker__grid__container {
   position: relative;
@@ -118,12 +127,23 @@ $datepicker-border: 1px solid $gray;
 
 .s-datepicker__date {
   cursor: pointer;
+  color: $almost-black;
   background: transparent;
 }
 
 .s-datepicker__date:hover {
   border-radius: 50%;
   background: $smartdok-eggs-yellow;
+}
+
+.s-datepicker__day.sunday,
+.s-datepicker__date.sunday {
+  color: $color-bad;
+}
+
+.s-datepicker__day.saturday,
+.s-datepicker__date.saturday {
+  color: $grayer;
 }
 
 .s-datepicker__date.today {
@@ -136,7 +156,7 @@ $datepicker-border: 1px solid $gray;
   bottom: 7px;
   width: 55%;
   height: 2px;
-  background: $grayer;
+  background: $almost-black;
 }
 
 .s-datepicker__date.from {
@@ -162,9 +182,14 @@ $datepicker-border: 1px solid $gray;
 }
 
 .s-datepicker__date--overlapping {
-  color: grey;
+  color: $gray;
 }
 
-.s-datepicker__date--current span {
-  color: darkcyan;
+.s-datepicker__date,
+.s-datepicker__day,
+.s-datepicker__month,
+.s-datepicker__weeks,
+.s-datepicker__date--overlapping,
+.s-datepicker__navigation {
+  user-select: none;
 }
