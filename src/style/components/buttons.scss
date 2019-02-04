@@ -41,12 +41,12 @@ $btn-normal-border-color: $gray;
     background-color: $btn-normal-bg-color;
     color: $btn-normal-fg-color;
 
-    &:not(.s-button__content--inactive):hover {
+    &:not(.s-button--inactive):hover {
       // lighten($btn-normal-bg-color, 10%);
       background-color: mix(#fff, $btn-normal-bg-color, 30%);
     }
 
-    &:not(.s-button__content--inactive):active {
+    &:not(.s-button--inactive):active {
       background-color: mix(#000, $btn-normal-bg-color, 10%);
     }
   }
@@ -56,13 +56,13 @@ $btn-normal-border-color: $gray;
     background-color: $btn-primary-bg-color;
     color: $btn-primary-fg-color;
 
-    &:not(.s-button__content--inactive):hover {
+    &:not(.s-button--inactive):hover {
       // XXX This is supposed to be a semi-transparent overlay
       // background-color: lighten($btn-primary-bg-color, 10%);
       background-color: mix(#fff, $btn-primary-bg-color, 30%);
     }
 
-    &:not(.s-button__content--inactive):active {
+    &:not(.s-button--inactive):active {
       background-color: mix(#000, $btn-primary-bg-color, 10%);
     }
   }
