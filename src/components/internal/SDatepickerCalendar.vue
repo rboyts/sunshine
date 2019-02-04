@@ -10,7 +10,7 @@
       </div>
       <div class="s-datepicker__grid__container"
         style="height: 390px; overflow: hidden;" v-wheel="testScroller">
-        <div class="s-datepicker__scroller" ref="calendarList" style="transform: translateY(0px)">
+        <div class="s-datepicker__scroller" ref="calendarList">
           <s-datepicker-month
               class="s-datepicker__grid"
               v-for="(month, monthKey) in calendar"
@@ -33,7 +33,6 @@ import Vue from 'vue';
 import debounce from 'debounce';
 import { IMonth, ICalendarPeriod } from '../types';
 import moment, { Moment } from 'moment';
-import virtualList from 'vue-virtual-scroll-list';
 import vuewheel from 'vuewheel';
 import SDatepickerMonth from './SDatepickerMonth.vue';
 
@@ -47,7 +46,7 @@ Vue.use(vuewheel);
 
 export default Vue.extend({
   name: 's-datepicker-calendar',
-  components: {'virtual-list': virtualList, SDatepickerMonth },
+  components: {SDatepickerMonth },
   data() {
     return {
       bench: 24,
