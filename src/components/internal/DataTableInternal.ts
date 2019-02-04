@@ -20,7 +20,8 @@ const toggleClassHelper = classHelper('s-data-table', 'toggle');
 
 interface IDragState {
   dragColumnIndex: number;
-  left: number;
+  currentDropIndex: number;
+
   widths: number[];
   height: number;
   scrollX: number;
@@ -94,15 +95,14 @@ export default Vue.extend({
       return this.condensed ? CONDENSED_ROW_HEIGHT : NORMAL_ROW_HEIGHT;
     },
 
-    thresholds(): number[] {
-      if (!this.drag) return [];
+  },
 
-      let { widths } = this.drag;
-
+  methods: {
+    getThresholds(widths: number[]): number[] {
       let res: number[] = [];
       let total = 0;
 
-      widths.forEach((w, i) => {
+      widths.forEach((w: number) => {
         res.push(total + w / 2);
         total += w;
       });
@@ -113,17 +113,15 @@ export default Vue.extend({
       return res;
     },
 
-    currentDropIndex(): number {
-      if (!this.drag) return -1;
-      let { drag, firstContentColumn } = this;
+    getCurrentDropIndex(widths: number[], left: number): number {
+      let { firstContentColumn } = this;
+      let thresholds = this.getThresholds(widths);
       let index = Math.max(firstContentColumn,
-        this.thresholds.findIndex(t => t > drag.left));
+        thresholds.findIndex(t => t > left));
 
       return index - firstContentColumn;
     },
-  },
 
-  methods: {
     isOpen(node: ITableNode): boolean {
       return this.openNodes.includes(node.key);
     },
@@ -159,7 +157,7 @@ export default Vue.extend({
         let rect = tr.getBoundingClientRect();
         this.drag = {
           dragColumnIndex: index,
-          left: event.x - rect.left,
+          currentDropIndex: this.getCurrentDropIndex(widths, event.x - rect.left),
           widths,
           height,
           scrollX: root.scrollLeft,
@@ -176,10 +174,10 @@ export default Vue.extend({
 
       event.preventDefault();
 
-      let { dragColumnIndex } = this.drag;
+      let { dragColumnIndex, currentDropIndex } = this.drag;
 
       let from = dragColumnIndex;
-      let to = this.currentDropIndex;
+      let to = currentDropIndex;
 
       this.drag = null;
 
@@ -196,7 +194,7 @@ export default Vue.extend({
       let tr = el.closest('tr') as HTMLElement;
       let rect = tr.getBoundingClientRect();
 
-      this.drag.left = event.x - rect.left;
+      this.drag.currentDropIndex = this.getCurrentDropIndex(this.drag.widths, event.x - rect.left);
     },
 
     onPointerOut(event: PointerEvent) {
@@ -650,7 +648,8 @@ export default Vue.extend({
       let children = [];
 
       if (this.drag != null) {
-        let { drag, firstContentColumn, currentDropIndex } = this;
+        let { drag, firstContentColumn } = this;
+        let { currentDropIndex } = drag;
 
         let width = 6;
         if (currentDropIndex === drag.dragColumnIndex + 1)
@@ -688,10 +687,11 @@ export default Vue.extend({
       });
     },
 
-    isDragging(index: number) {
-      let di = this.currentDropIndex;
+    isDragging(index: number): boolean {
+      if (this.drag === null) return false;
+      let di = this.drag.currentDropIndex;
       if (di === index + 1) di = index;
-      return this.drag != null && index === this.drag.dragColumnIndex && di !== index;
+      return index === this.drag.dragColumnIndex && di !== index;
     },
   },
 
