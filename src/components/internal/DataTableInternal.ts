@@ -138,6 +138,9 @@ export default Vue.extend({
       let index = Math.max(firstContentColumn,
         thresholds.findIndex(t => t > left));
 
+      if (this.stickyColumn && index === 0)
+        index = 1;
+
       return index - firstContentColumn;
     },
 
@@ -158,6 +161,10 @@ export default Vue.extend({
       event.preventDefault();
 
       clearTimeout(this.moveTimeoutId);
+
+      // Prevent moving sticky column
+      if (this.stickyColumn && index === 0) return;
+
       this.moveTimeoutId = window.setTimeout(() => {
         let el = event.target as HTMLElement;
 
