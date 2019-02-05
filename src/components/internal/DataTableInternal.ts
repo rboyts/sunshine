@@ -99,10 +99,6 @@ export default Vue.extend({
       return this.renderColgroup();
     },
 
-    renderedHeader(): VNode {
-      return this.renderHeader();
-    },
-
     renderedBody(): VNode {
       return this.renderBody();
     },
@@ -287,7 +283,7 @@ export default Vue.extend({
           class: 's-data-table__table',
         }, [
           this.renderedColgroup,
-          this.renderedHeader,
+          this.renderHeader(),
           this.renderedBody,
         ],
       );
