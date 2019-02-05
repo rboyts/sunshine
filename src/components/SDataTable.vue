@@ -23,7 +23,7 @@
 
           <template slot="content">
             <s-list>
-              <s-list-item v-for="oc in orderedColumns" :key="oc.column.key" checkable v-model="oc.visible">
+              <s-list-item v-for="(oc, i) in orderedColumns" :key="oc.column.key" checkable :inactive="i === 0" v-model="oc.visible">
                 {{ oc.column.title }}
               </s-list-item>
             </s-list>
