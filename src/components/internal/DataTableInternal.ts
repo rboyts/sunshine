@@ -81,7 +81,7 @@ export default Vue.extend({
   },
 
   computed: {
-    nodes(): ITableNode[] {
+    rootNodes(): ITableNode[] {
       return this.getNodes(null, this.items);
     },
 
@@ -95,6 +95,29 @@ export default Vue.extend({
       return this.condensed ? CONDENSED_ROW_HEIGHT : NORMAL_ROW_HEIGHT;
     },
 
+    renderedColgroup(): VNode {
+      return this.renderColgroup();
+    },
+
+    renderedHeader(): VNode {
+      return this.renderHeader();
+    },
+
+    renderedBody(): VNode {
+      return this.renderBody();
+    },
+
+    renderedTopSpacer(): VNode[] {
+      return this.renderTopSpacer();
+    },
+
+    renderedBottomSpacer(): VNode[] {
+      return this.renderBottomSpacer();
+    },
+
+    renderedRootNodes(): VNode[] {
+      return this.renderRootNodes();
+    },
   },
 
   methods: {
@@ -217,7 +240,7 @@ export default Vue.extend({
 
           const rows = Math.ceil((scrollBottom - spacerPos) / this.rowHeight) - rowOffset;
 
-          let firstRow = this.skip + this.nodes.length + rowOffset;
+          let firstRow = this.skip + this.rootNodes.length + rowOffset;
           let lastRow = firstRow + rows;
 
           const args = {firstRow, lastRow};
@@ -263,9 +286,9 @@ export default Vue.extend({
       return h('table', {
           class: 's-data-table__table',
         }, [
-          this.renderColgroup(),
-          this.renderHeader(),
-          this.renderBody(),
+          this.renderedColgroup,
+          this.renderedHeader,
+          this.renderedBody,
         ],
       );
     },
@@ -300,9 +323,9 @@ export default Vue.extend({
       const h = this.$createElement;
 
       return h('tbody', [
-          this.renderTopSpacer(),
-          this.renderNodes(this.nodes),
-          this.renderBottomSpacer(),
+          this.renderedTopSpacer,
+          this.renderedRootNodes,
+          this.renderedBottomSpacer,
         ]);
     },
 
@@ -326,14 +349,21 @@ export default Vue.extend({
       });
     },
 
-    renderNodes(nodes: ITableNode[]): VNode | any[] {
-      return nodes.map((node: ITableNode, i: number) => this.renderNode(node, this.skip + i));
+    renderRootNodes(): VNode[] {
+      return this.renderNodes(this.rootNodes);
     },
 
-    renderNode(node: ITableNode, row: number): any[] {
+    renderNodes(nodes: ITableNode[]): VNode[] {
+      return nodes.reduce(
+        (value: VNode[], node: ITableNode, i: number) => (
+          value.concat(this.renderNode(node, this.skip + i))
+        ), []);
+    },
+
+    renderNode(node: ITableNode, row: number): VNode[] {
       const h = this.$createElement;
       const el = h('tr', {
-          key: row,
+          key: row, // FIXME duplicate key for sub-items
         }, [
           this.columns.map((column, index) =>
             this.renderContentCell(node, column, index)),
@@ -633,8 +663,6 @@ export default Vue.extend({
     renderSortArrows(reverse: boolean): VNode {
       const h = this.$createElement;
 
-      let arrow = '\u2191';
-
       return h('span', {
         class: sortClassHelper({ reverse }),
       }, [
@@ -689,9 +717,7 @@ export default Vue.extend({
 
     isDragging(index: number): boolean {
       if (this.drag === null) return false;
-      let di = this.drag.currentDropIndex;
-      if (di === index + 1) di = index;
-      return index === this.drag.dragColumnIndex && di !== index;
+      return index === this.drag.dragColumnIndex;
     },
   },
 
