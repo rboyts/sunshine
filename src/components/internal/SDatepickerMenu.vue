@@ -5,18 +5,29 @@
       <p>{{fromDate}} - {{toDate}}</p>
       <hr />
     </div>
-    <!--<div>
-      <p>Forrige</p>
-      <p>Denne</p>
-      <p>Neste</p>
-      <hr />
-    </div>-->
-    <div>
-      <p @click="selectPeriod('day')">Dag</p>
-      <p @click="selectPeriod('week')">Uke</p>
-      <p @click="selectPeriod('month')">Måned</p>
-      <hr />
-    </div>
+    <s-radio-group v-model="periodOption">
+      <p>
+        <s-radio-button name="periodOption" value="previous">Forrige</s-radio-button>
+      </p>
+      <p>
+        <s-radio-button name="periodOption" value="current">Denne</s-radio-button>
+      </p>
+      <p>
+        <s-radio-button name="periodOption" value="next">Neste</s-radio-button>
+      </p>
+    </s-radio-group>
+    <hr/>
+    <s-radio-group v-model="periodPreselect">
+      <p>
+        <s-radio-button name="periodPreselect" value="day">Dag</s-radio-button>
+      </p>
+      <p>
+        <s-radio-button name="periodPreselect" value="week">Uke</s-radio-button>
+      </p>
+      <p>
+        <s-radio-button name="periodPreselect" value="month">Måned</s-radio-button>
+      </p>
+    </s-radio-group>
   </div>
 </template>
 
@@ -24,12 +35,21 @@
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
 import { IMonth, ICalendarPeriod } from '../types';
+import SRadioGroup from '../SRadioGroup.vue';
+import SRadioButton from '../SRadioButton.vue';
 
 moment.locale('nb');
 
 export default Vue.extend({
   name: 's-datepicker-menu',
-   props: {
+  components: { SRadioGroup, SRadioButton },
+  data() {
+    return {
+      periodPreselect: 'week',
+      periodOption: 'current',
+    };
+  },
+  props: {
     today: Object as () => Moment,
     selectedPeriod: Object as () => ICalendarPeriod,
   },
@@ -42,22 +62,42 @@ export default Vue.extend({
       return moment(this.selectedPeriod.from).format('DD-MM-YYYY');
     },
   },
+  watch: {
+    periodPreselect(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.selectPeriod(newVal);
+      }
+    },
+    periodOption(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.handlePeriodOption(newVal);
+      }
+    }
+  },
   methods: {
+    setDateSelection(option, period) {
+      switch(option) {
+        case 'previous':
+          this.$emit('setSelectedPeriod', moment(this.today).subtract(1, period).startOf(period));
+          this.$emit('setSelectedPeriod', moment(this.today).subtract(1, period).endOf(period));
+          break;
+        case 'current':
+          this.$emit('setSelectedPeriod', moment(this.today).startOf(period));
+          this.$emit('setSelectedPeriod', moment(this.today).endOf(period));
+          break;
+        case 'next':
+          this.$emit('setSelectedPeriod', moment(this.today).add(1, period).startOf(period));
+          this.$emit('setSelectedPeriod', moment(this.today).add(1, period).endOf(period));
+          break;
+      }
+    },
+
+    handlePeriodOption(option) {
+      this.setDateSelection(option, this.periodPreselect);
+    },
+
     selectPeriod(period) {
-      switch(period) {
-        case 'day':
-          this.$emit('setSelectedPeriod', this.today);
-          this.$emit('setSelectedPeriod', this.today);
-          break;
-        case 'week':
-          this.$emit('setSelectedPeriod', moment(this.today).startOf('week'));
-          this.$emit('setSelectedPeriod', moment(this.today).endOf('week').subtract(2, 'd'));
-          break;
-        case 'month':
-          this.$emit('setSelectedPeriod', moment(this.today).startOf('month'));
-          this.$emit('setSelectedPeriod', moment(this.today).endOf('month'));
-          break;
-      };
+      this.setDateSelection(this.periodOption, period);
     },
   },
 });
