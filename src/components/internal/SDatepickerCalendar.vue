@@ -23,7 +23,7 @@
         </ul>
       </div>
       <div class="s-datepicker__grid__container"
-        style="height: 390px; overflow: hidden;" v-wheel="testScroller">
+        style="height: 390px; overflow: hidden;" v-on:wheel="calendarScroll">
         <div class="s-datepicker__scroller" ref="calendarList">
           <s-datepicker-month
               class="s-datepicker__grid"
@@ -45,9 +45,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import debounce from 'debounce';
-import { IMonth, ICalendarPeriod } from '../types';
+import { IMonth, ICalendarPeriod, MouseWheelEvent } from '../types';
 import moment, { Moment } from 'moment';
-import vuewheel from 'vuewheel';
 import SSvg from './SSvg.vue';
 import SDatepickerMonth from './SDatepickerMonth.vue';
 
@@ -56,8 +55,6 @@ const MOVE_TIMEOUT = 350;
 const PADDING_TOP = 30;
 
 moment.locale('nb');
-
-Vue.use(vuewheel);
 
 export default Vue.extend({
   name: 's-datepicker-calendar',
@@ -94,7 +91,8 @@ export default Vue.extend({
   },
   methods: {
     setActiveMonth(calendar: IMonth[]) {
-      this.monthNameInHeader = moment(calendar[0].year + '-' + this.stringifyMonth(calendar[0].month)).format('MMMM-YYYY');
+      this.monthNameInHeader = moment(calendar[0].year
+        + '-' + this.stringifyMonth(calendar[0].month)).format('MMMM-YYYY');
     },
 
     selectDate(m: number, d: number, y: number) {
@@ -113,12 +111,13 @@ export default Vue.extend({
       return monthString;
     },
 
-    testScroller(event: UIEvent) {
-      let dragDirection = (event.wheelDelta > 0)? 'down' : 'up';
+    calendarScroll(event: MouseWheelEvent) {
+      // TODO: adjust event.wheelDelta minimum scroll to compensate for trackpads which are really sensitive?
+      let dragDirection = (event.wheelDelta > 0) ? 'down' : 'up';
       if (dragDirection === 'down') {
-        this.$emit('addPreviousMonth')
+        this.$emit('addPreviousMonth');
       } else if (dragDirection === 'up') {
-        this.$emit('addComingMonth')
+        this.$emit('addComingMonth');
       }
     },
 

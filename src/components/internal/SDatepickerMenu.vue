@@ -45,7 +45,7 @@ export default Vue.extend({
   components: { SRadioGroup, SRadioButton },
   data() {
     return {
-      periodPreselect: 'week',
+      periodPreselect: 'week' as moment.unitOfTime.DurationConstructor,
       periodOption: 'current',
     };
   },
@@ -55,11 +55,11 @@ export default Vue.extend({
   },
   computed: {
     toDate(): string {
-      return moment(this.selectedPeriod.to).format('L');
+      return moment(this.selectedPeriod.to).format('DD-MM-YYYY');
     },
 
     fromDate(): string {
-      return moment(this.selectedPeriod.from).format('L');
+      return moment(this.selectedPeriod.from).format('DD-MM-YYYY');
     },
   },
   watch: {
@@ -72,31 +72,34 @@ export default Vue.extend({
       if (newVal !== oldVal) {
         this.handlePeriodOption(newVal);
       }
-    }
+    },
   },
   methods: {
-    setDateSelection(option, period) {
-      switch(option) {
+    setDateSelection(option: string, period: moment.unitOfTime.DurationConstructor) {
+      let fromDate: Moment;
+      let toDate: Moment;
+      let moveDateAmount = 1;
+      switch (option) {
         case 'previous':
-          this.$emit('setSelectedPeriod', moment(this.today).subtract(1, period).startOf(period));
-          this.$emit('setSelectedPeriod', moment(this.today).subtract(1, period).endOf(period));
+          this.$emit('setSelectedPeriod', moment(this.today).subtract(moveDateAmount, period).startOf(period));
+          this.$emit('setSelectedPeriod', moment(this.today).subtract(moveDateAmount, period).endOf(period));
           break;
         case 'current':
           this.$emit('setSelectedPeriod', moment(this.today).startOf(period));
           this.$emit('setSelectedPeriod', moment(this.today).endOf(period));
           break;
         case 'next':
-          this.$emit('setSelectedPeriod', moment(this.today).add(1, period).startOf(period));
-          this.$emit('setSelectedPeriod', moment(this.today).add(1, period).endOf(period));
+          this.$emit('setSelectedPeriod', moment(this.today).add(moveDateAmount, period).startOf(period));
+          this.$emit('setSelectedPeriod', moment(this.today).add(moveDateAmount, period).endOf(period));
           break;
       }
     },
 
-    handlePeriodOption(option) {
+    handlePeriodOption(option: string) {
       this.setDateSelection(option, this.periodPreselect);
     },
 
-    selectPeriod(period) {
+    selectPeriod(period: moment.unitOfTime.DurationConstructor) {
       this.setDateSelection(this.periodOption, period);
     },
   },

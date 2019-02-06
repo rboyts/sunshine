@@ -1,19 +1,19 @@
 <template>
   <div class="s-datepicker">
     <s-datepicker-calendar 
-      :today="today.format('L')"
+      :today="today.format('YYYY-MM-DD')"
       :calendar="calendar"
       :current-year="yearNum"
       :current-month="monthKey + 1"
       :selected-period="selectedPeriod"
-      @click="dateClicked"
+      @click="selectDateOfPeriod"
       @addComingMonth="addComingMonth"
       @addPreviousMonth="addPreviousMonth"
     />
     <s-datepicker-menu
       :today="today"
       :selected-period="selectedPeriod"
-      @setSelectedPeriod="dateClicked"
+      @setSelectedPeriod="selectDateOfPeriod"
      />
   </div>
 </template>
@@ -91,7 +91,7 @@ export default Vue.extend({
       let firstMonth = this.calendar[0];
       let firstMonthDate = moment(firstMonth.year + '-' + firstMonth.month + '-01');
       let previousMonth = moment(firstMonthDate).subtract(1, 'months');
-      
+
       this.calendar.unshift(this.addMonthItem(previousMonth.get('year'), previousMonth.get('month') + 1));
       this.calendar.pop();
     },
@@ -100,7 +100,7 @@ export default Vue.extend({
       let lastMonth = this.calendar[this.calendar.length - 1];
       let lastMonthDate = moment(lastMonth.year + '-' + lastMonth.month + '-01');
       let nextMonth = moment(lastMonthDate).add(1, 'months');
-      
+
       this.calendar.push(this.addMonthItem(nextMonth.get('year'), nextMonth.get('month') + 1));
       this.calendar.shift();
     },
@@ -155,7 +155,6 @@ export default Vue.extend({
       for (let a = 0, b = 2; a < b; a++) {
         let tmpMonth: number;
         let tmpYear: number;
-        // Add coming months including current
         if ((present + a) > 12) {
           tmpMonth  = (present + a) - 12;
           tmpYear = year + 1;
@@ -192,7 +191,7 @@ export default Vue.extend({
         .weekday();
     },
 
-    dateClicked(d: Moment) {
+    selectDateOfPeriod(d: Moment) {
       if (!moment.isMoment(this.selectedDate)) {
         this.selectedDate = d;
       } else {

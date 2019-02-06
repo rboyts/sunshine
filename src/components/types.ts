@@ -77,3 +77,24 @@ export interface ICalendarPeriod {
   from: Moment;
   to: Moment;
 }
+
+export interface MouseWheelEvent extends MouseEvent {
+  wheelDelta: number;
+  wheelDeltaX: number;
+  wheelDeltaY: number;
+  initMouseWheelEvent(
+    typeArg: string,
+    canBubbleArg: boolean,
+    cancelableArg: boolean,
+    viewArg: Window,
+    detailArg: number,
+    screenXArg: number,
+    screenYArg: number,
+    clientXArg: number,
+    clientYArg: number,
+    buttonArg: number,
+    relatedTargetArg: EventTarget,
+    modifiersListArg: string,
+    wheelDeltaArg: number,
+  ): void;
+}

@@ -57,24 +57,25 @@ export default Vue.extend({
   },
   computed: {
     toDate(): string {
-      return moment(this.selectedPeriod.to).format('L');
+      return moment(this.selectedPeriod.to).format('YYYY-MM-DD');
     },
 
     fromDate(): string {
-      return moment(this.selectedPeriod.from).format('L');
+      return moment(this.selectedPeriod.from).format('YYYY-MM-DD');
     },
   },
   methods: {
     translateMonthName(monthKey: number, year: number) {
-      return moment(year + '-' + monthKey).format('L');
+      // TODO: Translate to other types of locales?
+      return moment(year + '-' + monthKey).format('MMMM-YYYY');
     },
 
     isSaturday(m: number, d: number, y: number) {
-      return moment(y + '-' + m + '-' + d).day() === 6
+      return moment(y + '-' + m + '-' + d).day() === 6;
     },
 
     isSunday(m: number, d: number, y: number) {
-      return moment(y + '-' + m + '-' + d).day() === 0
+      return moment(y + '-' + m + '-' + d).day() === 0;
     },
 
     isSameDate(m: number, d: number, y: number, date: string) {
