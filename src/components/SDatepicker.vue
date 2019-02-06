@@ -1,7 +1,7 @@
 <template>
   <div class="s-datepicker">
     <s-datepicker-calendar 
-      :today="today.format('YYYY-MM-DD')"
+      :today="today.format('L')"
       :calendar="calendar"
       :current-year="yearNum"
       :current-month="monthKey + 1"
@@ -25,6 +25,8 @@ import { IMonth } from './types';
 import SDatepickerCalendar from './internal/SDatepickerCalendar.vue';
 import SDatepickerMenu from './internal/SDatepickerMenu.vue';
 
+// TODO: Get local from system config
+// NB! also applicable to i18n of text
 moment.locale('nb');
 
 export default Vue.extend({

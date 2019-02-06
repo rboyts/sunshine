@@ -57,16 +57,16 @@ export default Vue.extend({
   },
   computed: {
     toDate(): string {
-      return moment(this.selectedPeriod.to).format('YYYY-MM-DD');
+      return moment(this.selectedPeriod.to).format('L');
     },
 
     fromDate(): string {
-      return moment(this.selectedPeriod.from).format('YYYY-MM-DD');
+      return moment(this.selectedPeriod.from).format('L');
     },
   },
   methods: {
     translateMonthName(monthKey: number, year: number) {
-      return moment(year + '-' + monthKey).format('MMMM-YYYY');
+      return moment(year + '-' + monthKey).format('L');
     },
 
     isSaturday(m: number, d: number, y: number) {

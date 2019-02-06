@@ -55,11 +55,11 @@ export default Vue.extend({
   },
   computed: {
     toDate(): string {
-      return moment(this.selectedPeriod.to).format('DD-MM-YYYY');
+      return moment(this.selectedPeriod.to).format('L');
     },
 
     fromDate(): string {
-      return moment(this.selectedPeriod.from).format('DD-MM-YYYY');
+      return moment(this.selectedPeriod.from).format('L');
     },
   },
   watch: {
