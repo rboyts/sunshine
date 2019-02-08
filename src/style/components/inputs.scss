@@ -65,6 +65,7 @@ $input-font-size: $paragraph-font-size;
   position: relative;
   flex: 1;
   height: 100%;
+  min-width: 0;
   font-size: $input-font-size;
   border: none;
   outline: none;
