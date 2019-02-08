@@ -1,5 +1,5 @@
 <template>
-  <span :class="classes(modifiers)">
+  <span :class="classes(modifiers)" v-on="$listeners">
     <transition name="fade">
       <i v-if="iconName"
         :key="iconName"

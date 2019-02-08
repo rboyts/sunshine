@@ -134,6 +134,13 @@ $table-toggle-width: base-spacing(5);
   }
 }
 
+.s-data-table__checkable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: $table-toggle-width;
+}
+
 .s-data-table__toggle {
   display: flex;
   justify-content: center;

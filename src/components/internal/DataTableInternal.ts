@@ -2,6 +2,7 @@ import Vue, { VNode, VNodeChildrenArrayContents } from 'vue';
 import debounce from 'debounce';
 import { IColumn, IItem, ISortState } from '../types';
 import { classHelper, joinKeyPath } from '../../lib/utils';
+import SCheckable from '../SCheckable.vue';
 import SIcon from '../SIcon.vue';
 import SProgress from '../SProgress.vue';
 
@@ -48,6 +49,7 @@ export default Vue.extend({
   name: 'data-table-internal',
 
   components: {
+    SCheckable,
     SIcon,
     SProgress,
   },
@@ -60,6 +62,11 @@ export default Vue.extend({
     sorting: Object as () => ISortState,
     draggable: Boolean,
     condensed: Boolean,
+
+    checkable: {
+      type: Boolean,
+      default: false,
+    },
 
     outline: {
       type: Boolean,
@@ -82,6 +89,7 @@ export default Vue.extend({
       drag: null as IDragState | null,
       moveTimeoutId: undefined as number | undefined,
       openNodes: [] as string[],
+      checkedNodes: [] as string[],
     };
   },
 
@@ -158,6 +166,18 @@ export default Vue.extend({
       } else {
         this.openNodes.push(node.key);
         this.$emit('open-item', node.keyPath);
+      }
+    },
+
+    isChecked(node: ITableNode): boolean {
+      return this.checkedNodes.includes(node.key);
+    },
+
+    toggleChecked(node: ITableNode) {
+      if (this.isChecked(node)) {
+        this.checkedNodes = this.checkedNodes.filter(k => k !== node.key);
+      } else {
+        this.checkedNodes.push(node.key);
       }
     },
 
@@ -626,6 +646,21 @@ export default Vue.extend({
       let { key } = column;
 
       let children = [];
+
+      if (this.checkable && index === 0) {
+        children.push(h('span', {
+          class: 's-data-table__checkable',
+        }, [
+          h('s-checkable', {
+            props: {
+              checked: this.isChecked(node),
+            },
+            on: {
+              click: () => this.toggleChecked(node),
+            },
+          }),
+        ]));
+      }
 
       if (this.outline && index === 0) {
         children.push(this.renderToggle(node));
