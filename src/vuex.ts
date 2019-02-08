@@ -154,7 +154,12 @@ export const createDataModule = <ModuleState = {}, RootState = any>(options: Mod
         let prepend: Range | null = null;
         let append: Range | null = null;
         if (needs[0] < has[0]) {
-          prepend = [needChunks[0], has[0]];
+          if (needChunks[1] < has[0]) {
+            items = [];
+            append = [needChunks[0], needChunks[1]];
+          } else {
+            prepend = [needChunks[0], has[0]];
+          }
         }
         if (needs[1] > has[1]) {
           if (needChunks[0] > has[1]) {
