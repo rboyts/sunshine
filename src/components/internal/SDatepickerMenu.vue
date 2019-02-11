@@ -55,11 +55,11 @@ export default Vue.extend({
   },
   computed: {
     toDate(): string {
-      return moment(this.selectedPeriod.to).format('DD-MM-YYYY');
+      return moment(this.selectedPeriod.to).format('L');
     },
 
     fromDate(): string {
-      return moment(this.selectedPeriod.from).format('DD-MM-YYYY');
+      return moment(this.selectedPeriod.from).format('L');
     },
   },
   watch: {
@@ -81,16 +81,26 @@ export default Vue.extend({
       let moveDateAmount = 1;
       switch (option) {
         case 'previous':
-          this.$emit('setSelectedPeriod', moment(this.today).subtract(moveDateAmount, period).startOf(period));
-          this.$emit('setSelectedPeriod', moment(this.today).subtract(moveDateAmount, period).endOf(period));
+          this.$emit(
+            'setSelectedPeriod',
+            moment(this.today)
+              .subtract(moveDateAmount, period)
+              .startOf(period),
+            moment(this.today)
+              .subtract(moveDateAmount, period)
+              .endOf(period));
           break;
         case 'current':
-          this.$emit('setSelectedPeriod', moment(this.today).startOf(period));
-          this.$emit('setSelectedPeriod', moment(this.today).endOf(period));
+          this.$emit(
+            'setSelectedPeriod',
+            moment(this.today).startOf(period),
+            moment(this.today).endOf(period));
           break;
         case 'next':
-          this.$emit('setSelectedPeriod', moment(this.today).add(moveDateAmount, period).startOf(period));
-          this.$emit('setSelectedPeriod', moment(this.today).add(moveDateAmount, period).endOf(period));
+          this.$emit(
+            'setSelectedPeriod',
+            moment(this.today).add(moveDateAmount, period).startOf(period),
+            moment(this.today).add(moveDateAmount, period).endOf(period));
           break;
       }
     },

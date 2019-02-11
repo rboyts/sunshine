@@ -6,9 +6,10 @@
       :current-year="yearNum"
       :current-month="monthKey + 1"
       :selected-period="selectedPeriod"
-      @click="selectDateOfPeriod"
+      :mouseDrag="mouseDrag"
       @addComingMonth="addComingMonth"
       @addPreviousMonth="addPreviousMonth"
+      @mouseDragEvent="mouseDragEvent"
     />
     <s-datepicker-menu
       :today="today"
@@ -43,9 +44,10 @@ export default Vue.extend({
       months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       selectedDate: null as Moment | null,
       selectedPeriod: {
-        from: null as Moment | null ,
+        from: null as Moment | null,
         to: null as Moment | null,
       },
+      mouseDrag: false,
     };
   },
   computed: {
@@ -191,22 +193,42 @@ export default Vue.extend({
         .weekday();
     },
 
-    selectDateOfPeriod(d: Moment) {
-      if (!moment.isMoment(this.selectedDate)) {
-        this.selectedDate = d;
-      } else {
-        if (moment(this.selectedDate).isBefore(d)) {
+    selectDateOfPeriod(from: Moment, to: Moment) {
+      this.selectedPeriod = {
+        from,
+        to,
+      };
+    },
+
+    mouseDragEvent(date: Moment, event: string) {
+      if (event === 'dragStart') {
+        this.mouseDrag = true;
+        this.selectedDate = date;
+      } else if (event === 'dragEnd') {
+        if (moment(this.selectedDate).isBefore(date)) {
           this.selectedPeriod = {
             from: this.selectedDate,
-            to: d,
+            to: date,
           };
-          this.selectedDate = null;
         } else {
           this.selectedPeriod = {
-            from: d,
+            from: date,
             to: this.selectedDate,
           };
-          this.selectedDate = null;
+        }
+        this.mouseDrag = false;
+        this.selectedDate = null;
+      } else {
+        if (moment(this.selectedDate).isBefore(date)) {
+          this.selectedPeriod = {
+            from: this.selectedDate,
+            to: date,
+          };
+        } else {
+          this.selectedPeriod = {
+            from: date,
+            to: this.selectedDate,
+          };
         }
       }
     },

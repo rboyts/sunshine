@@ -14,7 +14,9 @@
     <span
       class="s-datepicker__date"
       v-for="a in month.daysInMonth"
-      @click="$emit('click', month.month, a, month.year)"
+      @mousedown="$emit('mouseDragEvent', month.month, a, month.year, 'dragStart')"
+      @mouseup="$emit('mouseDragEvent', month.month, a, month.year, 'dragEnd')"
+      @mouseover="mouseOverEvent(month.month, a, month.year)"
       :class="{
         'saturday': isSaturday(month.month, a, month.year),
         'sunday': isSunday(month.month, a, month.year),
@@ -44,16 +46,13 @@ moment.locale('nb');
 
 export default Vue.extend({
   name: 's-datepicker-month',
-  data() {
-    return {
-    };
-  },
   props: {
     month: Object as () => IMonth,
     selectedPeriod: Object as () => ICalendarPeriod,
     today: String,
     lastScrollPosition: Number,
     scrollHeight: Number,
+    mouseDrag: Boolean,
   },
   computed: {
     toDate(): string {
@@ -84,6 +83,13 @@ export default Vue.extend({
 
     isInPeriod(m: number, d: number, y: number, fromDate: string, toDate: string) {
       return moment(y + '-' + m + '-' + d).isBetween(fromDate, toDate);
+    },
+
+    mouseOverEvent(m: number, d: number, y: number) {
+      if (!this.mouseDrag) {
+        return false;
+      }
+      this.$emit('mouseDragEvent', m, d, y, 'dragging');
     },
   },
 });

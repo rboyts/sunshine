@@ -28,12 +28,13 @@
           <s-datepicker-month
               class="s-datepicker__grid"
               v-for="(month, monthKey) in calendar"
-              @click="selectDate"
               :today="today"
               :selected-period="selectedPeriod"
               :ref="month.month + '-' + month.year"
               :key="'month' + month.month + '-' + month.year"
               :month="month"
+              :mouseDrag="mouseDrag"
+              @mouseDragEvent="mouseDragEvent"
             >
           </s-datepicker-month>
         </div>
@@ -64,7 +65,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      bench: 24,
       debounce: SCROLL_DEBOUNCE,
       days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
       dateContext: moment(),
@@ -81,6 +81,7 @@ export default Vue.extend({
     today: String,
     currentMonth: Number,
     currentYear: Number,
+    mouseDrag: Boolean,
   },
   watch: {
     calendar: {
@@ -90,14 +91,14 @@ export default Vue.extend({
     },
   },
   methods: {
+    mouseDragEvent(m: number, d: number, y: number, event: string) {
+      let date = moment(y + '-' + m + '-' + d);
+      this.$emit('mouseDragEvent', date, event);
+    },
+
     setActiveMonth(calendar: IMonth[]) {
       this.monthNameInHeader = moment(calendar[0].year
         + '-' + this.stringifyMonth(calendar[0].month)).format('MMMM-YYYY');
-    },
-
-    selectDate(m: number, d: number, y: number) {
-      let date = moment(y + '-' + m + '-' + d);
-      this.$emit('click', date);
     },
 
     stringifyMonth(monthKey: number): string {
