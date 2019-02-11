@@ -91,7 +91,7 @@ export default Vue.extend({
 
     addPreviousMonth() {
       let firstMonth = this.calendar[0];
-      let firstMonthDate = moment(firstMonth.year + '-' + firstMonth.month + '-01');
+      let firstMonthDate = moment(firstMonth.year + '-' + this.stringifySingleDigit(firstMonth.month) + '-01');
       let previousMonth = moment(firstMonthDate).subtract(1, 'months');
 
       this.calendar.unshift(this.addMonthItem(previousMonth.get('year'), previousMonth.get('month') + 1));
@@ -100,7 +100,7 @@ export default Vue.extend({
 
     addComingMonth() {
       let lastMonth = this.calendar[this.calendar.length - 1];
-      let lastMonthDate = moment(lastMonth.year + '-' + lastMonth.month + '-01');
+      let lastMonthDate = moment(lastMonth.year + '-' + this.stringifySingleDigit(lastMonth.month) + '-01');
       let nextMonth = moment(lastMonthDate).add(1, 'months');
 
       this.calendar.push(this.addMonthItem(nextMonth.get('year'), nextMonth.get('month') + 1));
@@ -113,7 +113,7 @@ export default Vue.extend({
         weeksInMonth: this.addWeekNumbers(year, month),
         firstDay: this.offsetStartDay(year, month),
         lastDay: this.offsetEndDay(year, month),
-        daysInMonth: moment(year + '-' + month).daysInMonth(),
+        daysInMonth: moment(year + '-' + this.stringifySingleDigit(month)).daysInMonth(),
         previousMonthDays: this.addOverlapDays(year, month, this.offsetStartDay(year, month)),
         year,
       };
@@ -121,9 +121,8 @@ export default Vue.extend({
 
     addWeekNumbers(year: number, month: number) {
       let weekNumbers = [] as number[];
-      for (let c = 0, d = (moment(year + '-' + this.stringifyMonth(month)).daysInMonth() - 1); c <= d; c++) {
-        // TODO: Fix moment complaining about "[date] not in a recognized RFC2822 or ISO format"
-        let week = moment(year + '-' + this.stringifyMonth(month) + '-' + (c + 1)).week();
+      for (let c = 1, d = (moment(year + '-' + this.stringifySingleDigit(month)).daysInMonth()); c <= d; c++) {
+        let week = moment(year + '-' + this.stringifySingleDigit(month) + '-' + this.stringifySingleDigit(c)).week();
         if (!weekNumbers.includes(week)) {
           weekNumbers.push(week);
         }
@@ -139,7 +138,7 @@ export default Vue.extend({
         let lastYear = year - 1;
         dateToSubtractFrom = moment(lastYear + '-12').daysInMonth();
       } else {
-        dateToSubtractFrom = moment(year + '-' + this.stringifyMonth(month - 1)).daysInMonth();
+        dateToSubtractFrom = moment(year + '-' + this.stringifySingleDigit(month - 1)).daysInMonth();
       }
       if (firstDay > 0) {
         // Add lastdays from previous month
@@ -170,25 +169,25 @@ export default Vue.extend({
       return months;
     },
 
-    stringifyMonth(monthKey: number): string {
-      let monthString;
+    stringifySingleDigit(key: number): string {
+      let digitAsString;
 
-      if (monthKey <= 9) {
-        monthString = '0' + monthKey;
+      if (key <= 9) {
+        digitAsString = '0' + key;
       } else {
-        monthString = '' + monthKey;
+        digitAsString = '' + key;
       }
-      return monthString;
+      return digitAsString;
     },
 
     offsetStartDay(year: number, month: number) {
-      return moment(year + '-' + this.stringifyMonth(month))
+      return moment(year + '-' + this.stringifySingleDigit(month))
         .startOf('month')
         .weekday();
     },
 
     offsetEndDay(year: number, month: number) {
-      return moment(year + '-' + this.stringifyMonth(month))
+      return moment(year + '-' + this.stringifySingleDigit(month))
         .endOf('month')
         .weekday();
     },
@@ -201,7 +200,7 @@ export default Vue.extend({
     },
 
     mouseDragEvent(date: Moment, event: string) {
-      if (event === 'dragStart') {
+      if (event === 'dragStart' || !moment.isMoment(this.selectedDate)) {
         this.mouseDrag = true;
         this.selectedDate = date;
       } else if (event === 'dragEnd') {

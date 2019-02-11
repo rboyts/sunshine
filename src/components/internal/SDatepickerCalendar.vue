@@ -92,24 +92,24 @@ export default Vue.extend({
   },
   methods: {
     mouseDragEvent(m: number, d: number, y: number, event: string) {
-      let date = moment(y + '-' + m + '-' + d);
+      let date = moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d));
       this.$emit('mouseDragEvent', date, event);
     },
 
     setActiveMonth(calendar: IMonth[]) {
       this.monthNameInHeader = moment(calendar[0].year
-        + '-' + this.stringifyMonth(calendar[0].month)).format('MMMM-YYYY');
+        + '-' + this.stringifySingleDigit(calendar[0].month)).format('MMMM-YYYY');
     },
 
-    stringifyMonth(monthKey: number): string {
-      let monthString;
+    stringifySingleDigit(key: number): string {
+      let digitAsString;
 
-      if (monthKey <= 9) {
-        monthString = '0' + monthKey;
+      if (key <= 9) {
+        digitAsString = '0' + key;
       } else {
-        monthString = '' + monthKey;
+        digitAsString = '' + key;
       }
-      return monthString;
+      return digitAsString;
     },
 
     calendarScroll(event: MouseWheelEvent) {

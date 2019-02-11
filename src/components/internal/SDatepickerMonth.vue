@@ -56,33 +56,46 @@ export default Vue.extend({
   },
   computed: {
     toDate(): string {
+      // Format used to compare dates, so not formatted for localization
       return moment(this.selectedPeriod.to).format('YYYY-MM-DD');
     },
 
     fromDate(): string {
+      // Format used to compare dates, so not formatted for localization
       return moment(this.selectedPeriod.from).format('YYYY-MM-DD');
     },
   },
   methods: {
+    stringifySingleDigit(key: number): string {
+      let digitAsString;
+
+      if (key <= 9) {
+        digitAsString = '0' + key;
+      } else {
+        digitAsString = '' + key;
+      }
+      return digitAsString;
+    },
+
     translateMonthName(monthKey: number, year: number) {
       // TODO: Translate to other types of locales?
-      return moment(year + '-' + monthKey).format('MMMM-YYYY');
+      return moment(year + '-' + this.stringifySingleDigit(monthKey)).format('MMMM-YYYY');
     },
 
     isSaturday(m: number, d: number, y: number) {
-      return moment(y + '-' + m + '-' + d).day() === 6;
+      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).day() === 6;
     },
 
     isSunday(m: number, d: number, y: number) {
-      return moment(y + '-' + m + '-' + d).day() === 0;
+      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).day() === 0;
     },
 
     isSameDate(m: number, d: number, y: number, date: string) {
-      return moment(y + '-' + m + '-' + d).isSame(date);
+      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).isSame(date);
     },
 
     isInPeriod(m: number, d: number, y: number, fromDate: string, toDate: string) {
-      return moment(y + '-' + m + '-' + d).isBetween(fromDate, toDate);
+      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).isBetween(fromDate, toDate);
     },
 
     mouseOverEvent(m: number, d: number, y: number) {
