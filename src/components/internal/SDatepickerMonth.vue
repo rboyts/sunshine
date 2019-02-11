@@ -14,7 +14,9 @@
     <span
       class="s-datepicker__date"
       v-for="a in month.daysInMonth"
-      @click="$emit('click', month.month, a, month.year)"
+      @mousedown="$emit('mouseDragEvent', month.month, a, month.year, 'dragStart')"
+      @mouseup="$emit('mouseDragEvent', month.month, a, month.year, 'dragEnd')"
+      @mouseover="mouseOverEvent(month.month, a, month.year)"
       :class="{
         'saturday': isSaturday(month.month, a, month.year),
         'sunday': isSunday(month.month, a, month.year),
@@ -44,45 +46,63 @@ moment.locale('nb');
 
 export default Vue.extend({
   name: 's-datepicker-month',
-  data() {
-    return {
-    };
-  },
   props: {
     month: Object as () => IMonth,
     selectedPeriod: Object as () => ICalendarPeriod,
     today: String,
     lastScrollPosition: Number,
     scrollHeight: Number,
+    mouseDrag: Boolean,
   },
   computed: {
     toDate(): string {
+      // Format used to compare dates, so not formatted for localization
       return moment(this.selectedPeriod.to).format('YYYY-MM-DD');
     },
 
     fromDate(): string {
+      // Format used to compare dates, so not formatted for localization
       return moment(this.selectedPeriod.from).format('YYYY-MM-DD');
     },
   },
   methods: {
+    stringifySingleDigit(key: number): string {
+      let digitAsString;
+
+      if (key <= 9) {
+        digitAsString = '0' + key;
+      } else {
+        digitAsString = '' + key;
+      }
+      return digitAsString;
+    },
+
     translateMonthName(monthKey: number, year: number) {
-      return moment(year + '-' + monthKey).format('MMMM-YYYY');
+      // TODO: Translate to other types of locales?
+      return moment(year + '-' + this.stringifySingleDigit(monthKey)).format('MMMM-YYYY');
     },
 
     isSaturday(m: number, d: number, y: number) {
-      return moment(y + '-' + m + '-' + d).day() === 6
+      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).day() === 6;
     },
 
     isSunday(m: number, d: number, y: number) {
-      return moment(y + '-' + m + '-' + d).day() === 0
+      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).day() === 0;
     },
 
     isSameDate(m: number, d: number, y: number, date: string) {
-      return moment(y + '-' + m + '-' + d).isSame(date);
+      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).isSame(date);
     },
 
     isInPeriod(m: number, d: number, y: number, fromDate: string, toDate: string) {
-      return moment(y + '-' + m + '-' + d).isBetween(fromDate, toDate);
+      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).isBetween(fromDate, toDate);
+    },
+
+    mouseOverEvent(m: number, d: number, y: number) {
+      if (!this.mouseDrag) {
+        return false;
+      }
+      this.$emit('mouseDragEvent', m, d, y, 'dragging');
     },
   },
 });

@@ -23,17 +23,18 @@
         </ul>
       </div>
       <div class="s-datepicker__grid__container"
-        style="height: 390px; overflow: hidden;" v-wheel="testScroller">
+        style="height: 390px; overflow: hidden;" v-on:wheel="calendarScroll">
         <div class="s-datepicker__scroller" ref="calendarList">
           <s-datepicker-month
               class="s-datepicker__grid"
               v-for="(month, monthKey) in calendar"
-              @click="selectDate"
               :today="today"
               :selected-period="selectedPeriod"
               :ref="month.month + '-' + month.year"
               :key="'month' + month.month + '-' + month.year"
               :month="month"
+              :mouseDrag="mouseDrag"
+              @mouseDragEvent="mouseDragEvent"
             >
           </s-datepicker-month>
         </div>
@@ -45,9 +46,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import debounce from 'debounce';
-import { IMonth, ICalendarPeriod } from '../types';
+import { IMonth, ICalendarPeriod, MouseWheelEvent } from '../types';
 import moment, { Moment } from 'moment';
-import vuewheel from 'vuewheel';
 import SSvg from './SSvg.vue';
 import SDatepickerMonth from './SDatepickerMonth.vue';
 
@@ -57,8 +57,6 @@ const PADDING_TOP = 30;
 
 moment.locale('nb');
 
-Vue.use(vuewheel);
-
 export default Vue.extend({
   name: 's-datepicker-calendar',
   components: {
@@ -67,7 +65,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      bench: 24,
       debounce: SCROLL_DEBOUNCE,
       days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
       dateContext: moment(),
@@ -84,6 +81,7 @@ export default Vue.extend({
     today: String,
     currentMonth: Number,
     currentYear: Number,
+    mouseDrag: Boolean,
   },
   watch: {
     calendar: {
@@ -93,32 +91,34 @@ export default Vue.extend({
     },
   },
   methods: {
+    mouseDragEvent(m: number, d: number, y: number, event: string) {
+      let date = moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d));
+      this.$emit('mouseDragEvent', date, event);
+    },
+
     setActiveMonth(calendar: IMonth[]) {
-      this.monthNameInHeader = moment(calendar[0].year + '-' + this.stringifyMonth(calendar[0].month)).format('MMMM-YYYY');
+      this.monthNameInHeader = moment(calendar[0].year
+        + '-' + this.stringifySingleDigit(calendar[0].month)).format('MMMM-YYYY');
     },
 
-    selectDate(m: number, d: number, y: number) {
-      let date = moment(y + '-' + m + '-' + d);
-      this.$emit('click', date);
-    },
+    stringifySingleDigit(key: number): string {
+      let digitAsString;
 
-    stringifyMonth(monthKey: number): string {
-      let monthString;
-
-      if (monthKey <= 9) {
-        monthString = '0' + monthKey;
+      if (key <= 9) {
+        digitAsString = '0' + key;
       } else {
-        monthString = '' + monthKey;
+        digitAsString = '' + key;
       }
-      return monthString;
+      return digitAsString;
     },
 
-    testScroller(event: UIEvent) {
-      let dragDirection = (event.wheelDelta > 0)? 'down' : 'up';
+    calendarScroll(event: MouseWheelEvent) {
+      // TODO: adjust event.wheelDelta minimum scroll to compensate for trackpads which are really sensitive?
+      let dragDirection = (event.wheelDelta > 0) ? 'down' : 'up';
       if (dragDirection === 'down') {
-        this.$emit('addPreviousMonth')
+        this.$emit('addPreviousMonth');
       } else if (dragDirection === 'up') {
-        this.$emit('addComingMonth')
+        this.$emit('addComingMonth');
       }
     },
 
