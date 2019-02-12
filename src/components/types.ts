@@ -30,8 +30,13 @@ export interface IItemData {
 export interface IItem {
   key: string;
   icon?: string;
-  totalChildren?: number;
-  children?: IItem[] | null;
+
+  // Sub-items for hierarchical data tables.
+  //
+  // Empty or not defined means that no sub-items exists.
+  // `null` means that sub-items are loaded asynchronously, and loadSubItems
+  // must be implemented.
+  subItems?: IItem[] | null;
 
   data: IItemData;
 }

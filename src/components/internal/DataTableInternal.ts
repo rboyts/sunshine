@@ -33,7 +33,7 @@ interface ITableNode {
   keyPath: string[];
   item: IItem;
   parent: ITableNode | null;
-  children: ITableNode[] | null;
+  subItems: ITableNode[] | null;
   isLastChild: boolean;
 }
 
@@ -342,11 +342,11 @@ export default Vue.extend({
           parent,
           item,
           isLastChild: i === items.length - 1,
-          children: item.children === null ? null : [],
+          subItems: item.subItems === null ? null : [],
         };
 
-        if (item.children) {
-          node.children = this.getNodes(node, item.children);
+        if (item.subItems) {
+          node.subItems = this.getNodes(node, item.subItems);
         }
         return node;
       });
@@ -373,8 +373,8 @@ export default Vue.extend({
         ],
       );
 
-      if (this.isOpen(node) && node.children) {
-        return [el].concat(this.renderNodes(node.children));
+      if (this.isOpen(node) && node.subItems) {
+        return [el].concat(this.renderNodes(node.subItems));
       } else {
         return [el];
       }
@@ -383,15 +383,14 @@ export default Vue.extend({
     renderToggle(node: ITableNode): VNode {
       const h = this.$createElement;
 
-      const hasChildren = node.children && node.children.length ||
-        node.item.totalChildren && node.item.totalChildren > 0;
-      const mayHaveChildren = !node.children && node.item.totalChildren === -1;
-      const isLoading = !node.children && this.isOpen(node);
+      const hasSubItems = node.subItems && node.subItems.length;
+      const hasPendingSubItems = node.subItems === null;
+      const isLoading = !node.subItems && this.isOpen(node);
 
       let children = [];
       if (isLoading) {
         children.push(h('s-svg', {props: {name: 'progress'}}));
-      } else if (hasChildren || mayHaveChildren) {
+      } else if (hasSubItems || hasPendingSubItems) {
         children.push(h('s-svg', {props: {name: 'arrow'}}));
       } else {
         children.push(h('i', {domProps: {innerHTML: '&nbsp;'}}));
@@ -401,7 +400,7 @@ export default Vue.extend({
         class: toggleClassHelper({
           loading: isLoading,
           open: !isLoading && this.isOpen(node),
-          unknown: !isLoading && mayHaveChildren,
+          // unknown: !isLoading && hasPendingSubItems,
         }),
         on: {
           click: () => {
@@ -426,7 +425,7 @@ export default Vue.extend({
 
       // Render icon and start line that child items will connect to, if any.
       children.push(h('span', {class: 's-data-table__outline__section'}, [
-        (this.isOpen(node) && node.children && node.children.length) ? this.renderTail() : '',
+        (this.isOpen(node) && node.subItems && node.subItems.length) ? this.renderTail() : '',
         node.item.icon ? h('s-icon', {class: 's-data-table__icon', props: {name: node.item.icon}}) : '',
       ]));
 

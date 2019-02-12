@@ -19,10 +19,10 @@ const getItems = (keyPath: string[], state: IDataTableState): IItem[] | null => 
 
   const nodes = items.map((item: IItem) => {
     let itemKeyPath = keyPath.concat(item.key);
-    let children = item.children || (item.totalChildren ? getItems(itemKeyPath, state) : []);
+    let subItems = item.subItems || (item.subItems === null ? getItems(itemKeyPath, state) : []);
     return {
       ...item,
-      children,
+      subItems,
     };
   });
   return nodes;
