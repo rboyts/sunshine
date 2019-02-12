@@ -5,7 +5,7 @@ import { classHelper, joinKeyPath } from '../../lib/utils';
 import SIcon from '../SIcon.vue';
 import SSvg from './SSvg.vue';
 
-const MAX_PLACEHOLDER_ROWS = 50;
+const MAX_PLACEHOLDER_ROWS = 0;
 const SCROLL_DEBOUNCE = 250;
 const MOVE_TIMEOUT = 350;
 
@@ -366,7 +366,7 @@ export default Vue.extend({
     renderNode(node: ITableNode, row: number): VNode[] {
       const h = this.$createElement;
       const el = h('tr', {
-          key: row, // FIXME duplicate key for sub-items
+          key: node.key, // FIXME key not consistent with placeholder rows key
         }, [
           this.columns.map((column, index) =>
             this.renderContentCell(node, column, index)),
