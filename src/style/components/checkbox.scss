@@ -20,6 +20,10 @@ $checkbox-border-width: 1px;
     opacity: 0;
   }
 
+  > .s-checkable {
+    margin-right: $checkbox-spacing;
+  }
+
   &:hover:not(.s-checkbox--inactive) {
     .s-checkable {
       border-color: $color-edit;
@@ -40,7 +44,6 @@ $checkbox-border-width: 1px;
   height: $checkbox-height;
   width: $checkbox-height;
   border-radius: $checkbox-border-radius;
-  margin-right: $checkbox-spacing;
 
   &--focus {
     border-color: $color-edit;
