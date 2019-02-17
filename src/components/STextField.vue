@@ -119,7 +119,7 @@ export default Vue.extend({
         return (
           keyCode === 43 ||
           keyCode === 45 ||
-          keyCode >= 48 && keyCode <= 57
+          (keyCode >= 48 && keyCode <= 57)
         );
       } else {
         return true;

@@ -21,7 +21,7 @@
         'saturday': isSaturday(month.month, a, month.year),
         'sunday': isSunday(month.month, a, month.year),
         'today': isSameDate(month.month, a, month.year, today),
-        'from': isSameDate(month.month, a, month.year, fromDate), 
+        'from': isSameDate(month.month, a, month.year, fromDate),
         'to': isSameDate(month.month, a, month.year, toDate),
         'between': isInPeriod(month.month, a, month.year, fromDate, toDate)
         }"
@@ -70,32 +70,32 @@ export default Vue.extend({
       let digitAsString;
 
       if (key <= 9) {
-        digitAsString = '0' + key;
+        digitAsString = `0${key}`;
       } else {
-        digitAsString = '' + key;
+        digitAsString = `${key}`;
       }
       return digitAsString;
     },
 
     translateMonthName(monthKey: number, year: number) {
       // TODO: Translate to other types of locales?
-      return moment(year + '-' + this.stringifySingleDigit(monthKey)).format('MMMM-YYYY');
+      return moment(`${year}-${this.stringifySingleDigit(monthKey)}`).format('MMMM-YYYY');
     },
 
     isSaturday(m: number, d: number, y: number) {
-      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).day() === 6;
+      return moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`).day() === 6;
     },
 
     isSunday(m: number, d: number, y: number) {
-      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).day() === 0;
+      return moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`).day() === 0;
     },
 
     isSameDate(m: number, d: number, y: number, date: string) {
-      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).isSame(date);
+      return moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`).isSame(date);
     },
 
     isInPeriod(m: number, d: number, y: number, fromDate: string, toDate: string) {
-      return moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d)).isBetween(fromDate, toDate);
+      return moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`).isBetween(fromDate, toDate);
     },
 
     mouseOverEvent(m: number, d: number, y: number) {

@@ -11,9 +11,9 @@
             </span>
         </div>
         <ul class="s-datepicker__days">
-          <li 
-            class="s-datepicker__day" 
-            v-for="(day, i) in days" 
+          <li
+            class="s-datepicker__day"
+            v-for="(day, i) in days"
             :key="'Day' + i"
             :class="{
               'saturday': (i === 5),
@@ -46,8 +46,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import debounce from 'debounce';
-import { IMonth, ICalendarPeriod, MouseWheelEvent } from '../types';
 import moment, { Moment } from 'moment';
+import { IMonth, ICalendarPeriod, MouseWheelEvent } from '../types';
 import SSvg from './SSvg.vue';
 import SDatepickerMonth from './SDatepickerMonth.vue';
 
@@ -92,22 +92,22 @@ export default Vue.extend({
   },
   methods: {
     mouseDragEvent(m: number, d: number, y: number, event: string) {
-      let date = moment(y + '-' + this.stringifySingleDigit(m) + '-' + this.stringifySingleDigit(d));
+      let date = moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`);
       this.$emit('mouseDragEvent', date, event);
     },
 
     setActiveMonth(calendar: IMonth[]) {
-      this.monthNameInHeader = moment(calendar[0].year
-        + '-' + this.stringifySingleDigit(calendar[0].month)).format('MMMM-YYYY');
+      this.monthNameInHeader = moment(`${calendar[0].year
+      }-${this.stringifySingleDigit(calendar[0].month)}`).format('MMMM-YYYY');
     },
 
     stringifySingleDigit(key: number): string {
       let digitAsString;
 
       if (key <= 9) {
-        digitAsString = '0' + key;
+        digitAsString = `0${key}`;
       } else {
-        digitAsString = '' + key;
+        digitAsString = `${key}`;
       }
       return digitAsString;
     },
@@ -124,4 +124,4 @@ export default Vue.extend({
 
   },
 });
-</script> 
+</script>

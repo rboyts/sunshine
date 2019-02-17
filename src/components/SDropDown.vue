@@ -151,7 +151,7 @@ export default mixins(ClassesMixin).extend({
 
   computed: {
     caretModifiers(): object {
-      return {open: this.isOpen};
+      return { open: this.isOpen };
     },
 
     filteredItems(): object[] {
@@ -377,4 +377,3 @@ export default mixins(ClassesMixin).extend({
   },
 });
 </script>
-

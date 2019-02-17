@@ -1,6 +1,6 @@
 <template>
   <div class="s-datepicker">
-    <s-datepicker-calendar 
+    <s-datepicker-calendar
       :today="today.format('YYYY-MM-DD')"
       :calendar="calendar"
       :current-year="yearNum"
@@ -91,7 +91,7 @@ export default Vue.extend({
 
     addPreviousMonth() {
       let firstMonth = this.calendar[0];
-      let firstMonthDate = moment(firstMonth.year + '-' + this.stringifySingleDigit(firstMonth.month) + '-01');
+      let firstMonthDate = moment(`${firstMonth.year}-${this.stringifySingleDigit(firstMonth.month)}-01`);
       let previousMonth = moment(firstMonthDate).subtract(1, 'months');
 
       this.calendar.unshift(this.addMonthItem(previousMonth.get('year'), previousMonth.get('month') + 1));
@@ -100,7 +100,7 @@ export default Vue.extend({
 
     addComingMonth() {
       let lastMonth = this.calendar[this.calendar.length - 1];
-      let lastMonthDate = moment(lastMonth.year + '-' + this.stringifySingleDigit(lastMonth.month) + '-01');
+      let lastMonthDate = moment(`${lastMonth.year}-${this.stringifySingleDigit(lastMonth.month)}-01`);
       let nextMonth = moment(lastMonthDate).add(1, 'months');
 
       this.calendar.push(this.addMonthItem(nextMonth.get('year'), nextMonth.get('month') + 1));
@@ -113,7 +113,7 @@ export default Vue.extend({
         weeksInMonth: this.addWeekNumbers(year, month),
         firstDay: this.offsetStartDay(year, month),
         lastDay: this.offsetEndDay(year, month),
-        daysInMonth: moment(year + '-' + this.stringifySingleDigit(month)).daysInMonth(),
+        daysInMonth: moment(`${year}-${this.stringifySingleDigit(month)}`).daysInMonth(),
         previousMonthDays: this.addOverlapDays(year, month, this.offsetStartDay(year, month)),
         year,
       };
@@ -121,8 +121,8 @@ export default Vue.extend({
 
     addWeekNumbers(year: number, month: number) {
       let weekNumbers = [] as number[];
-      for (let c = 1, d = (moment(year + '-' + this.stringifySingleDigit(month)).daysInMonth()); c <= d; c++) {
-        let week = moment(year + '-' + this.stringifySingleDigit(month) + '-' + this.stringifySingleDigit(c)).week();
+      for (let c = 1, d = (moment(`${year}-${this.stringifySingleDigit(month)}`).daysInMonth()); c <= d; c++) {
+        let week = moment(`${year}-${this.stringifySingleDigit(month)}-${this.stringifySingleDigit(c)}`).week();
         if (!weekNumbers.includes(week)) {
           weekNumbers.push(week);
         }
@@ -136,9 +136,9 @@ export default Vue.extend({
       if (month === 1) {
         // If january, get last day from previous years last month
         let lastYear = year - 1;
-        dateToSubtractFrom = moment(lastYear + '-12').daysInMonth();
+        dateToSubtractFrom = moment(`${lastYear}-12`).daysInMonth();
       } else {
-        dateToSubtractFrom = moment(year + '-' + this.stringifySingleDigit(month - 1)).daysInMonth();
+        dateToSubtractFrom = moment(`${year}-${this.stringifySingleDigit(month - 1)}`).daysInMonth();
       }
       if (firstDay > 0) {
         // Add lastdays from previous month
@@ -157,11 +157,11 @@ export default Vue.extend({
         let tmpMonth: number;
         let tmpYear: number;
         if ((present + a) > 12) {
-          tmpMonth  = (present + a) - 12;
+          tmpMonth = (present + a) - 12;
           tmpYear = year + 1;
           months.push(this.addMonthItem(tmpYear, tmpMonth));
         } else {
-          tmpMonth  = present + a;
+          tmpMonth = present + a;
           tmpYear = year;
           months.push(this.addMonthItem(tmpYear, tmpMonth));
         }
@@ -173,21 +173,21 @@ export default Vue.extend({
       let digitAsString;
 
       if (key <= 9) {
-        digitAsString = '0' + key;
+        digitAsString = `0${key}`;
       } else {
-        digitAsString = '' + key;
+        digitAsString = `${key}`;
       }
       return digitAsString;
     },
 
     offsetStartDay(year: number, month: number) {
-      return moment(year + '-' + this.stringifySingleDigit(month))
+      return moment(`${year}-${this.stringifySingleDigit(month)}`)
         .startOf('month')
         .weekday();
     },
 
     offsetEndDay(year: number, month: number) {
-      return moment(year + '-' + this.stringifySingleDigit(month))
+      return moment(`${year}-${this.stringifySingleDigit(month)}`)
         .endOf('month')
         .weekday();
     },
@@ -217,18 +217,16 @@ export default Vue.extend({
         }
         this.mouseDrag = false;
         this.selectedDate = null;
+      } else if (moment(this.selectedDate).isBefore(date)) {
+        this.selectedPeriod = {
+          from: this.selectedDate,
+          to: date,
+        };
       } else {
-        if (moment(this.selectedDate).isBefore(date)) {
-          this.selectedPeriod = {
-            from: this.selectedDate,
-            to: date,
-          };
-        } else {
-          this.selectedPeriod = {
-            from: date,
-            to: this.selectedDate,
-          };
-        }
+        this.selectedPeriod = {
+          from: date,
+          to: this.selectedDate,
+        };
       }
     },
   },

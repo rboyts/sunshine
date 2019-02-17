@@ -13,4 +13,3 @@ export default mixins(ClassesMixin).extend({
   name: 's-accordion',
 });
 </script>
-

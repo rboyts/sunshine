@@ -31,7 +31,6 @@ const getItems = (keyPath: string[], state: IDataTableState): IItem[] | null => 
 
 export const createDataModule = <ModuleState = {}, RootState = any>(options: Module<ModuleState, RootState>):
     Module<ModuleState & IDataTableState, RootState> => {
-
   const mutex = new Mutex();
 
   return {
@@ -44,7 +43,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(options: Mod
         offset: 0,
         total: null,
         isLoading: false,
-        items: {'': []},
+        items: { '': [] },
         sorting: {
           key: null,
           reverse: false,
@@ -94,16 +93,16 @@ export const createDataModule = <ModuleState = {}, RootState = any>(options: Mod
         state.isLoading = false;
       },
 
-      loadItemsComplete: (state, {items, offset, total}) => {
+      loadItemsComplete: (state, { items, offset, total }) => {
         state.items = {
           ...state.items,
-          ['']: items,
+          '': items,
         };
         state.offset = offset;
         state.total = total;
       },
 
-      loadSubItemsComplete: (state, {keyPath, items, total}) => {
+      loadSubItemsComplete: (state, { keyPath, items, total }) => {
         const key = joinKeyPath(keyPath);
         state.items = {
           ...state.items,
@@ -115,21 +114,21 @@ export const createDataModule = <ModuleState = {}, RootState = any>(options: Mod
     },
 
     actions: {
-      async sort({commit, dispatch}, key: string) {
+      async sort({ commit, dispatch }, key: string) {
         commit('sorting', key);
         await dispatch('init');
       },
 
-      async init({dispatch}) {
-        await dispatch('requestLoadItems', {firstRow: 0, lastRow: 49, clear: true});
+      async init({ dispatch }) {
+        await dispatch('requestLoadItems', { firstRow: 0, lastRow: 49, clear: true });
       },
 
-      async requestLoadItems({dispatch}, payload: IRequestLoadItemsPayload) {
+      async requestLoadItems({ dispatch }, payload: IRequestLoadItemsPayload) {
         // Wait until any previous requests are completed
         await mutex.runExclusive(() => dispatch('_doRequestLoadItems', payload));
       },
 
-      async _doRequestLoadItems({state, commit, dispatch}, payload: IRequestLoadItemsPayload) {
+      async _doRequestLoadItems({ state, commit, dispatch }, payload: IRequestLoadItemsPayload) {
         type Range = [number, number];
 
         let items = payload.clear ? [] : state.items[''];
@@ -149,7 +148,10 @@ export const createDataModule = <ModuleState = {}, RootState = any>(options: Mod
 
         const chunkSize = 50;
 
-        let needChunks = [Math.floor(needs[0] / chunkSize) * chunkSize, Math.ceil(needs[1] / chunkSize) * chunkSize];
+        let needChunks = [
+          Math.floor(needs[0] / chunkSize) * chunkSize,
+          Math.ceil(needs[1] / chunkSize) * chunkSize,
+        ];
 
         let prepend: Range | null = null;
         let append: Range | null = null;
@@ -180,23 +182,23 @@ export const createDataModule = <ModuleState = {}, RootState = any>(options: Mod
         if (prepend !== null) {
           let skip = prepend[0];
           let take = prepend[1] - prepend[0];
-          let result = await dispatch('loadItems', {skip, take});
+          let result = await dispatch('loadItems', { skip, take });
           let offset = skip;
           items = result.items.concat(items);
-          commit('loadItemsComplete', {items, offset, total: result.total});
+          commit('loadItemsComplete', { items, offset, total: result.total });
         }
 
         if (append !== null) {
           try {
             let skip = append[0];
             let take = append[1] - append[0];
-            let result = await dispatch('loadItems', {skip, take});
+            let result = await dispatch('loadItems', { skip, take });
             let offset = skip - items.length;
             items = items.concat(result.items);
 
             // console.log(`got ${result.items.length} of ${result.total}`);
 
-            commit('loadItemsComplete', {items, offset, total: result.total});
+            commit('loadItemsComplete', { items, offset, total: result.total });
           } catch (ex) {
             console.error('loadItems failed', ex);
           }
@@ -205,16 +207,16 @@ export const createDataModule = <ModuleState = {}, RootState = any>(options: Mod
         commit('loadEnd');
       },
 
-      async requestLoadSubItems({dispatch}, payload: IShowSubItemsPayload) {
+      async requestLoadSubItems({ dispatch }, payload: IShowSubItemsPayload) {
         // Wait until any previous requests are completed
         await mutex.runExclusive(() => dispatch('_doRequestLoadSubItems', payload));
       },
 
-      async _doRequestLoadSubItems({state, commit, dispatch}, {keyPath}: IShowSubItemsPayload) {
+      async _doRequestLoadSubItems({ state, commit, dispatch }, { keyPath }: IShowSubItemsPayload) {
         // Already loaded?
         if (joinKeyPath(keyPath) in state.items) return;
 
-        const result = await dispatch('loadSubItems', {keyPath});
+        const result = await dispatch('loadSubItems', { keyPath });
 
         commit('loadSubItemsComplete', { keyPath, items: result.items, total: result.total });
       },

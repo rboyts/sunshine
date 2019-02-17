@@ -78,7 +78,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     chevronOptions(): object {
-      return {rotate: !this.open};
+      return { rotate: !this.open };
     },
 
     bodyOptions(): object {

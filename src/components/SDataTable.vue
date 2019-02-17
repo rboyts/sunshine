@@ -52,7 +52,9 @@ import SList from './SList.vue';
 import SListItem from './SListItem.vue';
 import SSvg from './internal/SSvg.vue';
 import DataTableInternal from './internal/DataTableInternal';
-import { ISortState, IItem, IColumn, IRequestLoadItemsPayload } from './types';
+import {
+  ISortState, IItem, IColumn, IRequestLoadItemsPayload,
+} from './types';
 
 export { IColumn, ISortState, IItem } from './types';
 
@@ -113,7 +115,7 @@ export default mixins(ClassesMixin).extend({
     columns: {
       handler() {
         // TODO Be able to restore saved column order/selection
-        this.orderedColumns = this.columns.map(column => ({column, visible: true}));
+        this.orderedColumns = this.columns.map(column => ({ column, visible: true }));
 
         this.tryDispatchAction('init');
       },
@@ -137,14 +139,14 @@ export default mixins(ClassesMixin).extend({
     },
 
     onOpenItem(keyPath: string) {
-      this.tryDispatchAction('requestLoadSubItems', {keyPath});
+      this.tryDispatchAction('requestLoadSubItems', { keyPath });
     },
 
     onSort(event: MouseEvent, key: string) {
       this.tryDispatchAction('sort', key);
     },
 
-    onMoveColumn({from, to}: {from: number, to: number}) {
+    onMoveColumn({ from, to }: {from: number, to: number}) {
       const fromKey = this.visibleColumns[from].key;
       const fromIndex = this.orderedColumns.findIndex(oc => oc.column.key === fromKey);
 

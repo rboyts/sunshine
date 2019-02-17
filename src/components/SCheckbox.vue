@@ -19,8 +19,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import SCheckable from './SCheckable.vue';
 import mixins from 'vue-typed-mixins';
+import SCheckable from './SCheckable.vue';
 import { ClassesMixin } from '../lib/utils';
 
 export default mixins(ClassesMixin).extend({
@@ -59,4 +59,3 @@ export default mixins(ClassesMixin).extend({
   },
 });
 </script>
-

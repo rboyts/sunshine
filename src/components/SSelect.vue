@@ -83,13 +83,15 @@ export default Vue.extend({
     },
 
     setNextSelected() {
-      if (this.currentIndex < this.items.length - 1)
+      if (this.currentIndex < this.items.length - 1) {
         this.setSelectedItem(this.items[this.currentIndex + 1]);
+      }
     },
 
     setPrevSelected() {
-      if (this.currentIndex > 0)
+      if (this.currentIndex > 0) {
         this.setSelectedItem(this.items[this.currentIndex - 1]);
+      }
     },
 
     onKeyPress(event: KeyboardEvent) {
@@ -102,6 +104,7 @@ export default Vue.extend({
         case 'ArrowUp':
           this.setPrevSelected();
           break;
+        default:
       }
       return true;
     },

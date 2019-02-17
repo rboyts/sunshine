@@ -19,9 +19,9 @@ export default Vue.extend({
       let children: VNode[] = [];
       for (let d = start; d < end; d = d.add(1, 'day')) {
         children.push(h('span', {
-            class: 's-calendar__header',
-          },
-          weekdays[d.day()]));
+          class: 's-calendar__header',
+        },
+        weekdays[d.day()]));
       }
 
       return children;
@@ -64,7 +64,7 @@ export default Vue.extend({
 
   render(): VNode {
     const h = this.$createElement;
-    return h('div', {class: 's-calendar'}, [
+    return h('div', { class: 's-calendar' }, [
       this.renderHeader(),
       this.renderMonth(),
     ]);

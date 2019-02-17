@@ -8,9 +8,9 @@ describe('SSelect', () => {
     const wrapper = mount(SSelect, {
       propsData: {
         items: [
-          {title: 'Norge'},
-          {title: 'Sverige'},
-          {title: 'England'},
+          { title: 'Norge' },
+          { title: 'Sverige' },
+          { title: 'England' },
         ],
         label: 'Choose country',
       },

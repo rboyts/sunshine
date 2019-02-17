@@ -79,4 +79,3 @@ export default mixins(ClassesMixin).extend({
   },
 });
 </script>
-

@@ -11,7 +11,7 @@ const MOVE_TIMEOUT = 350;
 
 const NORMAL_ROW_HEIGHT = 40;
 const CONDENSED_ROW_HEIGHT = 24;
-const OUTLINE_WIDTH = 24;   // Must correspond to CSS
+const OUTLINE_WIDTH = 24; // Must correspond to CSS
 
 const tableClassHelper = classHelper('s-data-table');
 const columnClassHelper = classHelper('s-data-table', 'col');
@@ -138,8 +138,7 @@ export default Vue.extend({
       let index = Math.max(firstContentColumn,
         thresholds.findIndex(t => t > left));
 
-      if (this.stickyColumn && index === 0)
-        index = 1;
+      if (this.stickyColumn && index === 0) { index = 1; }
 
       return index - firstContentColumn;
     },
@@ -210,7 +209,7 @@ export default Vue.extend({
       if (to > from) to--;
       if (to === from) return null;
 
-      this.$emit('move-column', {from, to});
+      this.$emit('move-column', { from, to });
     },
 
     onPointerMove(event: PointerEvent) {
@@ -231,7 +230,7 @@ export default Vue.extend({
       let element = event.target as HTMLElement;
       if (element === null) return;
 
-      let scrollTop = element.scrollTop;
+      let { scrollTop } = element;
       let scrollBottom = element.scrollTop + element.clientHeight;
 
       const bottomSpacer = this.$refs['bottom-spacer'] as HTMLElement;
@@ -246,7 +245,7 @@ export default Vue.extend({
           let firstRow = this.skip + this.rootNodes.length + rowOffset;
           let lastRow = firstRow + rows;
 
-          const args = {firstRow, lastRow};
+          const args = { firstRow, lastRow };
           this.$emit('visible-rows', args);
         }
       }
@@ -268,7 +267,7 @@ export default Vue.extend({
           let lastRow = this.skip - rowOffset;
           let firstRow = Math.floor(scrollTop / this.rowHeight);
 
-          const args = {firstRow, lastRow};
+          const args = { firstRow, lastRow };
           this.$emit('visible-rows', args);
         }
       }
@@ -287,13 +286,12 @@ export default Vue.extend({
       const h = this.$createElement;
 
       return h('table', {
-          class: 's-data-table__table',
-        }, [
-          this.renderedColgroup,
-          this.renderHeader(),
-          this.renderedBody,
-        ],
-      );
+        class: 's-data-table__table',
+      }, [
+        this.renderedColgroup,
+        this.renderHeader(),
+        this.renderedBody,
+      ]);
     },
 
     renderColgroup(): VNode {
@@ -302,13 +300,11 @@ export default Vue.extend({
       const defaultWidth = this.fixed ? '150px' : 'auto';
 
       return h('colgroup', [
-        this.columns.map(column =>
-          h('col', {
-            style: {
-              width: column.width != null ? `${column.width}px` : defaultWidth,
-            },
-          }),
-        ),
+        this.columns.map(column => h('col', {
+          style: {
+            width: column.width != null ? `${column.width}px` : defaultWidth,
+          },
+        })),
       ]);
     },
 
@@ -326,10 +322,10 @@ export default Vue.extend({
       const h = this.$createElement;
 
       return h('tbody', [
-          this.renderedTopSpacer,
-          this.renderedRootNodes,
-          this.renderedBottomSpacer,
-        ]);
+        this.renderedTopSpacer,
+        this.renderedRootNodes,
+        this.renderedBottomSpacer,
+      ]);
     },
 
     getNodes(parent: ITableNode | null, items: IItem[]): ITableNode[] {
@@ -360,18 +356,17 @@ export default Vue.extend({
       return nodes.reduce(
         (value: VNode[], node: ITableNode, i: number) => (
           value.concat(this.renderNode(node, this.skip + i))
-        ), []);
+        ), [],
+      );
     },
 
     renderNode(node: ITableNode, row: number): VNode[] {
       const h = this.$createElement;
       const el = h('tr', {
-          key: node.key, // FIXME key not consistent with placeholder rows key
-        }, [
-          this.columns.map((column, index) =>
-            this.renderContentCell(node, column, index)),
-        ],
-      );
+        key: node.key, // FIXME key not consistent with placeholder rows key
+      }, [
+        this.columns.map((column, index) => this.renderContentCell(node, column, index)),
+      ]);
 
       if (this.isOpen(node) && node.subItems) {
         return [el].concat(this.renderNodes(node.subItems));
@@ -389,11 +384,11 @@ export default Vue.extend({
 
       let children = [];
       if (isLoading) {
-        children.push(h('s-svg', {props: {name: 'progress'}}));
+        children.push(h('s-svg', { props: { name: 'progress' } }));
       } else if (hasSubItems || hasPendingSubItems) {
-        children.push(h('s-svg', {props: {name: 'arrow'}}));
+        children.push(h('s-svg', { props: { name: 'arrow' } }));
       } else {
-        children.push(h('i', {domProps: {innerHTML: '&nbsp;'}}));
+        children.push(h('i', { domProps: { innerHTML: '&nbsp;' } }));
       }
 
       return h('span', {
@@ -418,15 +413,15 @@ export default Vue.extend({
       // Draw outline for this item, if it is a child item. This line will
       // connect to the line of the line above.
       if (node.parent != null) {
-        children.push(h('span', {class: 's-data-table__outline__section'}, [
+        children.push(h('span', { class: 's-data-table__outline__section' }, [
           this.renderAngle(!node.isLastChild),
         ]));
       }
 
       // Render icon and start line that child items will connect to, if any.
-      children.push(h('span', {class: 's-data-table__outline__section'}, [
+      children.push(h('span', { class: 's-data-table__outline__section' }, [
         (this.isOpen(node) && node.subItems && node.subItems.length) ? this.renderTail() : '',
-        node.item.icon ? h('s-icon', {class: 's-data-table__icon', props: {name: node.item.icon}}) : '',
+        node.item.icon ? h('s-icon', { class: 's-data-table__icon', props: { name: node.item.icon } }) : '',
       ]));
 
       // Render nested children with correct indentation, and connect lines between
@@ -436,14 +431,14 @@ export default Vue.extend({
       let p = node.parent;
       while (p != null) {
         if (p.parent) {
-          children.unshift(h('span', {class: 's-data-table__outline__section'}, [
+          children.unshift(h('span', { class: 's-data-table__outline__section' }, [
             !p.isLastChild ? this.renderLine() : '',
           ]));
         }
         p = p.parent;
       }
 
-      return h('span', {class: 's-data-table__outline'}, children);
+      return h('span', { class: 's-data-table__outline' }, children);
     },
 
     renderLine(): VNode {
@@ -490,13 +485,12 @@ export default Vue.extend({
       const h = this.$createElement;
 
       return h('svg', {
-          attrs: {
-            width: OUTLINE_WIDTH,
-            height: this.rowHeight,
-          },
+        attrs: {
+          width: OUTLINE_WIDTH,
+          height: this.rowHeight,
         },
-        lines.map(attrs => h('line', { attrs })),
-      );
+      },
+      lines.map(attrs => h('line', { attrs })));
     },
 
     renderTopSpacer(): VNode[] {
@@ -535,33 +529,28 @@ export default Vue.extend({
 
       const nodes: VNode[] = [];
 
-      // tslint:disable-next-line:no-bitwise
       const hash = (x: number, y: number): number => mod(((x << 24) ^ (y << 8)), 41);
       const mod = (x: number, m: number): number => ((x % m) + m) % m;
 
       for (let i = 0; i < rows; i++) {
         const row = startRow + i;
         const el = h('tr', {
-            key: row,
+          key: row,
+        }, [
+          this.columns.map((column, index) => h('td', {
+            key: column.key,
+            class: this.getColumnClass(column, index),
           }, [
-            this.columns.map((column, index) =>
-              h('td', {
-                  key: column.key,
-                  class: this.getColumnClass(column, index),
-                }, [
-                  h('span', {staticClass: 's-data-table__cell-wrapper'}, [
-                    h('span', {staticClass: 's-data-table__cell-content'}, [
-                      h('span', {
-                        staticClass: 's-data-table__cell-placeholder',
-                        style: {width: `${hash(row, index) + 20}px`},
-                      }),
-                    ]),
-                  ]),
-                ],
-              ),
-            ),
-          ],
-        );
+            h('span', { staticClass: 's-data-table__cell-wrapper' }, [
+              h('span', { staticClass: 's-data-table__cell-content' }, [
+                h('span', {
+                  staticClass: 's-data-table__cell-placeholder',
+                  style: { width: `${hash(row, index) + 20}px` },
+                }),
+              ]),
+            ]),
+          ])),
+        ]);
         nodes.push(el);
       }
 
@@ -573,7 +562,7 @@ export default Vue.extend({
       if (rows === 0) return [];
 
       let height = `${rows * this.rowHeight}px`;
-      return [h('tr', {style: {height}})];
+      return [h('tr', { style: { height } })];
     },
 
     // This is used to track scroll position
@@ -598,7 +587,7 @@ export default Vue.extend({
         );
       }
 
-      children.push(h('span', {staticClass: 's-data-table__cell-content'}, column.title));
+      children.push(h('span', { staticClass: 's-data-table__cell-content' }, column.title));
 
       let { sorting } = this;
       if (sorting.key === column.key) {
@@ -619,15 +608,14 @@ export default Vue.extend({
       }
 
       return h('th', {
-          key: column.key,
-          class: this.getColumnClass(column, index),
-          on,
-        }, [
-          h('span', {staticClass: 's-data-table__cell-wrapper'}, [
-            children,
-          ]),
-        ],
-      );
+        key: column.key,
+        class: this.getColumnClass(column, index),
+        on,
+      }, [
+        h('span', { staticClass: 's-data-table__cell-wrapper' }, [
+          children,
+        ]),
+      ]);
     },
 
     renderContentCell(node: ITableNode, column: IColumn, index: number): VNode | string | VNodeChildrenArrayContents {
@@ -647,19 +635,18 @@ export default Vue.extend({
       }
 
       let slot = this.$scopedSlots[`~${key}`];
-      let content = slot ? slot({value, item: node.item}) : value;
+      let content = slot ? slot({ value, item: node.item }) : value;
 
-      children.push(h('span', {staticClass: 's-data-table__cell-content'}, [ content ]));
+      children.push(h('span', { staticClass: 's-data-table__cell-content' }, [content]));
 
       return h('td', {
-          key,
-          class: this.getColumnClass(column, index),
-        }, [
-          h('span', {staticClass: 's-data-table__cell-wrapper'}, [
-            children,
-          ]),
-        ],
-      );
+        key,
+        class: this.getColumnClass(column, index),
+      }, [
+        h('span', { staticClass: 's-data-table__cell-wrapper' }, [
+          children,
+        ]),
+      ]);
     },
 
     renderSortArrows(reverse: boolean): VNode {
@@ -682,8 +669,7 @@ export default Vue.extend({
         let { currentDropIndex } = drag;
 
         let width = 6;
-        if (currentDropIndex === drag.dragColumnIndex + 1)
-          currentDropIndex = drag.dragColumnIndex;
+        if (currentDropIndex === drag.dragColumnIndex + 1) { currentDropIndex = drag.dragColumnIndex; }
 
         let widthIndex = firstContentColumn + currentDropIndex;
 
@@ -742,8 +728,7 @@ export default Vue.extend({
         }, [
           this.renderTable(),
         ]),
-      ],
-    );
+      ]);
   },
 
   created() {

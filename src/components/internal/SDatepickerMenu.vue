@@ -88,19 +88,22 @@ export default Vue.extend({
               .startOf(period),
             moment(this.today)
               .subtract(moveDateAmount, period)
-              .endOf(period));
+              .endOf(period),
+          );
           break;
         case 'current':
           this.$emit(
             'setSelectedPeriod',
             moment(this.today).startOf(period),
-            moment(this.today).endOf(period));
+            moment(this.today).endOf(period),
+          );
           break;
         case 'next':
           this.$emit(
             'setSelectedPeriod',
             moment(this.today).add(moveDateAmount, period).startOf(period),
-            moment(this.today).add(moveDateAmount, period).endOf(period));
+            moment(this.today).add(moveDateAmount, period).endOf(period),
+          );
           break;
       }
     },
