@@ -29,6 +29,7 @@ export default Vue.extend({
   watch: {
     name: {
       handler() {
+        // eslint-disable-next-line global-require, import/no-dynamic-require
         const svg = require(`html-loader!../../assets/svg/${this.name}.svg`);
 
         const parser = new DOMParser();

@@ -22,7 +22,11 @@
       v-if="hasFocus && format"
       class="s-input__format"
     >
-      <span class="s-input__value">{{ value }}</span><span class="s-input__format__remaining">{{ remainingFormat }}</span>
+      <span class="s-input__value">{{
+        value
+      }}</span><span class="s-input__format__remaining">{{
+        remainingFormat
+      }}</span>
     </span>
 
   </s-base-input>

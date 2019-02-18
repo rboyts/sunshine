@@ -94,14 +94,12 @@ export default Vue.extend({
       return moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`).isSame(date);
     },
 
-    isInPeriod(m: number, d: number, y: number, fromDate: string, toDate: string) {
+    isInPeriod(m: number, d: number, y: number, fromDate: string, toDate: string): boolean {
       return moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`).isBetween(fromDate, toDate);
     },
 
     mouseOverEvent(m: number, d: number, y: number) {
-      if (!this.mouseDrag) {
-        return false;
-      }
+      if (!this.mouseDrag) return;
       this.$emit('mouseDragEvent', m, d, y, 'dragging');
     },
   },

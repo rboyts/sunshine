@@ -15,7 +15,12 @@ module.exports = {
     'operator-linebreak': ['error', 'after'],
     'prefer-const': 'off',
     'no-else-return': 'off',
+    'no-underscore-dangle': 'off',
     'arrow-parens': 'off',
+    'prefer-destructuring': ['error', {object: true, array: false}],
+    'no-plusplus': 'off',
+    'default-case': 'off',
+    'no-restricted-syntax': 'off',
     'no-param-reassign': [2, {
       ignorePropertyModificationsFor: [
         'state', // vuex state mutations

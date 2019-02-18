@@ -39,6 +39,11 @@ interface ITableNode {
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
 
+const mod = (x: number, m: number): number => ((x % m) + m) % m;
+
+// eslint-disable-next-line no-bitwise
+const hash = (x: number, y: number): number => mod(((x << 24) ^ (y << 8)), 41);
+
 export default Vue.extend({
   name: 'data-table-internal',
 
@@ -207,7 +212,7 @@ export default Vue.extend({
       this.drag = null;
 
       if (to > from) to--;
-      if (to === from) return null;
+      if (to === from) return;
 
       this.$emit('move-column', { from, to });
     },
@@ -529,9 +534,6 @@ export default Vue.extend({
 
       const nodes: VNode[] = [];
 
-      const hash = (x: number, y: number): number => mod(((x << 24) ^ (y << 8)), 41);
-      const mod = (x: number, m: number): number => ((x % m) + m) % m;
-
       for (let i = 0; i < rows; i++) {
         const row = startRow + i;
         const el = h('tr', {
@@ -618,7 +620,8 @@ export default Vue.extend({
       ]);
     },
 
-    renderContentCell(node: ITableNode, column: IColumn, index: number): VNode | string | VNodeChildrenArrayContents {
+    renderContentCell(node: ITableNode, column: IColumn, index: number):
+        VNode | string | VNodeChildrenArrayContents {
       const h = this.$createElement;
       let { key } = column;
 
@@ -669,7 +672,9 @@ export default Vue.extend({
         let { currentDropIndex } = drag;
 
         let width = 6;
-        if (currentDropIndex === drag.dragColumnIndex + 1) { currentDropIndex = drag.dragColumnIndex; }
+        if (currentDropIndex === drag.dragColumnIndex + 1) {
+          currentDropIndex = drag.dragColumnIndex;
+        }
 
         let widthIndex = firstContentColumn + currentDropIndex;
 

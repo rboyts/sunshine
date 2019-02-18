@@ -200,7 +200,7 @@ export default Vue.extend({
     },
 
     mouseDragEvent(date: Moment, event: string) {
-      if (event === 'dragStart' || !moment.isMoment(this.selectedDate)) {
+      if (event === 'dragStart' || !moment.isMoment(this.selectedDate)) {
         this.mouseDrag = true;
         this.selectedDate = date;
       } else if (event === 'dragEnd') {

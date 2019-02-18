@@ -23,7 +23,13 @@
 
           <template slot="content">
             <s-list>
-              <s-list-item v-for="(oc, i) in orderedColumns" :key="oc.column.key" checkable :inactive="i === 0" v-model="oc.visible">
+              <s-list-item
+                v-for="(oc, i) in orderedColumns"
+                :key="oc.column.key"
+                checkable
+                :inactive="i === 0"
+                v-model="oc.visible"
+              >
                 {{ oc.column.title }}
               </s-list-item>
             </s-list>
@@ -35,7 +41,9 @@
       <slot v-for="slot in Object.keys($slots)" :name="slot" :slot="slot"/>
 
       <!-- Pass on all scoped slots -->
-      <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope"><slot :name="slot" v-bind="scope"/></template>
+      <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope">
+        <slot :name="slot" v-bind="scope"/>
+      </template>
 
     </data-table-internal>
 

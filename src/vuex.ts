@@ -29,8 +29,9 @@ const getItems = (keyPath: string[], state: IDataTableState): IItem[] | null => 
 };
 
 
-export const createDataModule = <ModuleState = {}, RootState = any>(options: Module<ModuleState, RootState>):
-    Module<ModuleState & IDataTableState, RootState> => {
+export const createDataModule = <ModuleState = {}, RootState = any>(
+  options: Module<ModuleState, RootState>,
+): Module<ModuleState & IDataTableState, RootState> => {
   const mutex = new Mutex();
 
   return {

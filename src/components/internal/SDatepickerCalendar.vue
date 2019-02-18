@@ -1,43 +1,42 @@
 <template>
-    <div class="s-datepicker__calendar">
-      <div class="s-datepicker__header">
-        <div class="flex flex-even s-datepicker__navigation">
-            <span class="s-datepicker__navigation-arrow back" @click="$emit('addPreviousMonth')" >
-              <s-svg name="arrow" />
-            </span>
-            <h4>{{monthNameInHeader}}</h4>
-            <span class="s-datepicker__navigation-arrow forward" @click="$emit('addComingMonth')" >
-              <s-svg name="arrow" />
-            </span>
-        </div>
-        <ul class="s-datepicker__days">
-          <li
-            class="s-datepicker__day"
-            v-for="(day, i) in days"
-            :key="'Day' + i"
-            :class="{
-              'saturday': (i === 5),
-              'sunday': (i === 6),
-            }"
-          >{{day}}</li>
-        </ul>
+  <div class="s-datepicker__calendar">
+    <div class="s-datepicker__header">
+      <div class="flex flex-even s-datepicker__navigation">
+          <span class="s-datepicker__navigation-arrow back" @click="$emit('addPreviousMonth')" >
+            <s-svg name="arrow" />
+          </span>
+          <h4>{{monthNameInHeader}}</h4>
+          <span class="s-datepicker__navigation-arrow forward" @click="$emit('addComingMonth')" >
+            <s-svg name="arrow" />
+          </span>
       </div>
-      <div class="s-datepicker__grid__container"
-        style="height: 390px; overflow: hidden;" v-on:wheel="calendarScroll">
-        <div class="s-datepicker__scroller" ref="calendarList">
-          <s-datepicker-month
-              class="s-datepicker__grid"
-              v-for="(month, monthKey) in calendar"
-              :today="today"
-              :selected-period="selectedPeriod"
-              :ref="month.month + '-' + month.year"
-              :key="'month' + month.month + '-' + month.year"
-              :month="month"
-              :mouseDrag="mouseDrag"
-              @mouseDragEvent="mouseDragEvent"
-            >
-          </s-datepicker-month>
-        </div>
+      <ul class="s-datepicker__days">
+        <li
+          class="s-datepicker__day"
+          v-for="(day, i) in days"
+          :key="'Day' + i"
+          :class="{
+            'saturday': (i === 5),
+            'sunday': (i === 6),
+          }"
+        >{{day}}</li>
+      </ul>
+    </div>
+    <div class="s-datepicker__grid__container"
+      style="height: 390px; overflow: hidden;" v-on:wheel="calendarScroll">
+      <div class="s-datepicker__scroller" ref="calendarList">
+        <s-datepicker-month
+            class="s-datepicker__grid"
+            v-for="(month, monthKey) in calendar"
+            :today="today"
+            :selected-period="selectedPeriod"
+            :ref="month.month + '-' + month.year"
+            :key="'month' + month.month + '-' + month.year"
+            :month="month"
+            :mouseDrag="mouseDrag"
+            @mouseDragEvent="mouseDragEvent"
+          >
+        </s-datepicker-month>
       </div>
     </div>
   </div>

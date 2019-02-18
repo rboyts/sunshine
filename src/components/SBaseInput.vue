@@ -48,7 +48,7 @@ export default Vue.extend({
 
     labelClass(): object {
       return labelClassHelper({
-        aside: this.hasFocus && !this.readonly || !this.isEmpty,
+        aside: (this.hasFocus && !this.readonly) || !this.isEmpty,
       });
     },
   },

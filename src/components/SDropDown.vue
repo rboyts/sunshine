@@ -3,7 +3,8 @@
 Use cases:
 
 - Simple drop-down (no keyboard input, just select one of multiple available options)
-- Drop-down with search (use keyboard input only to filter available options, not possible to input arbitrary text)
+- Drop-down with search (use keyboard input only to filter available options,
+  not possible to input arbitrary text)
 - Auto-complete (list is initially empty, only shows suggestions when partial text is entered)
 - Multi-select (items have checkbox, input shows comma separated list or "N items selected")
 - Multi-select with search
@@ -47,7 +48,11 @@ Use cases:
         @blur="hasFocus = false"
       />
 
-      <s-svg name="dropdownArrow" :class="classes('caret', caretModifiers)" @click.native="onCaretClick" />
+      <s-svg
+        name="dropdownArrow"
+        :class="classes('caret', caretModifiers)"
+        @click.native="onCaretClick"
+      />
     </s-base-input>
 
     <div slot="content" @mousedown="$event.preventDefault()">
@@ -160,7 +165,8 @@ export default mixins(ClassesMixin).extend({
       return this.items.filter((i: any) => i.title.toLocaleLowerCase().indexOf(flt) !== -1);
     },
 
-    // TODO: Need proper :key values, so that filtering doesn't alter which item each line corresponds to
+    // TODO: Need proper :key values, so that filtering doesn't alter which item
+    // each line corresponds to
 
     itemValues(): object[] {
       return this.filteredItems.map(item => {
