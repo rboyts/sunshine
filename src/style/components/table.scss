@@ -145,33 +145,15 @@ $table-toggle-width: base-spacing(5);
     color: $gray;
   }
 
-  .s-svg {
+  .s-icon {
     transition: transform $duration-normal;
     transform: rotate(180deg);
   }
 
   &--open {
-    .s-svg {
+    .s-icon {
       transform: rotate(0);
     }
-  }
-
-  &--loading {
-    .s-svg {
-      animation-name: spinning;
-      animation-timing-function: linear;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-    }
-  }
-}
-
-@keyframes spinning {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(-360deg);
   }
 }
 
@@ -183,9 +165,7 @@ $table-toggle-width: base-spacing(5);
   height: $table-normal-row-height;
 
   &--open {
-    svg path {
-      fill: $color-edit;
-    }
+    color: $color-edit;
   }
 }
 

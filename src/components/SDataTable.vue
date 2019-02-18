@@ -18,7 +18,7 @@
       <template slot="menu">
         <s-menu v-model="menuOpen">
           <div slot="activator" :class="classes('more', {open: menuOpen})">
-            <s-svg name="more" />
+            <s-icon package="sunshine24" name="more" />
           </div>
 
           <template slot="content">
@@ -58,7 +58,7 @@ import SMenu from './SMenu.vue';
 import SButton from './SButton.vue';
 import SList from './SList.vue';
 import SListItem from './SListItem.vue';
-import SSvg from './internal/SSvg.vue';
+import SIcon from './SIcon.vue';
 import DataTableInternal from './internal/DataTableInternal';
 import {
   ISortState, IItem, IColumn, IRequestLoadItemsPayload,
@@ -76,7 +76,7 @@ export default mixins(ClassesMixin).extend({
     SButton,
     SList,
     SListItem,
-    SSvg,
+    SIcon,
     DataTableInternal,
   },
 

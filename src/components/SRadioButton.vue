@@ -12,7 +12,9 @@
 
     <span :class="classes('box')">
       <transition name="fade">
-        <s-svg v-if="checked" name="radioButtonSelected" :class="classes('selected')" />
+        <i v-if="checked" name=""
+          class="sunshine16-radiobtnselected"
+          :class="classes('selected')" />
       </transition>
     </span>
     <slot/>
@@ -23,14 +25,9 @@
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../lib/utils';
-import SSvg from './internal/SSvg.vue';
 
 export default mixins(ClassesMixin).extend({
   name: 's-radio-button',
-
-  components: {
-    SSvg,
-  },
 
   props: {
     value: String,

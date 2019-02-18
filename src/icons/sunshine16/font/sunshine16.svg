@@ -1,0 +1,16 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2019 by original authors @ fontello.com</metadata>
+<defs>
+<font id="sunshine16" horiz-adv-x="1000" >
+<font-face font-family="sunshine16" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="checkmark" unicode="&#xe800;" d="M721 520c25 24 65 23 89-2 24-25 23-64-2-88l-261-250c-24-23-62-23-87 0l-191 183c-25 24-25 64-2 88 24 25 64 26 89 2l148-141 217 208z" horiz-adv-x="1000" />
+
+<glyph glyph-name="radiobtnselected" unicode="&#xe801;" d="M500 163c-104 0-187 83-187 187 0 104 83 188 187 188 104 0 188-84 188-188 0-104-84-187-188-187z" horiz-adv-x="1000" />
+
+<glyph glyph-name="checkmarkmultiple" unicode="&#xe802;" d="M313 413l375 0c34 0 62-28 62-63 0-34-28-62-62-62l-375 0c-35 0-63 28-63 62 0 35 28 63 63 63z" horiz-adv-x="1000" />
+</font>
+</defs>
+</svg>

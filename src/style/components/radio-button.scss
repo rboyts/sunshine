@@ -59,4 +59,8 @@ $radio-button-border-width: 1px;
   width: $radio-button-height;
   height: $radio-button-height;
   text-align: center;
+
+  &[class^="sunshine16-"]::before {
+    margin: 0;
+  }
 }

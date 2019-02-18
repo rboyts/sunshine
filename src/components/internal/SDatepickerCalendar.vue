@@ -3,11 +3,11 @@
     <div class="s-datepicker__header">
       <div class="flex flex-even s-datepicker__navigation">
           <span class="s-datepicker__navigation-arrow back" @click="$emit('addPreviousMonth')" >
-            <s-svg name="arrow" />
+            <s-icon package="sunshine24" name="arrow" />
           </span>
           <h4>{{monthNameInHeader}}</h4>
           <span class="s-datepicker__navigation-arrow forward" @click="$emit('addComingMonth')" >
-            <s-svg name="arrow" />
+            <s-icon package="sunshine24" name="arrow" />
           </span>
       </div>
       <ul class="s-datepicker__days">
@@ -47,7 +47,7 @@ import Vue from 'vue';
 import debounce from 'debounce';
 import moment, { Moment } from 'moment';
 import { IMonth, ICalendarPeriod, MouseWheelEvent } from '../types';
-import SSvg from './SSvg.vue';
+import SIcon from '../SIcon.vue';
 import SDatepickerMonth from './SDatepickerMonth.vue';
 
 const SCROLL_DEBOUNCE = 250;
@@ -60,7 +60,7 @@ export default Vue.extend({
   name: 's-datepicker-calendar',
   components: {
     SDatepickerMonth,
-    SSvg,
+    SIcon,
   },
   data() {
     return {

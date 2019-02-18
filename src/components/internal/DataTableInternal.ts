@@ -3,7 +3,7 @@ import debounce from 'debounce';
 import { IColumn, IItem, ISortState } from '../types';
 import { classHelper, joinKeyPath } from '../../lib/utils';
 import SIcon from '../SIcon.vue';
-import SSvg from './SSvg.vue';
+import SProgress from '../SProgress.vue';
 
 const MAX_PLACEHOLDER_ROWS = 0;
 const SCROLL_DEBOUNCE = 250;
@@ -49,7 +49,7 @@ export default Vue.extend({
 
   components: {
     SIcon,
-    SSvg,
+    SProgress,
   },
 
   props: {
@@ -389,9 +389,9 @@ export default Vue.extend({
 
       let children = [];
       if (isLoading) {
-        children.push(h('s-svg', { props: { name: 'progress' } }));
+        children.push(h('s-progress'));
       } else if (hasSubItems || hasPendingSubItems) {
-        children.push(h('s-svg', { props: { name: 'arrow' } }));
+        children.push(h('s-icon', { props: { package: 'sunshine24', name: 'arrow' } }));
       } else {
         children.push(h('i', { domProps: { innerHTML: '&nbsp;' } }));
       }

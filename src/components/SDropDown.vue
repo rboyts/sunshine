@@ -48,8 +48,9 @@ Use cases:
         @blur="hasFocus = false"
       />
 
-      <s-svg
-        name="dropdownArrow"
+      <s-icon
+        package="sunshine24"
+        name="dropdownarrow"
         :class="classes('caret', caretModifiers)"
         @click.native="onCaretClick"
       />
@@ -80,7 +81,7 @@ import SList from './SList.vue';
 import SListItem from './SListItem.vue';
 import SMenu from './SMenu.vue';
 import SBaseInput from './SBaseInput.vue';
-import SSvg from './internal/SSvg.vue';
+import SIcon from './SIcon.vue';
 import { ClassesMixin } from '../lib/utils';
 
 export default mixins(ClassesMixin).extend({
@@ -91,7 +92,7 @@ export default mixins(ClassesMixin).extend({
     SListItem,
     SMenu,
     SBaseInput,
-    SSvg,
+    SIcon,
   },
 
   props: {

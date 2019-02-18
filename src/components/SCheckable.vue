@@ -1,7 +1,9 @@
 <template>
   <span :class="classes(modifiers)">
     <transition name="fade">
-      <s-svg v-if="iconName" :key="iconName" :name="iconName" :class="classes('checkmark')" />
+      <i v-if="iconName"
+        :key="iconName"
+        :class="[`sunshine16-${iconName}`, classes('checkmark')]" />
     </transition>
   </span>
 </template>
@@ -10,14 +12,9 @@
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../lib/utils';
-import SSvg from './internal/SSvg.vue';
 
 export default mixins(ClassesMixin).extend({
   name: 's-checkable',
-
-  components: {
-    SSvg,
-  },
 
   props: {
     checked: Boolean,
@@ -44,9 +41,9 @@ export default mixins(ClassesMixin).extend({
     iconName(): string | null {
       switch (this.checked) {
         case true:
-          return 'checkMark';
+          return 'checkmark';
         case null:
-          return 'checkMarkMultiple';
+          return 'checkmarkmultiple';
         default:
           return null;
       }

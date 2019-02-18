@@ -7,12 +7,20 @@ import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../lib/utils';
 
-import '../icons/style.css';
+import '../icons/icon54/style.css';
+import '../icons/sunshine16/css/sunshine16-embedded.css';
+import '../icons/sunshine24/css/sunshine24-embedded.css';
+
 
 export default mixins(ClassesMixin).extend({
   name: 's-icon',
 
   props: {
+    package: {
+      type: String,
+      default: 'icon',
+    },
+
     name: {
       type: String,
       required: true,
@@ -21,7 +29,7 @@ export default mixins(ClassesMixin).extend({
 
   computed: {
     iconClass(): string {
-      return `icon-${this.name}`;
+      return `${this.package}-${this.name}`;
     },
   },
 });

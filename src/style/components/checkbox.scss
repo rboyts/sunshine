@@ -58,9 +58,12 @@ $checkbox-border-width: 1px;
   left: -$checkbox-border-width;
   user-select: none;
   pointer-events: none;
-  font-size: .675rem;
   line-height: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
   height: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
   width: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
   text-align: center;
+
+  &[class^="sunshine16-"]::before {
+    margin: 0;
+  }
 }

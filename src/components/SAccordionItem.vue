@@ -7,7 +7,9 @@
       @click="onClick"
     >
       <slot name="heading" />
-      <s-svg :class="classes('chevron', chevronOptions)" name="arrow" />
+      <s-icon package="sunshine24" name="arrow"
+        :class="classes('chevron', chevronOptions)"
+      />
     </a>
 
     <div
@@ -27,13 +29,13 @@
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../lib/utils';
-import SSvg from './internal/SSvg.vue';
+import SIcon from './SIcon.vue';
 
 export default mixins(ClassesMixin).extend({
   name: 's-accordion-item',
 
   components: {
-    SSvg,
+    SIcon,
   },
 
   // XXX parent should handle state

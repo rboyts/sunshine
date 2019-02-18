@@ -1,0 +1,14 @@
+
+.sunshine24-arrow:before { content: '\e800'; } /* '' */
+.sunshine24-bad:before { content: '\e801'; } /* '' */
+.sunshine24-close:before { content: '\e802'; } /* '' */
+.sunshine24-dialog:before { content: '\e803'; } /* '' */
+.sunshine24-good:before { content: '\e804'; } /* '' */
+.sunshine24-dropdownarrow:before { content: '\e805'; } /* '' */
+.sunshine24-more:before { content: '\e806'; } /* '' */
+.sunshine24-navigateback:before { content: '\e807'; } /* '' */
+.sunshine24-newmessage:before { content: '\e808'; } /* '' */
+.sunshine24-newmessagebg:before { content: '\e809'; } /* '' */
+.sunshine24-sortcolumn:before { content: '\e80c'; } /* '' */
+.sunshine24-readmessage:before { content: '\e80f'; } /* '' */
+.sunshine24-readmessagebg:before { content: '\e810'; } /* '' */
