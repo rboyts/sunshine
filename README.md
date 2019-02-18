@@ -8,12 +8,7 @@ UI component library for SmartDok.
 yarn install
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
-
-### Compiles and minifies for production
+### Compiles library and minifies for production
 ```
 yarn run build
 ```
@@ -26,4 +21,25 @@ yarn run lint
 ### Runs tests
 ```
 yarn test:unit
+```
+
+### VSCode setup
+
+Installed plugins:
+
+- ESLint
+- Vetur
+
+Relevant configuration options:
+
+```
+    "files.trimTrailingWhitespace": true,
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "vue"
+    ],
+    "eslint.packageManager": "yarn"
 ```
