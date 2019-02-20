@@ -16,7 +16,7 @@ const OUTLINE_WIDTH = 24; // Must correspond to CSS
 
 const tableClassHelper = classHelper('s-data-table');
 const columnClassHelper = classHelper('s-data-table', 'col');
-const sortClassHelper = classHelper('s-data-table', 'sort');
+const sortClassHelper = classHelper('s-data-table', 'sortcolumn');
 const toggleClassHelper = classHelper('s-data-table', 'toggle');
 
 interface IDragState {
@@ -612,8 +612,11 @@ export default Vue.extend({
       children.push(h('span', { staticClass: 's-data-table__cell-content' }, column.title));
 
       let { sorting } = this;
-      if (sorting.key === column.key) {
-        children.push(this.renderSortArrows(sorting.reverse));
+      if (column.sortable) {
+        children.push(this.renderSortArrows(
+          sorting.key === column.key,
+          sorting.reverse,
+        ));
       }
 
       let on: { [key: string]: any } = {};
@@ -687,13 +690,16 @@ export default Vue.extend({
       ]);
     },
 
-    renderSortArrows(reverse: boolean): VNode {
+    renderSortArrows(active: boolean, reverse: boolean): VNode {
       const h = this.$createElement;
 
       return h('span', {
-        class: sortClassHelper({ reverse }),
+        class: sortClassHelper({
+          active,
+          reverse,
+        }),
       }, [
-        h('span', { staticClass: 'fas fa-arrow-circle-up' }),
+        h('s-icon', { props: { package: 'sunshine24', name: 'sortcolumn' } }),
       ]);
     },
 
