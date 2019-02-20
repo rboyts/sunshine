@@ -389,7 +389,11 @@ export default Vue.extend({
     },
 
     renderRootNodes(): VNode[] {
-      return this.renderNodes(this.rootNodes);
+      if (this.rootNodes.length === 0) {
+        return this.$slots.empty || [];
+      } else {
+        return this.renderNodes(this.rootNodes);
+      }
     },
 
     renderNodes(nodes: ITableNode[]): VNode[] {
