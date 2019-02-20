@@ -92,6 +92,7 @@ export default Vue.extend({
       openNodes: [] as string[],
 
       // TODO Vuex
+      isSelectAll: false,
       checkedNodes: [] as string[],
       activeRow: null as string | null,
     };
@@ -134,6 +135,16 @@ export default Vue.extend({
   },
 
   methods: {
+    selectAll() {
+      this.checkedNodes = [];
+      this.isSelectAll = true;
+    },
+
+    selectNone() {
+      this.checkedNodes = [];
+      this.isSelectAll = false;
+    },
+
     getThresholds(widths: number[]): number[] {
       let res: number[] = [];
       let total = 0;
@@ -174,11 +185,11 @@ export default Vue.extend({
     },
 
     isChecked(node: ITableNode): boolean {
-      return this.checkedNodes.includes(node.key);
+      return this.checkedNodes.includes(node.key) !== this.isSelectAll;
     },
 
     toggleChecked(node: ITableNode) {
-      if (this.isChecked(node)) {
+      if (this.checkedNodes.includes(node.key)) {
         this.checkedNodes = this.checkedNodes.filter(k => k !== node.key);
       } else {
         this.checkedNodes.push(node.key);
@@ -658,7 +669,6 @@ export default Vue.extend({
       let { key } = column;
 
       let children = [];
-      let checked = this.isChecked(node);
 
       if (this.checkable && index === 0) {
         children.push(h('span', {

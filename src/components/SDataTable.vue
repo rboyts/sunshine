@@ -1,11 +1,13 @@
 <template>
   <data-table-internal
     class="flex-grow"
+    ref="impl"
     :items="items"
     :total="total"
     :skip="skip"
     :sorting="sorting"
     :columns="visibleColumns"
+    :checkable="checkable"
     @sort="onSort"
     @visible-rows="onVisibleRows"
     @move-column="onMoveColumn"
@@ -22,6 +24,8 @@
 
         <template slot="content">
           <s-list>
+            <s-list-item v-if="checkable" @click="onSelectAll">Select all</s-list-item>
+            <s-list-item v-if="checkable" @click="onSelectNone">Select none</s-list-item>
             <s-list-item
               v-for="(oc, i) in orderedColumns"
               :key="oc.column.key"
@@ -80,6 +84,11 @@ export default mixins(ClassesMixin).extend({
 
   props: {
     module: String,
+
+    checkable: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -136,6 +145,20 @@ export default mixins(ClassesMixin).extend({
       if (!this.module) return false;
       this.$store.dispatch(`${this.module}/${name}`, payload);
       return true;
+    },
+
+    onSelectAll() {
+      this.menuOpen = false;
+
+      // TODO: Vuex?
+      (this.$refs.impl as any).selectAll();
+    },
+
+    onSelectNone() {
+      this.menuOpen = false;
+
+      // TODO: Vuex?
+      (this.$refs.impl as any).selectNone();
     },
 
     onVisibleRows(args: IRequestLoadItemsPayload) {
