@@ -28,7 +28,8 @@
                 :key="oc.column.key"
                 checkable
                 :inactive="i === 0"
-                v-model="oc.visible"
+                :checked="oc.visible"
+                @change="onToggleColumn(i, $event)"
               >
                 {{ oc.column.title }}
               </s-list-item>
@@ -61,7 +62,7 @@ import SListItem from './SListItem.vue';
 import SIcon from './SIcon.vue';
 import DataTableInternal from './internal/DataTableInternal';
 import {
-  ISortState, IItem, IColumn, IRequestLoadItemsPayload,
+  ISortState, IItem, IColumn, IRequestLoadItemsPayload, IOrderedColumn, IColumns,
 } from './types';
 
 export { IColumn, ISortState, IItem } from './types';
@@ -87,15 +88,16 @@ export default mixins(ClassesMixin).extend({
   data() {
     return {
       menuOpen: false,
-      orderedColumns: [] as Array<{column: IColumn, visible: boolean}>,
     };
   },
 
   computed: {
     visibleColumns(): IColumn[] {
-      return this.orderedColumns
-        .filter(oc => oc.visible)
-        .map(oc => oc.column);
+      return this.getState('visibleColumns');
+    },
+
+    orderedColumns(): IOrderedColumn[] {
+      return this.getState('orderedColumns');
     },
 
     columns(): IColumn[] {
@@ -120,11 +122,8 @@ export default mixins(ClassesMixin).extend({
   },
 
   watch: {
-    columns: {
+    module: {
       handler() {
-        // TODO Be able to restore saved column order/selection
-        this.orderedColumns = this.columns.map(column => ({ column, visible: true }));
-
         this.tryDispatchAction('init');
       },
       immediate: true,
@@ -155,21 +154,12 @@ export default mixins(ClassesMixin).extend({
     },
 
     onMoveColumn({ from, to }: {from: number, to: number}) {
-      const fromKey = this.visibleColumns[from].key;
-      const fromIndex = this.orderedColumns.findIndex(oc => oc.column.key === fromKey);
-
-      let toIndex: number;
-      if (to === 0) {
-        toIndex = 0;
-      } else {
-        const afterKey = this.visibleColumns[to - 1].key;
-        toIndex = this.orderedColumns.findIndex(oc => oc.column.key === afterKey) + 1;
-      }
-
-      const moved = this.orderedColumns.splice(fromIndex, 1);
-      this.orderedColumns.splice(toIndex, 0, ...moved);
+      this.tryDispatchAction('moveColumn', { from, to });
     },
 
+    onToggleColumn(index: number, checked: boolean) {
+      this.tryDispatchAction('toggleColumn', { index, checked });
+    },
   },
 });
 </script>

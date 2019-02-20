@@ -11,6 +11,7 @@ export interface IDataTableState {
   sorting: ISortState;
   items: { [key: string]: IItem[] };
   total: number | null;
+  orderedColumns: IOrderedColumn[],
 }
 
 export interface IColumn {
@@ -21,6 +22,15 @@ export interface IColumn {
   width?: number;
   align?: 'left' | 'right' | 'center';
   filter?: (value: any) => any;
+}
+
+export interface IColumns {
+  columns: IColumn[],
+}
+
+export interface IOrderedColumn {
+  column: IColumn;
+  visible: boolean;
 }
 
 export interface IItemData {

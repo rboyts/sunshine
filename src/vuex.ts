@@ -5,6 +5,9 @@ import {
   IRequestLoadItemsPayload,
   ISortState,
   IItem,
+  IColumn,
+  IColumns,
+  IOrderedColumn,
 } from './components/types';
 import { joinKeyPath } from './lib/utils';
 
@@ -30,7 +33,7 @@ const getItems = (keyPath: string[], state: IDataTableState): IItem[] | null => 
 
 
 export const createDataModule = <ModuleState = {}, RootState = any>(
-  options: Module<ModuleState, RootState>,
+  options: Module<ModuleState, RootState> & IColumns,
 ): Module<ModuleState & IDataTableState, RootState> => {
   const mutex = new Mutex();
 
@@ -50,6 +53,8 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
           reverse: false,
         } as ISortState,
 
+        orderedColumns: options.columns.map(column => ({ column, visible: true })),
+
         ...(moduleState || {} as ModuleState),
       };
     },
@@ -59,6 +64,22 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
     },
 
     getters: {
+      columns(state): IColumn[] {
+        return options.columns;
+      },
+
+      orderedColumns(state): IOrderedColumn[] {
+        return state.orderedColumns;
+      },
+
+      visibleColumns(state, getters): IColumn[] {
+        const orderedColumns = getters.orderedColumns as IOrderedColumn[];
+        return orderedColumns
+          .filter(oc => oc.visible)
+          .map(oc => oc.column);
+      },
+
+
       items(state) {
         return getItems([], state);
       },
@@ -84,6 +105,15 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
           key,
           reverse: state.sorting.key === key ? !state.sorting.reverse : false,
         };
+      },
+
+      moveColumn: (state, { fromIndex, toIndex }: { fromIndex: number, toIndex: number}) => {
+        const moved = state.orderedColumns.splice(fromIndex, 1);
+        state.orderedColumns.splice(toIndex, 0, ...moved);
+      },
+
+      toggleColumn: (state, { index, checked }: { index: number, checked: boolean }) => {
+        state.orderedColumns[index].visible = checked;
       },
 
       loadStart: state => {
@@ -118,6 +148,28 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
       async sort({ commit, dispatch }, key: string) {
         commit('sorting', key);
         await dispatch('init');
+      },
+
+      moveColumn({ getters, commit }, { from, to }: { from: number, to: number}) {
+        const visibleColumns = getters.visibleColumns as ReadonlyArray<IColumn>;
+        const orderedColumns = getters.orderedColumns as ReadonlyArray<IOrderedColumn>;
+
+        const fromKey = visibleColumns[from].key;
+        const fromIndex = orderedColumns.findIndex(oc => oc.column.key === fromKey);
+
+        let toIndex: number;
+        if (to === 0) {
+          toIndex = 0;
+        } else {
+          const afterKey = visibleColumns[to - 1].key;
+          toIndex = orderedColumns.findIndex(oc => oc.column.key === afterKey) + 1;
+        }
+
+        commit('moveColumn', { fromIndex, toIndex });
+      },
+
+      toggleColumn({ getters, commit }, { index, checked }: { index: number, checked: boolean }) {
+        commit('toggleColumn', { index, checked });
       },
 
       async init({ dispatch }) {
