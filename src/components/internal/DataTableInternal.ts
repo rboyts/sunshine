@@ -15,6 +15,7 @@ const CONDENSED_ROW_HEIGHT = 24;
 const OUTLINE_WIDTH = 24; // Must correspond to CSS
 
 const tableClassHelper = classHelper('s-data-table');
+const rowClassHelper = classHelper('s-data-table', 'row');
 const columnClassHelper = classHelper('s-data-table', 'col');
 const sortClassHelper = classHelper('s-data-table', 'sortcolumn');
 const toggleClassHelper = classHelper('s-data-table', 'toggle');
@@ -89,7 +90,10 @@ export default Vue.extend({
       drag: null as IDragState | null,
       moveTimeoutId: undefined as number | undefined,
       openNodes: [] as string[],
+
+      // TODO Vuex
       checkedNodes: [] as string[],
+      activeRow: null as string | null,
     };
   },
 
@@ -389,6 +393,10 @@ export default Vue.extend({
       const h = this.$createElement;
       const el = h('tr', {
         key: node.key, // FIXME key not consistent with placeholder rows key
+        class: rowClassHelper({
+          checked: this.isChecked(node),
+          active: this.activeRow === node.key,
+        }),
       }, [
         this.columns.map((column, index) => this.renderContentCell(node, column, index)),
       ]);
@@ -423,7 +431,8 @@ export default Vue.extend({
           // unknown: !isLoading && hasPendingSubItems,
         }),
         on: {
-          click: () => {
+          click: (event: PointerEvent) => {
+            event.stopPropagation();
             this.toggleOpen(node);
           },
         },
@@ -649,6 +658,7 @@ export default Vue.extend({
       let { key } = column;
 
       let children = [];
+      let checked = this.isChecked(node);
 
       if (this.checkable && index === 0) {
         children.push(h('span', {
@@ -659,7 +669,10 @@ export default Vue.extend({
               checked: this.isChecked(node),
             },
             on: {
-              click: () => this.toggleChecked(node),
+              click: (event: PointerEvent) => {
+                event.stopPropagation();
+                this.toggleChecked(node);
+              },
             },
           }),
         ]));
@@ -683,6 +696,9 @@ export default Vue.extend({
       return h('td', {
         key,
         class: this.getColumnClass(column, index),
+        on: {
+          click: () => { this.activeRow = node.key; },
+        },
       }, [
         h('span', { staticClass: 's-data-table__cell-wrapper' }, [
           children,

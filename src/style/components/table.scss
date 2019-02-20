@@ -35,9 +35,9 @@ $table-toggle-width: base-spacing(5);
 
   &:not(.s-data-table--dragging) {
     .s-data-table__table {
-      tr:hover {
+      tr:not(.s-data-table__row--active):hover {
         td {
-          background-color: $whiteish;
+          background-color: $smartdok-eggs-yellow;
         }
       }
     }
@@ -120,6 +120,20 @@ $table-toggle-width: base-spacing(5);
     &--sticky {
       z-index: 1;
       border-right: $inner-border;
+    }
+  }
+}
+
+.s-data-table__row {
+  &--checked {
+    td {
+      background-color: $smartdok-eggs-yellow;
+    }
+  }
+
+  &--active {
+    td {
+      background-color: $smartdok-yellow;
     }
   }
 }
