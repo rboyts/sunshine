@@ -37,6 +37,14 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
 ): Module<ModuleState & IDataTableState, RootState> => {
   const mutex = new Mutex();
 
+  const findColumn = (key: string): IColumn => {
+    const it = options.columns.find(column => column.key === key);
+    if (!it) throw new Error(`Column not found: ${key}`);
+    return it;
+  };
+
+  const getStorageKey = (namespace: string) => `s-data-table@${namespace}`;
+
   return {
     namespaced: true,
 
@@ -53,7 +61,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
           reverse: false,
         } as ISortState,
 
-        orderedColumns: options.columns.map(column => ({ column, visible: true })),
+        columns: options.columns.map(column => ({ key: column.key, visible: true })),
 
         ...(moduleState || {} as ModuleState),
       };
@@ -69,14 +77,16 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
       },
 
       orderedColumns(state): IOrderedColumn[] {
-        return state.orderedColumns;
+        return state.columns.map(oc => ({
+          column: findColumn(oc.key),
+          visible: oc.visible,
+        }));
       },
 
       visibleColumns(state, getters): IColumn[] {
-        const orderedColumns = getters.orderedColumns as IOrderedColumn[];
-        return orderedColumns
+        return state.columns
           .filter(oc => oc.visible)
-          .map(oc => oc.column);
+          .map(oc => findColumn(oc.key));
       },
 
 
@@ -108,12 +118,12 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
       },
 
       moveColumn: (state, { fromIndex, toIndex }: { fromIndex: number, toIndex: number}) => {
-        const moved = state.orderedColumns.splice(fromIndex, 1);
-        state.orderedColumns.splice(toIndex, 0, ...moved);
+        const moved = state.columns.splice(fromIndex, 1);
+        state.columns.splice(toIndex, 0, ...moved);
       },
 
       toggleColumn: (state, { index, checked }: { index: number, checked: boolean }) => {
-        state.orderedColumns[index].visible = checked;
+        state.columns[index].visible = checked;
       },
 
       loadStart: state => {
@@ -139,6 +149,10 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
           ...state.items,
           [key]: items,
         };
+      },
+
+      savedState: (state, saved) => {
+        Object.assign(state, saved);
       },
 
       ...options.mutations,
@@ -272,6 +286,19 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         const result = await dispatch('loadSubItems', { keyPath });
 
         commit('loadSubItemsComplete', { keyPath, items: result.items, total: result.total });
+      },
+
+      async saveState({ state }, { namespace }) {
+        // TODO: Server-side
+
+        localStorage.setItem(getStorageKey(namespace), JSON.stringify(state.columns));
+      },
+
+      async loadState({ commit }, { namespace }) {
+        const data = localStorage.getItem(getStorageKey(namespace));
+        if (!data) return;
+
+        commit('savedState', { columns: JSON.parse(data) });
       },
 
       ...options.actions,

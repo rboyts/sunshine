@@ -32,4 +32,8 @@ $list-item-height: base-spacing(4);
 
     border: 1px solid rgba(0, 0, 0, 0.05);
   }
+
+  > .s-checkable {
+    margin-right: $checkbox-spacing;
+  }
 }

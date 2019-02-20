@@ -11,7 +11,7 @@ export interface IDataTableState {
   sorting: ISortState;
   items: { [key: string]: IItem[] };
   total: number | null;
-  orderedColumns: IOrderedColumn[],
+  columns: Array<{ key: string, visible: boolean }>,
 }
 
 export interface IColumn {
