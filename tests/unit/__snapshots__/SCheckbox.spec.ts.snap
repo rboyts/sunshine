@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SCheckbox renders checkbox 1`] = `<label class="s-checkbox"><input type="checkbox"> <span class="s-checkable"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="s-svg s-checkable__checkmark" name="fade"><g></g></svg></span> <span>I am a checkbox</span></label>`;
+exports[`SCheckbox renders checkbox 1`] = `<label class="s-checkbox"><input type="checkbox"> <span class="s-checkable"><i class="sunshine16-checkmark s-checkable__checkmark" name="fade"></i></span> <span>I am a checkbox</span></label>`;
