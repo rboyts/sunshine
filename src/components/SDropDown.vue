@@ -15,62 +15,65 @@ Use cases:
 
 <template>
   <s-menu v-model="isOpen" :class="classes()" :toggleOnClick="false">
-    <s-base-input
-      slot="activator"
-      :class="classes('input')"
-      :hasFocus="hasFocus"
-      :isEmpty="textValue == '' && text == ''"
-      :readonly="!search"
-      v-bind="$attrs"
-      @click.native="onClick"
-      @keydown.native="onKeyDown"
-      @mousedown.native="$event.preventDefault()"
-    >
-      <label v-if="textValue" :class="classes('label')">{{ textValue }}</label>
+    <template v-slot:activator>
+      <s-base-input
+        :class="classes('input')"
+        :hasFocus="hasFocus"
+        :isEmpty="textValue == '' && text == ''"
+        :readonly="!search"
+        v-bind="$attrs"
+        @click.native="onClick"
+        @keydown.native="onKeyDown"
+        @mousedown.native="$event.preventDefault()"
+      >
+        <label v-if="textValue" :class="classes('label')">{{ textValue }}</label>
 
-      <input
-        v-if="search"
-        ref="input"
-        class="s-input__input"
-        type="text"
-        :value="filter"
-        @focus="hasFocus = true"
-        @blur="hasFocus = false"
-        @input="onInput"
-      />
+        <input
+          v-if="search"
+          ref="input"
+          class="s-input__input"
+          type="text"
+          :value="filter"
+          @focus="hasFocus = true"
+          @blur="hasFocus = false"
+          @input="onInput"
+        />
 
-      <div
-        v-else
-        ref="input"
-        :class="classes('spacer')"
-        tabIndex="0"
-        @focus="hasFocus = true"
-        @blur="hasFocus = false"
-      />
+        <div
+          v-else
+          ref="input"
+          :class="classes('spacer')"
+          tabIndex="0"
+          @focus="hasFocus = true"
+          @blur="hasFocus = false"
+        />
 
-      <s-icon
-        package="sunshine24"
-        name="dropdownarrow"
-        :class="classes('caret', caretModifiers)"
-        @click.native="onCaretClick"
-      />
-    </s-base-input>
+        <s-icon
+          package="sunshine24"
+          name="dropdownarrow"
+          :class="classes('caret', caretModifiers)"
+          @click.native="onCaretClick"
+        />
+      </s-base-input>
+    </template>
 
-    <div slot="content" @mousedown="$event.preventDefault()">
-      <s-list>
-        <s-list-item
-          v-for="item in itemValues"
-          :key="item.key"
-          :checkable="multiple"
-          :checked="item.checked"
-          :selected="item.selected"
-          @change="onItemChange(item.item, $event)"
-          @click="onItemClick(item.item)"
-        >
-          {{ item.title }}
-        </s-list-item>
-      </s-list>
-    </div>
+    <template v-slot:content>
+      <div @mousedown="$event.preventDefault()">
+        <s-list>
+          <s-list-item
+            v-for="item in itemValues"
+            :key="item.key"
+            :checkable="multiple"
+            :checked="item.checked"
+            :selected="item.selected"
+            @change="onItemChange(item.item, $event)"
+            @click="onItemClick(item.item)"
+          >
+            {{ item.title }}
+          </s-list-item>
+        </s-list>
+      </div>
+    </template>
   </s-menu>
 </template>
 

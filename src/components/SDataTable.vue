@@ -16,13 +16,15 @@
     v-bind="$attrs"
   >
 
-    <template slot="menu">
+    <template v-slot:menu>
       <s-menu v-model="menuOpen">
-        <div slot="activator" :class="classes('more', {open: menuOpen})">
-          <s-icon package="sunshine24" name="more" />
-        </div>
+        <template v-slot:activator>
+          <div :class="classes('more', {open: menuOpen})">
+            <s-icon package="sunshine24" name="more" />
+          </div>
+        </template>
 
-        <template slot="content">
+        <template v-slot:content>
           <s-list>
             <s-list-item v-if="checkable" @click="onSelectAll">Select all</s-list-item>
             <s-list-item v-if="checkable" @click="onSelectNone">Select none</s-list-item>
@@ -40,6 +42,8 @@
         </template>
       </s-menu>
     </template>
+
+    <!-- TODO Find out how to forward slots with the new syntax (required for Vue 3.0) -->
 
     <!-- Pass on all named slots -->
     <slot v-for="slot in Object.keys($slots)" :name="slot" :slot="slot"/>
