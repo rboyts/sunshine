@@ -43,13 +43,11 @@
       </s-menu>
     </template>
 
-    <!-- TODO Find out how to forward slots with the new syntax (required for Vue 3.0) -->
-
     <!-- Pass on all named slots -->
-    <slot v-for="slot in Object.keys($slots)" :name="slot" :slot="slot"/>
+    <slot v-for="slot in Object.keys($slots)" :name="slot" v-slot:[slot] />
 
     <!-- Pass on all scoped slots -->
-    <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope">
+    <template v-for="slot in Object.keys($scopedSlots)" v-slot:[slot]="scope">
       <slot :name="slot" v-bind="scope"/>
     </template>
 
