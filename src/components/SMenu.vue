@@ -66,35 +66,17 @@ export default mixins(ClassesMixin, Watcher).extend({
   },
 
   watch: {
-    async value(val) {
+    value(val) {
       this.transitioning = true;
 
       if (val) {
-        setActive(this);
-        let activator = this.$el as HTMLElement;
-        let rect = activator.getBoundingClientRect();
-        this.style = {
-          top: `${rect.bottom}px`,
-          left: `${rect.left}px`,
-          minWidth: `${rect.width}px`,
-          height: 0,
-        };
-        this.contentStyle = {
-          opacity: 0,
-        };
-
-        await Vue.nextTick();
-        this.startWatcher();
-
-        const content = this.$refs.content as HTMLElement;
-        this.style.height = `${content.offsetHeight}px`;
-        this.contentStyle.opacity = 1;
+        this.initPopup();
+        this.animateOpen();
       } else {
         if (activeMenu === this) {
           setActive(null);
         }
-        this.style.height = 0;
-        this.contentStyle.opacity = 0;
+        this.animateClose();
       }
     },
   },
@@ -106,6 +88,41 @@ export default mixins(ClassesMixin, Watcher).extend({
   },
 
   methods: {
+    initPopup() {
+      setActive(this);
+      let activator = this.$el as HTMLElement;
+      let rect = activator.getBoundingClientRect();
+      this.style = {
+        top: `${rect.bottom}px`,
+        left: `${rect.left}px`,
+        minWidth: `${rect.width}px`,
+      };
+      this.startWatcher();
+    },
+
+    async animateOpen() {
+      setActive(this);
+      this.style = { ...this.style, height: 0 };
+      this.contentStyle = { opacity: 0 };
+
+      await Vue.nextTick();
+      this.setHeightToContentHeight();
+    },
+
+    async animateClose() {
+      this.setHeightToContentHeight();
+      await Vue.nextTick();
+      this.setHeightToContentHeight(); // force reflow
+      this.style = { ...this.style, height: 0 };
+      this.contentStyle = { opacity: 0 };
+    },
+
+    setHeightToContentHeight() {
+      const content = this.$refs.content as HTMLElement;
+      this.style = { ...this.style, height: `${content.offsetHeight}px` };
+      this.contentStyle = { opacity: 1 };
+    },
+
     toggle(val: boolean) {
       this.$emit('input', val);
     },
@@ -127,19 +144,28 @@ export default mixins(ClassesMixin, Watcher).extend({
     onWatcher() {
       let activator = this.$el as HTMLElement;
       let rect = activator.getBoundingClientRect();
-      Object.assign(this.style, {
+      this.style = {
+        ...this.style,
         top: `${rect.bottom}px`,
         left: `${rect.left}px`,
         minWidth: `${rect.width}px`,
-      });
+      };
     },
 
     onTransitionEnd() {
       this.transitioning = false;
+      const { height, ...rest } = this.style;
+      this.style = rest;
       if (!this.value) {
         this.stopWatcher();
       }
     },
+  },
+
+  mounted() {
+    if (this.value) {
+      this.initPopup();
+    }
   },
 });
 </script>
