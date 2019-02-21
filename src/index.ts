@@ -17,6 +17,7 @@ import SIcon from './components/SIcon.vue';
 import SInspector from './components/SInspector.vue';
 import SList from './components/SList.vue';
 import SListItem from './components/SListItem.vue';
+import SListSeparator from './components/SListSeparator.vue';
 import SMenu from './components/SMenu.vue';
 import SPieChart from './components/SPieChart.vue';
 import SRadioButton from './components/SRadioButton.vue';
@@ -46,6 +47,7 @@ const plugin = {
     Vue.component('s-inspector', SInspector);
     Vue.component('s-list', SList);
     Vue.component('s-list-item', SListItem);
+    Vue.component('s-list-separator', SListSeparator);
     Vue.component('s-menu', SMenu);
     Vue.component('s-pie-chart', SPieChart);
     Vue.component('s-radio-button', SRadioButton);

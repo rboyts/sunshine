@@ -28,6 +28,7 @@
           <s-list>
             <s-list-item v-if="checkable" @click="onSelectAll">Select all</s-list-item>
             <s-list-item v-if="checkable" @click="onSelectNone">Select none</s-list-item>
+            <s-list-separator v-if="checkable" />
             <s-list-item
               v-for="(oc, i) in orderedColumns"
               :key="oc.column.key"
@@ -62,6 +63,7 @@ import SMenu from './SMenu.vue';
 import SButton from './SButton.vue';
 import SList from './SList.vue';
 import SListItem from './SListItem.vue';
+import SListSeparator from './SListSeparator.vue';
 import SIcon from './SIcon.vue';
 import DataTableInternal from './internal/DataTableInternal';
 import {
@@ -80,6 +82,7 @@ export default mixins(ClassesMixin).extend({
     SButton,
     SList,
     SListItem,
+    SListSeparator,
     SIcon,
     DataTableInternal,
   },

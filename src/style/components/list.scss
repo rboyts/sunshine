@@ -37,3 +37,9 @@ $list-item-height: base-spacing(4);
     margin-right: $checkbox-spacing;
   }
 }
+
+.s-list-separator {
+  display: flex;
+  height: 1px;
+  background-color: $almost-gray;
+}
