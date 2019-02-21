@@ -12,9 +12,14 @@
 
     <span :class="classes('box')">
       <transition name="fade">
-        <i v-if="checked" name=""
-          class="sunshine16-radiobtnselected"
-          :class="classes('selected')" />
+        <svg v-if="checked" :class="classes('selected')" width="16" height="16">
+          <path
+            fill="#1C1C1C"
+            d="M8,11 C6.34314575,11 5,9.65685425 5,8 C5,6.34314575
+              6.34314575,5 8,5 C9.65685425,5 11,6.34314575 11,8 C11,9.65685425
+              9.65685425,11 8,11 Z"
+          />
+        </svg>
       </transition>
     </span>
     <slot/>

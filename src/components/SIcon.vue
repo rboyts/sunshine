@@ -1,5 +1,5 @@
 <template>
-  <span :class="classes()"><i :class="iconClass" /></span>
+  <span :class="classes()"><span :class="iconClass" /></span>
 </template>
 
 <script lang="ts">
@@ -8,7 +8,6 @@ import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../lib/utils';
 
 import '../icons/icon54/style.css';
-import '../icons/sunshine16/css/sunshine16-embedded.css';
 import '../icons/sunshine24/css/sunshine24-embedded.css';
 
 

@@ -64,8 +64,4 @@ $checkbox-border-width: 1px;
   user-select: none;
   pointer-events: none;
   text-align: center;
-
-  &[class^="sunshine16-"]::before {
-    margin: 0;
-  }
 }
