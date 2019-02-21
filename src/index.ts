@@ -25,6 +25,7 @@ import SRadioGroup from './components/SRadioGroup.vue';
 import STab from './components/STab.vue';
 import STabs from './components/STabs.vue';
 import STextField from './components/STextField.vue';
+import SDateField from './components/SDateField.vue';
 import SDatepicker from './components/SDatepicker.vue';
 
 export { createDataModule } from './vuex';
@@ -55,6 +56,7 @@ const plugin = {
     Vue.component('s-tab', STab);
     Vue.component('s-tabs', STabs);
     Vue.component('s-text-field', STextField);
+    Vue.component('s-date-field', SDateField);
     Vue.component('s-datepicker', SDatepicker);
   },
 };
