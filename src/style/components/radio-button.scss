@@ -45,8 +45,10 @@ $radio-button-border-width: 1px;
 
   border: $radio-button-border-width solid $gray;
   background-color: $white;
-  height: $radio-button-height;
-  width: $radio-button-height;
+  min-height: $radio-button-height;
+  max-height: $radio-button-height;
+  min-width: $radio-button-height;
+  max-width: $radio-button-height;
   border-radius: $radio-button-height / 2;
   margin-right: $radio-button-spacing;
 }
@@ -56,8 +58,6 @@ $radio-button-border-width: 1px;
   position: absolute;
   top: -$radio-button-border-width;
   left: -$radio-button-border-width;
-  width: $radio-button-height;
-  height: $radio-button-height;
   text-align: center;
 
   &[class^="sunshine16-"]::before {

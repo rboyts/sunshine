@@ -41,8 +41,10 @@ $checkbox-border-width: 1px;
 
   border: $checkbox-border-width solid $gray;
   background-color: $white;
-  height: $checkbox-height;
-  width: $checkbox-height;
+  min-height: $checkbox-height;
+  max-height: $checkbox-height;
+  min-width: $checkbox-height;
+  max-width: $checkbox-height;
   border-radius: $checkbox-border-radius;
 
   &--focus {
@@ -61,9 +63,6 @@ $checkbox-border-width: 1px;
   left: -$checkbox-border-width;
   user-select: none;
   pointer-events: none;
-  line-height: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
-  height: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
-  width: calc(#{$checkbox-height} - #{2 * $checkbox-border-width});
   text-align: center;
 
   &[class^="sunshine16-"]::before {
