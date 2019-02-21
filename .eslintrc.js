@@ -1,3 +1,5 @@
+const os = require('os');
+
 module.exports = {
   root: true,
   env: {
@@ -20,6 +22,7 @@ module.exports = {
     'prefer-destructuring': ['error', {object: true, array: false}],
     'no-plusplus': 'off',
     'default-case': 'off',
+    'linebreak-style': [1, os.platform() === 'win32' ? 'windows' : 'unix'],
     'no-restricted-syntax': 'off',
     'no-param-reassign': [2, {
       ignorePropertyModificationsFor: [
