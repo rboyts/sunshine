@@ -32,6 +32,13 @@ $alert-status-border: 1px solid rgba(0, 0, 0, .05);
     // text-align: center;
     // margin-left: -$alert-padding;
   }
+
+  .s-progress {
+    display: inline-block;
+    height: $alert-height;
+    margin-left: -$alert-padding + base-spacing();
+    margin-right: base-spacing();
+  }
 }
 
 .s-alert__status {
@@ -75,6 +82,7 @@ $alert-status-border: 1px solid rgba(0, 0, 0, .05);
 }
 
 .s-alert__main {
+  display: inline-flex;
   flex: 1;
 }
 

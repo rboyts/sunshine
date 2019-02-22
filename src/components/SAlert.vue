@@ -3,7 +3,10 @@
     <div :class="classes('status', alertOptions)" />
 
     <div :class="classes('content')">
-      <s-icon v-if="icon" :name="icon" />
+      <slot name="icon">
+        <s-icon v-if="icon" :name="icon" />
+        <s-progress v-else-if="progress" />
+      </slot>
 
       <div :class="classes('main')">
         <slot />
@@ -34,6 +37,10 @@ export default mixins(ClassesMixin).extend({
       default: false,
     },
     error: {
+      type: Boolean,
+      default: false,
+    },
+    progress: {
       type: Boolean,
       default: false,
     },

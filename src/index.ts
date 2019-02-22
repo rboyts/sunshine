@@ -20,6 +20,7 @@ import SListItem from './components/SListItem.vue';
 import SListSeparator from './components/SListSeparator.vue';
 import SMenu from './components/SMenu.vue';
 import SPieChart from './components/SPieChart.vue';
+import SProgress from './components/SProgress.vue';
 import SRadioButton from './components/SRadioButton.vue';
 import SRadioGroup from './components/SRadioGroup.vue';
 import STab from './components/STab.vue';
@@ -50,6 +51,7 @@ const plugin = {
     Vue.component('s-list-separator', SListSeparator);
     Vue.component('s-menu', SMenu);
     Vue.component('s-pie-chart', SPieChart);
+    Vue.component('s-progress', SProgress);
     Vue.component('s-radio-button', SRadioButton);
     Vue.component('s-radio-group', SRadioGroup);
     Vue.component('s-tab', STab);
