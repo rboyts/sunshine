@@ -25,14 +25,17 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../lib/utils';
 import SIcon from './SIcon.vue';
 
-export default mixins(ClassesMixin).extend({
+export default Vue.extend({
   name: 's-accordion-item',
+
+  mixins: [
+    ClassesMixin,
+  ],
 
   components: {
     SIcon,
@@ -49,6 +52,10 @@ export default mixins(ClassesMixin).extend({
 
   watch: {
     async open(val) {
+      if (val) {
+        this.$parent.notifyOpen(this);
+      }
+
       this.transitioning = true;
 
       // Need to wait for height to be correct
@@ -60,8 +67,7 @@ export default mixins(ClassesMixin).extend({
       // is set to the initial value, before we change it. If we don't do this,
       // the transition may not always occur.
       // Ref: https://stackoverflow.com/a/16575811/137627
-      const inner = this.$refs.inner as HTMLElement;
-      const height = inner.offsetHeight;
+      const height = this.$refs.inner.offsetHeight;
 
       if (val) {
         this.height = height;
@@ -75,22 +81,22 @@ export default mixins(ClassesMixin).extend({
   // to re-calculate height
 
   computed: {
-    showBody(): boolean {
+    showBody() {
       return this.open || this.transitioning;
     },
 
-    chevronOptions(): object {
+    chevronOptions() {
       return { rotate: !this.open };
     },
 
-    bodyOptions(): object {
+    bodyOptions() {
       return {
         open: this.open,
         transitioning: this.transitioning,
       };
     },
 
-    bodyStyle(): object {
+    bodyStyle() {
       if (!this.transitioning) return {};
 
       return {
@@ -108,6 +114,14 @@ export default mixins(ClassesMixin).extend({
     onTransitionEnd() {
       this.transitioning = false;
     },
+
+    close() {
+      this.open = false;
+    },
+  },
+
+  mounted() {
+    this.$parent.registerItem(this);
   },
 });
 </script>

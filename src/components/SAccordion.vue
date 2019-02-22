@@ -4,12 +4,42 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../lib/utils';
 
-export default mixins(ClassesMixin).extend({
+export default Vue.extend({
   name: 's-accordion',
+
+  mixins: [
+    ClassesMixin,
+  ],
+
+  props: {
+    linked: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  methods: {
+    registerItem(item) {
+      this.items.push(item);
+    },
+
+    notifyOpen(openedItem) {
+      if (!this.linked) return;
+
+      for (const item of this.items) {
+        if (item !== openedItem) {
+          item.close();
+        }
+      }
+    },
+  },
+
+  created() {
+    this.items = [];
+  },
 });
 </script>
