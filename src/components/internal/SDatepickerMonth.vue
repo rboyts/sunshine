@@ -5,7 +5,7 @@
       <span
         class="s-datepicker__weeks__week"
         v-for="(w, k) in month.weeksInMonth"
-        :key="'weeksOfMonth'+momth+k"
+        :key="'weeksOfMonth'+month+k"
       >{{w}}</span>
     </div>
     <span
