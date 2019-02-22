@@ -22,7 +22,6 @@
           ++?
         -->
         <s-datepicker
-
           :locale="locale"
           :format="format"
           v-model="input" />
