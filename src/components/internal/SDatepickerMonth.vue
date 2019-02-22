@@ -4,16 +4,19 @@
     <div class="s-datepicker__weeks">
       <span
         class="s-datepicker__weeks__week"
-        v-for="w in month.weeksInMonth"
+        v-for="(w, k) in month.weeksInMonth"
+        :key="'weeksOfMonth'+momth+k"
       >{{w}}</span>
     </div>
     <span
       class="s-datepicker__date--overlapping"
-      v-for="x in month.previousMonthDays"
+      v-for="(x, k) in month.previousMonthDays"
+      :key="'previousDaysInMonth'+month+k"
     >{{x}}</span>
     <span
       class="s-datepicker__date"
-      v-for="a in month.daysInMonth"
+      v-for="(a, k) in month.daysInMonth"
+      :key="'daysInMonth'+month + k"
       @mousedown="$emit('mouseDragEvent', month.month, a, month.year, 'dragStart')"
       @mouseup="$emit('mouseDragEvent', month.month, a, month.year, 'dragEnd')"
       @mouseover="mouseOverEvent(month.month, a, month.year)"
@@ -32,7 +35,8 @@
     </span>
     <span
       class="s-datepicker__date--overlapping"
-      v-for="x in (6 - month.lastDay)"
+      v-for="(x, k) in (6 - month.lastDay)"
+      :key="'lastDaysOfMonth'+month+k"
     >{{x}}</span>
   </span>
 </template>

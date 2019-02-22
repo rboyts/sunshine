@@ -36,21 +36,26 @@ $datepicker-navigation-margin: 1.5rem;
 
 .s-datepicker__navigation {
   flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 }
 
-.s-datepicker__navigation h4 {
-  text-transform: uppercase;
-}
-
-.s-datepicker__navigation h4 {
+.s-datepicker__navigation h2 {
   padding: 0.5rem 0;
   margin: 0;
-  flex-grow: 1;
+  flex-grow: 2;
   text-align: center;
+  min-width: 70%;
+}
+
+.s-datepicker__navigation h2::first-letter {
+  text-transform: uppercase;
 }
 
 .s-datepicker__navigation-arrow {
   cursor: pointer;
+  flex-grow: 1;
+  text-align: center;
 }
 
 .s-datepicker__navigation-arrow.back {

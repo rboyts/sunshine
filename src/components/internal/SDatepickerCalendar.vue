@@ -5,7 +5,7 @@
           <span class="s-datepicker__navigation-arrow back" @click="$emit('addPreviousMonth')" >
             <s-icon package="sunshine24" name="arrow" />
           </span>
-          <h4>{{monthNameInHeader}}</h4>
+          <h2>{{monthNameInHeader}}</h2>
           <span class="s-datepicker__navigation-arrow forward" @click="$emit('addComingMonth')" >
             <s-icon package="sunshine24" name="arrow" />
           </span>
@@ -27,7 +27,7 @@
       <div class="s-datepicker__scroller" ref="calendarList">
         <s-datepicker-month
             class="s-datepicker__grid"
-            v-for="(month, monthKey) in calendar"
+            v-for="month in calendar"
             :today="today"
             :selected-period="selectedPeriod"
             :ref="month.month + '-' + month.year"
@@ -97,7 +97,7 @@ export default Vue.extend({
 
     setActiveMonth(calendar: IMonth[]) {
       this.monthNameInHeader = moment(`${calendar[0].year
-      }-${this.stringifySingleDigit(calendar[0].month)}`).format('MMMM-YYYY');
+      }-${this.stringifySingleDigit(calendar[0].month)}`).format('MMMM YYYY');
     },
 
     stringifySingleDigit(key: number): string {
@@ -112,7 +112,6 @@ export default Vue.extend({
     },
 
     calendarScroll(event: MouseWheelEvent) {
-      // TODO: adjust event.wheelDelta minimum scroll to compensate for trackpads which are really sensitive?
       let dragDirection = (event.wheelDelta > 0) ? 'down' : 'up';
       if (dragDirection === 'down') {
         this.$emit('addPreviousMonth');
