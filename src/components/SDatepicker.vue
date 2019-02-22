@@ -1,5 +1,5 @@
 <template>
-  <div class="s-datepicker">
+  <div class="s-datepicker" :class="{includeMenu: menu}">
     <s-datepicker-calendar
       :today="today.format('YYYY-MM-DD')"
       :calendar="calendar"
@@ -12,6 +12,7 @@
       @mouseDragEvent="mouseDragEvent"
     />
     <s-datepicker-menu
+      v-if="menu"
       :today="today"
       :selected-period="selectedPeriod"
       @setSelectedPeriod="selectDateOfPeriod"
@@ -26,16 +27,35 @@ import { IMonth } from './types';
 import SDatepickerCalendar from './internal/SDatepickerCalendar.vue';
 import SDatepickerMenu from './internal/SDatepickerMenu.vue';
 
-// TODO: Get local from system config
-// NB! also applicable to i18n of text
-moment.locale('nb');
-
 export default Vue.extend({
   name: 's-datepicker',
+
   components: {
     SDatepickerCalendar,
     SDatepickerMenu,
   },
+
+  props: {
+    value: String,
+    locale: String,
+    format: String,
+    includeMenu: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  watch: {
+    value(newVal, oldVal) {
+      // Validate date?
+      // TODO: all
+      // this.dateContext = moment(newVal, 'DD.MM.YYYY');
+      // this.calendar = this.createMonths();
+      // this.selectedPeriod.from = moment(newVal, 'DD.MM.YYYY');
+      // this.selectedPeriod.to = moment(newVal, 'DD.MM.YYYY');
+    },
+  },
+
   data() {
     return {
       calendar: [] as IMonth[],
@@ -50,7 +70,12 @@ export default Vue.extend({
       mouseDrag: false,
     };
   },
+
   computed: {
+    menu(): boolean {
+      return this.includeMenu;
+    },
+
     year(): string {
       return this.dateContext.format('Y');
     },
@@ -87,6 +112,7 @@ export default Vue.extend({
       return this.today.format('Y');
     },
   },
+
   methods: {
 
     addPreviousMonth() {
@@ -150,8 +176,9 @@ export default Vue.extend({
     },
 
     createMonths() {
-      let year = this.yearNum;
-      let present = this.monthKey + 1;
+      let year = this.dateContext.get('year');
+      // let present = this.monthKey + 1;
+      let present = this.dateContext.get('month') + 1;
       let months = [];
       for (let a = 0, b = 2; a < b; a++) {
         let tmpMonth: number;
@@ -230,10 +257,7 @@ export default Vue.extend({
       }
     },
   },
-  created() {
-    this.selectedPeriod.from = moment('2019-02-02');
-    this.selectedPeriod.to = moment('2019-02-28');
-  },
+
   mounted() {
     this.calendar = this.createMonths();
   },

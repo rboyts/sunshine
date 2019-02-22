@@ -4,17 +4,19 @@ $datepicker-height: 29rem;
 $datepicker-width: 18rem;
 $datepicker-menu-width: 14rem;
 $datepicker-navigation-margin: 1.5rem;
-$datepicker-border: 1px solid $gray;
 
 .s-datepicker {
   display: flex;
   flex-direction: row;
   position: relative;
-  width: $datepicker-width + $datepicker-menu-width;
+  width: $datepicker-width;
   height: $datepicker-height;
-  border: $datepicker-border;
   //overflow: hidden;
   background: #fff;
+}
+
+.s-datepicker.includeMenu {
+  width: $datepicker-menu-width + $datepicker-width;
 }
 
 .s-datepicker__calendar {
