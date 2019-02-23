@@ -23,7 +23,12 @@ Use cases:
         :readonly="!search"
         v-bind="$attrs"
         @click.native="onClick"
-        @keydown.native="onKeyDown"
+        @keydown.native.up.prevent="onArrowUp"
+        @keydown.native.down.prevent="onArrowDown"
+        @keydown.native.enter.prevent="onEnter"
+        @keydown.native.esc.prevent="onEscape"
+        @keydown.native.backspace="onBackspace"
+        @keydown.native.space="onSpace"
         @mousedown.native="$event.preventDefault()"
       >
         <label v-if="textValue" :class="classes('label')">{{ textValue }}</label>
@@ -230,85 +235,82 @@ export default mixins(ClassesMixin).extend({
       el.focus();
     },
 
-    onKeyDown(event: KeyboardEvent) {
-      let consumed = false;
-
+    onArrowUp() {
       if (this.isOpen) {
-        switch (event.key) {
-          case 'ArrowUp':
-            this.selectPrevious();
-            consumed = true;
-            break;
-          case 'ArrowDown':
-            this.selectNext();
-            consumed = true;
-            break;
-          case 'Enter':
-            if (this.selected) {
-              if (this.multiple) {
-                this.setChecked(this.selected, true);
-              } else {
-                this.setValue(this.selected);
-              }
-              this.isOpen = false;
-            }
-            consumed = true;
-            break;
-          case ' ':
-            if (this.selected) {
-              if (this.multiple) {
-                this.toggleChecked(this.selected);
-                this.filter = '';
-                consumed = true;
-              }
-            }
-            break;
-          case 'Backspace':
-            if (!this.filter) {
-              if (this.multiple) {
-                this.value.pop();
-                consumed = true;
-              }
-            }
-            break;
-          case 'Escape':
-            if (this.filter) {
-              this.filter = '';
-            } else {
-              this.isOpen = false;
-            }
-            consumed = true;
-        }
+        this.selectPrevious();
       } else {
-        switch (event.key) {
-          case 'ArrowDown':
-            if (this.multiple) {
-              this.isOpen = true;
-              this.selectNext();
-            } else {
-              this.setValue(this.getNextItem(this.value));
-            }
-            consumed = true;
-            break;
-          case 'ArrowUp':
-            if (this.multiple) {
-              this.isOpen = true;
-              this.selectPrevious();
-            } else {
-              this.setValue(this.getPreviousItem(this.value));
-            }
-            consumed = true;
-            break;
-          case 'Enter':
-          case 'Backspace':
-          case ' ':
-            this.isOpen = true;
-            consumed = true;
-            break;
+        if (this.multiple) {
+          this.isOpen = true;
+          this.selectPrevious();
+        } else {
+          this.setValue(this.getPreviousItem(this.value));
         }
       }
+    },
 
-      if (consumed) {
+    onArrowDown() {
+      if (this.isOpen) {
+        this.selectNext();
+      } else {
+        if (this.multiple) {
+          this.isOpen = true;
+          this.selectNext();
+        } else {
+          this.setValue(this.getNextItem(this.value));
+        }
+      }
+    },
+
+    onEnter() {
+      if (this.isOpen) {
+        if (this.selected) {
+          if (this.multiple) {
+            this.setChecked(this.selected, true);
+          } else {
+            this.setValue(this.selected);
+          }
+          this.isOpen = false;
+        }
+      } else {
+        this.isOpen = true;
+      }
+    },
+
+    onEscape() {
+      if (this.isOpen) {
+        if (this.filter) {
+          this.filter = '';
+        } else {
+          this.isOpen = false;
+        }
+      }
+    },
+
+    onBackspace(event: KeyboardEvent) {
+      if (this.isOpen) {
+        if (!this.filter) {
+          if (this.multiple) {
+            this.value.pop();
+            event.preventDefault();
+          }
+        }
+      } else {
+        this.isOpen = true;
+        event.preventDefault();
+      }
+    },
+
+    onSpace(event: KeyboardEvent) {
+      if (this.isOpen) {
+        if (this.selected) {
+          if (this.multiple) {
+            this.toggleChecked(this.selected);
+            this.filter = '';
+            event.preventDefault();
+          }
+        }
+      } else {
+        this.isOpen = true;
         event.preventDefault();
       }
     },
