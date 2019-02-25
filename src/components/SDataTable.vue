@@ -49,10 +49,7 @@
       </s-menu>
     </template>
 
-    <!-- Pass on all named slots -->
-    <slot v-for="slot in Object.keys($slots)" :name="slot" v-slot:[slot] />
-
-    <!-- Pass on all scoped slots -->
+    <!-- Pass on all slots -->
     <template v-for="slot in Object.keys($scopedSlots)" v-slot:[slot]="scope">
       <slot :name="slot" v-bind="scope"/>
     </template>
