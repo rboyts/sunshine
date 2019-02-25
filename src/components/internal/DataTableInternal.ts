@@ -390,7 +390,8 @@ export default Vue.extend({
 
     renderRootNodes(): VNode[] {
       if (this.rootNodes.length === 0) {
-        return this.$slots.empty || [];
+        const slot = this.$scopedSlots.empty && this.$scopedSlots.empty({});
+        return slot || [];
       } else {
         return this.renderNodes(this.rootNodes);
       }
