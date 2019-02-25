@@ -26,8 +26,7 @@ $list-item-height: base-spacing(4);
   // Invisible border, to prevent content moving on hover
   border: 1px solid rgba(0, 0, 0, 0);
 
-  &--selected,
-  &:hover {
+  &--selected {
     background-color: $color-editish;
 
     border: 1px solid rgba(0, 0, 0, 0.05);

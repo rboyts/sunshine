@@ -1,14 +1,19 @@
 <template>
-  <s-list>
-    <global-events
-      @keydown.capture.down.prevent="selectNext"
-      @keydown.capture.up.prevent="selectPrevious"
-      @keydown.capture.enter.prevent.stop="activate"
-      @keydown.capture.space.prevent.stop="activate"
-    />
+  <div
+    @mouseover="onMouseOver"
+    @mousedown="$event.preventDefault()"
+  >
+    <s-list>
+      <global-events
+        @keydown.capture.down.prevent="selectNext"
+        @keydown.capture.up.prevent="selectPrevious"
+        @keydown.capture.enter.prevent.stop="activate"
+        @keydown.capture.space.prevent.stop="activate"
+      />
 
-    <slot />
-  </s-list>
+      <slot />
+    </s-list>
+  </div>
 </template>
 
 <script>
@@ -63,6 +68,11 @@ export default Vue.extend({
       const selected = this.getSelectedItem();
       const index = selected ? items.indexOf(selected) : -1;
       this.setSelected(items[index + 1], selected);
+    },
+
+    onMouseOver(event) {
+      const item = event.target.closest(`.${itemClass}`);
+      this.setSelected(item, this.getSelectedItem());
     },
   },
 });

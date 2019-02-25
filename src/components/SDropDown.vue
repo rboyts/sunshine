@@ -63,20 +63,18 @@ Use cases:
     </template>
 
     <template v-slot:content>
-      <div @mousedown="$event.preventDefault()">
-        <s-menu-list>
-          <s-list-item
-            v-for="item in itemValues"
-            :key="item.key"
-            :checkable="multiple"
-            :checked="item.checked"
-            @change="onItemChange(item.item, $event)"
-            @click="onItemClick(item.item)"
-          >
-            {{ item.title }}
-          </s-list-item>
-        </s-menu-list>
-      </div>
+      <s-menu-list>
+        <s-list-item
+          v-for="item in itemValues"
+          :key="item.key"
+          :checkable="multiple"
+          :checked="item.checked"
+          @change="onItemChange(item.item, $event)"
+          @click="onItemClick(item.item)"
+        >
+          {{ item.title }}
+        </s-list-item>
+      </s-menu-list>
     </template>
   </s-menu>
 </template>
