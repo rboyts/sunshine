@@ -192,7 +192,9 @@ $table-toggle-width: base-spacing(5);
   align-items: center;
   width: $table-toggle-width;
   height: $table-normal-row-height;
+  outline: none;
 
+  &:focus,
   &--open {
     color: $color-edit;
   }

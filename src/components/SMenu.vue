@@ -48,13 +48,18 @@ export default mixins(ClassesMixin, Watcher).extend({
   name: 's-menu',
 
   props: {
-    value: Boolean,
+    isOpen: Boolean,
 
     // TODO default false?
     toggleOnClick: {
       type: Boolean,
       default: true,
     },
+  },
+
+  model: {
+    prop: 'isOpen',
+    event: 'toggle',
   },
 
   data() {
@@ -66,7 +71,7 @@ export default mixins(ClassesMixin, Watcher).extend({
   },
 
   watch: {
-    value(val) {
+    isOpen(val) {
       this.transitioning = true;
 
       if (val) {
@@ -83,7 +88,7 @@ export default mixins(ClassesMixin, Watcher).extend({
 
   computed: {
     showContent(): boolean {
-      return this.value || this.transitioning;
+      return this.isOpen || this.transitioning;
     },
   },
 
@@ -124,7 +129,7 @@ export default mixins(ClassesMixin, Watcher).extend({
     },
 
     toggle(val: boolean) {
-      this.$emit('input', val);
+      this.$emit('toggle', val);
     },
 
     hide() {
@@ -133,7 +138,7 @@ export default mixins(ClassesMixin, Watcher).extend({
 
     onClick(event: MouseEvent) {
       if (this.toggleOnClick) {
-        this.toggle(!this.value);
+        this.toggle(!this.isOpen);
       }
     },
 
@@ -156,14 +161,14 @@ export default mixins(ClassesMixin, Watcher).extend({
       this.transitioning = false;
       const { height, ...rest } = this.style;
       this.style = rest;
-      if (!this.value) {
+      if (!this.isOpen) {
         this.stopWatcher();
       }
     },
   },
 
   mounted() {
-    if (this.value) {
+    if (this.isOpen) {
       this.initPopup();
     }
   },
