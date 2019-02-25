@@ -1,5 +1,5 @@
 <template>
-  <li :class="classes({selected})" @click="onClick">
+  <li :class="classes({selected})" @click="onClick" @accept="onAccept">
     <s-checkable v-if="checkable" :checked="checked" :inactive="inactive" />
     <slot />
   </li>
@@ -54,6 +54,15 @@ export default mixins(ClassesMixin).extend({
       } else {
         this.$emit('click');
       }
+    },
+
+    onAccept() {
+      if (this.inactive) return;
+
+      if (this.checkable && !this.checked) {
+        this.$emit('change', true);
+      }
+      this.$emit('click');
     },
   },
 });

@@ -40,6 +40,7 @@
               :inactive="i === 0"
               :checked="oc.visible"
               @change="onToggleColumn(i, $event)"
+              @click="menuOpen = false"
             >
               {{ oc.column.title }}
             </s-list-item>
