@@ -39,6 +39,7 @@ Use cases:
           class="s-input__input"
           type="text"
           :value="filter"
+          @click.stop="onClickSearch"
           @focus="hasFocus = true"
           @blur="hasFocus = false"
           @input="onInput"
@@ -201,13 +202,17 @@ export default mixins(ClassesMixin).extend({
   },
 
   methods: {
-    onClick(event: PointerEvent) {
-      if (this.isOpen && !this.search) {
-        this.isOpen = false;
-      } else {
-        this.isOpen = true;
-      }
+    onClick() {
+      this.isOpen = !this.isOpen;
+      this.setFocus();
+    },
 
+    onClickSearch() {
+      this.isOpen = true;
+      this.setFocus();
+    },
+
+    setFocus() {
       const el = this.$refs.input as HTMLElement;
       el.focus();
     },
@@ -233,7 +238,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     onEnter() {
-      this.isOpen = !this.isOpen;
+      this.isOpen = true;
     },
 
     onEscape() {
@@ -291,10 +296,10 @@ export default mixins(ClassesMixin).extend({
       this.filter = '';
     },
 
-    async onItemClick(item: any) {
-      if (this.multiple) return;
-
-      this.setValue(item);
+    onItemClick(item: any) {
+      if (!this.multiple) {
+        this.setValue(item);
+      }
 
       this.filter = '';
       this.isOpen = false;
