@@ -19,13 +19,17 @@
     <template v-slot:menu>
       <s-menu v-model="menuOpen">
         <template v-slot:activator>
-          <div :class="classes('more', {open: menuOpen})">
+          <a tabIndex="0" :class="classes('more', {open: menuOpen})"
+            @keydown.enter.space.prevent="menuOpen = true"
+            @keydown.escape="menuOpen = false"
+            @blur="menuOpen = false"
+          >
             <s-icon package="sunshine24" name="more" />
-          </div>
+          </a>
         </template>
 
         <template v-slot:content>
-          <s-list>
+          <s-menu-list>
             <s-list-item v-if="checkable" @click="onSelectAll">Select all</s-list-item>
             <s-list-item v-if="checkable" @click="onSelectNone">Select none</s-list-item>
             <s-list-separator v-if="checkable" />
@@ -39,7 +43,7 @@
             >
               {{ oc.column.title }}
             </s-list-item>
-          </s-list>
+          </s-menu-list>
         </template>
       </s-menu>
     </template>
@@ -61,8 +65,8 @@ import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../lib/utils';
 import SMenu from './SMenu.vue';
 import SButton from './SButton.vue';
-import SList from './SList.vue';
 import SListItem from './SListItem.vue';
+import SMenuList from './SMenuList.vue';
 import SListSeparator from './SListSeparator.vue';
 import SIcon from './SIcon.vue';
 import DataTableInternal from './internal/DataTableInternal';
@@ -78,9 +82,9 @@ export default mixins(ClassesMixin).extend({
   inheritAttrs: false,
 
   components: {
-    SMenu,
     SButton,
-    SList,
+    SMenu,
+    SMenuList,
     SListItem,
     SListSeparator,
     SIcon,

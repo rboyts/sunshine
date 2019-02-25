@@ -64,19 +64,18 @@ Use cases:
 
     <template v-slot:content>
       <div @mousedown="$event.preventDefault()">
-        <s-list>
+        <s-menu-list>
           <s-list-item
             v-for="item in itemValues"
             :key="item.key"
             :checkable="multiple"
             :checked="item.checked"
-            :selected="item.selected"
             @change="onItemChange(item.item, $event)"
             @click="onItemClick(item.item)"
           >
             {{ item.title }}
           </s-list-item>
-        </s-list>
+        </s-menu-list>
       </div>
     </template>
   </s-menu>
@@ -85,10 +84,10 @@ Use cases:
 <script lang="ts">
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
-import SList from './SList.vue';
+import SBaseInput from './SBaseInput.vue';
 import SListItem from './SListItem.vue';
 import SMenu from './SMenu.vue';
-import SBaseInput from './SBaseInput.vue';
+import SMenuList from './SMenuList.vue';
 import SIcon from './SIcon.vue';
 import { ClassesMixin } from '../lib/utils';
 
@@ -96,10 +95,10 @@ export default mixins(ClassesMixin).extend({
   name: 's-drop-down',
 
   components: {
-    SList,
+    SBaseInput,
     SListItem,
     SMenu,
-    SBaseInput,
+    SMenuList,
     SIcon,
   },
 
@@ -131,7 +130,6 @@ export default mixins(ClassesMixin).extend({
       hasFocus: false,
       isOpen: false,
       filter: '',
-      selected: null as object | null,
     };
   },
 
@@ -145,20 +143,6 @@ export default mixins(ClassesMixin).extend({
     isOpen(val) {
       if (!val) {
         this.filter = '';
-        this.selected = null;
-      }
-    },
-
-    filteredItems(val) {
-      // Unselect if the selected item becomes hidden by filter
-      if (this.selected) {
-        if (val.indexOf(this.selected) === -1) {
-          this.selected = null;
-        }
-      }
-
-      if (this.isOpen && val.length && !this.selected) {
-        this.selected = val[0];
       }
     },
   },
@@ -174,18 +158,13 @@ export default mixins(ClassesMixin).extend({
       return this.items.filter((i: any) => i.title.toLocaleLowerCase().indexOf(flt) !== -1);
     },
 
-    // TODO: Need proper :key values, so that filtering doesn't alter which item
-    // each line corresponds to
-
     itemValues(): object[] {
       return this.filteredItems.map(item => {
         let checked = this.multiple && this.value.includes(item);
-        let selected = this.selected === item;
         return {
           ...item,
           item,
           checked,
-          selected,
         };
       });
     },
@@ -236,12 +215,9 @@ export default mixins(ClassesMixin).extend({
     },
 
     onArrowUp() {
-      if (this.isOpen) {
-        this.selectPrevious();
-      } else {
+      if (!this.isOpen) {
         if (this.multiple) {
           this.isOpen = true;
-          this.selectPrevious();
         } else {
           this.setValue(this.getPreviousItem(this.value));
         }
@@ -249,12 +225,9 @@ export default mixins(ClassesMixin).extend({
     },
 
     onArrowDown() {
-      if (this.isOpen) {
-        this.selectNext();
-      } else {
+      if (!this.isOpen) {
         if (this.multiple) {
           this.isOpen = true;
-          this.selectNext();
         } else {
           this.setValue(this.getNextItem(this.value));
         }
@@ -262,18 +235,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     onEnter() {
-      if (this.isOpen) {
-        if (this.selected) {
-          if (this.multiple) {
-            this.setChecked(this.selected, true);
-          } else {
-            this.setValue(this.selected);
-          }
-          this.isOpen = false;
-        }
-      } else {
-        this.isOpen = true;
-      }
+      this.isOpen = !this.isOpen;
     },
 
     onEscape() {
@@ -301,26 +263,10 @@ export default mixins(ClassesMixin).extend({
     },
 
     onSpace(event: KeyboardEvent) {
-      if (this.isOpen) {
-        if (this.selected) {
-          if (this.multiple) {
-            this.toggleChecked(this.selected);
-            this.filter = '';
-            event.preventDefault();
-          }
-        }
-      } else {
+      if (!this.isOpen) {
         this.isOpen = true;
         event.preventDefault();
       }
-    },
-
-    selectPrevious() {
-      this.selected = this.getPreviousItem(this.selected);
-    },
-
-    selectNext() {
-      this.selected = this.getNextItem(this.selected);
     },
 
     getPreviousItem(item: object | null): object {
@@ -343,12 +289,15 @@ export default mixins(ClassesMixin).extend({
       if (!this.multiple) return;
 
       this.setChecked(item, checked);
-      this.selected = item;
+
+      this.filter = '';
     },
 
-    onItemClick(item: any) {
+    async onItemClick(item: any) {
       if (this.multiple) return;
+
       this.setValue(item);
+
       this.filter = '';
       this.isOpen = false;
     },
