@@ -1,7 +1,7 @@
 import { Module } from 'vuex';
 import { Mutex } from 'async-mutex';
 import {
-  IDataTableState,
+  IDataModuleState,
   IRequestLoadItemsPayload,
   ISortState,
   IItem,
@@ -15,7 +15,7 @@ export interface IShowSubItemsPayload {
   keyPath: string[];
 }
 
-const getItems = (keyPath: string[], state: IDataTableState): IItem[] | null => {
+const getItems = (keyPath: string[], state: IDataModuleState): IItem[] | null => {
   const key = joinKeyPath(keyPath);
   const items = state.items[key];
   if (items == null) return null;
@@ -34,7 +34,7 @@ const getItems = (keyPath: string[], state: IDataTableState): IItem[] | null => 
 
 export const createDataModule = <ModuleState = {}, RootState = any>(
   options: Module<ModuleState, RootState> & IColumns,
-): Module<ModuleState & IDataTableState, RootState> => {
+): Module<ModuleState & IDataModuleState, RootState> => {
   const mutex = new Mutex();
 
   const findColumn = (key: string): IColumn => {

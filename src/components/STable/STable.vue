@@ -43,7 +43,7 @@ import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../../lib/utils';
 import SButton from '../SButton.vue';
 import SIcon from '../SIcon.vue';
-import STableInternal from './STableInternal';
+import STableInternal from './STableInternal.vue';
 import STableOptionsMenu from './STableOptionsMenu.vue';
 import {
   ISortState, IItem, IColumn, IRequestLoadItemsPayload, IOrderedColumn, IColumns,

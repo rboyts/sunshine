@@ -5,7 +5,7 @@ export interface ISortState {
   reverse: boolean;
 }
 
-export interface IDataTableState {
+export interface IDataModuleState {
   isLoading: boolean;
   offset: number;
   sorting: ISortState;
