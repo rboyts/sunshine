@@ -17,9 +17,6 @@
       class="s-datepicker__date"
       v-for="(a, k) in month.daysInMonth"
       :key="'daysInMonth'+month + k"
-      @mousedown="$emit('mouseDragEvent', month.month, a, month.year, 'dragStart')"
-      @mouseup="$emit('mouseDragEvent', month.month, a, month.year, 'dragEnd')"
-      @mouseover="mouseOverEvent(month.month, a, month.year)"
       :class="{
         'saturday': isSaturday(month.month, a, month.year),
         'sunday': isSunday(month.month, a, month.year),
@@ -27,7 +24,10 @@
         'from': isSameDate(month.month, a, month.year, fromDate),
         'to': isSameDate(month.month, a, month.year, toDate),
         'between': isInPeriod(month.month, a, month.year, fromDate, toDate)
-        }"
+      }"
+      @mousedown="$emit('mouseDragEvent', month.month, a, month.year, 'dragStart')"
+      @mouseup="$emit('mouseDragEvent', month.month, a, month.year, 'dragEnd')"
+      @mouseover="mouseOverEvent(month.month, a, month.year)"
     >
       <span v-if="isSameDate(month.month, a, month.year, fromDate)" class="circle">{{a}}</span>
       <span v-else-if="isSameDate(month.month, a, month.year, toDate)" class="circle">{{a}}</span>
@@ -46,27 +46,34 @@ import Vue from 'vue';
 import moment, { Moment } from 'moment';
 import { IMonth, ICalendarPeriod } from '../types';
 
-moment.locale('nb');
+/**
+ * Obs: for comparison of dates this uses default date format (ISO 8601) 'YYYY-MM-DD'
+ */
 
 export default Vue.extend({
   name: 's-datepicker-month',
   props: {
+    format: String,
+    locale: String,
     month: Object as () => IMonth,
-    selectedPeriod: Object as () => ICalendarPeriod,
-    today: String,
+    today: Object as () => Moment,
     lastScrollPosition: Number,
     scrollHeight: Number,
     mouseDrag: Boolean,
+    selectedDate: {} as () => Moment,
+    selectedPeriod: {} as () => ICalendarPeriod,
   },
   computed: {
-    toDate(): string {
-      // Format used to compare dates, so not formatted for localization
-      return moment(this.selectedPeriod.to).format('YYYY-MM-DD');
+    fromDate(): Moment {
+      return this.selectedPeriod.from;
     },
 
-    fromDate(): string {
-      // Format used to compare dates, so not formatted for localization
-      return moment(this.selectedPeriod.from).format('YYYY-MM-DD');
+    toDate(): Moment {
+      return this.selectedPeriod.to;
+    },
+
+    singleDate(): Moment {
+      return this.selectedDate;
     },
   },
   methods: {
@@ -87,25 +94,37 @@ export default Vue.extend({
     },
 
     isSaturday(m: number, d: number, y: number) {
-      return moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`).day() === 6;
+      return moment({ y, M: m, d }).day() === 6;
     },
 
     isSunday(m: number, d: number, y: number) {
-      return moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`).day() === 0;
+      return moment({ y, M: m, d }).day() === 0;
     },
 
     isSameDate(m: number, d: number, y: number, date: string) {
-      return moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`).isSame(date);
+      let dateInMonth = moment({ y, M: (m - 1), d }).format('YYYY-MM-DD');
+      let compareDate = moment(date).format('YYYY-MM-DD');
+      return moment(dateInMonth).isSame(compareDate);
     },
 
     isInPeriod(m: number, d: number, y: number, fromDate: string, toDate: string): boolean {
-      return moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`).isBetween(fromDate, toDate);
+      let dateInMonth = moment({ y, M: (m - 1), d }).format('YYYY-MM-DD');
+      let compareDateFrom = moment(fromDate).format('YYYY-MM-DD');
+      let compareDateTo = moment(toDate).format('YYYY-MM-DD');
+      return moment(dateInMonth).isBetween(compareDateFrom, compareDateTo);
     },
 
     mouseOverEvent(m: number, d: number, y: number) {
       if (!this.mouseDrag) return;
       this.$emit('mouseDragEvent', m, d, y, 'dragging');
     },
+  },
+
+  mounted() {
+    console.log('TODAY', moment(this.today).format(this.format));
+    console.log('FROM DATE ', moment(this.selectedPeriod.from).format(this.format));
+    console.log('TO DATE ', moment(this.selectedPeriod.to).format(this.format));
+    // console.log(this.format);
   },
 });
 </script>

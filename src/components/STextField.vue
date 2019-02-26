@@ -48,6 +48,8 @@ export default Vue.extend({
 
   props: {
     maxlength: String,
+    dateLocale: String,
+    dateFormat: String,
     value: {
       type: [String, Number],
       default: '',
@@ -79,14 +81,6 @@ export default Vue.extend({
     moment: {
       type: Boolean,
       default: false,
-    },
-    dateLocale: {
-      type: String,
-      default: '',
-    },
-    dateFormat: {
-      type: String,
-      default: '',
     },
   },
 

@@ -1,12 +1,15 @@
 <template>
   <div class="s-datepicker" :class="{includeMenu: menu}">
     <s-datepicker-calendar
-      :today="today.format('YYYY-MM-DD')"
+      :today="today"
       :calendar="calendar"
       :current-year="yearNum"
       :current-month="monthKey + 1"
-      :selected-period="selectedPeriod"
       :mouseDrag="mouseDrag"
+      :format="format"
+      :locale="locale"
+      :selectedPeriod="selectedPeriod"
+      :selectedDate="selectedDate"
       @addComingMonth="addComingMonth"
       @addPreviousMonth="addPreviousMonth"
       @mouseDragEvent="mouseDragEvent"
@@ -14,7 +17,7 @@
     <s-datepicker-menu
       v-if="menu"
       :today="today"
-      :selected-period="selectedPeriod"
+      :format="format"
       @setSelectedPeriod="selectDateOfPeriod"
      />
   </div>
@@ -23,7 +26,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import { IMonth } from './types';
+import { IMonth, ICalendarPeriod } from './types';
 import SDatepickerCalendar from './internal/SDatepickerCalendar.vue';
 import SDatepickerMenu from './internal/SDatepickerMenu.vue';
 
@@ -39,7 +42,14 @@ export default Vue.extend({
     value: String,
     locale: String,
     format: String,
+    date: Object as () => Moment,
+    from: Object as () => Moment,
+    to: Object as () => Moment,
     includeMenu: {
+      type: Boolean,
+      default: false,
+    },
+    rangeSelect: {
       type: Boolean,
       default: false,
     },
@@ -62,18 +72,28 @@ export default Vue.extend({
       today: moment(),
       dateContext: moment(),
       months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      selectedDate: null as Moment | null,
-      selectedPeriod: {
-        from: null as Moment | null,
-        to: null as Moment | null,
-      },
       mouseDrag: false,
     };
   },
 
   computed: {
+    selectedPeriod(): ICalendarPeriod {
+      return {
+        from: this.from,
+        to: this.to,
+      };
+    },
+
+    selectedDate(): Moment {
+      return this.date;
+    },
+
     menu(): boolean {
       return this.includeMenu;
+    },
+
+    range(): boolean {
+      return this.rangeSelect;
     },
 
     year(): string {
@@ -227,34 +247,35 @@ export default Vue.extend({
     },
 
     mouseDragEvent(date: Moment, event: string) {
-      if (event === 'dragStart' || !moment.isMoment(this.selectedDate)) {
-        this.mouseDrag = true;
-        this.selectedDate = date;
-      } else if (event === 'dragEnd') {
-        if (moment(this.selectedDate).isBefore(date)) {
-          this.selectedPeriod = {
-            from: this.selectedDate,
-            to: date,
-          };
-        } else {
-          this.selectedPeriod = {
-            from: date,
-            to: this.selectedDate,
-          };
-        }
-        this.mouseDrag = false;
-        this.selectedDate = null;
-      } else if (moment(this.selectedDate).isBefore(date)) {
-        this.selectedPeriod = {
-          from: this.selectedDate,
-          to: date,
-        };
-      } else {
-        this.selectedPeriod = {
-          from: date,
-          to: this.selectedDate,
-        };
-      }
+      // if (!this.range) return;
+      // if (event === 'dragStart' || !moment.isMoment(this.selectedDate)) {
+      //   this.mouseDrag = true;
+      //   this.selectedDate = date;
+      // } else if (event === 'dragEnd') {
+      //   if (moment(this.selectedDate).isBefore(date)) {
+      //     this.selectedPeriod = {
+      //       from: this.selectedDate,
+      //       to: date,
+      //     };
+      //   } else {
+      //     this.selectedPeriod = {
+      //       from: date,
+      //       to: this.selectedDate,
+      //     };
+      //   }
+      //   this.mouseDrag = false;
+      //   this.selectedDate = null;
+      // } else if (moment(this.selectedDate).isBefore(date)) {
+      //   this.selectedPeriod = {
+      //     from: this.selectedDate,
+      //     to: date,
+      //   };
+      // } else {
+      //   this.selectedPeriod = {
+      //     from: date,
+      //     to: this.selectedDate,
+      //   };
+      // }
     },
   },
 

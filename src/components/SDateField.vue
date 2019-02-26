@@ -1,8 +1,6 @@
 <template>
   <div class="s-date-field">
     <s-menu v-model="isOpen">
-
-      <!-- activator textField -->
       <template v-slot:activator>
         <s-text-field
           v-model="input"
@@ -18,10 +16,22 @@
       <!-- content datepicker -->
       <template v-slot:content>
         <!--
-          Add props: range: false,
-          ++?
+          Possible props:
+          includeMenu, (adds menu)
+          rangeSelect, (enables rangeselect) (WIP),
+          from: date, (default if !rangeSelect && !selectedDate)
+          to: date,
+          date: date
+        -->
+        <!--
+          TODO: differentiate between single date select
+          and range select in datepicker
         -->
         <s-datepicker
+          rangeSelect
+          :date="date"
+          :from="from"
+          :to="to"
           :locale="locale"
           :format="format"
           v-model="input" />
@@ -51,6 +61,10 @@ export default Vue.extend({
 
   data() {
     return {
+      // TODO: Remove
+      from: { y: 2019, M: 1, d: 25 },
+      to: { y: 2019, M: 1, d: 28 },
+      date: { y: 2019, M: 1, d: 1 },
       isOpen: false,
       input: '',
       locale: moment.locale(),

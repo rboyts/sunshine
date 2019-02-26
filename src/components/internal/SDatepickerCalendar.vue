@@ -28,12 +28,15 @@
         <s-datepicker-month
             class="s-datepicker__grid"
             v-for="month in calendar"
+            :format="format"
+            :locale="locale"
             :today="today"
-            :selected-period="selectedPeriod"
             :ref="month.month + '-' + month.year"
             :key="'month' + month.month + '-' + month.year"
             :month="month"
             :mouseDrag="mouseDrag"
+            :selectedDate="selectedDate"
+            :selectedPeriod="selectedPeriod"
             @mouseDragEvent="mouseDragEvent"
           >
         </s-datepicker-month>
@@ -50,12 +53,6 @@ import { IMonth, ICalendarPeriod, MouseWheelEvent } from '../types';
 import SIcon from '../SIcon.vue';
 import SDatepickerMonth from './SDatepickerMonth.vue';
 
-const SCROLL_DEBOUNCE = 250;
-const MOVE_TIMEOUT = 350;
-const PADDING_TOP = 30;
-
-moment.locale('nb');
-
 export default Vue.extend({
   name: 's-datepicker-calendar',
   components: {
@@ -64,7 +61,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      debounce: SCROLL_DEBOUNCE,
       days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
       dateContext: moment(),
       activeMonth: this.currentMonth,
@@ -76,11 +72,14 @@ export default Vue.extend({
   },
   props: {
     calendar: Array as () => IMonth[],
-    selectedPeriod: Object as () => ICalendarPeriod,
-    today: String,
+    today: Object as () => Moment,
     currentMonth: Number,
     currentYear: Number,
     mouseDrag: Boolean,
+    format: String,
+    locale: String,
+    selectedDate: Object as () => Moment,
+    selectedPeriod: Object as () => ICalendarPeriod,
   },
   watch: {
     calendar: {
@@ -91,6 +90,8 @@ export default Vue.extend({
   },
   methods: {
     mouseDragEvent(m: number, d: number, y: number, event: string) {
+      let testStr = { y: 2019, M: 1, d: 7 };
+      console.log(moment({ y, M: (m - 1), d }).isSame(moment(testStr)));
       let date = moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`);
       this.$emit('mouseDragEvent', date, event);
     },
@@ -119,7 +120,6 @@ export default Vue.extend({
         this.$emit('addComingMonth');
       }
     },
-
   },
 });
 </script>
