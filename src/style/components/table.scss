@@ -195,7 +195,7 @@ $table-toggle-width: base-spacing(5);
   margin-left: -24px;
 }
 
-.s-data-table__more {
+.s-table-options-menu {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -225,7 +225,7 @@ $table-toggle-width: base-spacing(5);
     height: $table-condensed-row-height;
   }
 
-  .s-data-table__more {
+  .s-table-options-menu {
     height: $table-condensed-row-height;
   }
 

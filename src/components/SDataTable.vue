@@ -20,36 +20,13 @@
   >
 
     <template v-slot:menu>
-      <s-menu v-model="menuOpen">
-        <template v-slot:activator>
-          <a tabIndex="0" :class="classes('more', {open: menuOpen})"
-            @keydown.enter.space.prevent="menuOpen = true"
-            @keydown.escape="menuOpen = false"
-            @blur="menuOpen = false"
-          >
-            <s-icon package="sunshine24" name="more" />
-          </a>
-        </template>
-
-        <template v-slot:content>
-          <s-menu-list>
-            <s-list-item v-if="checkable" @click="onSelectAll">Select all</s-list-item>
-            <s-list-item v-if="checkable" @click="onSelectNone">Select none</s-list-item>
-            <s-list-separator v-if="checkable" />
-            <s-list-item
-              v-for="(oc, i) in orderedColumns"
-              :key="oc.column.key"
-              checkable
-              :inactive="i === 0"
-              :checked="oc.visible"
-              @change="onToggleColumn(i, $event)"
-              @click="menuOpen = false"
-            >
-              {{ oc.column.title }}
-            </s-list-item>
-          </s-menu-list>
-        </template>
-      </s-menu>
+      <s-table-options-menu
+        :checkable="checkable"
+        :orderedColumns="orderedColumns"
+        @selectAll="onSelectAll"
+        @selectNone="onSelectNone"
+        @toggleColumn="onToggleColumn"
+      />
     </template>
 
     <!-- Pass on all slots -->
@@ -64,13 +41,10 @@
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../lib/utils';
-import SMenu from './SMenu.vue';
 import SButton from './SButton.vue';
-import SListItem from './SListItem.vue';
-import SMenuList from './SMenuList.vue';
-import SListSeparator from './SListSeparator.vue';
 import SIcon from './SIcon.vue';
 import DataTableInternal from './internal/DataTableInternal';
+import STableOptionsMenu from './table/STableOptionsMenu.vue';
 import {
   ISortState, IItem, IColumn, IRequestLoadItemsPayload, IOrderedColumn, IColumns,
 } from './types';
@@ -84,12 +58,9 @@ export default mixins(ClassesMixin).extend({
 
   components: {
     SButton,
-    SMenu,
-    SMenuList,
-    SListItem,
-    SListSeparator,
     SIcon,
     DataTableInternal,
+    STableOptionsMenu,
   },
 
   props: {
@@ -102,12 +73,6 @@ export default mixins(ClassesMixin).extend({
       type: Boolean,
       default: false,
     },
-  },
-
-  data() {
-    return {
-      menuOpen: false,
-    };
   },
 
   computed: {
@@ -171,12 +136,10 @@ export default mixins(ClassesMixin).extend({
     },
 
     onSelectAll() {
-      this.menuOpen = false;
       this.commitMutation('selectAll');
     },
 
     onSelectNone() {
-      this.menuOpen = false;
       this.commitMutation('selectNone');
     },
 
@@ -200,7 +163,7 @@ export default mixins(ClassesMixin).extend({
       this.dispatchAction('moveColumn', { from, to });
     },
 
-    onToggleColumn(index: number, checked: boolean) {
+    onToggleColumn({ index, checked }: any) {
       this.commitMutation('toggleColumn', { index, checked });
     },
   },
