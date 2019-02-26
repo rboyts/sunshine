@@ -21,6 +21,11 @@
       target="window"
       @mousedown="onWindowClick"
     />
+
+    <watcher
+      v-if="showContent"
+      @trigger="onWatcher"
+    />
   </div>
 </template>
 
@@ -28,14 +33,15 @@
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import GlobalEvents from 'vue-global-events';
-import Watcher from './mixins/watcher';
+import Watcher from './internal/Watcher';
 import { ClassesMixin } from '../lib/utils';
 
-export default mixins(ClassesMixin, Watcher).extend({
+export default mixins(ClassesMixin).extend({
   name: 's-menu',
 
   components: {
     GlobalEvents,
+    Watcher,
   },
 
   props: {
@@ -89,7 +95,6 @@ export default mixins(ClassesMixin, Watcher).extend({
         left: `${rect.left}px`,
         minWidth: `${rect.width}px`,
       };
-      this.startWatcher();
     },
 
     async animateOpen() {
@@ -147,9 +152,6 @@ export default mixins(ClassesMixin, Watcher).extend({
       this.transitioning = false;
       const { height, ...rest } = this.style;
       this.style = rest;
-      if (!this.isOpen) {
-        this.stopWatcher();
-      }
     },
 
     // Close menu when clicking anywhere outside
