@@ -72,7 +72,7 @@ export default mixins(ClassesMixin).extend({
       this.transitioning = true;
 
       if (val) {
-        this.initPopup();
+        this.setPosition();
         this.animateOpen();
       } else {
         this.animateClose();
@@ -87,14 +87,32 @@ export default mixins(ClassesMixin).extend({
   },
 
   methods: {
-    initPopup() {
+    setPosition() {
       let activator = this.$el as HTMLElement;
       let rect = activator.getBoundingClientRect();
-      this.style = {
-        top: `${rect.bottom}px`,
-        left: `${rect.left}px`,
-        minWidth: `${rect.width}px`,
-      };
+
+      const height = document.documentElement.clientHeight;
+
+      const spaceDown = height - rect.bottom;
+      const spaceUp = rect.top;
+
+      if (spaceDown > spaceUp || spaceDown > 300) {
+        this.style = {
+          ...this.style,
+          top: `${rect.bottom}px`,
+          bottom: undefined,
+          left: `${rect.left}px`,
+          minWidth: `${rect.width}px`,
+        };
+      } else {
+        this.style = {
+          ...this.style,
+          top: undefined,
+          bottom: `${height - rect.top}px`,
+          left: `${rect.left}px`,
+          minWidth: `${rect.width}px`,
+        };
+      }
     },
 
     async animateOpen() {
@@ -138,14 +156,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     onWatcher() {
-      let activator = this.$el as HTMLElement;
-      let rect = activator.getBoundingClientRect();
-      this.style = {
-        ...this.style,
-        top: `${rect.bottom}px`,
-        left: `${rect.left}px`,
-        minWidth: `${rect.width}px`,
-      };
+      this.setPosition();
     },
 
     onTransitionEnd() {
@@ -166,7 +177,7 @@ export default mixins(ClassesMixin).extend({
 
   mounted() {
     if (this.isOpen) {
-      this.initPopup();
+      this.setPosition();
     }
   },
 });
