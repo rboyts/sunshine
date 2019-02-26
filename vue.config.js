@@ -3,6 +3,7 @@ module.exports = {
     config.externals({
       moment: 'moment',
       d3: 'd3',
+      vuex: 'vuex',
     });
   },
 

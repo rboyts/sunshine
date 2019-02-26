@@ -12,6 +12,8 @@ export interface IDataTableState {
   items: { [key: string]: IItem[] };
   total: number | null;
   columns: Array<{ key: string, visible: boolean }>,
+  selectedItems: string[],
+  invertSelection: boolean,
 }
 
 export interface IColumn {

@@ -63,6 +63,9 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
 
         columns: options.columns.map(column => ({ key: column.key, visible: true })),
 
+        selectedItems: [],
+        invertSelection: false,
+
         ...(moduleState || {} as ModuleState),
       };
     },
@@ -94,6 +97,9 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         return getItems([], state);
       },
 
+      selectedItems: state => state.selectedItems,
+      invertSelection: state => state.invertSelection,
+
       skip(state) {
         return state.offset;
       },
@@ -124,6 +130,24 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
 
       toggleColumn: (state, { index, checked }: { index: number, checked: boolean }) => {
         state.columns[index].visible = checked;
+      },
+
+      toggleItem: (state, key: string) => {
+        if (state.selectedItems.includes(key)) {
+          state.selectedItems = state.selectedItems.filter(k => k !== key);
+        } else {
+          state.selectedItems.push(key);
+        }
+      },
+
+      selectAll: state => {
+        state.invertSelection = true;
+        state.selectedItems = [];
+      },
+
+      selectNone: state => {
+        state.invertSelection = false;
+        state.selectedItems = [];
       },
 
       loadStart: state => {
@@ -180,10 +204,6 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         }
 
         commit('moveColumn', { fromIndex, toIndex });
-      },
-
-      toggleColumn({ getters, commit }, { index, checked }: { index: number, checked: boolean }) {
-        commit('toggleColumn', { index, checked });
       },
 
       async init({ dispatch }) {

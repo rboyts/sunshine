@@ -8,10 +8,13 @@
     :sorting="sorting"
     :columns="visibleColumns"
     :checkable="checkable"
+    :selectedItems="selectedItems"
+    :invertSelection="invertSelection"
     @sort="onSort"
     @visible-rows="onVisibleRows"
     @move-column="onMoveColumn"
     @open-item="onOpenItem"
+    @toggle-item="onToggleItem"
 
     v-bind="$attrs"
   >
@@ -90,7 +93,10 @@ export default mixins(ClassesMixin).extend({
   },
 
   props: {
-    module: String,
+    module: {
+      type: String,
+      required: true,
+    },
 
     checkable: {
       type: Boolean,
@@ -121,6 +127,14 @@ export default mixins(ClassesMixin).extend({
       return this.getState('items');
     },
 
+    selectedItems(): string[] {
+      return this.getState('selectedItems');
+    },
+
+    invertSelection(): boolean {
+      return this.getState('invertSelection');
+    },
+
     skip(): number {
       return this.getState('skip');
     },
@@ -137,7 +151,7 @@ export default mixins(ClassesMixin).extend({
   watch: {
     module: {
       handler() {
-        this.tryDispatchAction('init');
+        this.dispatchAction('init');
       },
       immediate: true,
     },
@@ -148,44 +162,46 @@ export default mixins(ClassesMixin).extend({
       return this.$store.getters[`${this.module}/${key}`];
     },
 
-    tryDispatchAction(name: string, payload?: any): boolean {
-      if (!this.module) return false;
+    dispatchAction(name: string, payload?: any) {
       this.$store.dispatch(`${this.module}/${name}`, payload);
-      return true;
+    },
+
+    commitMutation(name: string, payload?: any) {
+      this.$store.commit(`${this.module}/${name}`, payload);
     },
 
     onSelectAll() {
       this.menuOpen = false;
-
-      // TODO: Vuex?
-      (this.$refs.impl as any).selectAll();
+      this.commitMutation('selectAll');
     },
 
     onSelectNone() {
       this.menuOpen = false;
-
-      // TODO: Vuex?
-      (this.$refs.impl as any).selectNone();
+      this.commitMutation('selectNone');
     },
 
     onVisibleRows(args: IRequestLoadItemsPayload) {
-      this.tryDispatchAction('requestLoadItems', args);
+      this.dispatchAction('requestLoadItems', args);
     },
 
     onOpenItem(keyPath: string) {
-      this.tryDispatchAction('requestLoadSubItems', { keyPath });
+      this.dispatchAction('requestLoadSubItems', { keyPath });
+    },
+
+    onToggleItem(key: string) {
+      this.commitMutation('toggleItem', key);
     },
 
     onSort(event: MouseEvent, key: string) {
-      this.tryDispatchAction('sort', key);
+      this.dispatchAction('sort', key);
     },
 
     onMoveColumn({ from, to }: {from: number, to: number}) {
-      this.tryDispatchAction('moveColumn', { from, to });
+      this.dispatchAction('moveColumn', { from, to });
     },
 
     onToggleColumn(index: number, checked: boolean) {
-      this.tryDispatchAction('toggleColumn', { index, checked });
+      this.commitMutation('toggleColumn', { index, checked });
     },
   },
 });

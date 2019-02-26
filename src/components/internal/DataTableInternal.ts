@@ -64,6 +64,9 @@ export default Vue.extend({
     draggable: Boolean,
     condensed: Boolean,
 
+    selectedItems: Array as () => string[],
+    invertSelection: Boolean,
+
     checkable: {
       type: Boolean,
       default: false,
@@ -92,8 +95,6 @@ export default Vue.extend({
       openNodes: [] as string[],
 
       // TODO Vuex
-      isSelectAll: false,
-      checkedNodes: [] as string[],
       activeRow: null as string | null,
     };
   },
@@ -135,16 +136,6 @@ export default Vue.extend({
   },
 
   methods: {
-    selectAll() {
-      this.checkedNodes = [];
-      this.isSelectAll = true;
-    },
-
-    selectNone() {
-      this.checkedNodes = [];
-      this.isSelectAll = false;
-    },
-
     getThresholds(widths: number[]): number[] {
       let res: number[] = [];
       let total = 0;
@@ -185,15 +176,11 @@ export default Vue.extend({
     },
 
     isChecked(node: ITableNode): boolean {
-      return this.checkedNodes.includes(node.key) !== this.isSelectAll;
+      return this.selectedItems.includes(node.key) !== this.invertSelection;
     },
 
     toggleChecked(node: ITableNode) {
-      if (this.checkedNodes.includes(node.key)) {
-        this.checkedNodes = this.checkedNodes.filter(k => k !== node.key);
-      } else {
-        this.checkedNodes.push(node.key);
-      }
+      this.$emit('toggle-item', node.key);
     },
 
     onMouseDown(event: PointerEvent, index: number) {
