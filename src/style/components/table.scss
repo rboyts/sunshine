@@ -187,9 +187,12 @@ $table-toggle-width: base-spacing(5);
 }
 
 .s-data-table__icon {
-  margin-left: -24px;
   text-align: center;
   width: base-spacing(3);
+}
+
+.s-data-table__outline__section + .s-data-table__icon {
+  margin-left: -24px;
 }
 
 .s-data-table__more {

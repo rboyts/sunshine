@@ -17,8 +17,6 @@
 <script>
 const OUTLINE_WIDTH = 24; // Must correspond to CSS
 
-// TODO Separate icon from outline
-
 export default {
   name: 's-table-outline',
 
