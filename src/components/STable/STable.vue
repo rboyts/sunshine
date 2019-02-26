@@ -1,5 +1,5 @@
 <template>
-  <data-table-internal
+  <s-table-internal
     class="flex-grow"
     ref="impl"
     :items="items"
@@ -34,32 +34,29 @@
       <slot :name="slot" v-bind="scope"/>
     </template>
 
-  </data-table-internal>
+  </s-table-internal>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
-import { ClassesMixin } from '../lib/utils';
-import SButton from './SButton.vue';
-import SIcon from './SIcon.vue';
-import DataTableInternal from './internal/DataTableInternal';
-import STableOptionsMenu from './table/STableOptionsMenu.vue';
+import { ClassesMixin } from '../../lib/utils';
+import SButton from '../SButton.vue';
+import SIcon from '../SIcon.vue';
+import STableInternal from './STableInternal';
+import STableOptionsMenu from './STableOptionsMenu.vue';
 import {
   ISortState, IItem, IColumn, IRequestLoadItemsPayload, IOrderedColumn, IColumns,
-} from './types';
-
-export { IColumn, ISortState, IItem } from './types';
-
+} from '../types';
 
 export default mixins(ClassesMixin).extend({
-  name: 's-data-table',
+  name: 's-table',
   inheritAttrs: false,
 
   components: {
     SButton,
     SIcon,
-    DataTableInternal,
+    STableInternal,
     STableOptionsMenu,
   },
 

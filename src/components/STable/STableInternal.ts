@@ -5,7 +5,7 @@ import { classHelper, joinKeyPath } from '../../lib/utils';
 import SCheckable from '../SCheckable.vue';
 import SIcon from '../SIcon.vue';
 import SProgress from '../SProgress.vue';
-import STableOutline from '../table/TableOutline.vue';
+import STableOutline from './STableOutline.vue';
 
 const MAX_PLACEHOLDER_ROWS = 0;
 const SCROLL_DEBOUNCE = 250;
@@ -14,11 +14,11 @@ const MOVE_TIMEOUT = 350;
 const NORMAL_ROW_HEIGHT = 40;
 const CONDENSED_ROW_HEIGHT = 24;
 
-const tableClassHelper = classHelper('s-data-table');
-const rowClassHelper = classHelper('s-data-table', 'row');
-const columnClassHelper = classHelper('s-data-table', 'col');
-const sortClassHelper = classHelper('s-data-table', 'sortcolumn');
-const toggleClassHelper = classHelper('s-data-table', 'toggle');
+const tableClassHelper = classHelper('s-table');
+const rowClassHelper = classHelper('s-table', 'row');
+const columnClassHelper = classHelper('s-table', 'col');
+const sortClassHelper = classHelper('s-table', 'sortcolumn');
+const toggleClassHelper = classHelper('s-table', 'toggle');
 
 interface IDragState {
   dragColumnIndex: number;
@@ -47,7 +47,7 @@ const mod = (x: number, m: number): number => ((x % m) + m) % m;
 const hash = (x: number, y: number): number => mod(((x << 24) ^ (y << 8)), 41);
 
 export default Vue.extend({
-  name: 'data-table-internal',
+  name: 's-table-internal',
 
   components: {
     SCheckable,
@@ -198,7 +198,7 @@ export default Vue.extend({
         let tr = el.closest('tr') as HTMLElement;
         if (tr === null) return;
 
-        let root = tr.closest('.s-data-table__wrapper') as HTMLElement;
+        let root = tr.closest('.s-table__wrapper') as HTMLElement;
         if (root === null) return;
 
         let height = root.scrollHeight;
@@ -314,7 +314,7 @@ export default Vue.extend({
       const h = this.$createElement;
 
       return h('table', {
-        class: 's-data-table__table',
+        class: 's-table__table',
       }, [
         this.renderedColgroup,
         this.renderHeader(),
@@ -499,10 +499,10 @@ export default Vue.extend({
             key: column.key,
             class: this.getColumnClass(column, index),
           }, [
-            h('span', { staticClass: 's-data-table__cell-wrapper' }, [
-              h('span', { staticClass: 's-data-table__cell-content' }, [
+            h('span', { staticClass: 's-table__cell-wrapper' }, [
+              h('span', { staticClass: 's-table__cell-content' }, [
                 h('span', {
-                  staticClass: 's-data-table__cell-placeholder',
+                  staticClass: 's-table__cell-placeholder',
                   style: { width: `${hash(row, index) + 20}px` },
                 }),
               ]),
@@ -545,7 +545,7 @@ export default Vue.extend({
         );
       }
 
-      children.push(h('span', { staticClass: 's-data-table__cell-content' }, column.title));
+      children.push(h('span', { staticClass: 's-table__cell-content' }, column.title));
 
       let { sorting } = this;
       if (column.sortable) {
@@ -573,7 +573,7 @@ export default Vue.extend({
         class: this.getColumnClass(column, index),
         on,
       }, [
-        h('span', { staticClass: 's-data-table__cell-wrapper' }, [
+        h('span', { staticClass: 's-table__cell-wrapper' }, [
           children,
         ]),
       ]);
@@ -588,7 +588,7 @@ export default Vue.extend({
 
       if (this.checkable && index === 0) {
         children.push(h('span', {
-          class: 's-data-table__checkable',
+          class: 's-table__checkable',
         }, [
           h('s-checkable', {
             props: {
@@ -617,7 +617,7 @@ export default Vue.extend({
       let slot = this.$scopedSlots[`~${key}`];
       let content = slot ? slot({ value, item: node.item }) : value;
 
-      children.push(h('span', { staticClass: 's-data-table__cell-content' }, [content]));
+      children.push(h('span', { staticClass: 's-table__cell-content' }, [content]));
 
       return h('td', {
         key,
@@ -626,7 +626,7 @@ export default Vue.extend({
           click: () => { this.activeRow = node.key; },
         },
       }, [
-        h('span', { staticClass: 's-data-table__cell-wrapper' }, [
+        h('span', { staticClass: 's-table__cell-wrapper' }, [
           children,
         ]),
       ]);
@@ -671,7 +671,7 @@ export default Vue.extend({
         }
 
         children.push(h('div', {
-          class: 's-data-table__move-cursor',
+          class: 's-table__move-cursor',
           style: {
             left: `${pos}px`,
             width: `${width}px`,
@@ -709,7 +709,7 @@ export default Vue.extend({
       [
         this.renderMoveCursor(),
         h('div', {
-          class: 's-data-table__wrapper',
+          class: 's-table__wrapper',
           on: {
             scroll: this.debounceOnScroll,
           },

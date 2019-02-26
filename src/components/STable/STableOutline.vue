@@ -1,14 +1,14 @@
 <template>
-  <span class="s-data-table__outline">
+  <span class="s-table__outline">
     <span v-for="(segment, i) in segments" :key="i"
-      class="s-data-table__outline__section"
+      class="s-table__outline__section"
     >
       <svg :width="width" :height="rowHeight">
         <line v-for="(line, j) in segment" :key="j" v-bind="line" />
       </svg>
     </span>
 
-    <span class="s-data-table__icon">
+    <span class="s-table__icon">
       <s-icon v-if="node.item.icon" :name="node.item.icon" />
     </span>
   </span>

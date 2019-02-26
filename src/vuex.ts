@@ -43,7 +43,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
     return it;
   };
 
-  const getStorageKey = (namespace: string) => `s-data-table@${namespace}`;
+  const getStorageKey = (namespace: string) => `s-table@${namespace}`;
 
   return {
     namespaced: true,
