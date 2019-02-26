@@ -8,11 +8,13 @@
       :mouseDrag="mouseDrag"
       :format="format"
       :locale="locale"
+      :range="range"
       :selectedPeriod="selectedPeriod"
       :selectedDate="selectedDate"
       @addComingMonth="addComingMonth"
       @addPreviousMonth="addPreviousMonth"
       @mouseDragEvent="mouseDragEvent"
+      @mouseClickEvent="mouseClickEvent"
     />
     <s-datepicker-menu
       v-if="menu"
@@ -36,6 +38,21 @@ export default Vue.extend({
   components: {
     SDatepickerCalendar,
     SDatepickerMenu,
+  },
+
+  data() {
+    return {
+      calendar: [] as IMonth[],
+      today: moment(),
+      dateContext: moment(),
+      months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      mouseDrag: false,
+      startDragDate: {} as moment.Moment,
+      period: {
+        from: {} as moment.Moment,
+        to: {} as moment.Moment,
+      },
+    };
   },
 
   props: {
@@ -64,16 +81,6 @@ export default Vue.extend({
       // this.selectedPeriod.from = moment(newVal, 'DD.MM.YYYY');
       // this.selectedPeriod.to = moment(newVal, 'DD.MM.YYYY');
     },
-  },
-
-  data() {
-    return {
-      calendar: [] as IMonth[],
-      today: moment(),
-      dateContext: moment(),
-      months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      mouseDrag: false,
-    };
   },
 
   computed: {
@@ -137,7 +144,7 @@ export default Vue.extend({
 
     addPreviousMonth() {
       let firstMonth = this.calendar[0];
-      let firstMonthDate = moment(`${firstMonth.year}-${this.stringifySingleDigit(firstMonth.month)}-01`);
+      let firstMonthDate = moment({ y: firstMonth.year, M: (firstMonth.month - 1), d: 1 });
       let previousMonth = moment(firstMonthDate).subtract(1, 'months');
 
       this.calendar.unshift(this.addMonthItem(previousMonth.get('year'), previousMonth.get('month') + 1));
@@ -146,7 +153,7 @@ export default Vue.extend({
 
     addComingMonth() {
       let lastMonth = this.calendar[this.calendar.length - 1];
-      let lastMonthDate = moment(`${lastMonth.year}-${this.stringifySingleDigit(lastMonth.month)}-01`);
+      let lastMonthDate = moment({ y: lastMonth.year, M: (lastMonth.month - 1), d: 1 });
       let nextMonth = moment(lastMonthDate).add(1, 'months');
 
       this.calendar.push(this.addMonthItem(nextMonth.get('year'), nextMonth.get('month') + 1));
@@ -159,7 +166,7 @@ export default Vue.extend({
         weeksInMonth: this.addWeekNumbers(year, month),
         firstDay: this.offsetStartDay(year, month),
         lastDay: this.offsetEndDay(year, month),
-        daysInMonth: moment(`${year}-${this.stringifySingleDigit(month)}`).daysInMonth(),
+        daysInMonth: moment({ y: year, M: (month - 1) }).daysInMonth(),
         previousMonthDays: this.addOverlapDays(year, month, this.offsetStartDay(year, month)),
         year,
       };
@@ -167,8 +174,8 @@ export default Vue.extend({
 
     addWeekNumbers(year: number, month: number) {
       let weekNumbers = [] as number[];
-      for (let c = 1, d = (moment(`${year}-${this.stringifySingleDigit(month)}`).daysInMonth()); c <= d; c++) {
-        let week = moment(`${year}-${this.stringifySingleDigit(month)}-${this.stringifySingleDigit(c)}`).week();
+      for (let c = 1, d = (moment({ y: year, M: (month - 1) }).daysInMonth()); c <= d; c++) {
+        let week = moment(moment({ y: year, M: (month - 1), d: c })).week();
         if (!weekNumbers.includes(week)) {
           weekNumbers.push(week);
         }
@@ -182,9 +189,9 @@ export default Vue.extend({
       if (month === 1) {
         // If january, get last day from previous years last month
         let lastYear = year - 1;
-        dateToSubtractFrom = moment(`${lastYear}-12`).daysInMonth();
+        dateToSubtractFrom = moment({ y: lastYear, M: 11 }).daysInMonth();
       } else {
-        dateToSubtractFrom = moment(`${year}-${this.stringifySingleDigit(month - 1)}`).daysInMonth();
+        dateToSubtractFrom = moment({ y: year, M: (month - 1) }).daysInMonth();
       }
       if (firstDay > 0) {
         // Add lastdays from previous month
@@ -197,7 +204,6 @@ export default Vue.extend({
 
     createMonths() {
       let year = this.dateContext.get('year');
-      // let present = this.monthKey + 1;
       let present = this.dateContext.get('month') + 1;
       let months = [];
       for (let a = 0, b = 2; a < b; a++) {
@@ -216,66 +222,48 @@ export default Vue.extend({
       return months;
     },
 
-    stringifySingleDigit(key: number): string {
-      let digitAsString;
-
-      if (key <= 9) {
-        digitAsString = `0${key}`;
-      } else {
-        digitAsString = `${key}`;
-      }
-      return digitAsString;
-    },
-
     offsetStartDay(year: number, month: number) {
-      return moment(`${year}-${this.stringifySingleDigit(month)}`)
+      return moment({ y: year, M: (month - 1) })
         .startOf('month')
         .weekday();
     },
 
     offsetEndDay(year: number, month: number) {
-      return moment(`${year}-${this.stringifySingleDigit(month)}`)
+      return moment({ y: year, M: (month - 1) })
         .endOf('month')
         .weekday();
     },
 
     selectDateOfPeriod(from: Moment, to: Moment) {
-      this.selectedPeriod = {
+      this.period = {
         from,
         to,
       };
+      this.$emit('setSelectedPeriod', this.period);
     },
 
     mouseDragEvent(date: Moment, event: string) {
-      // if (!this.range) return;
-      // if (event === 'dragStart' || !moment.isMoment(this.selectedDate)) {
-      //   this.mouseDrag = true;
-      //   this.selectedDate = date;
-      // } else if (event === 'dragEnd') {
-      //   if (moment(this.selectedDate).isBefore(date)) {
-      //     this.selectedPeriod = {
-      //       from: this.selectedDate,
-      //       to: date,
-      //     };
-      //   } else {
-      //     this.selectedPeriod = {
-      //       from: date,
-      //       to: this.selectedDate,
-      //     };
-      //   }
-      //   this.mouseDrag = false;
-      //   this.selectedDate = null;
-      // } else if (moment(this.selectedDate).isBefore(date)) {
-      //   this.selectedPeriod = {
-      //     from: this.selectedDate,
-      //     to: date,
-      //   };
-      // } else {
-      //   this.selectedPeriod = {
-      //     from: date,
-      //     to: this.selectedDate,
-      //   };
-      // }
+      if (!this.range) return;
+      if (event === 'dragStart') {
+        this.mouseDrag = true;
+        this.startDragDate = date;
+      } else if (event === 'dragEnd') {
+        if (moment(this.startDragDate).isBefore(date)) {
+          this.selectDateOfPeriod(this.startDragDate, date);
+        } else {
+          this.selectDateOfPeriod(date, this.startDragDate);
+        }
+        this.mouseDrag = false;
+      } else if (moment(this.startDragDate).isBefore(date)) {
+        this.selectDateOfPeriod(this.startDragDate, date);
+      } else {
+        this.selectDateOfPeriod(date, this.startDragDate);
+      }
+    },
+
+    mouseClickEvent(date: Moment, event: string) {
+      if (this.range) return;
+      console.log(date, event);
     },
   },
 

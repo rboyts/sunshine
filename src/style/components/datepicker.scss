@@ -138,7 +138,7 @@ $datepicker-navigation-margin: 1.5rem;
   background: transparent;
 }
 
-.s-datepicker__date:hover {
+.s-datepicker__date:not(.from):not(.to):not(.between):hover {
   border-radius: 50%;
   background: $smartdok-eggs-yellow;
 }

@@ -120,11 +120,5 @@ export default Vue.extend({
     },
   },
 
-  mounted() {
-    console.log('TODAY', moment(this.today).format(this.format));
-    console.log('FROM DATE ', moment(this.selectedPeriod.from).format(this.format));
-    console.log('TO DATE ', moment(this.selectedPeriod.to).format(this.format));
-    // console.log(this.format);
-  },
 });
 </script>

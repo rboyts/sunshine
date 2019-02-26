@@ -78,6 +78,7 @@ export default Vue.extend({
     mouseDrag: Boolean,
     format: String,
     locale: String,
+    range: Boolean,
     selectedDate: Object as () => Moment,
     selectedPeriod: Object as () => ICalendarPeriod,
   },
@@ -90,26 +91,19 @@ export default Vue.extend({
   },
   methods: {
     mouseDragEvent(m: number, d: number, y: number, event: string) {
-      let testStr = { y: 2019, M: 1, d: 7 };
-      console.log(moment({ y, M: (m - 1), d }).isSame(moment(testStr)));
-      let date = moment(`${y}-${this.stringifySingleDigit(m)}-${this.stringifySingleDigit(d)}`);
-      this.$emit('mouseDragEvent', date, event);
+      let date = moment({ y, M: (m - 1), d });
+      if (this.range) {
+        this.$emit('mouseDragEvent', date, event);
+      } else {
+        this.$emit('mouseClickEvent', date, event);
+      }
     },
 
     setActiveMonth(calendar: IMonth[]) {
-      this.monthNameInHeader = moment(`${calendar[0].year
-      }-${this.stringifySingleDigit(calendar[0].month)}`).format('MMMM YYYY');
-    },
-
-    stringifySingleDigit(key: number): string {
-      let digitAsString;
-
-      if (key <= 9) {
-        digitAsString = `0${key}`;
-      } else {
-        digitAsString = `${key}`;
-      }
-      return digitAsString;
+      this.monthNameInHeader = moment({
+        y: calendar[0].year,
+        M: calendar[0].month,
+      }).format('MMMM YYYY');
     },
 
     calendarScroll(event: MouseWheelEvent) {

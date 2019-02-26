@@ -34,7 +34,9 @@
           :to="to"
           :locale="locale"
           :format="format"
-          v-model="input" />
+          v-model="input"
+          @setSelectedPeriod="setSelectedPeriod"
+        />
       </template>
 
     </s-menu>
@@ -44,6 +46,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
+import { ICalendarPeriod } from './types';
 import SMenu from './SMenu.vue';
 import SDatepicker from './SDatepicker.vue';
 import STextField from './STextField.vue';
@@ -62,8 +65,8 @@ export default Vue.extend({
   data() {
     return {
       // TODO: Remove
-      from: { y: 2019, M: 1, d: 25 },
-      to: { y: 2019, M: 1, d: 28 },
+      from: moment({ y: 2019, M: 1, d: 25 }),
+      to: moment({ y: 2019, M: 1, d: 28 }),
       date: { y: 2019, M: 1, d: 1 },
       isOpen: false,
       input: '',
@@ -77,6 +80,11 @@ export default Vue.extend({
       console.log(input);
       console.log(this.format);
       this.input = input;
+    },
+
+    setSelectedPeriod(period: ICalendarPeriod) {
+      this.from = period.from;
+      this.to = period.to;
     },
   },
 });
