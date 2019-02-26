@@ -5,6 +5,7 @@ import { classHelper, joinKeyPath } from '../../lib/utils';
 import SCheckable from '../SCheckable.vue';
 import SIcon from '../SIcon.vue';
 import SProgress from '../SProgress.vue';
+import STableOutline from '../table/TableOutline.vue';
 
 const MAX_PLACEHOLDER_ROWS = 0;
 const SCROLL_DEBOUNCE = 250;
@@ -12,7 +13,6 @@ const MOVE_TIMEOUT = 350;
 
 const NORMAL_ROW_HEIGHT = 40;
 const CONDENSED_ROW_HEIGHT = 24;
-const OUTLINE_WIDTH = 24; // Must correspond to CSS
 
 const tableClassHelper = classHelper('s-data-table');
 const rowClassHelper = classHelper('s-data-table', 'row');
@@ -53,6 +53,7 @@ export default Vue.extend({
     SCheckable,
     SIcon,
     SProgress,
+    STableOutline,
   },
 
   props: {
@@ -444,90 +445,13 @@ export default Vue.extend({
 
     renderOutline(node: ITableNode): VNode {
       const h = this.$createElement;
-
-      let children = [];
-
-      // Draw outline for this item, if it is a child item. This line will
-      // connect to the line of the line above.
-      if (node.parent != null) {
-        children.push(h('span', { class: 's-data-table__outline__section' }, [
-          this.renderAngle(!node.isLastChild),
-        ]));
-      }
-
-      // Render icon and start line that child items will connect to, if any.
-      children.push(h('span', { class: 's-data-table__outline__section' }, [
-        (this.isOpen(node) && node.subItems && node.subItems.length) ? this.renderTail() : '',
-        node.item.icon ? h('s-icon', { class: 's-data-table__icon', props: { name: node.item.icon } }) : '',
-      ]));
-
-      // Render nested children with correct indentation, and connect lines between
-      // grandparents and remaining items, at any level. Unlimited number of levels are
-      // supported, by traversing the parent hierarchy, and inserting sections
-      // to the beginning of the array.
-      let p = node.parent;
-      while (p != null) {
-        if (p.parent) {
-          children.unshift(h('span', { class: 's-data-table__outline__section' }, [
-            !p.isLastChild ? this.renderLine() : '',
-          ]));
-        }
-        p = p.parent;
-      }
-
-      return h('span', { class: 's-data-table__outline' }, children);
-    },
-
-    renderLine(): VNode {
-      return this.renderGraph([
-        {
-          x1: OUTLINE_WIDTH / 2,
-          x2: OUTLINE_WIDTH / 2,
-          y1: 0,
-          y2: this.rowHeight,
+      return h('s-table-outline', {
+        props: {
+          node,
+          rowHeight: this.rowHeight,
+          isOpen: this.isOpen(node),
         },
-      ]);
-    },
-
-    renderAngle(continues: boolean): VNode {
-      const mid = this.rowHeight / 2 - 1;
-      return this.renderGraph([
-        {
-          x1: OUTLINE_WIDTH / 2,
-          x2: OUTLINE_WIDTH / 2,
-          y1: 0,
-          y2: continues ? this.rowHeight : mid,
-        },
-        {
-          x1: OUTLINE_WIDTH / 2,
-          x2: OUTLINE_WIDTH - 4,
-          y1: mid,
-          y2: mid,
-        },
-      ]);
-    },
-
-    renderTail(): VNode {
-      return this.renderGraph([
-        {
-          x1: OUTLINE_WIDTH / 2,
-          x2: OUTLINE_WIDTH / 2,
-          y1: this.rowHeight / 2 + 14,
-          y2: this.rowHeight,
-        },
-      ]);
-    },
-
-    renderGraph(lines: object[]): VNode {
-      const h = this.$createElement;
-
-      return h('svg', {
-        attrs: {
-          width: OUTLINE_WIDTH,
-          height: this.rowHeight,
-        },
-      },
-      lines.map(attrs => h('line', { attrs })));
+      });
     },
 
     renderTopSpacer(): VNode[] {
