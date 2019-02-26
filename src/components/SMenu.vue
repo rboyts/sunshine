@@ -15,37 +15,28 @@
         <slot name="content"></slot>
       </div>
     </div>
+
+    <global-events
+      v-if="isOpen"
+      target="window"
+      @mousedown="onWindowClick"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
+import GlobalEvents from 'vue-global-events';
 import Watcher from './mixins/watcher';
 import { ClassesMixin } from '../lib/utils';
 
-// Close active menu when clicking anywhere outside
-let activeMenu: any = null;
-window.addEventListener('click', (event: MouseEvent) => {
-  if (!activeMenu) return;
-
-  // Ignore clicks on the menu/activator itself
-  let el = activeMenu.$el as HTMLElement;
-  if (el.contains(event.target as HTMLElement)) return;
-
-  activeMenu.hide();
-  activeMenu = null;
-}, true);
-
-const setActive = (value: any) => {
-  if (activeMenu && activeMenu !== value) {
-    activeMenu.hide();
-  }
-  activeMenu = value;
-};
-
 export default mixins(ClassesMixin, Watcher).extend({
   name: 's-menu',
+
+  components: {
+    GlobalEvents,
+  },
 
   props: {
     isOpen: Boolean,
@@ -78,9 +69,6 @@ export default mixins(ClassesMixin, Watcher).extend({
         this.initPopup();
         this.animateOpen();
       } else {
-        if (activeMenu === this) {
-          setActive(null);
-        }
         this.animateClose();
       }
     },
@@ -94,7 +82,6 @@ export default mixins(ClassesMixin, Watcher).extend({
 
   methods: {
     initPopup() {
-      setActive(this);
       let activator = this.$el as HTMLElement;
       let rect = activator.getBoundingClientRect();
       this.style = {
@@ -106,7 +93,6 @@ export default mixins(ClassesMixin, Watcher).extend({
     },
 
     async animateOpen() {
-      setActive(this);
       this.style = { ...this.style, height: 0 };
       this.contentStyle = { opacity: 0 };
 
@@ -164,6 +150,15 @@ export default mixins(ClassesMixin, Watcher).extend({
       if (!this.isOpen) {
         this.stopWatcher();
       }
+    },
+
+    // Close menu when clicking anywhere outside
+    onWindowClick(event: MouseEvent) {
+      // Ignore clicks on the menu/activator itself
+      let el = this.$el as HTMLElement;
+      if (el.contains(event.target as HTMLElement)) return;
+
+      this.hide();
     },
   },
 
