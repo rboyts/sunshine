@@ -15,37 +15,34 @@
         <slot name="content"></slot>
       </div>
     </div>
+
+    <global-events
+      v-if="isOpen"
+      target="window"
+      @mousedown="onWindowClick"
+    />
+
+    <watcher
+      v-if="showContent"
+      @trigger="onWatcher"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
-import Watcher from './mixins/watcher';
+import GlobalEvents from 'vue-global-events';
+import Watcher from './internal/Watcher';
 import { ClassesMixin } from '../lib/utils';
 
-// Close active menu when clicking anywhere outside
-let activeMenu: any = null;
-window.addEventListener('click', (event: MouseEvent) => {
-  if (!activeMenu) return;
-
-  // Ignore clicks on the menu/activator itself
-  let el = activeMenu.$el as HTMLElement;
-  if (el.contains(event.target as HTMLElement)) return;
-
-  activeMenu.hide();
-  activeMenu = null;
-}, true);
-
-const setActive = (value: any) => {
-  if (activeMenu && activeMenu !== value) {
-    activeMenu.hide();
-  }
-  activeMenu = value;
-};
-
-export default mixins(ClassesMixin, Watcher).extend({
+export default mixins(ClassesMixin).extend({
   name: 's-menu',
+
+  components: {
+    GlobalEvents,
+    Watcher,
+  },
 
   props: {
     isOpen: Boolean,
@@ -75,12 +72,9 @@ export default mixins(ClassesMixin, Watcher).extend({
       this.transitioning = true;
 
       if (val) {
-        this.initPopup();
+        this.setPosition();
         this.animateOpen();
       } else {
-        if (activeMenu === this) {
-          setActive(null);
-        }
         this.animateClose();
       }
     },
@@ -93,20 +87,35 @@ export default mixins(ClassesMixin, Watcher).extend({
   },
 
   methods: {
-    initPopup() {
-      setActive(this);
+    setPosition() {
       let activator = this.$el as HTMLElement;
       let rect = activator.getBoundingClientRect();
-      this.style = {
-        top: `${rect.bottom}px`,
-        left: `${rect.left}px`,
-        minWidth: `${rect.width}px`,
-      };
-      this.startWatcher();
+
+      const height = document.documentElement.clientHeight;
+
+      const spaceDown = height - rect.bottom;
+      const spaceUp = rect.top;
+
+      if (spaceDown > spaceUp || spaceDown > 300) {
+        this.style = {
+          ...this.style,
+          top: `${rect.bottom}px`,
+          bottom: undefined,
+          left: `${rect.left}px`,
+          minWidth: `${rect.width}px`,
+        };
+      } else {
+        this.style = {
+          ...this.style,
+          top: undefined,
+          bottom: `${height - rect.top}px`,
+          left: `${rect.left}px`,
+          minWidth: `${rect.width}px`,
+        };
+      }
     },
 
     async animateOpen() {
-      setActive(this);
       this.style = { ...this.style, height: 0 };
       this.contentStyle = { opacity: 0 };
 
@@ -147,29 +156,28 @@ export default mixins(ClassesMixin, Watcher).extend({
     },
 
     onWatcher() {
-      let activator = this.$el as HTMLElement;
-      let rect = activator.getBoundingClientRect();
-      this.style = {
-        ...this.style,
-        top: `${rect.bottom}px`,
-        left: `${rect.left}px`,
-        minWidth: `${rect.width}px`,
-      };
+      this.setPosition();
     },
 
     onTransitionEnd() {
       this.transitioning = false;
       const { height, ...rest } = this.style;
       this.style = rest;
-      if (!this.isOpen) {
-        this.stopWatcher();
-      }
+    },
+
+    // Close menu when clicking anywhere outside
+    onWindowClick(event: MouseEvent) {
+      // Ignore clicks on the menu/activator itself
+      let el = this.$el as HTMLElement;
+      if (el.contains(event.target as HTMLElement)) return;
+
+      this.hide();
     },
   },
 
   mounted() {
     if (this.isOpen) {
-      this.initPopup();
+      this.setPosition();
     }
   },
 });

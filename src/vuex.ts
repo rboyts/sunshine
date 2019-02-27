@@ -1,7 +1,7 @@
 import { Module } from 'vuex';
 import { Mutex } from 'async-mutex';
 import {
-  IDataTableState,
+  IDataModuleState,
   IRequestLoadItemsPayload,
   ISortState,
   IItem,
@@ -15,7 +15,7 @@ export interface IShowSubItemsPayload {
   keyPath: string[];
 }
 
-const getItems = (keyPath: string[], state: IDataTableState): IItem[] | null => {
+const getItems = (keyPath: string[], state: IDataModuleState): IItem[] | null => {
   const key = joinKeyPath(keyPath);
   const items = state.items[key];
   if (items == null) return null;
@@ -34,7 +34,7 @@ const getItems = (keyPath: string[], state: IDataTableState): IItem[] | null => 
 
 export const createDataModule = <ModuleState = {}, RootState = any>(
   options: Module<ModuleState, RootState> & IColumns,
-): Module<ModuleState & IDataTableState, RootState> => {
+): Module<ModuleState & IDataModuleState, RootState> => {
   const mutex = new Mutex();
 
   const findColumn = (key: string): IColumn => {
@@ -43,7 +43,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
     return it;
   };
 
-  const getStorageKey = (namespace: string) => `s-data-table@${namespace}`;
+  const getStorageKey = (namespace: string) => `s-table@${namespace}`;
 
   return {
     namespaced: true,
@@ -62,6 +62,9 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         } as ISortState,
 
         columns: options.columns.map(column => ({ key: column.key, visible: true })),
+
+        selectedItems: [],
+        invertSelection: false,
 
         ...(moduleState || {} as ModuleState),
       };
@@ -94,7 +97,10 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         return getItems([], state);
       },
 
-      skip(state) {
+      selectedItems: state => state.selectedItems,
+      invertSelection: state => state.invertSelection,
+
+      offset(state) {
         return state.offset;
       },
 
@@ -124,6 +130,24 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
 
       toggleColumn: (state, { index, checked }: { index: number, checked: boolean }) => {
         state.columns[index].visible = checked;
+      },
+
+      toggleItem: (state, key: string) => {
+        if (state.selectedItems.includes(key)) {
+          state.selectedItems = state.selectedItems.filter(k => k !== key);
+        } else {
+          state.selectedItems.push(key);
+        }
+      },
+
+      selectAll: state => {
+        state.invertSelection = true;
+        state.selectedItems = [];
+      },
+
+      selectNone: state => {
+        state.invertSelection = false;
+        state.selectedItems = [];
       },
 
       loadStart: state => {
@@ -180,10 +204,6 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         }
 
         commit('moveColumn', { fromIndex, toIndex });
-      },
-
-      toggleColumn({ getters, commit }, { index, checked }: { index: number, checked: boolean }) {
-        commit('toggleColumn', { index, checked });
       },
 
       async init({ dispatch }) {

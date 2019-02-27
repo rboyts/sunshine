@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-// A mixin that calls `onWatcher` on every animation frame when active
+// An abstract component that emits `trigger` event on every animation frame
 export default Vue.extend({
   methods: {
     startWatcher(this: any) {
@@ -8,7 +8,7 @@ export default Vue.extend({
 
       const startTimer = () => {
         this._watcherHandle = window.requestAnimationFrame(() => {
-          this.onWatcher();
+          this.$emit('trigger');
           startTimer();
         });
       };
@@ -21,4 +21,14 @@ export default Vue.extend({
       this._watcherHandle = null;
     },
   },
+
+  mounted() {
+    this.startWatcher();
+  },
+
+  beforeDestroy() {
+    this.stopWatcher();
+  },
+
+  render: h => h(),
 });

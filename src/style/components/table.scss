@@ -12,7 +12,7 @@ $table-condensed-row-height: 1.5rem;
 
 $table-toggle-width: base-spacing(5);
 
-.s-data-table {
+.s-table {
   @include paragraph-font;
 
   position: relative;
@@ -28,14 +28,14 @@ $table-toggle-width: base-spacing(5);
 
   // XXX Use when adjusting column width
   &--fixed {
-    .s-data-table__table {
+    .s-table__table {
       width: 0;
     }
   }
 
-  &:not(.s-data-table--dragging) {
-    .s-data-table__table {
-      tr:not(.s-data-table__row--active):hover {
+  &:not(.s-table--dragging) {
+    .s-table__table {
+      tr:not(.s-table__row--active):hover {
         td {
           background-color: $smartdok-eggs-yellow;
         }
@@ -44,11 +44,11 @@ $table-toggle-width: base-spacing(5);
   }
 }
 
-.s-data-table__wrapper {
+.s-table__wrapper {
   overflow: auto;
 }
 
-.s-data-table__table {
+.s-table__table {
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -82,7 +82,7 @@ $table-toggle-width: base-spacing(5);
     z-index: 2;
   }
 
-  .s-data-table__col {
+  .s-table__col {
     &--sticky {
       position: sticky;
       left: 0;
@@ -101,22 +101,22 @@ $table-toggle-width: base-spacing(5);
     }
   }
 
-  th.s-data-table__col {
+  th.s-table__col {
     &--sticky {
       z-index: 3;
       border-right: $th-inner-border;
     }
 
     &:hover {
-      .s-data-table__sortcolumn {
-        &:not(.s-data-table__sortcolumn--active) {
+      .s-table__sortcolumn {
+        &:not(.s-table__sortcolumn--active) {
           opacity: .1;
         }
       }
     }
   }
 
-  td.s-data-table__col {
+  td.s-table__col {
     &--sticky {
       z-index: 1;
       border-right: $inner-border;
@@ -124,7 +124,7 @@ $table-toggle-width: base-spacing(5);
   }
 }
 
-.s-data-table__row {
+.s-table__row {
   &--checked {
     td {
       background-color: $smartdok-eggs-yellow;
@@ -138,32 +138,32 @@ $table-toggle-width: base-spacing(5);
   }
 }
 
-.s-data-table__cell-wrapper {
+.s-table__cell-wrapper {
   display: flex;
   align-items: stretch;
 }
 
-.s-data-table__cell-content {
+.s-table__cell-content {
   height: $table-normal-row-height;
   flex: 1;
   padding: 0 $table-padding;
   border-bottom: $inner-border;
 }
 
-.s-data-table__table tr:last-child {
-  .s-data-table__cell-content {
+.s-table__table tr:last-child {
+  .s-table__cell-content {
     border-bottom: none;
   }
 }
 
-.s-data-table__checkable {
+.s-table__checkable {
   display: flex;
   justify-content: center;
   align-items: center;
   width: $table-toggle-width;
 }
 
-.s-data-table__toggle {
+.s-table__toggle {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -186,7 +186,16 @@ $table-toggle-width: base-spacing(5);
   }
 }
 
-.s-data-table__more {
+.s-table__icon {
+  text-align: center;
+  width: base-spacing(3);
+}
+
+.s-table__outline__section + .s-table__icon {
+  margin-left: -24px;
+}
+
+.s-table-options-menu {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -200,23 +209,23 @@ $table-toggle-width: base-spacing(5);
   }
 }
 
-.s-data-table--condensed {
-  .s-data-table__table {
+.s-table--condensed {
+  .s-table__table {
     th, td {
       height: $table-condensed-row-height;
       line-height: $table-condensed-row-height;
     }
   }
 
-  .s-data-table__cell-content {
+  .s-table__cell-content {
     height: $table-condensed-row-height;
   }
 
-  .s-data-table__toggle {
+  .s-table__toggle {
     height: $table-condensed-row-height;
   }
 
-  .s-data-table__more {
+  .s-table-options-menu {
     height: $table-condensed-row-height;
   }
 
@@ -225,7 +234,7 @@ $table-toggle-width: base-spacing(5);
   }
 }
 
-.s-data-table__outline {
+.s-table__outline {
   display: flex;
 }
 
@@ -237,8 +246,7 @@ $table-toggle-width: base-spacing(5);
   font-size: 1.4em;
 }
 
-.s-data-table__outline__section {
-  text-align: center;
+.s-table__outline__section {
   width: base-spacing(3);
   position: relative;
 
@@ -251,14 +259,14 @@ $table-toggle-width: base-spacing(5);
   }
 }
 
-.s-data-table__cell-placeholder {
+.s-table__cell-placeholder {
   display: inline-block;
   border-radius: 3px;
   height: .5rem;
   background-color: $almost-gray;
 }
 
-.s-data-table__sortcolumn {
+.s-table__sortcolumn {
   opacity: 0;
   margin-left: base-spacing();
 
@@ -279,7 +287,7 @@ $table-toggle-width: base-spacing(5);
   }
 }
 
-.s-data-table__move-cursor {
+.s-table__move-cursor {
   position: absolute;
   z-index: 5;
   top: 0;

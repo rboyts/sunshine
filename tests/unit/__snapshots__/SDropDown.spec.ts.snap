@@ -4,10 +4,11 @@ exports[`SDropDown renders dropdown list 1`] = `
 <div class="s-menu s-drop-down" label="Choose country"><span><div class="s-input s-drop-down__input"><span class="s-input__label">Choose country</span>
   <!---->
   <div tabindex="0" class="s-drop-down__spacer"></div> <span class="s-icon s-drop-down__caret s-drop-down__caret--open"><span class="sunshine24-dropdownarrow"></span></span></div></span>
-<div class="s-menu__popup" style="top: 0px; left: 0px; min-width: 0px; height: 0px;">
+<div class="s-menu__popup" style="bottom: 0px; left: 0px; min-width: 0px; height: 0px;">
   <div class="s-menu__popup__content" style="opacity: 0;">
     <div>
       <ul class="s-list">
+        <!---->
         <li class="s-list-item">
           <!---->
           Norge
@@ -24,17 +25,20 @@ exports[`SDropDown renders dropdown list 1`] = `
     </div>
   </div>
 </div>
+<!---->
+<!---->
 </div>
 `;
 
 exports[`SDropDown renders filtered list 1`] = `
 <div class="s-menu s-drop-down" label="Choose country"><span><div class="s-input s-input--focus s-drop-down__input"><span class="s-input__label s-input__label--aside">Choose country</span>
   <!----> <input type="text" class="s-input__input"> <span class="s-icon s-drop-down__caret s-drop-down__caret--open"><span class="sunshine24-dropdownarrow"></span></span></div></span>
-<div class="s-menu__popup" style="top: 0px; left: 0px; min-width: 0px; height: 0px;">
+<div class="s-menu__popup" style="bottom: 0px; left: 0px; min-width: 0px; height: 0px;">
   <div class="s-menu__popup__content" style="opacity: 1;">
     <div>
       <ul class="s-list">
-        <li class="s-list-item s-list-item--selected">
+        <!---->
+        <li class="s-list-item">
           <!---->
           Sverige
         </li>
@@ -42,5 +46,7 @@ exports[`SDropDown renders filtered list 1`] = `
     </div>
   </div>
 </div>
+<!---->
+<!---->
 </div>
 `;

@@ -20,6 +20,8 @@
 }
 
 .s-menu__popup__content {
+  display: flex;
+  flex-direction: column;
   transition: opacity $duration-normal;
 
   // XXX Hard-coded

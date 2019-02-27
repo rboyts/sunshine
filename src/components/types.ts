@@ -5,13 +5,15 @@ export interface ISortState {
   reverse: boolean;
 }
 
-export interface IDataTableState {
+export interface IDataModuleState {
   isLoading: boolean;
   offset: number;
   sorting: ISortState;
   items: { [key: string]: IItem[] };
   total: number | null;
   columns: Array<{ key: string, visible: boolean }>,
+  selectedItems: string[],
+  invertSelection: boolean,
 }
 
 export interface IColumn {
