@@ -2,17 +2,38 @@
   <div class="s-date-field">
     <s-menu v-model="isOpen">
       <template v-slot:activator>
-        <s-text-field
-          v-model="input"
-          format="dd.mm.åååå"
-          :dateLocale="locale"
-          :dateFormat="format"
-          moment
-          label="Dato"
-          @input="onInput"
-        />
+        <div v-if="isRangeField" class="s-date-field-range-input">
+          <s-text-field
+            v-model="formattedInputFrom"
+            format="dd.mm.åååå"
+            :dateLocale="locale"
+            :dateFormat="format"
+            moment
+            label="Fra dato"
+            @input="setSelectedPeriodFrom"
+          />
+          <s-text-field
+            v-model="formattedInputTo"
+            format="dd.mm.åååå"
+            :dateLocale="locale"
+            :dateFormat="format"
+            moment
+            label="Til dato"
+            @input="setSelectedPeriodTo"
+          />
+        </div>
+        <div v-else class="s-date-field-single-input">
+          <s-text-field
+            v-model="input"
+            format="dd.mm.åååå"
+            :dateLocale="locale"
+            :dateFormat="format"
+            moment
+            label="Dato"
+            @input="onInput"
+          />
+        </div>
       </template>
-
       <!-- content datepicker -->
       <template v-slot:content>
         <!--
@@ -28,7 +49,7 @@
           and range select in datepicker
         -->
         <s-datepicker
-          rangeSelect
+          :rangeSelect="isRangeField"
           :date="date"
           :from="from"
           :to="to"
@@ -75,11 +96,40 @@ export default Vue.extend({
     };
   },
 
+  props: {
+    rangeInput: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  computed: {
+    isRangeField(): boolean {
+      return this.rangeInput;
+    },
+
+    formattedInputFrom(): string {
+      return moment(this.from).format(this.format);
+    },
+
+    formattedInputTo(): string {
+      return moment(this.to).format(this.format);
+    },
+  },
+
   methods: {
+    // TODO: Handle change of dates from input
+
     onInput(input: string) {
-      console.log(input);
-      console.log(this.format);
       this.input = input;
+    },
+
+    setSelectedPeriodTo(input: string) {
+      console.log(input);
+    },
+
+    setSelectedPeriodFrom(input: string) {
+      console.log(input);
     },
 
     setSelectedPeriod(period: ICalendarPeriod) {

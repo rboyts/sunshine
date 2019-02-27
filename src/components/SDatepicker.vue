@@ -45,7 +45,6 @@ export default Vue.extend({
       calendar: [] as IMonth[],
       today: moment(),
       dateContext: moment(),
-      months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       mouseDrag: false,
       startDragDate: {} as moment.Moment,
       period: {
@@ -69,17 +68,6 @@ export default Vue.extend({
     rangeSelect: {
       type: Boolean,
       default: false,
-    },
-  },
-
-  watch: {
-    value(newVal, oldVal) {
-      // Validate date?
-      // TODO: all
-      // this.dateContext = moment(newVal, 'DD.MM.YYYY');
-      // this.calendar = this.createMonths();
-      // this.selectedPeriod.from = moment(newVal, 'DD.MM.YYYY');
-      // this.selectedPeriod.to = moment(newVal, 'DD.MM.YYYY');
     },
   },
 

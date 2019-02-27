@@ -77,28 +77,20 @@ export default Vue.extend({
     },
   },
   methods: {
-    stringifySingleDigit(key: number): string {
-      let digitAsString;
-
-      if (key <= 9) {
-        digitAsString = `0${key}`;
-      } else {
-        digitAsString = `${key}`;
-      }
-      return digitAsString;
+    translateMonthName(monthKey: number, year: number) {
+      return moment({ y: year, M: (monthKey - 1) }).format('MMMM-YYYY');
     },
 
-    translateMonthName(monthKey: number, year: number) {
-      // TODO: Translate to other types of locales?
-      return moment(`${year}-${this.stringifySingleDigit(monthKey)}`).format('MMMM-YYYY');
+    dayOfWeek(m: number, d: number, y: number) {
+      return moment({ y, M: (m - 1), d }).day();
     },
 
     isSaturday(m: number, d: number, y: number) {
-      return moment({ y, M: m, d }).day() === 6;
+      return moment({ y, M: (m - 1), d }).day() === 6;
     },
 
     isSunday(m: number, d: number, y: number) {
-      return moment({ y, M: m, d }).day() === 0;
+      return moment({ y, M: (m - 1), d }).day() === 0;
     },
 
     isSameDate(m: number, d: number, y: number, date: string) {

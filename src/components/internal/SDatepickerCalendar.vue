@@ -102,7 +102,7 @@ export default Vue.extend({
     setActiveMonth(calendar: IMonth[]) {
       this.monthNameInHeader = moment({
         y: calendar[0].year,
-        M: calendar[0].month,
+        M: (calendar[0].month - 1),
       }).format('MMMM YYYY');
     },
 
