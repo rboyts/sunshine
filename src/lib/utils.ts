@@ -24,7 +24,7 @@ export const classHelper = (...name: string[]): Generate => {
 export const ClassesMixin = Vue.extend({
   methods: {
     classes(...args: any[]): object {
-      let names: any[] = [this.$options.className || this.$options.name].concat(args);
+      let names: any[] = [this.$options.name].concat(args);
       let options = {};
       let last = names[names.length - 1];
       if (typeof last === 'object') {
