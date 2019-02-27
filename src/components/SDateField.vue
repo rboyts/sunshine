@@ -88,7 +88,7 @@ export default Vue.extend({
       // TODO: Remove
       from: moment({ y: 2019, M: 1, d: 25 }),
       to: moment({ y: 2019, M: 1, d: 28 }),
-      date: { y: 2019, M: 1, d: 1 },
+      date: moment({ y: 2019, M: 1, d: 1 }),
       isOpen: false,
       input: '',
       locale: moment.locale(),
