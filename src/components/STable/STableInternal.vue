@@ -28,7 +28,13 @@
                   @click.stop="noop"
                   @pointerdown.stop="noop"
                 >
-                  <slot name="menu"/>
+                  <s-table-options-menu
+                    :checkable="checkable"
+                    :orderedColumns="orderedColumns"
+                    @selectAll="$listeners.selectAll"
+                    @selectNone="$listeners.selectNone"
+                    @toggleColumn="$listeners.toggleColumn"
+                  />
                 </span>
 
                 <span :class="classes('cell-content')">{{ column.title }}</span>
@@ -124,6 +130,7 @@ import SIcon from '../SIcon.vue';
 import SProgress from '../SProgress.vue';
 import STableOutline from './STableOutline.vue';
 import STableToggle from './STableToggle.vue';
+import STableOptionsMenu from './STableOptionsMenu.vue';
 
 const MAX_PLACEHOLDER_ROWS = 0;
 const SCROLL_DEBOUNCE = 250;
@@ -168,10 +175,12 @@ export default mixins(ClassesMixin).extend({
     SProgress,
     STableOutline,
     STableToggle,
+    STableOptionsMenu,
   },
 
   props: {
     columns: Array as () => IColumn[],
+    orderedColumns: Array as () => IColumn[],
     items: Array as () => IItem[],
     total: Number as () => number | null,
     offset: Number,

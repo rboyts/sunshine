@@ -1,12 +1,12 @@
 <template>
   <s-table-internal
     class="flex-grow"
-    ref="impl"
     :items="items"
     :total="total"
     :offset="offset"
     :sorting="sorting"
     :columns="visibleColumns"
+    :orderedColumns="orderedColumns"
     :checkable="checkable"
     :selectedItems="selectedItems"
     :invertSelection="invertSelection"
@@ -15,19 +15,12 @@
     @move-column="onMoveColumn"
     @open-item="onOpenItem"
     @toggle-item="onToggleItem"
+    @selectAll="onSelectAll"
+    @selectNone="onSelectNone"
+    @toggleColumn="onToggleColumn"
 
     v-bind="$attrs"
   >
-
-    <template v-slot:menu>
-      <s-table-options-menu
-        :checkable="checkable"
-        :orderedColumns="orderedColumns"
-        @selectAll="onSelectAll"
-        @selectNone="onSelectNone"
-        @toggleColumn="onToggleColumn"
-      />
-    </template>
 
     <!-- Pass on all slots -->
     <template v-for="slot in Object.keys($scopedSlots)" v-slot:[slot]="scope">
@@ -39,25 +32,17 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
-import { ClassesMixin } from '../../lib/utils';
-import SButton from '../SButton.vue';
-import SIcon from '../SIcon.vue';
 import STableInternal from './STableInternal.vue';
-import STableOptionsMenu from './STableOptionsMenu.vue';
 import {
-  ISortState, IItem, IColumn, IRequestLoadItemsPayload, IOrderedColumn, IColumns,
+  ISortState, IItem, IColumn, IRequestLoadItemsPayload, IOrderedColumn,
 } from '../types';
 
-export default mixins(ClassesMixin).extend({
+export default Vue.extend({
   name: 's-table',
   inheritAttrs: false,
 
   components: {
-    SButton,
-    SIcon,
     STableInternal,
-    STableOptionsMenu,
   },
 
   props: {
