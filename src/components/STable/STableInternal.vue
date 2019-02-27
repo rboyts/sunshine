@@ -67,13 +67,13 @@
               checked: isChecked(node),
               active: activeRow === node.key,
             })"
+            @click="onClick(node)"
           >
 
             <td
               v-for="(column, index) in columns"
               :key="column.key"
               :class="getColumnClass(column, index)"
-              @click="activeRow = node.key"
             >
               <span :class="classes('cell-wrapper')">
 
@@ -281,6 +281,10 @@ export default mixins(ClassesMixin).extend({
       const startRow = this.offset + this.items.length;
       return this.total == null ? 1 : this.total - startRow;
     },
+
+    hasSelection(): boolean {
+      return this.invertSelection || this.selectedItems.length !== 0;
+    },
   },
 
   methods: {
@@ -331,6 +335,13 @@ export default mixins(ClassesMixin).extend({
 
     toggleChecked(node: ITableNode) {
       this.$emit('toggle-item', node.key);
+    },
+
+    onClick(node: ITableNode) {
+      this.activeRow = node.key;
+      if (this.hasSelection) {
+        this.toggleChecked(node);
+      }
     },
 
     onMouseDown(event: PointerEvent, index: number) {
