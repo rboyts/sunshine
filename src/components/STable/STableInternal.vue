@@ -8,7 +8,10 @@
     />
 
     <div :class="classes('wrapper')" @scroll="debounceOnScroll">
-      <table :class="classes('table')">
+      <table
+        @mousedown.shift.prevent="noop"
+        :class="classes('table')"
+      >
 
         <colgroup>
           <col v-for="(width, i) in colWidths" :key="i" :style="{ width }" />
@@ -67,7 +70,9 @@
               checked: isChecked(node),
               active: activeRow === node.key,
             })"
-            @click="onClick(node)"
+            @click.exact.prevent="onClick($event, node)"
+            @click.exact.ctrl.prevent="onCtrlClick(node)"
+            @click.exact.shift.stop.prevent="onShiftClick(node)"
           >
 
             <td
@@ -334,13 +339,42 @@ export default mixins(ClassesMixin).extend({
     },
 
     toggleChecked(node: ITableNode) {
-      this.$emit('toggle-item', node.key);
+      this.$emit('toggle-item', { key: node.key, checked: !this.isChecked(node) });
     },
 
-    onClick(node: ITableNode) {
+    onClick(event: UIEvent, node: ITableNode) {
       this.activeRow = node.key;
-      if (this.hasSelection) {
+      if (this.checkable && (this.hasSelection || event.detail > 1)) {
+        this.$emit('toggle-item', { key: node.key, checked: true });
+      }
+    },
+
+    onCtrlClick(node: ITableNode) {
+      if (this.checkable) {
         this.toggleChecked(node);
+      }
+      this.activeRow = node.key;
+    },
+
+    onShiftClick(node: ITableNode) {
+      if (this.checkable) {
+        if (this.activeRow) {
+          const activeIndex = this.rootNodes.findIndex(n => n.key === this.activeRow);
+          const newIndex = this.rootNodes.indexOf(node);
+          if (activeIndex === -1 || newIndex === -1) return;
+
+          const start = Math.min(activeIndex, newIndex);
+          const stop = Math.max(activeIndex, newIndex);
+
+          // const keys = this.rootNodes.slice(start, stop + 1).map(n => n.key);
+          this.$emit('selectNone');
+          for (let index = start; index <= stop; index++) {
+            this.$emit('toggle-item', {
+              key: this.rootNodes[index].key,
+              checked: true,
+            });
+          }
+        }
       }
     },
 

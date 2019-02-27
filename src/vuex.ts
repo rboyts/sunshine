@@ -132,11 +132,13 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         state.columns[index].visible = checked;
       },
 
-      toggleItem: (state, key: string) => {
-        if (state.selectedItems.includes(key)) {
-          state.selectedItems = state.selectedItems.filter(k => k !== key);
+      toggleItem: (state, { key, checked }: { key: string, checked: boolean }) => {
+        if (state.invertSelection !== checked) {
+          if (!state.selectedItems.includes(key)) {
+            state.selectedItems.push(key);
+          }
         } else {
-          state.selectedItems.push(key);
+          state.selectedItems = state.selectedItems.filter(k => k !== key);
         }
       },
 

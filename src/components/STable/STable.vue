@@ -133,8 +133,8 @@ export default Vue.extend({
       this.dispatchAction('requestLoadSubItems', { keyPath });
     },
 
-    onToggleItem(key: string) {
-      this.commitMutation('toggleItem', key);
+    onToggleItem(payload: any) {
+      this.commitMutation('toggleItem', payload);
     },
 
     onSort(event: MouseEvent, key: string) {
