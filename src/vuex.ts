@@ -100,7 +100,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
       selectedItems: state => state.selectedItems,
       invertSelection: state => state.invertSelection,
 
-      skip(state) {
+      offset(state) {
         return state.offset;
       },
 

@@ -4,7 +4,7 @@
     ref="impl"
     :items="items"
     :total="total"
-    :skip="skip"
+    :offset="offset"
     :sorting="sorting"
     :columns="visibleColumns"
     :checkable="checkable"
@@ -97,8 +97,8 @@ export default mixins(ClassesMixin).extend({
       return this.getState('invertSelection');
     },
 
-    skip(): number {
-      return this.getState('skip');
+    offset(): number {
+      return this.getState('offset');
     },
 
     total(): number {

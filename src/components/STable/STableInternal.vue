@@ -174,7 +174,7 @@ export default mixins(ClassesMixin).extend({
     columns: Array as () => IColumn[],
     items: Array as () => IItem[],
     total: Number as () => number | null,
-    skip: Number,
+    offset: Number,
     sorting: Object as () => ISortState,
     draggable: Boolean,
     condensed: Boolean,
@@ -259,17 +259,17 @@ export default mixins(ClassesMixin).extend({
 
     colWidths(): string[] {
       const defaultWidth = this.fixed ? '150px' : 'auto';
-      return this.columns.map(column =>
+      return this.columns.map(column => (
         column.width != null ? `${column.width}px` : defaultWidth
-      );
+      ));
     },
 
     topSpacerRows(): number {
-      return this.skip;
+      return this.offset;
     },
 
     bottomSpacerRows(): number {
-      const startRow = this.skip + this.items.length;
+      const startRow = this.offset + this.items.length;
       return this.total == null ? 1 : this.total - startRow;
     },
   },
@@ -410,7 +410,7 @@ export default mixins(ClassesMixin).extend({
 
           const rows = Math.ceil((scrollBottom - spacerPos) / this.rowHeight) - rowOffset;
 
-          let firstRow = this.skip + this.rootNodes.length + rowOffset;
+          let firstRow = this.offset + this.rootNodes.length + rowOffset;
           let lastRow = firstRow + rows;
 
           const args = { firstRow, lastRow };
@@ -432,7 +432,7 @@ export default mixins(ClassesMixin).extend({
 
           const rows = Math.ceil((spacerPos - scrollTop) / this.rowHeight) - rowOffset;
 
-          let lastRow = this.skip - rowOffset;
+          let lastRow = this.offset - rowOffset;
           let firstRow = Math.floor(scrollTop / this.rowHeight);
 
           const args = { firstRow, lastRow };
