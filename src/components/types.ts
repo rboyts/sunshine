@@ -12,7 +12,7 @@ export interface IDataModuleState {
   items: { [key: string]: IItem[] };
   total: number | null;
   columns: Array<{ key: string, visible: boolean }>,
-  selectedItems: string[],
+  selectedKeys: string[],
   invertSelection: boolean,
 }
 

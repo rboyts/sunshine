@@ -63,7 +63,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
 
         columns: options.columns.map(column => ({ key: column.key, visible: true })),
 
-        selectedItems: [],
+        selectedKeys: [],
         invertSelection: false,
 
         ...(moduleState || {} as ModuleState),
@@ -97,8 +97,14 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         return getItems([], state);
       },
 
-      selectedItems: state => state.selectedItems,
+      selectedKeys: state => state.selectedKeys,
       invertSelection: state => state.invertSelection,
+
+      selectedItems: state => {
+        // TODO Include sub-items
+        const selected = state.selectedKeys;
+        return state.items[''].filter(item => selected.includes(item.key) !== state.invertSelection);
+      },
 
       offset(state) {
         return state.offset;
@@ -134,22 +140,22 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
 
       toggleItem: (state, { key, checked }: { key: string, checked: boolean }) => {
         if (state.invertSelection !== checked) {
-          if (!state.selectedItems.includes(key)) {
-            state.selectedItems.push(key);
+          if (!state.selectedKeys.includes(key)) {
+            state.selectedKeys.push(key);
           }
         } else {
-          state.selectedItems = state.selectedItems.filter(k => k !== key);
+          state.selectedKeys = state.selectedKeys.filter(k => k !== key);
         }
       },
 
       selectAll: state => {
         state.invertSelection = true;
-        state.selectedItems = [];
+        state.selectedKeys = [];
       },
 
       selectNone: state => {
         state.invertSelection = false;
-        state.selectedItems = [];
+        state.selectedKeys = [];
       },
 
       loadStart: state => {

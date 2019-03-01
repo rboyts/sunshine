@@ -193,7 +193,7 @@ export default mixins(ClassesMixin).extend({
     draggable: Boolean,
     condensed: Boolean,
 
-    selectedItems: Array as () => string[],
+    selectedKeys: Array as () => string[],
     invertSelection: Boolean,
 
     checkable: {
@@ -288,7 +288,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     hasSelection(): boolean {
-      return this.invertSelection || this.selectedItems.length !== 0;
+      return this.invertSelection || this.selectedKeys.length !== 0;
     },
   },
 
@@ -335,7 +335,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     isChecked(node: ITableNode): boolean {
-      return this.selectedItems.includes(node.key) !== this.invertSelection;
+      return this.selectedKeys.includes(node.key) !== this.invertSelection;
     },
 
     toggleChecked(node: ITableNode) {

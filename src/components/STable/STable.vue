@@ -8,7 +8,7 @@
     :columns="visibleColumns"
     :orderedColumns="orderedColumns"
     :checkable="checkable"
-    :selectedItems="selectedItems"
+    :selectedKeys="selectedKeys"
     :invertSelection="invertSelection"
     @sort="onSort"
     @visible-rows="onVisibleRows"
@@ -74,8 +74,8 @@ export default Vue.extend({
       return this.getState('items');
     },
 
-    selectedItems(): string[] {
-      return this.getState('selectedItems');
+    selectedKeys(): string[] {
+      return this.getState('selectedKeys');
     },
 
     invertSelection(): boolean {
