@@ -21,6 +21,7 @@ Use cases:
         :hasFocus="hasFocus"
         :isEmpty="textValue == '' && text == ''"
         :readonly="!search"
+        :inactive="inactive"
         v-bind="$attrs"
         @click.native="onClick"
         @keydown.native.up.prevent="onArrowUp"
@@ -38,6 +39,7 @@ Use cases:
           ref="input"
           class="s-input__input"
           type="text"
+          :disabled="inactive"
           :value="filter"
           @click.stop="onClickSearch"
           @focus="hasFocus = true"
@@ -49,7 +51,7 @@ Use cases:
           v-else
           ref="input"
           :class="classes('spacer')"
-          tabIndex="0"
+          :tabIndex="inactive ? undefined : 0"
           @focus="hasFocus = true"
           @blur="hasFocus = false"
         />
@@ -121,6 +123,11 @@ export default mixins(ClassesMixin).extend({
     maxSelectedShown: {
       type: Number,
       default: 2,
+    },
+
+    inactive: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -203,11 +210,15 @@ export default mixins(ClassesMixin).extend({
 
   methods: {
     onClick() {
+      if (this.inactive) return;
+
       this.isOpen = !this.isOpen;
       this.setFocus();
     },
 
     onClickSearch() {
+      if (this.inactive) return;
+
       this.isOpen = true;
       this.setFocus();
     },
@@ -284,6 +295,8 @@ export default mixins(ClassesMixin).extend({
     },
 
     onCaretClick(event: PointerEvent) {
+      if (this.inactive) return;
+
       this.isOpen = !this.isOpen;
       event.stopPropagation();
     },
