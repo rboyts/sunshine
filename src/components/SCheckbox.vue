@@ -4,13 +4,12 @@
   >
     <input
       type="checkbox"
-      :checked="checked || false"
       :disabled="inactive"
-      @change="$emit('change', $event.target.checked)"
+      v-model="isChecked"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
     />
-    <s-checkable :inactive="inactive" :checked="checked" :hasFocus="hasFocus" />
+    <s-checkable :inactive="inactive" :checked="isChecked" :hasFocus="hasFocus" />
     <span>
       <slot />
     </span>
@@ -36,7 +35,11 @@ export default mixins(ClassesMixin).extend({
   },
 
   props: {
-    checked: Boolean,
+    checked: {
+      type: Boolean,
+      required: false,
+    },
+
     inactive: {
       type: Boolean,
       default: false,
@@ -46,7 +49,20 @@ export default mixins(ClassesMixin).extend({
   data() {
     return {
       hasFocus: false,
+      isChecked: this.checked === null ? null : !!this.checked,
     };
+  },
+
+  watch: {
+    checked(val) {
+      this.isChecked = val === null ? null : !!val;
+    },
+
+    isChecked(val) {
+      if (val !== this.checked) {
+        this.$emit('change', val);
+      }
+    },
   },
 
   computed: {
