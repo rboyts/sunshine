@@ -133,6 +133,7 @@ export default mixins(ClassesMixin).extend({
 
   data() {
     return {
+      internalValue: null as any,
       hasFocus: false,
       isOpen: false,
       filter: '',
@@ -140,6 +141,21 @@ export default mixins(ClassesMixin).extend({
   },
 
   watch: {
+    value: {
+      handler(val) {
+        if (this.multiple) {
+          this.internalValue = val || [];
+        } else {
+          this.internalValue = val;
+        }
+      },
+      immediate: true,
+    },
+
+    internalValue(val) {
+      this.$emit('input', val);
+    },
+
     hasFocus(val) {
       if (!val) {
         this.isOpen = false;
@@ -166,7 +182,7 @@ export default mixins(ClassesMixin).extend({
 
     itemValues(): object[] {
       return this.filteredItems.map(item => {
-        let checked = this.multiple && this.value.includes(item);
+        let checked = this.multiple && this.internalValue.includes(item);
         return {
           ...item,
           item,
@@ -180,30 +196,30 @@ export default mixins(ClassesMixin).extend({
     },
 
     textValue(): string {
-      if (!this.value) return '';
+      if (!this.internalValue) return '';
 
       // Hide when typing in single-select mode
       if (!this.multiple && this.filter) return '';
 
       if (this.multiple) {
-        if (this.value.length > this.maxSelectedShown) {
+        if (this.internalValue.length > this.maxSelectedShown) {
           // TODO customize/i18n
-          return `${this.value.length} selected`;
+          return `${this.internalValue.length} selected`;
         } else {
-          return this.value.map((v: any) => v.title).join(', ');
+          return this.internalValue.map((v: any) => v.title).join(', ');
         }
       } else {
-        return this.value.title;
+        return this.internalValue.title;
       }
     },
 
     labels(): string[] {
       if (!this.multiple) return [];
 
-      if (this.value.length > this.maxSelectedShown) {
-        return [`${this.value.length} selected`];
+      if (this.internalValue.length > this.maxSelectedShown) {
+        return [`${this.internalValue.length} selected`];
       } else {
-        return this.value.map((v: any) => v.title);
+        return this.internalValue.map((v: any) => v.title);
       }
     },
   },
@@ -233,7 +249,7 @@ export default mixins(ClassesMixin).extend({
         if (this.multiple) {
           this.isOpen = true;
         } else {
-          this.setValue(this.getPreviousItem(this.value));
+          this.internalValue = this.getPreviousItem(this.internalValue);
         }
       }
     },
@@ -243,7 +259,7 @@ export default mixins(ClassesMixin).extend({
         if (this.multiple) {
           this.isOpen = true;
         } else {
-          this.setValue(this.getNextItem(this.value));
+          this.internalValue = this.getNextItem(this.internalValue);
         }
       }
     },
@@ -266,7 +282,7 @@ export default mixins(ClassesMixin).extend({
       if (this.isOpen) {
         if (!this.filter) {
           if (this.multiple) {
-            this.value.pop();
+            this.internalValue.pop();
             event.preventDefault();
           }
         }
@@ -311,7 +327,7 @@ export default mixins(ClassesMixin).extend({
 
     onItemClick(item: any) {
       if (!this.multiple) {
-        this.setValue(item);
+        this.internalValue = item;
       }
 
       this.filter = '';
@@ -331,25 +347,21 @@ export default mixins(ClassesMixin).extend({
     toggleChecked(item: any) {
       if (!this.multiple) throw new Error('Expected multiple to be true');
 
-      const currentValue = this.value as object[] || [];
+      const currentValue = this.internalValue as object[] || [];
       this.setChecked(item, currentValue.indexOf(item) === -1);
     },
 
     setChecked(item: any, checked: boolean) {
       if (!this.multiple) throw new Error('Expected multiple to be true');
 
-      const currentValue = this.value as object[] || [];
+      const currentValue = this.internalValue as object[] || [];
       let newValue: object[];
       if (checked) {
         newValue = (currentValue.indexOf(item) === -1) ? currentValue.concat(item) : currentValue;
       } else {
         newValue = currentValue.filter(i => i !== item);
       }
-      this.setValue(newValue);
-    },
-
-    setValue(value: any) {
-      this.$emit('input', value);
+      this.internalValue = newValue;
     },
   },
 });
