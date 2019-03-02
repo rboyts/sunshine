@@ -101,7 +101,10 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
 
       selectedItems: state => {
         // TODO Include sub-items
-        const selected = state.selection.selected;
+        let { active, selected } = state.selection;
+        if (active && selected.length === 0) {
+          selected = [active];
+        }
         return state.items[''].filter(item => selected.includes(item.key) !== state.selection.inverted);
       },
 
