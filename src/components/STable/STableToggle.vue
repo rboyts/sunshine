@@ -36,7 +36,7 @@ export default {
       return this.classes({
         loading: this.isLoading,
         open: !this.isLoading && this.isOpen,
-      })
+      });
     },
 
     isLoading() {
@@ -49,4 +49,3 @@ export default {
   },
 };
 </script>
-

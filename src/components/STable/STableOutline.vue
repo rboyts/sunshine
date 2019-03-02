@@ -15,9 +15,11 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 const OUTLINE_WIDTH = 24; // Must correspond to CSS
 
-export default {
+export default Vue.extend({
   name: 's-table-outline',
 
   props: {
@@ -114,5 +116,5 @@ export default {
       ];
     },
   },
-};
+});
 </script>
