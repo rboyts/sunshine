@@ -6,7 +6,9 @@
       @_click="$emit('click')"
       @click="onClick"
     >
-      <slot name="heading" />
+      <slot name="heading">
+        {{ heading }}
+      </slot>
       <s-icon package="sunshine24" name="arrow"
         :class="classes('chevron', chevronOptions)"
       />
@@ -39,6 +41,10 @@ export default Vue.extend({
 
   components: {
     SIcon,
+  },
+
+  props: {
+    heading: String,
   },
 
   // XXX parent should handle state
