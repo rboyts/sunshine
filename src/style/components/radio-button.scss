@@ -5,6 +5,7 @@ $radio-button-border-width: 1px;
 .s-radio-button {
   @include paragraph-font;
 
+  position: relative;
   display: inline-flex;
   height: $radio-button-height;
   line-height: $radio-button-height;

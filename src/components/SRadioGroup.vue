@@ -20,8 +20,27 @@ export default Vue.extend({
     value: String,
   },
 
+  data() {
+    return {
+      internalValue: null,
+    };
+  },
+
   watch: {
-    value: 'updateValues',
+    value: {
+      handler(val) {
+        this.internalValue = val;
+      },
+      immediate: true,
+    },
+
+    internalValue(val) {
+      this.updateValues();
+      if (val !== this.value) {
+        this.$emit('input', val);
+      }
+    },
+
   },
 
   methods: {
@@ -29,7 +48,7 @@ export default Vue.extend({
       this.$_radios.push(radio);
 
       const handler = () => {
-        this.$emit('input', radio.value);
+        this.internalValue = radio.value;
       };
 
       radio.$on('change', handler);
@@ -46,7 +65,7 @@ export default Vue.extend({
 
     updateValues() {
       for (let radio of this.$_radios) {
-        radio.checked = radio.value === this.value;
+        radio.checked = radio.value === this.internalValue;
       }
     },
   },
