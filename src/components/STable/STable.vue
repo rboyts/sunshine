@@ -8,15 +8,11 @@
     :columns="visibleColumns"
     :orderedColumns="orderedColumns"
     :checkable="checkable"
-    :selectedKeys="selectedKeys"
-    :invertSelection="invertSelection"
+    :selection.sync="selection"
     @sort="onSort"
     @visible-rows="onVisibleRows"
     @move-column="onMoveColumn"
     @open-item="onOpenItem"
-    @toggle-item="onToggleItem"
-    @selectAll="onSelectAll"
-    @selectNone="onSelectNone"
     @toggleColumn="onToggleColumn"
 
     v-bind="$attrs"
@@ -36,6 +32,24 @@ import STableInternal from './STableInternal.vue';
 import {
   ISortState, IItem, IColumn, IRequestLoadItemsPayload, IOrderedColumn,
 } from '../types';
+
+const connectToStore = (key: string) => ({
+  get(this: any) {
+    return this.getState(key);
+  },
+
+  set(this: any, value: any) {
+    return this.commitMutation(key, value);
+  },
+});
+
+const mapToStore = (keys: string[]) => {
+  const mapped: {[key: string]: any} = {};
+  for (const key of keys) {
+    mapped[key] = connectToStore(key);
+  }
+  return mapped;
+};
 
 export default Vue.extend({
   name: 's-table',
@@ -74,14 +88,6 @@ export default Vue.extend({
       return this.getState('items');
     },
 
-    selectedKeys(): string[] {
-      return this.getState('selectedKeys');
-    },
-
-    invertSelection(): boolean {
-      return this.getState('invertSelection');
-    },
-
     offset(): number {
       return this.getState('offset');
     },
@@ -93,6 +99,10 @@ export default Vue.extend({
     sorting(): ISortState {
       return this.getState('sorting');
     },
+
+    ...mapToStore([
+      'selection'
+    ]),
   },
 
   watch: {
@@ -117,24 +127,12 @@ export default Vue.extend({
       this.$store.commit(`${this.module}/${name}`, payload);
     },
 
-    onSelectAll() {
-      this.commitMutation('selectAll');
-    },
-
-    onSelectNone() {
-      this.commitMutation('selectNone');
-    },
-
     onVisibleRows(args: IRequestLoadItemsPayload) {
       this.dispatchAction('requestLoadItems', args);
     },
 
     onOpenItem(keyPath: string) {
       this.dispatchAction('requestLoadSubItems', { keyPath });
-    },
-
-    onToggleItem(payload: any) {
-      this.commitMutation('toggleItem', payload);
     },
 
     onSort(event: MouseEvent, key: string) {

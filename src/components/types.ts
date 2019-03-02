@@ -5,6 +5,12 @@ export interface ISortState {
   reverse: boolean;
 }
 
+export interface ISelection {
+  active: string | null;
+  selected: string[];
+  inverted: boolean;
+}
+
 export interface IDataModuleState {
   isLoading: boolean;
   offset: number;
@@ -12,8 +18,8 @@ export interface IDataModuleState {
   items: { [key: string]: IItem[] };
   total: number | null;
   columns: Array<{ key: string, visible: boolean }>,
-  selectedKeys: string[],
-  invertSelection: boolean,
+
+  selection: ISelection;
 }
 
 export interface IColumn {
@@ -115,3 +121,9 @@ export interface MouseWheelEvent extends MouseEvent {
     wheelDeltaArg: number,
   ): void;
 }
+
+export const NO_SELECTION: ISelection = Object.freeze({
+  active: null,
+  selected: [],
+  inverted: false,
+});

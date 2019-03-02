@@ -34,8 +34,8 @@
                   <s-table-options-menu
                     :checkable="checkable"
                     :orderedColumns="orderedColumns"
-                    @selectAll="$listeners.selectAll"
-                    @selectNone="$listeners.selectNone"
+                    @selectAll="selectAll"
+                    @selectNone="selectNone"
                     @toggleColumn="$listeners.toggleColumn"
                   />
                 </span>
@@ -128,7 +128,7 @@
 import Vue, { VNode, VNodeChildrenArrayContents } from 'vue';
 import debounce from 'debounce';
 import mixins from 'vue-typed-mixins';
-import { IColumn, IItem, ISortState } from '../types';
+import { IColumn, IItem, ISortState, ISelection, NO_SELECTION } from '../types';
 import { ClassesMixin, joinKeyPath } from '../../lib/utils';
 import SCheckable from '../SCheckable.vue';
 import SIcon from '../SIcon.vue';
@@ -193,8 +193,7 @@ export default mixins(ClassesMixin).extend({
     draggable: Boolean,
     condensed: Boolean,
 
-    selectedKeys: Array as () => string[],
-    invertSelection: Boolean,
+    selection: Object as () => ISelection,
 
     checkable: {
       type: Boolean,
@@ -223,9 +222,23 @@ export default mixins(ClassesMixin).extend({
       moveTimeoutId: undefined as number | undefined,
       openNodes: [] as string[],
 
-      // TODO Vuex
-      activeRow: null as string | null,
+      internalSelection: NO_SELECTION,
     };
+  },
+
+  watch: {
+    selection: {
+      handler(val) {
+        this.internalSelection = val || NO_SELECTION;
+      },
+      immediate: true,
+    },
+
+    internalSelection(val) {
+      if (val !== this.selection) {
+        this.$emit('update:selection', val);
+      }
+    },
   },
 
   computed: {
@@ -288,7 +301,23 @@ export default mixins(ClassesMixin).extend({
     },
 
     hasSelection(): boolean {
-      return this.invertSelection || this.selectedKeys.length !== 0;
+      return (
+        this.internalSelection.inverted ||
+        this.internalSelection.selected.length !== 0
+      );
+    },
+
+    activeRow: {
+      get(): string | null {
+        return this.internalSelection.active;
+      },
+
+      set(val: string | null) {
+        this.internalSelection = {
+          ...this.internalSelection,
+          active: val,
+        };
+      },
     },
   },
 
@@ -335,17 +364,46 @@ export default mixins(ClassesMixin).extend({
     },
 
     isChecked(node: ITableNode): boolean {
-      return this.selectedKeys.includes(node.key) !== this.invertSelection;
+      return (
+        this.internalSelection.selected.includes(node.key) !==
+        this.internalSelection.inverted
+      );
     },
 
     toggleChecked(node: ITableNode) {
-      this.$emit('toggle-item', { key: node.key, checked: !this.isChecked(node) });
+      let selected = this.internalSelection.selected;
+      if (selected.includes(node.key)) {
+        selected = selected.filter(k => k !== node.key);
+      } else {
+        selected = selected.concat(node.key);
+      }
+
+      this.internalSelection = {
+        ...this.internalSelection,
+        selected,
+      };
+    },
+
+    selectAll() {
+      this.internalSelection = {
+        ...this.internalSelection,
+        inverted: true,
+        selected: [],
+      }
+    },
+
+    selectNone() {
+      this.internalSelection = {
+        ...this.internalSelection,
+        inverted: false,
+        selected: [],
+      };
     },
 
     onClick(event: UIEvent, node: ITableNode) {
       this.activeRow = node.key;
       if (this.checkable && (this.hasSelection || event.detail > 1)) {
-        this.$emit('toggle-item', { key: node.key, checked: true });
+        this.toggleChecked(node);
       }
     },
 
@@ -366,14 +424,13 @@ export default mixins(ClassesMixin).extend({
           const start = Math.min(activeIndex, newIndex);
           const stop = Math.max(activeIndex, newIndex);
 
-          // const keys = this.rootNodes.slice(start, stop + 1).map(n => n.key);
-          this.$emit('selectNone');
-          for (let index = start; index <= stop; index++) {
-            this.$emit('toggle-item', {
-              key: this.rootNodes[index].key,
-              checked: true,
-            });
-          }
+          const selected = this.rootNodes.slice(start, stop + 1).map(n => n.key);
+
+          this.internalSelection = {
+            ...this.internalSelection,
+            inverted: false,
+            selected,
+          };
         }
       }
     },
@@ -431,6 +488,7 @@ export default mixins(ClassesMixin).extend({
       if (to > from) to--;
       if (to === from) return;
 
+      // TODO sync
       this.$emit('move-column', { from, to });
     },
 
@@ -478,11 +536,6 @@ export default mixins(ClassesMixin).extend({
         if (spacerPos > scrollTop) {
           const spacerOffset = Math.max(0, spacerPos - scrollBottom);
           const rowOffset = Math.floor(spacerOffset / this.rowHeight);
-
-          console.log('spacerOffset', spacerOffset);
-          console.log('rowOffste', rowOffset);
-
-          console.log('rows', Math.ceil((spacerPos - scrollTop) / this.rowHeight));
 
           const rows = Math.ceil((spacerPos - scrollTop) / this.rowHeight) - rowOffset;
 

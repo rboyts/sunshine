@@ -8,6 +8,7 @@ import {
   IColumn,
   IColumns,
   IOrderedColumn,
+  NO_SELECTION,
 } from './components/types';
 import { joinKeyPath } from './lib/utils';
 
@@ -63,8 +64,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
 
         columns: options.columns.map(column => ({ key: column.key, visible: true })),
 
-        selectedKeys: [],
-        invertSelection: false,
+        selection: NO_SELECTION,
 
         ...(moduleState || {} as ModuleState),
       };
@@ -97,13 +97,12 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         return getItems([], state);
       },
 
-      selectedKeys: state => state.selectedKeys,
-      invertSelection: state => state.invertSelection,
+      selection: state => state.selection,
 
       selectedItems: state => {
         // TODO Include sub-items
-        const selected = state.selectedKeys;
-        return state.items[''].filter(item => selected.includes(item.key) !== state.invertSelection);
+        const selected = state.selection.selected;
+        return state.items[''].filter(item => selected.includes(item.key) !== state.selection.inverted);
       },
 
       offset(state) {
@@ -138,24 +137,8 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         state.columns[index].visible = checked;
       },
 
-      toggleItem: (state, { key, checked }: { key: string, checked: boolean }) => {
-        if (state.invertSelection !== checked) {
-          if (!state.selectedKeys.includes(key)) {
-            state.selectedKeys.push(key);
-          }
-        } else {
-          state.selectedKeys = state.selectedKeys.filter(k => k !== key);
-        }
-      },
-
-      selectAll: state => {
-        state.invertSelection = true;
-        state.selectedKeys = [];
-      },
-
-      selectNone: state => {
-        state.invertSelection = false;
-        state.selectedKeys = [];
+      selection: (state, selection) => {
+        state.selection = selection;
       },
 
       loadStart: state => {
