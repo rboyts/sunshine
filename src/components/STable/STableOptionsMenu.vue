@@ -1,7 +1,7 @@
 <template>
-  <s-menu v-model="menuOpen">
+  <s-menu v-model="menuOpen" :class="classes({ open: menuOpen })">
     <template v-slot:activator>
-      <a tabIndex="0" :class="classes({open: menuOpen})"
+      <a tabIndex="0"
         @keydown.enter.space.prevent="menuOpen = true"
         @keydown.escape="menuOpen = false"
         @blur="menuOpen = false"
