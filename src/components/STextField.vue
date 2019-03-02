@@ -9,9 +9,8 @@
     <input
       class="s-input__input"
       :type="type"
-      :value="value"
       :disabled="inactive"
-      @input="onInput"
+      v-model="internalValue"
       @keypress="onKeyPress"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
@@ -23,7 +22,7 @@
       class="s-input__format"
     >
       <span class="s-input__value">{{
-        value
+        internalValue
       }}</span><span class="s-input__format__remaining">{{
         remainingFormat
       }}</span>
@@ -76,13 +75,26 @@ export default Vue.extend({
 
   data() {
     return {
+      internalValue: this.value,
       hasFocus: false,
     };
   },
 
+  watch: {
+    value(val) {
+      this.internalValue = val;
+    },
+
+    internalValue(val) {
+      if (val !== this.value) {
+        this.$emit('input', val);
+      }
+    },
+  },
+
   computed: {
     isEmpty(): boolean {
-      return !this.value;
+      return !this.internalValue;
     },
 
     type(): string {
@@ -102,16 +114,11 @@ export default Vue.extend({
 
     remainingFormat(): string {
       if (!this.format) return '';
-      return this.format.substring(`${this.value}`.length);
+      return this.format.substring(`${this.internalValue}`.length);
     },
   },
 
   methods: {
-    onInput(event: InputEvent) {
-      let input = event.target as HTMLInputElement;
-      this.$emit('input', input.value);
-    },
-
     onKeyPress(event: KeyboardEvent) {
       if (!this.isValidKey(event.keyCode)) {
         event.preventDefault();
