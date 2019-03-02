@@ -75,7 +75,7 @@ Use cases:
           @change="onItemChange(item.item, $event)"
           @click="onItemClick(item.item)"
         >
-          {{ item.title }}
+          {{ item[labelKey] }}
         </s-list-item>
       </s-menu-list>
     </template>
@@ -105,6 +105,11 @@ export default mixins(ClassesMixin).extend({
 
   props: {
     items: Array as () => object[],
+
+    labelKey: {
+      type: String,
+      default: 'label',
+    },
 
     value: {
       type: [Object, Array],
@@ -177,7 +182,9 @@ export default mixins(ClassesMixin).extend({
     filteredItems(): object[] {
       if (!this.filter) return this.items;
       const flt = this.filter.toLocaleLowerCase();
-      return this.items.filter((i: any) => i.title.toLocaleLowerCase().indexOf(flt) !== -1);
+      return this.items.filter((i: any) => (
+        i[this.labelKey].toLocaleLowerCase().indexOf(flt) !== -1)
+      );
     },
 
     itemValues(): object[] {
@@ -206,10 +213,10 @@ export default mixins(ClassesMixin).extend({
           // TODO customize/i18n
           return `${this.internalValue.length} selected`;
         } else {
-          return this.internalValue.map((v: any) => v.title).join(', ');
+          return this.internalValue.map((v: any) => v[this.labelKey]).join(', ');
         }
       } else {
-        return this.internalValue.title;
+        return this.internalValue[this.labelKey];
       }
     },
 
@@ -219,7 +226,7 @@ export default mixins(ClassesMixin).extend({
       if (this.internalValue.length > this.maxSelectedShown) {
         return [`${this.internalValue.length} selected`];
       } else {
-        return this.internalValue.map((v: any) => v.title);
+        return this.internalValue.map((v: any) => v[this.labelKey]);
       }
     },
   },
