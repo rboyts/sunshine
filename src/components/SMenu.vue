@@ -1,5 +1,5 @@
 <template>
-  <div :class="classes()">
+  <span :class="classes()">
     <span @click="onClick">
       <slot name="activator" />
     </span>
@@ -26,7 +26,7 @@
       v-if="showContent"
       @trigger="onWatcher"
     />
-  </div>
+  </span>
 </template>
 
 <script lang="ts">
