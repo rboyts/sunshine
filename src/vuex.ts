@@ -302,17 +302,30 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         commit('loadSubItemsComplete', { keyPath, items: result.items, total: result.total });
       },
 
-      async saveState({ state }, { namespace }) {
+      async saveState({ state }, { namespace, label }) {
         // TODO: Server-side
 
-        localStorage.setItem(getStorageKey(namespace), JSON.stringify(state.columns));
+        const storage = JSON.parse(localStorage.getItem(getStorageKey(namespace)) || '[]');
+
+        storage.push({
+          key: storage.length,
+          label,
+          state: {
+            columns: state.columns,
+          },
+        });
+
+        localStorage.setItem(getStorageKey(namespace), JSON.stringify(storage));
       },
 
-      async loadState({ commit }, { namespace }) {
+      async loadState({ commit }, { namespace, label }) {
         const data = localStorage.getItem(getStorageKey(namespace));
         if (!data) return;
 
-        commit('savedState', { columns: JSON.parse(data) });
+        const saved = JSON.parse(data).find((s: any) => s.label === label);
+        if (!saved) return;
+
+        commit('savedState', saved.state);
       },
 
       ...options.actions,

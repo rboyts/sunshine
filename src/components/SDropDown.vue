@@ -206,7 +206,7 @@ export default mixins(ClassesMixin).extend({
       if (!this.internalValue) return '';
 
       // Hide when typing in single-select mode
-      if (!this.multiple && this.filter) return '';
+      if (!this.multiple && this.search && this.isOpen) return '';
 
       if (this.multiple) {
         if (this.internalValue.length > this.maxSelectedShown) {
@@ -272,6 +272,9 @@ export default mixins(ClassesMixin).extend({
     },
 
     onEnter() {
+      if (this.search && this.filter) {
+        this.$emit('text-input', this.filter);
+      }
       this.isOpen = true;
     },
 
@@ -302,7 +305,6 @@ export default mixins(ClassesMixin).extend({
     onSpace(event: KeyboardEvent) {
       if (!this.isOpen) {
         this.isOpen = true;
-        event.preventDefault();
       }
     },
 
