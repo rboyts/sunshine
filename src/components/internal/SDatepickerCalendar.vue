@@ -29,6 +29,7 @@
             class="s-datepicker__grid"
             v-for="month in calendar"
             :format="format"
+            :range="range"
             :locale="locale"
             :today="today"
             :ref="month.month + '-' + month.year"
@@ -37,7 +38,10 @@
             :mouseDrag="mouseDrag"
             :selectedDate="selectedDate"
             :selectedPeriod="selectedPeriod"
-            @mouseDragEvent="mouseDragEvent"
+            @mouseClick="mouseClick"
+            @mouseDragStart="dragStart"
+            @mouseDragEnd="dragEnd"
+            @mouseDragging="dragging"
           >
         </s-datepicker-month>
       </div>
@@ -49,16 +53,23 @@
 import Vue from 'vue';
 import debounce from 'debounce';
 import moment, { Moment } from 'moment';
-import { IMonth, ICalendarPeriod, MouseWheelEvent } from '../types';
+import {
+  IMonth,
+  ICalendarPeriod,
+  MouseWheelEvent,
+  IMomentPayload,
+} from '../types';
 import SIcon from '../SIcon.vue';
 import SDatepickerMonth from './SDatepickerMonth.vue';
 
 export default Vue.extend({
   name: 's-datepicker-calendar',
+
   components: {
     SDatepickerMonth,
     SIcon,
   },
+
   data() {
     return {
       days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
@@ -70,6 +81,7 @@ export default Vue.extend({
       monthNameInHeader: '',
     };
   },
+
   props: {
     calendar: Array as () => IMonth[],
     today: Object as () => Moment,
@@ -82,6 +94,7 @@ export default Vue.extend({
     selectedDate: Object as () => Moment,
     selectedPeriod: Object as () => ICalendarPeriod,
   },
+
   watch: {
     calendar: {
       handler(newVal: IMonth[], oldVal: IMonth[]) {
@@ -89,14 +102,22 @@ export default Vue.extend({
       },
     },
   },
+
   methods: {
-    mouseDragEvent(m: number, d: number, y: number, event: string) {
-      let date = moment({ y, M: (m - 1), d });
-      if (this.range) {
-        this.$emit('mouseDragEvent', date, event);
-      } else {
-        this.$emit('mouseClickEvent', date, event);
-      }
+    dragStart(payload: IMomentPayload) {
+      this.$emit('mouseDragStart', payload);
+    },
+
+    dragEnd(payload: IMomentPayload) {
+      this.$emit('mouseDragEnd', payload);
+    },
+
+    dragging(payload: IMomentPayload) {
+      this.$emit('mouseDragging', payload);
+    },
+
+    mouseClick(payload: IMomentPayload) {
+      this.$emit('mouseClick', payload);
     },
 
     setActiveMonth(calendar: IMonth[]) {

@@ -25,12 +25,16 @@
         'to': isSameDate(month.month, a, month.year, toDate),
         'between': isInPeriod(month.month, a, month.year, fromDate, toDate)
       }"
-      @mousedown="$emit('mouseDragEvent', month.month, a, month.year, 'dragStart')"
-      @mouseup="$emit('mouseDragEvent', month.month, a, month.year, 'dragEnd')"
-      @mouseover="mouseOverEvent(month.month, a, month.year)"
+      @click="mouseClick({ y: month.year, M: month.month, d: a })"
+      @mousedown="$emit('mouseDragStart', { y: month.year, M: month.month, d: a })"
+      @mouseup="$emit('mouseDragEnd', { y: month.year, M: month.month, d: a })"
+      @mouseover="mouseOverEvent({ y: month.year, M: month.month, d: a })"
     >
       <span v-if="isSameDate(month.month, a, month.year, fromDate)" class="circle">{{a}}</span>
       <span v-else-if="isSameDate(month.month, a, month.year, toDate)" class="circle">{{a}}</span>
+      <span v-else-if="isSameDate(month.month, a, month.year, selectedDate)" class="circle">
+        {{a}}
+      </span>
       <span v-else>{{a}}</span>
     </span>
     <span
@@ -44,7 +48,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import { IMonth, ICalendarPeriod } from '../types';
+import { IMonth, ICalendarPeriod, IMomentPayload } from '../types';
 
 /**
  * Obs: for comparison of dates this uses default date format (ISO 8601) 'YYYY-MM-DD'
@@ -52,9 +56,11 @@ import { IMonth, ICalendarPeriod } from '../types';
 
 export default Vue.extend({
   name: 's-datepicker-month',
+
   props: {
     format: String,
     locale: String,
+    range: Boolean,
     month: Object as () => IMonth,
     today: Object as () => Moment,
     lastScrollPosition: Number,
@@ -63,6 +69,7 @@ export default Vue.extend({
     selectedDate: {} as () => Moment,
     selectedPeriod: {} as () => ICalendarPeriod,
   },
+
   computed: {
     fromDate(): Moment {
       return this.selectedPeriod.from;
@@ -71,11 +78,8 @@ export default Vue.extend({
     toDate(): Moment {
       return this.selectedPeriod.to;
     },
-
-    singleDate(): Moment {
-      return this.selectedDate;
-    },
   },
+
   methods: {
     translateMonthName(monthKey: number, year: number) {
       return moment({ y: year, M: (monthKey - 1) }).format('MMMM-YYYY');
@@ -106,11 +110,15 @@ export default Vue.extend({
       return moment(dateInMonth).isBetween(compareDateFrom, compareDateTo);
     },
 
-    mouseOverEvent(m: number, d: number, y: number) {
+    mouseOverEvent(payload: IMomentPayload) {
       if (!this.mouseDrag) return;
-      this.$emit('mouseDragEvent', m, d, y, 'dragging');
+      this.$emit('mouseDragging', payload);
+    },
+
+    mouseClick(payload: IMomentPayload) {
+      if (this.range) return;
+      this.$emit('mouseClick', payload);
     },
   },
-
 });
 </script>

@@ -95,6 +95,12 @@ export interface ICalendarPeriod {
   to: Moment;
 }
 
+export interface IMomentPayload {
+  y: number,
+  M: number,
+  d: number
+}
+
 export interface MouseWheelEvent extends MouseEvent {
   wheelDelta: number;
   wheelDeltaX: number;

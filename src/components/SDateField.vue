@@ -35,28 +35,22 @@
         </div>
       </template>
       <!-- content datepicker -->
+      <!--
+      // TODO:
+      Fix menu date props
+       -->
       <template v-slot:content>
-        <!--
-          Possible props:
-          includeMenu, (adds menu)
-          rangeSelect, (enables rangeselect) (WIP),
-          from: date, (default if !rangeSelect && !selectedDate)
-          to: date,
-          date: date
-        -->
-        <!--
-          TODO: differentiate between single date select
-          and range select in datepicker
-        -->
         <s-datepicker
+          :includeMenu="hasCalendarMenu"
           :rangeSelect="isRangeField"
-          :date="date"
-          :from="from"
-          :to="to"
+          :from="fromDate"
+          :to="toDate"
+          :date="singleDate"
           :locale="locale"
           :format="format"
           v-model="input"
           @setSelectedPeriod="setSelectedPeriod"
+          @setSelectedDate="setSelectedDate"
         />
       </template>
 
@@ -67,7 +61,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import { ICalendarPeriod } from './types';
+import { ICalendarPeriod, IMomentPayload } from './types';
 import SMenu from './SMenu.vue';
 import SDatepicker from './SDatepicker.vue';
 import STextField from './STextField.vue';
@@ -85,10 +79,9 @@ export default Vue.extend({
 
   data() {
     return {
-      // TODO: Remove
-      from: moment({ y: 2019, M: 1, d: 25 }),
-      to: moment({ y: 2019, M: 1, d: 28 }),
-      date: moment({ y: 2019, M: 1, d: 1 }),
+      from: moment({ y: 2019, M: 2, d: 18 }),
+      to: moment({ y: 2019, M: 2, d: 23 }),
+      date: moment({ y: 2019, M: 2, d: 1 }),
       isOpen: false,
       input: '',
       locale: moment.locale(),
@@ -101,11 +94,22 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    includeMenu: {
+      type: Boolean,
+      default: false,
+    },
+    rangeFrom: {} as () => moment.Moment,
+    rangeTo: {} as () => moment.Moment,
+    selectedDate: {} as () => moment.Moment,
   },
 
   computed: {
     isRangeField(): boolean {
       return this.rangeInput;
+    },
+
+    hasCalendarMenu(): boolean {
+      return this.includeMenu;
     },
 
     formattedInputFrom(): string {
@@ -115,13 +119,28 @@ export default Vue.extend({
     formattedInputTo(): string {
       return moment(this.to).format(this.format);
     },
+
+    fromDate(): Moment {
+      return this.from;
+    },
+
+    toDate(): Moment {
+      return this.to;
+    },
+
+    singleDate(): Moment {
+      return this.date;
+    },
   },
 
   methods: {
-    // TODO: Handle change of dates from input
-
     onInput(input: string) {
       this.input = input;
+    },
+
+    setSelectedDate(date: Moment) {
+      this.date = date;
+      this.input = moment(this.date).format(this.format);
     },
 
     setSelectedPeriodTo(input: string) {

@@ -13,8 +13,10 @@
       :selectedDate="selectedDate"
       @addComingMonth="addComingMonth"
       @addPreviousMonth="addPreviousMonth"
-      @mouseDragEvent="mouseDragEvent"
-      @mouseClickEvent="mouseClickEvent"
+      @mouseDragStart="mouseDragStart"
+      @mouseDragEnd="mouseDragEnd"
+      @mouseDragging="mouseDragging"
+      @mouseClick="mouseClick"
     />
     <s-datepicker-menu
       v-if="menu"
@@ -28,7 +30,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import { IMonth, ICalendarPeriod } from './types';
+import { IMonth, ICalendarPeriod, IMomentPayload } from './types';
 import SDatepickerCalendar from './internal/SDatepickerCalendar.vue';
 import SDatepickerMenu from './internal/SDatepickerMenu.vue';
 
@@ -230,28 +232,37 @@ export default Vue.extend({
       this.$emit('setSelectedPeriod', this.period);
     },
 
-    mouseDragEvent(date: Moment, event: string) {
+    mouseDragStart(payload: IMomentPayload) {
       if (!this.range) return;
-      if (event === 'dragStart') {
-        this.mouseDrag = true;
-        this.startDragDate = date;
-      } else if (event === 'dragEnd') {
-        if (moment(this.startDragDate).isBefore(date)) {
-          this.selectDateOfPeriod(this.startDragDate, date);
-        } else {
-          this.selectDateOfPeriod(date, this.startDragDate);
-        }
-        this.mouseDrag = false;
-      } else if (moment(this.startDragDate).isBefore(date)) {
+      let date = moment({ y: payload.y, M: (payload.M - 1), d: payload.d });
+      this.mouseDrag = true;
+      this.startDragDate = date;
+    },
+
+    mouseDragEnd(payload: IMomentPayload) {
+      if (!this.range) return;
+      let date = moment({ y: payload.y, M: (payload.M - 1), d: payload.d });
+      if (moment(this.startDragDate).isBefore(date)) {
+        this.selectDateOfPeriod(this.startDragDate, date);
+      } else {
+        this.selectDateOfPeriod(date, this.startDragDate);
+      }
+      this.mouseDrag = false;
+    },
+
+    mouseDragging(payload: IMomentPayload) {
+      if (!this.range) return;
+      let date = moment({ y: payload.y, M: (payload.M - 1), d: payload.d });
+      if (moment(this.startDragDate).isBefore(date)) {
         this.selectDateOfPeriod(this.startDragDate, date);
       } else {
         this.selectDateOfPeriod(date, this.startDragDate);
       }
     },
 
-    mouseClickEvent(date: Moment, event: string) {
-      if (this.range) return;
-      console.log(date, event);
+    mouseClick(payload: IMomentPayload) {
+      let date = moment({ y: payload.y, M: (payload.M - 1), d: payload.d });
+      this.$emit('setSelectedDate', date);
     },
   },
 
