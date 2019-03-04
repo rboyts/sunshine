@@ -15,6 +15,7 @@ export interface IDataModuleState {
   isLoading: boolean;
   offset: number;
   sorting: ISortState;
+  filter: any[], // TODO type
   items: { [key: string]: IItem[] };
   total: number | null;
   columns: Array<{ key: string, visible: boolean }>,

@@ -1,4 +1,10 @@
-import { Module } from 'vuex';
+import {
+  Module,
+  GetterTree,
+  ActionTree,
+  MutationTree,
+  ModuleTree,
+} from 'vuex';
 import { Mutex } from 'async-mutex';
 import {
   IDataModuleState,
@@ -32,9 +38,18 @@ const getItems = (keyPath: string[], state: IDataModuleState): IItem[] | null =>
   return nodes;
 };
 
+export interface WrappedModule<S, R> {
+  namespaced?: boolean;
+  state?: S | (() => S);
+  getters?: GetterTree<S & IDataModuleState, R>;
+  actions?: ActionTree<S & IDataModuleState, R>;
+  mutations?: MutationTree<S & IDataModuleState>;
+  modules?: ModuleTree<R>;
+}
+
 
 export const createDataModule = <ModuleState = {}, RootState = any>(
-  options: Module<ModuleState, RootState> & IColumns,
+  options: WrappedModule<ModuleState, RootState> & IColumns,
 ): Module<ModuleState & IDataModuleState, RootState> => {
   const mutex = new Mutex();
 
@@ -61,6 +76,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
           key: null,
           reverse: false,
         } as ISortState,
+        filter: [],
 
         columns: options.columns.map(column => ({ key: column.key, visible: true })),
 
@@ -131,6 +147,10 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         };
       },
 
+      filter(state, filter) {
+        state.filter = filter;
+      },
+
       moveColumn: (state, { fromIndex, toIndex }: { fromIndex: number, toIndex: number}) => {
         const moved = state.columns.splice(fromIndex, 1);
         state.columns.splice(toIndex, 0, ...moved);
@@ -179,6 +199,11 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
     actions: {
       async sort({ commit, dispatch }, key: string) {
         commit('sorting', key);
+        await dispatch('init');
+      },
+
+      async filter({ dispatch, commit }, filter) {
+        commit('filter', filter);
         await dispatch('init');
       },
 
