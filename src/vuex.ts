@@ -312,6 +312,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
           label,
           state: {
             columns: state.columns,
+            filter: state.filter,
           },
         });
 

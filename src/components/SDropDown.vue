@@ -274,6 +274,7 @@ export default mixins(ClassesMixin).extend({
     onEnter() {
       if (this.search && this.filter) {
         this.$emit('text-input', this.filter);
+        this.filter = '';
       }
       this.isOpen = true;
     },
@@ -292,7 +293,7 @@ export default mixins(ClassesMixin).extend({
       if (this.isOpen) {
         if (!this.filter) {
           if (this.multiple) {
-            this.internalValue.pop();
+            this.internalValue = this.internalValue.slice(0, this.internalValue.length - 1);
             event.preventDefault();
           }
         }
