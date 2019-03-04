@@ -42,9 +42,9 @@
           :rangeSelect="isRangeField"
           :locale="locale"
           :format="format"
-          :from="fromDate"
-          :to="toDate"
-          :date="selectedDate"
+          :from="testFromDate"
+          :to="testToDate"
+          :date="testSelectedDate"
           @setSelectedPeriod="setSelectedPeriod"
           @setSelectedDate="setSelectedDate"
         />
@@ -63,6 +63,8 @@ import SDatepicker from './SDatepicker.vue';
 import STextField from './STextField.vue';
 
 moment.locale('nb');
+
+// TODO: Stop moment to return todays date when from, to and date is not set by props
 
 export default Vue.extend({
   name: 's-date-field',
@@ -97,6 +99,27 @@ export default Vue.extend({
       return this.rangeInput;
     },
 
+    testFromDate(): Moment | null {
+      if (this.rangeInput) {
+        return this.fromDate;
+      }
+      return null;
+    },
+
+    testToDate(): Moment | null {
+      if (this.rangeInput) {
+        return this.toDate;
+      }
+      return null;
+    },
+
+    testSelectedDate(): Moment | null {
+      if (!this.rangeInput) {
+        return this.selectedDate;
+      }
+      return null;
+    },
+
     from(): string {
       return moment(this.fromDate).format(this.format);
     },
@@ -118,6 +141,11 @@ export default Vue.extend({
     setSelectedDate(date: Moment) {
       this.$emit('input', date);
     },
+  },
+
+  mounted() {
+    console.log('Range ', this.isRangeField);
+    console.log(this.from, this.to, this.date);
   },
 });
 </script>

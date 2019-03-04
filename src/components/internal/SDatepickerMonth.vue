@@ -98,12 +98,14 @@ export default Vue.extend({
     },
 
     isSameDate(m: number, d: number, y: number, date: string) {
+      if (date === null) return null;
       let dateInMonth = moment({ y, M: (m - 1), d }).format('YYYY-MM-DD');
       let compareDate = moment(date).format('YYYY-MM-DD');
       return moment(dateInMonth).isSame(compareDate);
     },
 
     isInPeriod(m: number, d: number, y: number, fromDate: string, toDate: string): boolean {
+      if (fromDate === null || toDate === null) return false;
       let dateInMonth = moment({ y, M: (m - 1), d }).format('YYYY-MM-DD');
       let compareDateFrom = moment(fromDate).format('YYYY-MM-DD');
       let compareDateTo = moment(toDate).format('YYYY-MM-DD');
@@ -120,5 +122,9 @@ export default Vue.extend({
       this.$emit('mouseClick', payload);
     },
   },
+
+  mounted() {
+    console.log(this.fromDate, this.toDate, this.selectedDate);
+  }
 });
 </script>
