@@ -12,6 +12,7 @@
       :type="type"
       :value="formatValue"
       :disabled="inactive"
+      @keyup.delete="removeInput"
       @input="onInput"
       @keypress="onKeyPress"
       @focus="hasFocus = true"
@@ -160,6 +161,12 @@ export default Vue.extend({
     onInput(event: InputEvent) {
       let input = event.target as HTMLInputElement;
       this.$emit('input', input.value);
+    },
+
+    removeInput(event: KeyboardEvent) {
+      if (this.moment) {
+        this.$emit('input', '');
+      }
     },
 
     onKeyPress(event: KeyboardEvent) {

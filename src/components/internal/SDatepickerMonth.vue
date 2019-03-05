@@ -21,18 +21,18 @@
         'saturday': isSaturday(month.month, a, month.year),
         'sunday': isSunday(month.month, a, month.year),
         'today': isSameDate(month.month, a, month.year, today),
-        'from': isSameDate(month.month, a, month.year, fromDate),
-        'to': isSameDate(month.month, a, month.year, toDate),
-        'between': isInPeriod(month.month, a, month.year, fromDate, toDate)
+        'between': isInPeriod(month.month, a, month.year, fromDate, toDate),
+        'from': isSameDate(month.month, a, month.year, fromDate) && range,
+        'to': isSameDate(month.month, a, month.year, toDate) && range,
       }"
       @click="mouseClick({ y: month.year, M: month.month, d: a })"
       @mousedown="$emit('mouseDragStart', { y: month.year, M: month.month, d: a })"
       @mouseup="$emit('mouseDragEnd', { y: month.year, M: month.month, d: a })"
       @mouseover="mouseOverEvent({ y: month.year, M: month.month, d: a })"
     >
-      <span v-if="isSameDate(month.month, a, month.year, fromDate)" class="circle">{{a}}</span>
-      <span v-else-if="isSameDate(month.month, a, month.year, toDate)" class="circle">{{a}}</span>
-      <span v-else-if="isSameDate(month.month, a, month.year, selectedDate)" class="circle">
+      <span v-if="isSameDate(month.month, a, month.year, fromDate, 'from') && range" class="circle">{{a}}</span>
+      <span v-else-if="isSameDate(month.month, a, month.year, toDate, 'to') && range" class="circle">{{a}}</span>
+      <span v-else-if="isSameDate(month.month, a, month.year, selectedDate) && !range" class="circle">
         {{a}}
       </span>
       <span v-else>{{a}}</span>
@@ -97,15 +97,15 @@ export default Vue.extend({
       return moment({ y, M: (m - 1), d }).day() === 0;
     },
 
-    isSameDate(m: number, d: number, y: number, date: string) {
+    isSameDate(m: number, d: number, y: number, date: Moment, trigger: string) {
       if (date === null) return null;
       let dateInMonth = moment({ y, M: (m - 1), d }).format('YYYY-MM-DD');
       let compareDate = moment(date).format('YYYY-MM-DD');
       return moment(dateInMonth).isSame(compareDate);
     },
 
-    isInPeriod(m: number, d: number, y: number, fromDate: string, toDate: string): boolean {
-      if (fromDate === null || toDate === null) return false;
+    isInPeriod(m: number, d: number, y: number, fromDate: Moment, toDate: string): boolean {
+      if (fromDate === null || toDate === null) return false;
       let dateInMonth = moment({ y, M: (m - 1), d }).format('YYYY-MM-DD');
       let compareDateFrom = moment(fromDate).format('YYYY-MM-DD');
       let compareDateTo = moment(toDate).format('YYYY-MM-DD');

@@ -37,9 +37,6 @@
       <!-- content datepicker -->
       <!--
       :includeMenu="hasCalendarMenu"
-      :date="date"
-      @setSelectedPeriod="setSelectedPeriod"
-      @setSelectedDate="setSelectedDate"
        -->
       <template v-slot:content>
         <s-datepicker
@@ -50,6 +47,7 @@
           :to="toMoment"
           :date="dateMoment"
           @setSelectedPeriod="setSelectedPeriod"
+          @setSelectedDate="setSelectedDate"
         />
       </template>
 
@@ -66,10 +64,6 @@ import SDatepicker from './SDatepicker.vue';
 import STextField from './STextField.vue';
 
 moment.locale('nb');
-
-// TODO: set date from input
-// TODO: Fix menu date props
-// TODO: Handle dates differently, cant input when props not set
 
 export default Vue.extend({
   name: 's-date-field',
@@ -99,10 +93,7 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    stringFormat: {
-      type: String,
-      default: 'dd.mm.åååå',
-    },
+    stringFormat: String,
     fromDate: String,
     toDate: String,
     selectedDate: String,
@@ -153,6 +144,10 @@ export default Vue.extend({
     setSelectedPeriod(payload: ICalendarPeriod) {
       this.setFromDate(moment(payload.from).format(this.format));
       this.setToDate(moment(payload.to).format(this.format));
+    },
+
+    setSelectedDate(payload: Moment) {
+      this.setDate(moment(payload).format(this.format));
     },
   },
 });

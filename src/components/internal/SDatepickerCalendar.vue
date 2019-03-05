@@ -91,8 +91,8 @@ export default Vue.extend({
     format: String,
     locale: String,
     range: Boolean,
-    selectedDate: Object as () => Moment,
-    selectedPeriod: Object as () => ICalendarPeriod,
+    selectedDate: {} as () => Moment,
+    selectedPeriod: {} as () => ICalendarPeriod,
   },
 
   watch: {
