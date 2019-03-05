@@ -122,9 +122,5 @@ export default Vue.extend({
       this.$emit('mouseClick', payload);
     },
   },
-
-  mounted() {
-    console.log(this.fromDate, this.toDate, this.selectedDate);
-  }
 });
 </script>

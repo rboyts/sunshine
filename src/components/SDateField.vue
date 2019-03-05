@@ -5,48 +5,51 @@
         <div v-if="isRangeField" class="s-date-field-range-input">
           <s-text-field
             v-model="from"
-            format="dd.mm.åååå"
+            :format="stringFormat"
             :dateLocale="locale"
             :dateFormat="format"
             moment
             label="Fra dato"
+            @input="setFromDate"
           />
           <s-text-field
             v-model="to"
-            format="dd.mm.åååå"
+            :format="stringFormat"
             :dateLocale="locale"
             :dateFormat="format"
             moment
             label="Til dato"
+            @input="setToDate"
           />
         </div>
         <div v-else class="s-date-field-single-input">
           <s-text-field
             v-model="date"
-            format="dd.mm.åååå"
+            :format="stringFormat"
             :dateLocale="locale"
             :dateFormat="format"
             moment
             label="Dato"
+            @input="setDate"
           />
         </div>
       </template>
       <!-- content datepicker -->
       <!--
-      // TODO:
-      Fix menu date props
       :includeMenu="hasCalendarMenu"
+      :date="date"
+      @setSelectedPeriod="setSelectedPeriod"
+      @setSelectedDate="setSelectedDate"
        -->
       <template v-slot:content>
         <s-datepicker
           :rangeSelect="isRangeField"
           :locale="locale"
           :format="format"
-          :from="testFromDate"
-          :to="testToDate"
-          :date="testSelectedDate"
+          :from="fromMoment"
+          :to="toMoment"
+          :date="dateMoment"
           @setSelectedPeriod="setSelectedPeriod"
-          @setSelectedDate="setSelectedDate"
         />
       </template>
 
@@ -64,7 +67,9 @@ import STextField from './STextField.vue';
 
 moment.locale('nb');
 
-// TODO: Stop moment to return todays date when from, to and date is not set by props
+// TODO: set date from input
+// TODO: Fix menu date props
+// TODO: Handle dates differently, cant input when props not set
 
 export default Vue.extend({
   name: 's-date-field',
@@ -80,6 +85,12 @@ export default Vue.extend({
       isOpen: false,
       locale: moment.locale(),
       format: moment.localeData().longDateFormat('L'),
+      from: '',
+      to: '',
+      date: '',
+      dateMoment: {} as any,
+      fromMoment: {} as any,
+      toMoment: {} as any,
     };
   },
 
@@ -88,64 +99,61 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    fromDate: {} as () => moment.Moment,
-    toDate: {} as () => moment.Moment,
-    selectedDate: {} as () => moment.Moment,
+    stringFormat: {
+      type: String,
+      default: 'dd.mm.åååå',
+    },
+    fromDate: String,
+    toDate: String,
+    selectedDate: String,
   },
 
   computed: {
-
     isRangeField(): boolean {
       return this.rangeInput;
-    },
-
-    testFromDate(): Moment | null {
-      if (this.rangeInput) {
-        return this.fromDate;
-      }
-      return null;
-    },
-
-    testToDate(): Moment | null {
-      if (this.rangeInput) {
-        return this.toDate;
-      }
-      return null;
-    },
-
-    testSelectedDate(): Moment | null {
-      if (!this.rangeInput) {
-        return this.selectedDate;
-      }
-      return null;
-    },
-
-    from(): string {
-      return moment(this.fromDate).format(this.format);
-    },
-
-    to(): string {
-      return moment(this.toDate).format(this.format);
-    },
-
-    date(): string {
-      return moment(this.selectedDate).format(this.format);
     },
   },
 
   methods: {
-    setSelectedPeriod(period: ICalendarPeriod) {
-      this.$emit('input', period);
+    formatSymbol(): string | undefined {
+      return (this.format) ? this.stringFormat.match(/[^\w]/g)[0] : undefined;
     },
 
-    setSelectedDate(date: Moment) {
-      this.$emit('input', date);
+    momentFormatted(date: Moment): string {
+      return moment(date).format(this.format);
     },
-  },
 
-  mounted() {
-    console.log('Range ', this.isRangeField);
-    console.log(this.from, this.to, this.date);
+    createMoment(dateString: string): Moment {
+      let testStr = dateString.replace(`/[${this.formatSymbol}]/g`, '-');
+      let momentDate = moment(testStr, this.format);
+      return momentDate;
+    },
+
+    setFromDate(value: string) {
+      if (value.length === Number(this.stringFormat.length)) {
+        this.fromMoment = this.createMoment(value);
+        this.from = this.momentFormatted(this.fromMoment);
+      }
+    },
+
+    setToDate(value: string) {
+      if (value.length === Number(this.stringFormat.length)) {
+        this.toMoment = this.createMoment(value);
+        this.to = this.momentFormatted(this.toMoment);
+      }
+    },
+
+    setDate(value: string) {
+      if (value.length === Number(this.stringFormat.length)) {
+        this.dateMoment = this.createMoment(value);
+        this.date = this.momentFormatted(this.dateMoment);
+      }
+    },
+
+    setSelectedPeriod(payload: ICalendarPeriod) {
+      this.setFromDate(moment(payload.from).format(this.format));
+      this.setToDate(moment(payload.to).format(this.format));
+    },
   },
 });
 </script>

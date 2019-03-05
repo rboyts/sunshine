@@ -126,9 +126,11 @@ export default Vue.extend({
       }
       return undefined;
     },
+
     formatSymbol(): string | undefined {
       return (this.format) ? this.format.match(/[^\w]/g)[0] : undefined;
     },
+
     formatSymbolIndicies(): number[] | undefined {
       if (!this.format) return undefined;
       const formatRegex = new RegExp(`[${this.formatSymbol}]`, 'g');
@@ -141,6 +143,7 @@ export default Vue.extend({
       }
       return formatSymbolIndicies;
     },
+
     formatValue(): string {
       if (!this.format) return `${this.value}`;
       let input = this.value as string;
