@@ -1,4 +1,10 @@
-import { Module } from 'vuex';
+import {
+  Module,
+  GetterTree,
+  ActionTree,
+  MutationTree,
+  ModuleTree,
+} from 'vuex';
 import { Mutex } from 'async-mutex';
 import {
   IDataModuleState,
@@ -8,6 +14,7 @@ import {
   IColumn,
   IColumns,
   IOrderedColumn,
+  NO_SELECTION,
 } from './components/types';
 import { joinKeyPath } from './lib/utils';
 
@@ -31,9 +38,18 @@ const getItems = (keyPath: string[], state: IDataModuleState): IItem[] | null =>
   return nodes;
 };
 
+export interface WrappedModule<S, R> {
+  namespaced?: boolean;
+  state?: S | (() => S);
+  getters?: GetterTree<S & IDataModuleState, R>;
+  actions?: ActionTree<S & IDataModuleState, R>;
+  mutations?: MutationTree<S & IDataModuleState>;
+  modules?: ModuleTree<R>;
+}
+
 
 export const createDataModule = <ModuleState = {}, RootState = any>(
-  options: Module<ModuleState, RootState> & IColumns,
+  options: WrappedModule<ModuleState, RootState> & IColumns,
 ): Module<ModuleState & IDataModuleState, RootState> => {
   const mutex = new Mutex();
 
@@ -60,11 +76,11 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
           key: null,
           reverse: false,
         } as ISortState,
+        filter: [],
 
         columns: options.columns.map(column => ({ key: column.key, visible: true })),
 
-        selectedItems: [],
-        invertSelection: false,
+        selection: NO_SELECTION,
 
         ...(moduleState || {} as ModuleState),
       };
@@ -97,8 +113,16 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         return getItems([], state);
       },
 
-      selectedItems: state => state.selectedItems,
-      invertSelection: state => state.invertSelection,
+      selection: state => state.selection,
+
+      selectedItems: state => {
+        // TODO Include sub-items
+        let { active, selected } = state.selection;
+        if (active && selected.length === 0) {
+          selected = [active];
+        }
+        return state.items[''].filter(item => selected.includes(item.key) !== state.selection.inverted);
+      },
 
       offset(state) {
         return state.offset;
@@ -123,6 +147,10 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         };
       },
 
+      filter(state, filter) {
+        state.filter = filter;
+      },
+
       moveColumn: (state, { fromIndex, toIndex }: { fromIndex: number, toIndex: number}) => {
         const moved = state.columns.splice(fromIndex, 1);
         state.columns.splice(toIndex, 0, ...moved);
@@ -132,22 +160,8 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         state.columns[index].visible = checked;
       },
 
-      toggleItem: (state, key: string) => {
-        if (state.selectedItems.includes(key)) {
-          state.selectedItems = state.selectedItems.filter(k => k !== key);
-        } else {
-          state.selectedItems.push(key);
-        }
-      },
-
-      selectAll: state => {
-        state.invertSelection = true;
-        state.selectedItems = [];
-      },
-
-      selectNone: state => {
-        state.invertSelection = false;
-        state.selectedItems = [];
+      selection: (state, selection) => {
+        state.selection = selection;
       },
 
       loadStart: state => {
@@ -185,6 +199,11 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
     actions: {
       async sort({ commit, dispatch }, key: string) {
         commit('sorting', key);
+        await dispatch('init');
+      },
+
+      async filter({ dispatch, commit }, filter) {
+        commit('filter', filter);
         await dispatch('init');
       },
 
@@ -308,17 +327,31 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         commit('loadSubItemsComplete', { keyPath, items: result.items, total: result.total });
       },
 
-      async saveState({ state }, { namespace }) {
+      async saveState({ state }, { namespace, label }) {
         // TODO: Server-side
 
-        localStorage.setItem(getStorageKey(namespace), JSON.stringify(state.columns));
+        const storage = JSON.parse(localStorage.getItem(getStorageKey(namespace)) || '[]');
+
+        storage.push({
+          key: storage.length,
+          label,
+          state: {
+            columns: state.columns,
+            filter: state.filter,
+          },
+        });
+
+        localStorage.setItem(getStorageKey(namespace), JSON.stringify(storage));
       },
 
-      async loadState({ commit }, { namespace }) {
+      async loadState({ commit }, { namespace, label }) {
         const data = localStorage.getItem(getStorageKey(namespace));
         if (!data) return;
 
-        commit('savedState', { columns: JSON.parse(data) });
+        const saved = JSON.parse(data).find((s: any) => s.label === label);
+        if (!saved) return;
+
+        commit('savedState', saved.state);
       },
 
       ...options.actions,

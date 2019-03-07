@@ -21,6 +21,7 @@ Use cases:
         :hasFocus="hasFocus"
         :isEmpty="textValue == '' && text == ''"
         :readonly="!search"
+        :inactive="inactive"
         v-bind="$attrs"
         @click.native="onClick"
         @keydown.native.up.prevent="onArrowUp"
@@ -38,6 +39,7 @@ Use cases:
           ref="input"
           class="s-input__input"
           type="text"
+          :disabled="inactive"
           :value="filter"
           @click.stop="onClickSearch"
           @focus="hasFocus = true"
@@ -49,7 +51,7 @@ Use cases:
           v-else
           ref="input"
           :class="classes('spacer')"
-          tabIndex="0"
+          :tabIndex="inactive ? undefined : 0"
           @focus="hasFocus = true"
           @blur="hasFocus = false"
         />
@@ -73,7 +75,7 @@ Use cases:
           @change="onItemChange(item.item, $event)"
           @click="onItemClick(item.item)"
         >
-          {{ item.title }}
+          {{ item[labelKey] }}
         </s-list-item>
       </s-menu-list>
     </template>
@@ -104,6 +106,11 @@ export default mixins(ClassesMixin).extend({
   props: {
     items: Array as () => object[],
 
+    labelKey: {
+      type: String,
+      default: 'label',
+    },
+
     value: {
       type: [Object, Array],
     },
@@ -122,10 +129,16 @@ export default mixins(ClassesMixin).extend({
       type: Number,
       default: 2,
     },
+
+    inactive: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
     return {
+      internalValue: null as any,
       hasFocus: false,
       isOpen: false,
       filter: '',
@@ -133,6 +146,21 @@ export default mixins(ClassesMixin).extend({
   },
 
   watch: {
+    value: {
+      handler(val) {
+        if (this.multiple) {
+          this.internalValue = val || [];
+        } else {
+          this.internalValue = val;
+        }
+      },
+      immediate: true,
+    },
+
+    internalValue(val) {
+      this.$emit('input', val);
+    },
+
     hasFocus(val) {
       if (!val) {
         this.isOpen = false;
@@ -154,12 +182,14 @@ export default mixins(ClassesMixin).extend({
     filteredItems(): object[] {
       if (!this.filter) return this.items;
       const flt = this.filter.toLocaleLowerCase();
-      return this.items.filter((i: any) => i.title.toLocaleLowerCase().indexOf(flt) !== -1);
+      return this.items.filter((i: any) => (
+        i[this.labelKey].toLocaleLowerCase().indexOf(flt) !== -1)
+      );
     },
 
     itemValues(): object[] {
       return this.filteredItems.map(item => {
-        let checked = this.multiple && this.value.includes(item);
+        let checked = this.multiple && this.internalValue.includes(item);
         return {
           ...item,
           item,
@@ -173,41 +203,45 @@ export default mixins(ClassesMixin).extend({
     },
 
     textValue(): string {
-      if (!this.value) return '';
+      if (!this.internalValue) return '';
 
       // Hide when typing in single-select mode
-      if (!this.multiple && this.filter) return '';
+      if (!this.multiple && this.search && this.isOpen) return '';
 
       if (this.multiple) {
-        if (this.value.length > this.maxSelectedShown) {
+        if (this.internalValue.length > this.maxSelectedShown) {
           // TODO customize/i18n
-          return `${this.value.length} selected`;
+          return `${this.internalValue.length} selected`;
         } else {
-          return this.value.map((v: any) => v.title).join(', ');
+          return this.internalValue.map((v: any) => v[this.labelKey]).join(', ');
         }
       } else {
-        return this.value.title;
+        return this.internalValue[this.labelKey];
       }
     },
 
     labels(): string[] {
       if (!this.multiple) return [];
 
-      if (this.value.length > this.maxSelectedShown) {
-        return [`${this.value.length} selected`];
+      if (this.internalValue.length > this.maxSelectedShown) {
+        return [`${this.internalValue.length} selected`];
       } else {
-        return this.value.map((v: any) => v.title);
+        return this.internalValue.map((v: any) => v[this.labelKey]);
       }
     },
   },
 
   methods: {
     onClick() {
+      if (this.inactive) return;
+
       this.isOpen = !this.isOpen;
       this.setFocus();
     },
 
     onClickSearch() {
+      if (this.inactive) return;
+
       this.isOpen = true;
       this.setFocus();
     },
@@ -222,7 +256,7 @@ export default mixins(ClassesMixin).extend({
         if (this.multiple) {
           this.isOpen = true;
         } else {
-          this.setValue(this.getPreviousItem(this.value));
+          this.internalValue = this.getPreviousItem(this.internalValue);
         }
       }
     },
@@ -232,12 +266,16 @@ export default mixins(ClassesMixin).extend({
         if (this.multiple) {
           this.isOpen = true;
         } else {
-          this.setValue(this.getNextItem(this.value));
+          this.internalValue = this.getNextItem(this.internalValue);
         }
       }
     },
 
     onEnter() {
+      if (this.search && this.filter) {
+        this.$emit('text-input', this.filter);
+        this.filter = '';
+      }
       this.isOpen = true;
     },
 
@@ -255,7 +293,7 @@ export default mixins(ClassesMixin).extend({
       if (this.isOpen) {
         if (!this.filter) {
           if (this.multiple) {
-            this.value.pop();
+            this.internalValue = this.internalValue.slice(0, this.internalValue.length - 1);
             event.preventDefault();
           }
         }
@@ -268,7 +306,6 @@ export default mixins(ClassesMixin).extend({
     onSpace(event: KeyboardEvent) {
       if (!this.isOpen) {
         this.isOpen = true;
-        event.preventDefault();
       }
     },
 
@@ -284,6 +321,8 @@ export default mixins(ClassesMixin).extend({
     },
 
     onCaretClick(event: PointerEvent) {
+      if (this.inactive) return;
+
       this.isOpen = !this.isOpen;
       event.stopPropagation();
     },
@@ -298,7 +337,7 @@ export default mixins(ClassesMixin).extend({
 
     onItemClick(item: any) {
       if (!this.multiple) {
-        this.setValue(item);
+        this.internalValue = item;
       }
 
       this.filter = '';
@@ -318,25 +357,21 @@ export default mixins(ClassesMixin).extend({
     toggleChecked(item: any) {
       if (!this.multiple) throw new Error('Expected multiple to be true');
 
-      const currentValue = this.value as object[] || [];
+      const currentValue = this.internalValue as object[] || [];
       this.setChecked(item, currentValue.indexOf(item) === -1);
     },
 
     setChecked(item: any, checked: boolean) {
       if (!this.multiple) throw new Error('Expected multiple to be true');
 
-      const currentValue = this.value as object[] || [];
+      const currentValue = this.internalValue as object[] || [];
       let newValue: object[];
       if (checked) {
         newValue = (currentValue.indexOf(item) === -1) ? currentValue.concat(item) : currentValue;
       } else {
         newValue = currentValue.filter(i => i !== item);
       }
-      this.setValue(newValue);
-    },
-
-    setValue(value: any) {
-      this.$emit('input', value);
+      this.internalValue = newValue;
     },
   },
 });

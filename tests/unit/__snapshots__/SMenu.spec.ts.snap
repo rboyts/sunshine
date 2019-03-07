@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SMenu renders dropdown list 1`] = `
+<span class="s-menu"><span><button>activator</button></span>
+<div class="s-menu__popup" style="bottom: 0px; left: 0px; min-width: 0px; height: 0px;">
+  <div class="s-menu__popup__content" style="opacity: 0;">
+    <div>content</div>
+  </div>
+</div>
+<!---->
+<!---->
+</span>
+`;

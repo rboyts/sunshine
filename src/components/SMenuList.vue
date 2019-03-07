@@ -7,8 +7,8 @@
       <global-events
         @keydown.capture.down.prevent="selectNext"
         @keydown.capture.up.prevent="selectPrevious"
-        @keydown.capture.space.prevent.stop="onSpace"
-        @keydown.capture.enter.prevent.stop="onEnter"
+        @keydown.capture.space="onSpace"
+        @keydown.capture.enter.prevent="onEnter"
       />
 
       <slot />
@@ -41,16 +41,18 @@ export default Vue.extend({
       return Array.from(this.$el.querySelectorAll(`.${itemClass}`));
     },
 
-    onSpace() {
+    onSpace(event) {
       const selected = this.getSelectedItem();
       if (selected) {
+        event.preventDefault();
         selected.click();
       }
     },
 
-    onEnter() {
+    onEnter(event) {
       const selected = this.getSelectedItem();
       if (selected) {
+        event.stopPropagation();
         selected.dispatchEvent(new Event('accept'));
       }
     },

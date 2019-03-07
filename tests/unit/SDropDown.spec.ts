@@ -8,9 +8,9 @@ describe('SDropDown', () => {
     const wrapper = mount(SDropDown, {
       propsData: {
         items: [
-          { title: 'Norge' },
-          { title: 'Sverige' },
-          { title: 'England' },
+          { label: 'Norge' },
+          { label: 'Sverige' },
+          { label: 'England' },
         ],
         label: 'Choose country',
       },
@@ -24,6 +24,7 @@ describe('SDropDown', () => {
     const wrapper = mount(SDropDown, {
       propsData: {
         search: true,
+        labelKey: 'title',
         items: [
           { title: 'Norge' },
           { title: 'Sverige' },

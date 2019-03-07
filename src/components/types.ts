@@ -5,15 +5,22 @@ export interface ISortState {
   reverse: boolean;
 }
 
+export interface ISelection {
+  active: string | null;
+  selected: string[];
+  inverted: boolean;
+}
+
 export interface IDataModuleState {
   isLoading: boolean;
   offset: number;
   sorting: ISortState;
+  filter: any[], // TODO type
   items: { [key: string]: IItem[] };
   total: number | null;
   columns: Array<{ key: string, visible: boolean }>,
-  selectedItems: string[],
-  invertSelection: boolean,
+
+  selection: ISelection;
 }
 
 export interface IColumn {
@@ -121,3 +128,9 @@ export interface MouseWheelEvent extends MouseEvent {
     wheelDeltaArg: number,
   ): void;
 }
+
+export const NO_SELECTION: ISelection = Object.freeze({
+  active: null,
+  selected: [],
+  inverted: false,
+});

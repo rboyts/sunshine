@@ -13,7 +13,33 @@ describe('SCheckbox', () => {
         default: 'I am a checkbox',
       },
     });
+    expect(wrapper.contains('.s-checkable__checkmark')).toBeTruthy();
     expect(wrapper.html()).toMatchSnapshot();
+  });
+
+  it('changes state', () => {
+    const wrapper = mount(SCheckbox, {
+      slots: {
+        default: 'I am a checkbox',
+      },
+    });
+
+    expect(wrapper.contains('.s-checkable__checkmark')).toBeFalsy();
+    wrapper.element.click();
+    expect(wrapper.contains('.s-checkable__checkmark')).toBeTruthy();
+  });
+
+  it('shows multiple state', () => {
+    const wrapper = mount(SCheckbox, {
+      propsData: {
+        checked: null,
+      },
+      slots: {
+        default: 'I am a checkbox',
+      },
+    });
+
+    expect(wrapper.contains('.s-checkable__checkmark')).toBeTruthy();
   });
 
   it('emits input', () => {

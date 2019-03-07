@@ -1,5 +1,5 @@
 <template>
-  <div :class="classes()">
+  <span :class="classes()">
     <span @click="onClick">
       <slot name="activator" />
     </span>
@@ -19,14 +19,14 @@
     <global-events
       v-if="isOpen"
       target="window"
-      @mousedown="onWindowClick"
+      @mousedown.capture="onWindowClick"
     />
 
     <watcher
       v-if="showContent"
       @trigger="onWatcher"
     />
-  </div>
+  </span>
 </template>
 
 <script lang="ts">
@@ -45,7 +45,10 @@ export default mixins(ClassesMixin).extend({
   },
 
   props: {
-    isOpen: Boolean,
+    value: {
+      type: Boolean,
+      required: false,
+    },
 
     // TODO default false?
     toggleOnClick: {
@@ -54,21 +57,25 @@ export default mixins(ClassesMixin).extend({
     },
   },
 
-  model: {
-    prop: 'isOpen',
-    event: 'toggle',
-  },
-
   data() {
     return {
       style: {} as {[key: string]: any},
       contentStyle: {} as {[key: string]: any},
       transitioning: false,
+      isOpen: !!this.value,
     };
   },
 
   watch: {
+    value(val) {
+      this.isOpen = !!val;
+    },
+
     isOpen(val) {
+      if (val !== this.value) {
+        this.$emit('input', val);
+      }
+
       this.transitioning = true;
 
       if (val) {
@@ -137,17 +144,13 @@ export default mixins(ClassesMixin).extend({
       this.contentStyle = { opacity: 1 };
     },
 
-    toggle(val: boolean) {
-      this.$emit('toggle', val);
-    },
-
     hide() {
-      this.toggle(false);
+      this.isOpen = false;
     },
 
     onClick(event: MouseEvent) {
       if (this.toggleOnClick) {
-        this.toggle(!this.isOpen);
+        this.isOpen = !this.isOpen;
       }
     },
 

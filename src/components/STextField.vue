@@ -10,10 +10,8 @@
       class="s-input__input"
       :maxlength="maxLength"
       :type="type"
-      :value="formatValue"
       :disabled="inactive"
-      @keyup.delete="removeInput"
-      @input="onInput"
+      v-model="internalValue"
       @keypress="onKeyPress"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
@@ -24,12 +22,11 @@
       v-if="hasFocus && format"
       class="s-input__format"
     >
-      <span class="s-input__value">
-        {{ value }}
-      </span>
-      <span class="s-input__format__remaining">
-        {{ remainingFormat }}
-      </span>
+      <span class="s-input__value">{{
+        internalValue
+      }}</span><span class="s-input__format__remaining">{{
+        remainingFormat
+      }}</span>
     </span>
 
   </s-base-input>
@@ -37,7 +34,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment, { Moment } from 'moment';
 import SBaseInput from './SBaseInput.vue';
 
 export default Vue.extend({
@@ -87,14 +83,27 @@ export default Vue.extend({
 
   data() {
     return {
+      internalValue: this.value,
       hasFocus: false,
       formattedValue: this.value,
     };
   },
 
+  watch: {
+    value(val) {
+      this.internalValue = val;
+    },
+
+    internalValue(val) {
+      if (val !== this.value) {
+        this.$emit('input', val);
+      }
+    },
+  },
+
   computed: {
     isEmpty(): boolean {
-      return !this.value;
+      return !this.internalValue;
     },
 
     type(): string {
@@ -116,7 +125,7 @@ export default Vue.extend({
 
     remainingFormat(): string {
       if (!this.format) return '';
-      return this.format.substring(`${this.value}`.length);
+      return this.format.substring(`${this.internalValue}`.length);
     },
 
     maxLength(): string | undefined {
@@ -158,16 +167,6 @@ export default Vue.extend({
   },
 
   methods: {
-    onInput(event: InputEvent) {
-      let input = event.target as HTMLInputElement;
-      this.$emit('input', input.value);
-    },
-
-    removeInput(event: KeyboardEvent) {
-      if (this.moment) {
-        this.$emit('input', '');
-      }
-    },
 
     onKeyPress(event: KeyboardEvent) {
       if (!this.isValidKey(event.keyCode)) {
