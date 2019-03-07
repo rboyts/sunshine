@@ -10,7 +10,6 @@
             :dateFormat="format"
             moment
             label="Fra dato"
-            @input="setFromDate"
           />
           <s-text-field
             v-model="to"
@@ -19,7 +18,6 @@
             :dateFormat="format"
             moment
             label="Til dato"
-            @input="setToDate"
           />
         </div>
         <div v-else class="s-date-field-single-input">
@@ -30,7 +28,6 @@
             :dateFormat="format"
             moment
             label="Dato"
-            @input="setDate"
           />
         </div>
       </template>
@@ -82,9 +79,6 @@ export default Vue.extend({
       from: '',
       to: '',
       date: '',
-      dateMoment: {} as any,
-      fromMoment: {} as any,
-      toMoment: {} as any,
     };
   },
 
@@ -103,6 +97,42 @@ export default Vue.extend({
     isRangeField(): boolean {
       return this.rangeInput;
     },
+
+    fromMoment(): Moment {
+      return this.createMoment(this.from);
+    },
+
+    toMoment(): Moment {
+      return this.createMoment(this.to);
+    },
+
+    dateMoment(): Moment {
+      return this.createMoment(this.date);
+    },
+  },
+
+  watch: {
+    from(value) {
+      if (value.length === Number(this.stringFormat.length)) {
+        this.from = this.momentFormatted(this.fromMoment);
+      }
+      console.log(this.from);
+      console.log(this.fromMoment);
+    },
+
+    to(value) {
+      if (value.length === Number(this.stringFormat.length)) {
+        this.to = this.momentFormatted(this.toMoment);
+      }
+      console.log(this.to);
+    },
+
+    date(value) {
+      if (value.length === Number(this.stringFormat.length)) {
+        this.date = this.momentFormatted(this.dateMoment);
+      }
+      console.log(this.date);
+    },
   },
 
   methods: {
@@ -120,34 +150,13 @@ export default Vue.extend({
       return momentDate;
     },
 
-    setFromDate(value: string) {
-      if (value.length === Number(this.stringFormat.length)) {
-        this.fromMoment = this.createMoment(value);
-        this.from = this.momentFormatted(this.fromMoment);
-      }
-    },
-
-    setToDate(value: string) {
-      if (value.length === Number(this.stringFormat.length)) {
-        this.toMoment = this.createMoment(value);
-        this.to = this.momentFormatted(this.toMoment);
-      }
-    },
-
-    setDate(value: string) {
-      if (value.length === Number(this.stringFormat.length)) {
-        this.dateMoment = this.createMoment(value);
-        this.date = this.momentFormatted(this.dateMoment);
-      }
-    },
-
     setSelectedPeriod(payload: ICalendarPeriod) {
-      this.setFromDate(moment(payload.from).format(this.format));
-      this.setToDate(moment(payload.to).format(this.format));
+      this.from = moment(payload.from).format(this.format);
+      this.to = moment(payload.to).format(this.format);
     },
 
     setSelectedDate(payload: Moment) {
-      this.setDate(moment(payload).format(this.format));
+      this.date = moment(payload).format(this.format);
     },
   },
 });
