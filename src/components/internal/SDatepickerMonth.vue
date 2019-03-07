@@ -30,9 +30,14 @@
       @mouseup="$emit('mouseDragEnd', { y: month.year, M: month.month, d: a })"
       @mouseover="mouseOverEvent({ y: month.year, M: month.month, d: a })"
     >
-      <span v-if="isSameDate(month.month, a, month.year, fromDate) && range" class="circle">{{a}}</span>
-      <span v-else-if="isSameDate(month.month, a, month.year, toDate) && range" class="circle">{{a}}</span>
-      <span v-else-if="isSameDate(month.month, a, month.year, selectedDate) && !range" class="circle">
+      <span v-if="isSameDate(month.month, a, month.year, fromDate) && range" class="circle">
+        {{a}}
+      </span>
+      <span v-else-if="isSameDate(month.month, a, month.year, toDate) && range" class="circle">
+        {{a}}
+      </span>
+      <span v-else-if="isSameDate(month.month, a, month.year, selectedDate) && !range"
+        class="circle">
         {{a}}
       </span>
       <span v-else>{{a}}</span>

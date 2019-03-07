@@ -166,11 +166,11 @@ $datepicker-navigation-margin: 1.5rem;
   background: $almost-black;
 }
 
-.s-datepicker__date.from {
+.s-datepicker__date.from:not(.to) {
   background: linear-gradient(to right, #fff 50%, $smartdok-eggs-yellow 50%);
 }
 
-.s-datepicker__date.to {
+.s-datepicker__date.to:not(.from) {
   background: linear-gradient(to left, #fff 50%, $smartdok-eggs-yellow 50%);
 }
 
