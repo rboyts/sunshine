@@ -98,15 +98,18 @@ export default Vue.extend({
       return this.rangeInput;
     },
 
-    fromMoment(): Moment {
+    fromMoment(): Moment | null {
+      if (!this.from || this.from.length !== this.stringFormat.length) return null;
       return this.createMoment(this.from);
     },
 
-    toMoment(): Moment {
+    toMoment(): Moment | null{
+      if (!this.to || this.to.length !== this.stringFormat.length) return null;
       return this.createMoment(this.to);
     },
 
-    dateMoment(): Moment {
+    dateMoment(): Moment | null{
+      if (!this.date || this.date.length !== this.stringFormat.length) return null;
       return this.createMoment(this.date);
     },
   },
@@ -116,22 +119,18 @@ export default Vue.extend({
       if (value.length === Number(this.stringFormat.length)) {
         this.from = this.momentFormatted(this.fromMoment);
       }
-      console.log(this.from);
-      console.log(this.fromMoment);
     },
 
     to(value) {
       if (value.length === Number(this.stringFormat.length)) {
         this.to = this.momentFormatted(this.toMoment);
       }
-      console.log(this.to);
     },
 
     date(value) {
       if (value.length === Number(this.stringFormat.length)) {
         this.date = this.momentFormatted(this.dateMoment);
       }
-      console.log(this.date);
     },
   },
 
@@ -140,7 +139,8 @@ export default Vue.extend({
       return (this.format) ? this.stringFormat.match(/[^\w]/g)[0] : undefined;
     },
 
-    momentFormatted(date: Moment): string {
+    momentFormatted(date: Moment | null): string {
+      if (date === null) return '';
       return moment(date).format(this.format);
     },
 

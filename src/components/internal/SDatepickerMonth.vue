@@ -30,8 +30,8 @@
       @mouseup="$emit('mouseDragEnd', { y: month.year, M: month.month, d: a })"
       @mouseover="mouseOverEvent({ y: month.year, M: month.month, d: a })"
     >
-      <span v-if="isSameDate(month.month, a, month.year, fromDate, 'from') && range" class="circle">{{a}}</span>
-      <span v-else-if="isSameDate(month.month, a, month.year, toDate, 'to') && range" class="circle">{{a}}</span>
+      <span v-if="isSameDate(month.month, a, month.year, fromDate) && range" class="circle">{{a}}</span>
+      <span v-else-if="isSameDate(month.month, a, month.year, toDate) && range" class="circle">{{a}}</span>
       <span v-else-if="isSameDate(month.month, a, month.year, selectedDate) && !range" class="circle">
         {{a}}
       </span>
@@ -97,8 +97,8 @@ export default Vue.extend({
       return moment({ y, M: (m - 1), d }).day() === 0;
     },
 
-    isSameDate(m: number, d: number, y: number, date: Moment, trigger: string) {
-      if (date === null) return null;
+    isSameDate(m: number, d: number, y: number, date: Moment): boolean {
+      if (date === null) return false;
       let dateInMonth = moment({ y, M: (m - 1), d }).format('YYYY-MM-DD');
       let compareDate = moment(date).format('YYYY-MM-DD');
       return moment(dateInMonth).isSame(compareDate);
