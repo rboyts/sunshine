@@ -37,6 +37,14 @@ $input-font-size: $paragraph-font-size;
       color: $grayer;
     }
   }
+
+  &--error {
+    border-color: crimson;
+  }
+
+  &--valid {
+    border-color: lightgreen;
+  }
 }
 
 .s-input__label {

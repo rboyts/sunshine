@@ -10,6 +10,10 @@
             :dateFormat="format"
             moment
             label="Fra dato"
+            :class="{
+              's-input--error': !validDate(from),
+              's-input--valid': validDate(from),
+            }"
           />
           <s-text-field
             v-model="to"
@@ -18,6 +22,10 @@
             :dateFormat="format"
             moment
             label="Til dato"
+            :class="{
+              's-input--error': !validDate(to),
+              's-input--valid': validDate(to),
+            }"
           />
         </div>
         <div v-else class="s-date-field-single-input">
@@ -28,6 +36,10 @@
             :dateFormat="format"
             moment
             label="Dato"
+            :class="{
+              's-input--error': !validDate(date),
+              's-input--valid': validDate(date),
+            }"
           />
         </div>
       </template>
@@ -61,6 +73,8 @@ import SDatepicker from './SDatepicker.vue';
 import STextField from './STextField.vue';
 
 moment.locale('nb');
+
+// TODO: Format date-input
 
 export default Vue.extend({
   name: 's-date-field',
@@ -111,31 +125,19 @@ export default Vue.extend({
       if (!this.date || this.date.length !== this.format.length) return null;
       return this.createMoment(this.date);
     },
-  },
 
-  watch: {
-    from(value) {
-      if (value.length === Number(this.format.length)) {
-        this.from = this.momentFormatted(this.fromMoment);
-      } else {
-        console.log(this.fromDate);
+    formatSymbolIndicies(): number[] {
+      const formatRegex = new RegExp(`[${this.formatSymbol}]`, 'g');
+      const splitFormatString = this.format.split('');
+      let formatSymbolIndicies = [];
+      for (let a = 0, b = splitFormatString.length; a < b; a++) {
+        if (splitFormatString[a].match(formatRegex) !== null) {
+          formatSymbolIndicies.push(a);
+        }
       }
+      return formatSymbolIndicies;
     },
 
-    to(value) {
-      if (value.length === Number(this.format.length)) {
-        this.to = this.momentFormatted(this.toMoment);
-      }
-    },
-
-    date(value) {
-      if (value.length === Number(this.format.length)) {
-        this.date = this.momentFormatted(this.dateMoment);
-      }
-    },
-  },
-
-  methods: {
     formatSymbol(): string | null {
       let symbol = this.format.match(/[^\w]/g);
       if (symbol !== null) {
@@ -143,7 +145,41 @@ export default Vue.extend({
       }
       return null;
     },
+  },
 
+  watch: {
+    from(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.from = this.formatValue(newVal);
+      }
+      if (newVal.length === Number(this.format.length) &&
+        this.validDate(newVal)) {
+        this.from = this.momentFormatted(this.fromMoment);
+      }
+    },
+
+    to(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.to = this.formatValue(newVal);
+      }
+      if (newVal.length === Number(this.format.length) &&
+        this.validDate(newVal)) {
+        this.to = this.momentFormatted(this.toMoment);
+      }
+    },
+
+    date(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.date = this.formatValue(newVal);
+      }
+      if (newVal.length === Number(this.format.length) &&
+        this.validDate(newVal)) {
+        this.date = this.momentFormatted(this.dateMoment);
+      }
+    },
+  },
+
+  methods: {
     momentFormatted(date: Moment | null): string {
       if (date === null) return '';
       return moment(date).format(this.format);
@@ -162,6 +198,19 @@ export default Vue.extend({
 
     setSelectedDate(payload: Moment) {
       this.date = moment(payload).format(this.format);
+    },
+
+    formatValue(input: string): string {
+      for (let a = 0, b = this.formatSymbolIndicies.length; a < b; a++) {
+        if (input.length === this.formatSymbolIndicies[a]) {
+          return `${input}${this.formatSymbol}`;
+        }
+      }
+      return input;
+    },
+
+    validDate(value: string): Boolean {
+      return moment(value, this.format).isValid();
     },
   },
 

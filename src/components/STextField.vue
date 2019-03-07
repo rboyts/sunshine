@@ -136,34 +136,6 @@ export default Vue.extend({
       }
       return undefined;
     },
-
-    formatSymbol(): string | undefined {
-      return (this.format) ? this.format.match(/[^\w]/g)[0] : undefined;
-    },
-
-    formatSymbolIndicies(): number[] | undefined {
-      if (!this.format) return undefined;
-      const formatRegex = new RegExp(`[${this.formatSymbol}]`, 'g');
-      const splitFormatString = this.format.split('');
-      let formatSymbolIndicies = [];
-      for (let a = 0, b = splitFormatString.length; a < b; a++) {
-        if (splitFormatString[a].match(formatRegex) !== null) {
-          formatSymbolIndicies.push(a);
-        }
-      }
-      return formatSymbolIndicies;
-    },
-
-    formatValue(): string {
-      if (!this.format) return `${this.value}`;
-      let input = this.value as string;
-      for (let a = 0, b = this.formatSymbolIndicies.length; a < b; a++) {
-        if (input.length === this.formatSymbolIndicies[a]) {
-          return `${this.value}${this.formatSymbol}`;
-        }
-      }
-      return `${this.value}`;
-    },
   },
 
   methods: {
