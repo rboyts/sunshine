@@ -5,7 +5,7 @@
         <div v-if="isRangeField" class="s-date-field-range-input">
           <s-text-field
             v-model="from"
-            :format="stringFormat"
+            :format="format"
             :dateLocale="locale"
             :dateFormat="format"
             moment
@@ -13,7 +13,7 @@
           />
           <s-text-field
             v-model="to"
-            :format="stringFormat"
+            :format="format"
             :dateLocale="locale"
             :dateFormat="format"
             moment
@@ -23,7 +23,7 @@
         <div v-else class="s-date-field-single-input">
           <s-text-field
             v-model="date"
-            :format="stringFormat"
+            :format="format"
             :dateLocale="locale"
             :dateFormat="format"
             moment
@@ -87,7 +87,6 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    stringFormat: String,
     fromDate: String,
     toDate: String,
     selectedDate: String,
@@ -99,44 +98,50 @@ export default Vue.extend({
     },
 
     fromMoment(): Moment | null {
-      if (!this.from || this.from.length !== this.stringFormat.length) return null;
+      if (!this.from || this.from.length !== this.format.length) return null;
       return this.createMoment(this.from);
     },
 
     toMoment(): Moment | null{
-      if (!this.to || this.to.length !== this.stringFormat.length) return null;
+      if (!this.to || this.to.length !== this.format.length) return null;
       return this.createMoment(this.to);
     },
 
     dateMoment(): Moment | null{
-      if (!this.date || this.date.length !== this.stringFormat.length) return null;
+      if (!this.date || this.date.length !== this.format.length) return null;
       return this.createMoment(this.date);
     },
   },
 
   watch: {
     from(value) {
-      if (value.length === Number(this.stringFormat.length)) {
+      if (value.length === Number(this.format.length)) {
         this.from = this.momentFormatted(this.fromMoment);
+      } else {
+        console.log(this.fromDate);
       }
     },
 
     to(value) {
-      if (value.length === Number(this.stringFormat.length)) {
+      if (value.length === Number(this.format.length)) {
         this.to = this.momentFormatted(this.toMoment);
       }
     },
 
     date(value) {
-      if (value.length === Number(this.stringFormat.length)) {
+      if (value.length === Number(this.format.length)) {
         this.date = this.momentFormatted(this.dateMoment);
       }
     },
   },
 
   methods: {
-    formatSymbol(): string | undefined {
-      return (this.format) ? this.stringFormat.match(/[^\w]/g)[0] : undefined;
+    formatSymbol(): string | null {
+      let symbol = this.format.match(/[^\w]/g);
+      if (symbol !== null) {
+        return symbol[0];
+      }
+      return null;
     },
 
     momentFormatted(date: Moment | null): string {
@@ -158,6 +163,18 @@ export default Vue.extend({
     setSelectedDate(payload: Moment) {
       this.date = moment(payload).format(this.format);
     },
+  },
+
+  mounted() {
+    if (this.fromDate) {
+      this.from = this.fromDate;
+    }
+    if (this.toDate) {
+      this.to = this.toDate;
+    }
+    if (this.selectedDate) {
+      this.date = this.selectedDate;
+    }
   },
 });
 </script>
