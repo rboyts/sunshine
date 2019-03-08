@@ -39,11 +39,11 @@ $input-font-size: $paragraph-font-size;
   }
 
   &--error {
-    border-color: crimson;
+    border-color: $color-bad;
   }
 
   &--valid {
-    border-color: lightgreen;
+    border-color: $color-good;
   }
 }
 
