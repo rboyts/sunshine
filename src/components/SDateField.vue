@@ -73,8 +73,6 @@ import STextField from './STextField.vue';
 
 moment.locale('nb');
 
-// TODO: Format date-input
-
 export default Vue.extend({
   name: 's-date-field',
 
