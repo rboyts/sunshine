@@ -1,19 +1,20 @@
 <template>
   <div class="s-date-field">
-    <s-menu v-model="isOpen">
+    <s-menu v-model="isOpen" :toggleOnClick="false">
       <template v-slot:activator>
-        <div v-if="isRangeField" class="s-date-field-range-input">
+        <div
+          v-if="isRangeField"
+          class="s-date-field-range-input"
+          @click="toggleOpen"
+        >
           <s-text-field
             v-model="from"
             :format="format"
             :dateLocale="locale"
             :dateFormat="format"
             moment
-            label="Fra dato"
-            :class="{
-              's-input--error': !validDate(from),
-              's-input--valid': validDate(from),
-            }"
+            :label="fromLabel"
+            :class="validState(from)"
           />
           <s-text-field
             v-model="to"
@@ -21,25 +22,23 @@
             :dateLocale="locale"
             :dateFormat="format"
             moment
-            label="Til dato"
-            :class="{
-              's-input--error': !validDate(to),
-              's-input--valid': validDate(to),
-            }"
+            :label="toLabel"
+            :class="validState(to)"
           />
         </div>
-        <div v-else class="s-date-field-single-input">
+        <div
+          v-else
+          class="s-date-field-single-input"
+          @click="toggleOpen"
+        >
           <s-text-field
             v-model="date"
             :format="format"
             :dateLocale="locale"
             :dateFormat="format"
             moment
-            label="Dato"
-            :class="{
-              's-input--error': !validDate(date),
-              's-input--valid': validDate(date),
-            }"
+            :label="label"
+            :class="validState(date)"
           />
         </div>
       </template>
@@ -93,6 +92,8 @@ export default Vue.extend({
       from: '',
       to: '',
       date: '',
+      validStyle: 's-input--valid',
+      errorStyle: 's-input--error',
     };
   },
 
@@ -101,9 +102,12 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    fromDate: String,
-    toDate: String,
-    selectedDate: String,
+    fromDate: [Object, String],
+    toDate: [Object, String],
+    selectedDate: [Object, String],
+    fromLabel: String,
+    toLabel: String,
+    label: String,
   },
 
   computed: {
@@ -209,20 +213,36 @@ export default Vue.extend({
       return input;
     },
 
-    validDate(value: string): Boolean {
+    validState(value: string): string {
+      if (value.length === Number(this.format.length)) {
+        if (this.validDate(value)) {
+          return this.validStyle;
+        } else {
+          return this.errorStyle;
+        }
+      } else {
+        return '';
+      }
+    },
+
+    validDate(value: string): boolean {
       return moment(value, this.format).isValid();
+    },
+
+    toggleOpen() {
+      this.isOpen = true;
     },
   },
 
   mounted() {
-    if (this.fromDate) {
-      this.from = this.fromDate;
+    if (this.fromDate && moment.isMoment(this.fromDate)) {
+      this.from = moment(this.fromDate).format(this.format);
     }
-    if (this.toDate) {
-      this.to = this.toDate;
+    if (this.toDate && moment.isMoment(this.toDate)) {
+      this.to = moment(this.toDate).format(this.format);
     }
-    if (this.selectedDate) {
-      this.date = this.selectedDate;
+    if (this.selectedDate && moment.isMoment(this.selectedDate)) {
+      this.date = moment(this.selectedDate).format(this.format);
     }
   },
 });
