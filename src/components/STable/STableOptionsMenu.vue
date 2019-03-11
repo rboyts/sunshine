@@ -12,9 +12,12 @@
 
     <template v-slot:content>
       <s-menu-list>
-        <s-list-item v-if="checkable" @click="onSelectAll">Select all</s-list-item>
-        <s-list-item v-if="checkable" @click="onSelectNone">Select none</s-list-item>
+        <s-list-item v-if="checkable" @click="onSelectAll">Velg alle</s-list-item>
+        <s-list-item v-if="checkable" @click="onSelectNone">Velg ingen</s-list-item>
         <s-list-separator v-if="checkable" />
+        <s-list-item>Eksporter til PDF</s-list-item>
+        <s-list-item>Eksporter til Excel</s-list-item>
+        <s-list-separator />
         <s-list-item
           v-for="(oc, i) in orderedColumns"
           :key="oc.column.key"
