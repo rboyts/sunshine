@@ -179,6 +179,12 @@ export default Vue.extend({
         this.date = this.momentFormatted(this.dateMoment);
       }
     },
+
+    isOpen(newVal, oldVal) {
+      if (oldVal && !newVal) {
+        // TODO: Validate if range is valid (ie. from date is before to date)?
+      }
+    },
   },
 
   methods: {
