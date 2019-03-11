@@ -19,7 +19,7 @@
     <global-events
       v-if="isOpen"
       target="window"
-      @mousedown.capture="onWindowClick"
+      @pointerdown.capture="onWindowClick"
     />
 
     <watcher
