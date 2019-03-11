@@ -1,16 +1,16 @@
 <template>
   <div
     @mouseover="onMouseOver"
-    @mousedown="$event.preventDefault()"
+    @mousedown.prevent=""
   >
-    <s-list>
-      <global-events
-        @keydown.capture.down.prevent="selectNext"
-        @keydown.capture.up.prevent="selectPrevious"
-        @keydown.capture.space="onSpace"
-        @keydown.capture.enter.prevent="onEnter"
-      />
+    <global-events
+      @keydown.capture.down.prevent="selectNext"
+      @keydown.capture.up.prevent="selectPrevious"
+      @keydown.capture.space="onSpace"
+      @keydown.capture.enter.prevent="onEnter"
+    />
 
+    <s-list ref="list">
       <slot />
     </s-list>
   </div>
@@ -63,6 +63,7 @@ export default Vue.extend({
         prev.classList.remove(selectedItemClass);
       }
       next.classList.add(selectedItemClass);
+      this.ensureItemVisible(next);
     },
 
     selectPrevious() {
@@ -82,6 +83,15 @@ export default Vue.extend({
     onMouseOver(event) {
       const item = event.target.closest(`.${itemClass}`);
       this.setSelected(item, this.getSelectedItem());
+    },
+
+    ensureItemVisible(item) {
+      const list = this.$refs.list.$el;
+      if (item.offsetTop < list.scrollTop) {
+        item.scrollIntoView(true);
+      } else if (item.offsetTop + item.offsetHeight > list.scrollTop + list.offsetHeight) {
+        item.scrollIntoView(false);
+      }
     },
   },
 });
