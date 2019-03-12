@@ -34,8 +34,14 @@ import { ClassesMixin } from '../lib/utils';
 export default mixins(ClassesMixin).extend({
   name: 's-radio-button',
 
+  model: {
+    prop: 'choice',
+    event: 'input',
+  },
+
   props: {
     value: String,
+    choice: String,
     name: {
       type: String,
       default: '',
@@ -46,15 +52,17 @@ export default mixins(ClassesMixin).extend({
     },
   },
 
-  inject: [
-    'group',
-  ],
-
   data() {
     return {
-      checked: false,
+      checked: this.choice === this.value,
       hasFocus: false,
     };
+  },
+
+  watch: {
+    choice(val) {
+      this.checked = val === this.value;
+    },
   },
 
   computed: {
@@ -67,17 +75,10 @@ export default mixins(ClassesMixin).extend({
   },
 
   methods: {
-    onChange(event) {
-      this.$emit('change', event.target.checked);
+    onChange() {
+      this.checked = true;
+      this.$emit('input', this.value);
     },
-  },
-
-  mounted() {
-    this.unregister = this.group.register(this);
-  },
-
-  beforeDestroy() {
-    this.unregister();
   },
 });
 </script>

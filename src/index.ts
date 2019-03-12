@@ -21,7 +21,6 @@ import SMenu from './components/SMenu.vue';
 import SPieChart from './components/SPieChart.vue';
 import SProgress from './components/SProgress.vue';
 import SRadioButton from './components/SRadioButton.vue';
-import SRadioGroup from './components/SRadioGroup.vue';
 import STab from './components/STab.vue';
 import STable from './components/STable/STable.vue';
 import STabs from './components/STabs.vue';
@@ -52,7 +51,6 @@ const plugin = {
     Vue.component('s-pie-chart', SPieChart);
     Vue.component('s-progress', SProgress);
     Vue.component('s-radio-button', SRadioButton);
-    Vue.component('s-radio-group', SRadioGroup);
     Vue.component('s-tab', STab);
     Vue.component('s-table', STable);
     Vue.component('s-tabs', STabs);
