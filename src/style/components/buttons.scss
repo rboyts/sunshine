@@ -14,12 +14,27 @@ $btn-normal-border-color: $gray;
 // Implements keyboard-only focus styling,
 // https://stackoverflow.com/a/45191208/137627
 
+@mixin btn-overlay() {
+  :after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: ($btn-normal-height / 2);
+
+    @content;
+  }
+};
+
 .s-button {
   background: none;
   border: none;
   outline: none;
   font-size: inherit;
   padding: 0;
+  position: relative;
 
   height: $btn-normal-height;
   border-radius: ($btn-normal-height / 2);
@@ -35,9 +50,6 @@ $btn-normal-border-color: $gray;
   }
 
   &--normal {
-    // border: 1px solid
-    border: none;
-    box-shadow: inset 0 0 0 1px $btn-normal-border-color;
     background-color: $btn-normal-bg-color;
     color: $btn-normal-fg-color;
 
@@ -48,6 +60,12 @@ $btn-normal-border-color: $gray;
 
     &:not(.s-button--inactive):active {
       background-color: mix(#000, $btn-normal-bg-color, 10%);
+    }
+
+    // Implement the border as a pseudo-element, to prevent the content
+    // from moving when the border thickness is changed due to tab selection.
+    @include btn-overlay {
+      border: 1px solid $btn-normal-border-color;
     }
   }
 
@@ -85,7 +103,6 @@ $btn-normal-border-color: $gray;
   height: 100%;
   width: 100%;
   padding: 0 $btn-normal-padding;
-  // border-radius: ($btn-normal-height / 2);
   outline: none;
   user-select: none;
   cursor: default;
@@ -93,5 +110,7 @@ $btn-normal-border-color: $gray;
 }
 
 .s-button:focus {
-  box-shadow: inset 0 0 0 0.125em $color-edit;
+  @include btn-overlay {
+    border: .125rem solid $color-edit;
+  }
 }
