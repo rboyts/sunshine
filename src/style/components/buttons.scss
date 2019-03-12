@@ -49,18 +49,21 @@ $btn-normal-border-color: $gray;
     }
   }
 
+  &:not(.s-button--inactive):hover {
+    @include btn-overlay {
+      background-color: rgba(255, 255, 255, .1);
+    }
+  }
+
+  &:not(.s-button--inactive):active {
+    @include btn-overlay {
+      background-color: rgba(0, 0, 0, .1);
+    }
+  }
+
   &--normal {
     background-color: $btn-normal-bg-color;
     color: $btn-normal-fg-color;
-
-    &:not(.s-button--inactive):hover {
-      // lighten($btn-normal-bg-color, 10%);
-      background-color: mix(#fff, $btn-normal-bg-color, 30%);
-    }
-
-    &:not(.s-button--inactive):active {
-      background-color: mix(#000, $btn-normal-bg-color, 10%);
-    }
 
     // Implement the border as a pseudo-element, to prevent the content
     // from moving when the border thickness is changed due to tab selection.
@@ -73,16 +76,6 @@ $btn-normal-border-color: $gray;
     border: none;
     background-color: $btn-primary-bg-color;
     color: $btn-primary-fg-color;
-
-    &:not(.s-button--inactive):hover {
-      // XXX This is supposed to be a semi-transparent overlay
-      // background-color: lighten($btn-primary-bg-color, 10%);
-      background-color: mix(#fff, $btn-primary-bg-color, 30%);
-    }
-
-    &:not(.s-button--inactive):active {
-      background-color: mix(#000, $btn-primary-bg-color, 10%);
-    }
   }
 
   &--inactive {
