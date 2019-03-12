@@ -183,8 +183,7 @@ export default mixins(ClassesMixin).extend({
       if (!this.filter) return this.items;
       const flt = this.filter.toLocaleLowerCase();
       return this.items.filter((i: any) => (
-        i[this.labelKey].toLocaleLowerCase().indexOf(flt) !== -1)
-      );
+        i[this.labelKey].toLocaleLowerCase().indexOf(flt) !== -1));
     },
 
     itemValues(): object[] {

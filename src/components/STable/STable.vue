@@ -101,7 +101,7 @@ export default Vue.extend({
     },
 
     ...mapToStore([
-      'selection'
+      'selection',
     ]),
   },
 
