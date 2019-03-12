@@ -3,7 +3,6 @@
     <s-menu v-model="isOpen" :toggleOnClick="false">
       <template v-slot:activator>
         <div
-          v-if="isRangeField"
           class="s-date-field-range-input"
           @click="toggleOpen"
         >
@@ -24,21 +23,6 @@
             moment
             :label="toLabel"
             :class="validState(to)"
-          />
-        </div>
-        <div
-          v-else
-          class="s-date-field-single-input"
-          @click="toggleOpen"
-        >
-          <s-text-field
-            v-model="date"
-            :format="format"
-            :dateLocale="locale"
-            :dateFormat="format"
-            moment
-            :label="label"
-            :class="validState(date)"
           />
         </div>
       </template>
@@ -66,10 +50,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import { ICalendarPeriod, IMomentPayload } from './types';
-import SMenu from './SMenu.vue';
-import SDatepicker from './SDatepicker.vue';
-import STextField from './STextField.vue';
+import { ICalendarPeriod, IMomentPayload } from '../types';
+import SMenu from '../SMenu.vue';
+import SDatepicker from '../SDatepicker.vue';
+import STextField from '../STextField.vue';
 
 moment.locale('nb');
 
@@ -87,15 +71,14 @@ export default Vue.extend({
       isOpen: false,
       locale: moment.locale(),
       format: moment.localeData().longDateFormat('L'),
-      from: '',
-      to: '',
-      date: '',
+      internalValue: {} as () => ICalendarPeriod,
       validStyle: 's-input--valid',
       errorStyle: 's-input--error',
     };
   },
 
   props: {
+    value: {} as () => ICalendarPeriod,
     rangeInput: {
       type: Boolean,
       default: false,

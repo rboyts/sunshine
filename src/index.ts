@@ -26,8 +26,8 @@ import STab from './components/STab.vue';
 import STable from './components/STable/STable.vue';
 import STabs from './components/STabs.vue';
 import STextField from './components/STextField.vue';
-import SDateField from './components/SDateField.vue';
-import SDatepicker from './components/SDatepicker.vue';
+import SDateRange from './components/SDateField/SDateRange.vue';
+import SDateSingle from './components/SDateField/SDateSingle.vue';
 
 export { createDataModule } from './vuex';
 export * from './components/types';
@@ -58,8 +58,8 @@ const plugin = {
     Vue.component('s-table', STable);
     Vue.component('s-tabs', STabs);
     Vue.component('s-text-field', STextField);
-    Vue.component('s-date-field', SDateField);
-    Vue.component('s-datepicker', SDatepicker);
+    Vue.component('s-date-range', SDateRange);
+    Vue.component('s-date-single', SDateSingle);
   },
 };
 
