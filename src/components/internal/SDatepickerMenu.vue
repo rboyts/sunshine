@@ -31,14 +31,13 @@
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
 import { IMonth, ICalendarPeriod } from '../types';
-import SRadioGroup from '../SRadioGroup.vue';
 import SRadioButton from '../SRadioButton.vue';
 
 moment.locale('nb');
 
 export default Vue.extend({
   name: 's-datepicker-menu',
-  components: { SRadioGroup, SRadioButton },
+  components: { SRadioButton },
   data() {
     return {
       periodPreselect: 'week' as moment.unitOfTime.DurationConstructor,
