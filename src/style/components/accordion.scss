@@ -24,6 +24,10 @@ $accordion-border: 1px solid $gray;
   outline: none;
   text-decoration: none;
 
+  &--invalid {
+    color: $color-bad;
+  }
+
   &:hover {
     // XXX Design system says, "Text opacity: 80%", but this looks a bit weird
     opacity: .8;

@@ -3,6 +3,7 @@
     :inactive="inactive"
     :hasFocus="hasFocus"
     :isEmpty="isEmpty"
+    :errors="errors"
     v-bind="$attrs"
   >
 
@@ -43,6 +44,7 @@ export default Vue.extend({
   },
 
   props: {
+    errors: Array,
     value: {
       type: [String, Number],
       default: '',

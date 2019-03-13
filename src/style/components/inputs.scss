@@ -37,6 +37,10 @@ $input-font-size: $paragraph-font-size;
       color: $grayer;
     }
   }
+
+  &--error {
+    border-color: $color-bad;
+  }
 }
 
 .s-input__label {
@@ -101,4 +105,13 @@ $input-font-size: $paragraph-font-size;
 
 .s-input__value {
   color: transparent;
+}
+
+.s-input__error {
+  position: absolute;
+  white-space: nowrap;
+  font-size: .75rem;
+  left: $input-padding;
+  bottom: 2px;
+  color: $color-bad;
 }

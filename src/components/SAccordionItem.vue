@@ -2,7 +2,7 @@
   <div :class="classes()">
     <a
       href="#"
-      :class="classes('heading')"
+      :class="classes('heading', {invalid})"
       @_click="$emit('click')"
       @click="onClick"
     >
@@ -45,6 +45,12 @@ export default Vue.extend({
 
   props: {
     heading: String,
+
+    // Set to true, if one input inside failed form validation
+    invalid: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   // XXX parent should handle state
