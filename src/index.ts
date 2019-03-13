@@ -30,6 +30,33 @@ import SDatepicker from './components/SDatepicker.vue';
 export { createDataModule } from './vuex';
 export * from './components/types';
 
+export {
+  SAccordion,
+  SAccordionItem,
+  SAlert,
+  SBaseInput,
+  SButton,
+  SCalendar,
+  SCheckbox,
+  SDatepicker,
+  SDropDown,
+  SGrid,
+  SGridItem,
+  SIcon,
+  SInspector,
+  SList,
+  SListItem,
+  SListSeparator,
+  SMenu,
+  SPieChart,
+  SProgress,
+  SRadioButton,
+  STab,
+  STable,
+  STabs,
+  STextField,
+};
+
 const plugin = {
   install: (Vue: VueConstructor) => {
     Vue.component('s-button', SButton);
