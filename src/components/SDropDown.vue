@@ -67,6 +67,7 @@ Use cases:
 
     <template v-slot:content>
       <s-menu-list>
+        <slot name="above" />
         <s-list-item
           v-for="item in itemValues"
           :key="item.key"
@@ -75,7 +76,9 @@ Use cases:
           @change="onItemChange(item.item, $event)"
           @click="onItemClick(item.item)"
         >
-          {{ item[labelKey] }}
+          <slot v-bind="{label: item[labelKey], item}">
+            {{ item[labelKey] }}
+          </slot>
         </s-list-item>
       </s-menu-list>
     </template>
@@ -158,7 +161,9 @@ export default mixins(ClassesMixin).extend({
     },
 
     internalValue(val) {
-      this.$emit('input', val);
+      if (val !== this.value) {
+        this.$emit('input', val);
+      }
     },
 
     hasFocus(val) {
