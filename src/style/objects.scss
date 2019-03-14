@@ -11,6 +11,25 @@
   flex-direction: row;
 }
 
+// flex-layout with gap between items
+// TODO: Need to design a generic layout system
+.flex-layout {
+  display: flex;
+
+  > * {
+    margin: base-spacing(.5);
+  }
+}
+
+.flex-layout-down {
+  display: flex;
+  flex-direction: column;
+
+  > * {
+    margin: base-spacing(.5) 0;
+  }
+}
+
 .inline-flex {
   display: inline-flex;
   align-items: center;
