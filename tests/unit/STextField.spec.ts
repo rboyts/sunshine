@@ -35,4 +35,18 @@ describe('STextField', () => {
 
     expect(wrapper.emitted('input')[0]).toEqual(['kokobaba']);
   });
+
+  it('forwards attributes', () => {
+    const wrapper = mount(STextField, {
+      propsData: {
+        label: 'Text field',
+        value: '',
+      },
+      attrs: {
+        name: 'field',
+      },
+    });
+    let input = wrapper.find('input');
+    expect(input.attributes().name).toEqual('field');
+  });
 });

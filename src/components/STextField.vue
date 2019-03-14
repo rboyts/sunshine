@@ -4,7 +4,7 @@
     :hasFocus="hasFocus"
     :isEmpty="isEmpty"
     :errors="errors"
-    v-bind="$attrs"
+    :label="label"
   >
 
     <input
@@ -15,6 +15,8 @@
       @keypress="onKeyPress"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
+
+      v-bind="$attrs"
     />
 
     <!-- expected format -->
@@ -39,12 +41,15 @@ import SBaseInput from './SBaseInput.vue';
 export default Vue.extend({
   name: 's-text-field',
 
+  inheritAttrs: false,
+
   components: {
     SBaseInput,
   },
 
   props: {
     errors: Array,
+    label: String,
     value: {
       type: [String, Number],
       default: '',
