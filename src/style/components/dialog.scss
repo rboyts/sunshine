@@ -1,0 +1,41 @@
+@import '../tools.scss';
+
+$s-dialog-z-index: 1000;
+$s-dialog-padding: base-spacing(2);
+$s-dialog-border-color: $gray;
+$s-dialog-border-radius: 3px;
+
+.s-dialog__wrapper {
+  position: fixed;
+  z-index: $s-dialog-z-index;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.s-dialog {
+  border: 1px solid $s-dialog-border-color;
+  border-radius: $s-dialog-border-radius;
+  padding: $s-dialog-padding;
+
+  background-color: $white;
+}
+
+.s-dialog__header {
+  white-space: nowrap;
+
+  .s-icon {
+    float: right;
+    color: $almost-black;
+    cursor: pointer;
+  }
+}
+
+.s-dialog__header {
+  font-weight: $font-weight-medium;
+}

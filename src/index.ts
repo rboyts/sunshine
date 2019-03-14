@@ -9,6 +9,7 @@ import SBaseInput from './components/SBaseInput.vue';
 import SButton from './components/SButton.vue';
 import SCalendar from './components/SCalendar.vue';
 import SCheckbox from './components/SCheckbox.vue';
+import SDialog from './components/SDialog.vue';
 import SDropDown from './components/SDropDown.vue';
 import SGrid from './components/SGrid.vue';
 import SGridItem from './components/SGridItem.vue';
@@ -39,6 +40,7 @@ const plugin = {
     Vue.component('s-base-input', SBaseInput);
     Vue.component('s-calendar', SCalendar);
     Vue.component('s-checkbox', SCheckbox);
+    Vue.component('s-dialog', SDialog);
     Vue.component('s-drop-down', SDropDown);
     Vue.component('s-grid', SGrid);
     Vue.component('s-grid-item', SGridItem);
