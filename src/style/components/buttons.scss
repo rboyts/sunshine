@@ -10,6 +10,9 @@ $btn-primary-fg-color: $almost-black;
 $btn-normal-bg-color: rgba(0, 0, 0, 0.02);
 $btn-normal-fg-color: $almost-black;
 $btn-normal-border-color: $gray;
+$btn-danger-bg-color: $btn-normal-bg-color;
+$btn-danger-fg-color: $color-bad;
+$btn-danger-border-color: $color-bad;
 
 // Implements keyboard-only focus styling,
 // https://stackoverflow.com/a/45191208/137627
@@ -76,6 +79,17 @@ $btn-normal-border-color: $gray;
     border: none;
     background-color: $btn-primary-bg-color;
     color: $btn-primary-fg-color;
+  }
+
+  &--danger {
+    background-color: $btn-danger-bg-color;
+    color: $btn-danger-fg-color;
+
+    // Implement the border as a pseudo-element, to prevent the content
+    // from moving when the border thickness is changed due to tab selection.
+    @include btn-overlay {
+      border: 1px solid $btn-danger-border-color;
+    }
   }
 
   &--inactive {

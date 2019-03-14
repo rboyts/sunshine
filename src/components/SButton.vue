@@ -28,6 +28,10 @@ export default mixins(ClassesMixin).extend({
       type: Boolean,
       default: false,
     },
+    danger: {
+      type: Boolean,
+      default: false,
+    },
     inactive: {
       type: Boolean,
       default: false,
@@ -40,6 +44,7 @@ export default mixins(ClassesMixin).extend({
         small: this.small,
         normal: !this.primary,
         primary: this.primary,
+        danger: this.danger,
         inactive: this.inactive,
       });
     },
