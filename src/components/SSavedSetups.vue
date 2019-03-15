@@ -29,7 +29,7 @@
         <s-text-field v-model="editText" label="Name" />
         <div class="flex-layout flex-end">
           <s-button v-if="editItem" danger @click="onDelete">Delete</s-button>
-          <s-button primary :inactive="!editText" @click="onSave">Save</s-button>
+          <s-button primary :inactive="!hasValidName" @click="onSave">Save</s-button>
         </div>
       </div>
     </s-dialog>
@@ -71,9 +71,23 @@ export default Vue.extend({
     };
   },
 
+  watch: {
+    selected(val) {
+      if (val) {
+        this.$emit('select', val);
+      }
+    },
+  },
+
   computed: {
     headingText() {
       return this.editItem ? 'Edit setup' : 'Save this table setup';
+    },
+
+    hasValidName() {
+      if (this.editText === '') return false;
+      if (this.editItem && this.editText === this.editItem.label) return true;
+      return !this.items.find(i => i.label === this.editText);
     },
   },
 
