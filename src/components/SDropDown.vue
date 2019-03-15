@@ -177,6 +177,16 @@ export default mixins(ClassesMixin).extend({
         this.filter = '';
       }
     },
+
+    items(val) {
+      if (this.multiple) {
+        this.internalValue = this.internalValue.filter((v: any) => val.includes(v));
+      } else if (this.internalValue) {
+        if (!val.includes(this.internalValue)) {
+          this.internalValue = null;
+        }
+      }
+    },
   },
 
   computed: {
