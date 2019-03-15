@@ -344,6 +344,20 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         localStorage.setItem(getStorageKey(namespace), JSON.stringify(storage));
       },
 
+      async deleteSavedState({ state }, { namespace, label }) {
+        const data = localStorage.getItem(getStorageKey(namespace));
+        if (!data) return;
+
+        let storage = JSON.parse(data).filter((s: any) => s.label !== label);
+
+        // Re-set keys
+        storage.forEach((it: any, i: number) => {
+          it.key = i;
+        });
+
+        localStorage.setItem(getStorageKey(namespace), JSON.stringify(storage));
+      },
+
       async loadState({ commit }, { namespace, label }) {
         const data = localStorage.getItem(getStorageKey(namespace));
         if (!data) return;
