@@ -1,6 +1,14 @@
 <template>
   <div :class="classes({ condensed, fixed, dragging: drag != null })">
 
+    <vue-global-events
+      @keydown.up.exact.prevent="onKeyArrowUp"
+      @keydown.down.exact.prevent="onKeyArrowDown"
+      @keydown.up.shift.prevent="onKeyArrowUpShift"
+      @keydown.down.shift.prevent="onKeyArrowDownShift"
+      @click="onGlobalClick"
+    />
+
     <div
       v-if="moveCursorStyle"
       :class="classes('move-cursor')"
@@ -9,8 +17,12 @@
 
     <div :class="classes('wrapper')" @scroll="debounceOnScroll">
       <table
-        @mousedown.shift.prevent="noop"
+        ref="table"
+        @mousedown.shift.prevent=""
         :class="classes('table')"
+        @pointermove="onCellMouseMove"
+        @pointerup="onCellMouseUp"
+        @click.stop=""
       >
 
         <colgroup>
@@ -28,8 +40,8 @@
               <span :class="classes('cell-wrapper')">
                 <span
                   v-if="index === 0"
-                  @click.stop="noop"
-                  @pointerdown.stop="noop"
+                  @click.stop=""
+                  @pointerdown.stop=""
                 >
                   <s-table-options-menu
                     :checkable="checkable"
@@ -64,15 +76,13 @@
           <slot v-if="rootNodes.length === 0" name="empty" />
 
           <tr
-            v-for="node in rootNodes"
+            v-for="(node, row) in rootNodes"
             :key="node.key"
-            :class="classes('row', {
-              checked: isChecked(node),
-              active: activeRow === node.key,
-            })"
+            :class="getRowClass(node, row)"
             @click.exact.prevent="onClick($event, node)"
             @click.exact.ctrl.prevent="onCtrlClick(node)"
             @click.exact.shift.stop.prevent="onShiftClick(node)"
+            @pointerdown.exact.prevent="onCellMouseDown(row, $event)"
           >
 
             <td
@@ -81,14 +91,6 @@
               :class="getColumnClass(column, index)"
             >
               <span :class="classes('cell-wrapper')">
-
-                <span v-if="checkable && index === 0" :class="classes('checkable')">
-                  <s-checkable
-                    :checked="isChecked(node)"
-                    @click.stop="toggleChecked(node)"
-                  />
-                </span>
-
                 <s-table-toggle
                   v-if="outline && index === 0"
                   :node="node"
@@ -108,7 +110,7 @@
                     value: getCellValue(node, column),
                     item: node.item,
                   }">
-                    {{ getCellValue(node, column) }}
+                    <span>{{ getCellValue(node, column) }}</span>
                   </slot>
                 </span>
               </span>
@@ -127,12 +129,12 @@
 <script lang="ts">
 import Vue, { VNode, VNodeChildrenArrayContents } from 'vue';
 import debounce from 'debounce';
+import VueGlobalEvents from 'vue-global-events';
 import mixins from 'vue-typed-mixins';
 import {
   IColumn, IItem, ISortState, ISelection, NO_SELECTION,
 } from '../types';
 import { ClassesMixin, get, joinKeyPath } from '../../lib/utils';
-import SCheckable from '../SCheckable.vue';
 import SIcon from '../SIcon.vue';
 import SProgress from '../SProgress.vue';
 import STableOutline from './STableOutline.vue';
@@ -154,6 +156,10 @@ interface IDragState {
   widths: number[];
   height: number;
   scrollX: number;
+}
+
+interface ISelectState {
+  startRow: number;
 }
 
 // Internal representation of a data item, with added properties for correct rendering
@@ -178,12 +184,12 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
   name: 's-table',
 
   components: {
-    SCheckable,
     SIcon,
     SProgress,
     STableOutline,
     STableToggle,
     STableOptionsMenu,
+    VueGlobalEvents,
   },
 
   props: {
@@ -193,17 +199,17 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     },
 
     total: Number as () => number | null,
-    offset: Number,
+
+    offset: {
+      type: Number,
+      default: 0,
+    },
+
     sorting: Object as () => ISortState,
     draggable: Boolean,
     condensed: Boolean,
 
     selection: Object as () => ISelection,
-
-    checkable: {
-      type: Boolean,
-      default: false,
-    },
 
     outline: {
       type: Boolean,
@@ -223,7 +229,9 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
 
   data() {
     return {
+      checkable: true,
       drag: null as IDragState | null,
+      select: null as ISelectState | null,
       moveTimeoutId: undefined as number | undefined,
       openNodes: [] as string[],
 
@@ -327,8 +335,6 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
   },
 
   methods: {
-    noop() {},
-
     getThresholds(widths: number[]): number[] {
       let res: number[] = [];
       let total = 0;
@@ -368,13 +374,6 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       }
     },
 
-    isChecked(node: ITableNode): boolean {
-      return (
-        this.internalSelection.selected.includes(node.key) !==
-        this.internalSelection.inverted
-      );
-    },
-
     toggleChecked(node: ITableNode) {
       let { selected } = this.internalSelection;
       if (selected.includes(node.key)) {
@@ -406,10 +405,11 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     },
 
     onClick(event: UIEvent, node: ITableNode) {
-      this.activeRow = node.key;
-      if (this.checkable && (this.hasSelection || event.detail > 1)) {
-        this.toggleChecked(node);
-      }
+      this.internalSelection = {
+        active: node.key,
+        selected: [node.key],
+        inverted: false,
+      };
     },
 
     onCtrlClick(node: ITableNode) {
@@ -552,6 +552,114 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       }
     },
 
+    onCellMouseDown(row: number, event: PointerEvent) {
+      // Clear text selection, because we're preventing default behavior
+      const sel = window.document.getSelection();
+      if (sel) {
+        sel.removeAllRanges();
+      }
+
+      this.select = {
+        startRow: row,
+      };
+
+      const table = this.$refs.table as HTMLElement;
+      table.setPointerCapture(event.pointerId);
+    },
+
+    onCellMouseMove(event: PointerEvent) {
+      if (!this.select) return;
+
+      const table = this.$refs.table as HTMLElement;
+      const el = document.elementFromPoint(event.clientX, event.clientY);
+      if (!(el && table.contains(el))) return;
+
+      const rowNode = el.closest('.s-table__row') as HTMLElement;
+      if (!rowNode) return;
+
+      const index = Array.from(table.querySelectorAll('.s-table__row')).indexOf(rowNode);
+
+      const row = this.offset + index;
+      const start = Math.min(this.select.startRow, row);
+      const stop = Math.max(this.select.startRow, row);
+
+      const selected = this.rootNodes.slice(start, stop + 1).map(n => n.key);
+
+      this.internalSelection = {
+        ...this.internalSelection,
+        inverted: false,
+        selected,
+      };
+    },
+
+    onCellMouseUp(event: PointerEvent) {
+      this.select = null;
+      const table = this.$refs.table as HTMLElement;
+      table.releasePointerCapture(event.pointerId);
+    },
+
+    onKeyArrowUp() {
+      this.goToRow(this.getPreviousIndex());
+    },
+
+    onKeyArrowUpShift() {
+      this.goToRow(this.getPreviousIndex(), true);
+    },
+
+    onKeyArrowDown() {
+      this.goToRow(this.getNextIndex());
+    },
+
+    onKeyArrowDownShift() {
+      this.goToRow(this.getNextIndex(), true);
+    },
+
+    onGlobalClick(event: MouseEvent) {
+      // XXX Disabled, because of many undesired side-effects
+      // this.selectNone();
+    },
+
+    goToRow(index: number, expandSelection: boolean = false) {
+      const selectNode = this.rootNodes[index];
+      if (!selectNode) return;
+
+      let { inverted, selected } = this.internalSelection;
+
+      if (expandSelection) {
+        selected = selected.filter(k => k !== selectNode.key);
+        if (!inverted) {
+          selected.push(selectNode.key);
+        }
+      } else {
+        inverted = false;
+        selected = [selectNode.key];
+      }
+
+      this.internalSelection = {
+        inverted,
+        selected,
+        active: selectNode.key,
+      };
+    },
+
+    getPreviousIndex(): number {
+      if (!this.activeRow) return -1;
+
+      const activeIndex = this.rootNodes.findIndex(n => n.key === this.activeRow);
+      if (activeIndex === -1) return -1;
+
+      return activeIndex - 1;
+    },
+
+    getNextIndex(): number {
+      if (!this.activeRow) return 0;
+
+      const activeIndex = this.rootNodes.findIndex(n => n.key === this.activeRow);
+      if (activeIndex === -1) return 0;
+
+      return activeIndex + 1;
+    },
+
     // Placeholder for type safety
     debounceOnScroll(event: UIEvent) { /* empty */ },
 
@@ -644,6 +752,25 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
         right: column.align === 'right',
         center: column.align === 'center',
       });
+    },
+
+    getRowClass(node: ITableNode, row: number) {
+      const checked = this.isChecked(row);
+      return this.classes('row', {
+        checked,
+        'first-checked': checked && !this.isChecked(row - 1),
+        'last-checked': checked && !this.isChecked(row + 1),
+        active: this.activeRow === node.key,
+      });
+    },
+
+    isChecked(row: number): boolean {
+      const node = this.rootNodes[row];
+      if (!node) return false;
+      return (
+        this.internalSelection.selected.includes(node.key) !==
+        this.internalSelection.inverted
+      );
     },
 
     getCellValue(node: ITableNode, column: IColumn) {
