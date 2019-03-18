@@ -103,14 +103,22 @@ $input-font-size: $paragraph-font-size;
   color: transparent;
 }
 
+.s-text-area {
+  align-items: baseline;
+  height: initial;
+}
+
+.s-input__textarea__wrapper {
+  height: 100%;
+  width: 100%;
+  cursor: text;
+  padding: ($input-padding * 2) ($input-padding / 2) ($input-padding / 2) $input-padding;
+}
+
 .s-input__textarea {
   resize: none;
   box-sizing: border-box;
-  padding-top: $input-padding * 2;
-  overflow: hidden;
-
-  // margin-top: $input-padding * 2;
-  // padding-top: 0;
-  // height: calc(100% - 20px);
+  padding: 0 ($input-padding / 2) 0 0;
+  height: 100%;
   width: 100%;
 }

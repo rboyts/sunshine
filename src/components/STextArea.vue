@@ -1,14 +1,20 @@
 <template>
   <s-base-input
-    :style="baseStyle"
+    class="s-text-area"
+    :style="baseHeight"
     :inactive="inactive"
     :hasFocus="hasFocus"
     :isEmpty="isEmpty"
-    :label="$attrs.label"
-    :readonly="$attrs.readonly"
+    :label="label"
+    :readonly="readonly"
   >
 
+  <div
+    class="s-input__textarea__wrapper"
+    @click="$refs.inputArea.focus()"
+  >
     <textarea
+      ref="inputArea"
       class="s-input__input s-input__textarea"
       :disabled="inactive"
       v-bind="$attrs"
@@ -17,6 +23,7 @@
       @focus="hasFocus = true"
       @blur="hasFocus = false">
     </textarea>
+  </div>
 
   </s-base-input>
 </template>
@@ -38,10 +45,6 @@ export default Vue.extend({
       type: String,
       default: '',
     },
-    width: {
-      type: String,
-      default: '10em',
-    },
     height: {
       type: String,
       default: '10em',
@@ -53,6 +56,14 @@ export default Vue.extend({
     inactive: {
       type: Boolean,
       default: false,
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+    label: {
+      type: String,
+      default: 'Label',
     },
   },
 
@@ -85,11 +96,9 @@ export default Vue.extend({
         } = this.$listeners;
       return listeners;
     },
-    baseStyle() {
+    baseHeight() {
       return {
         height: this.height,
-        width: this.width,
-        alignItems: 'baseline',
       };
     },
   },
