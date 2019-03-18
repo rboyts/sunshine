@@ -16,8 +16,10 @@ export default mixins(ClassesMixin).extend({
 
   watch: {
     $route: {
-      handler(route) {
-        if (route.path === this.to) {
+      async handler(route) {
+        await Vue.nextTick();
+        const classes = Array.from(this.$el.classList);
+        if (classes.includes('router-link-active')) {
           (this.$parent as any).setActiveTab(this);
         }
       },
