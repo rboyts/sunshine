@@ -32,7 +32,7 @@ Use cases:
         @keydown.native.space="onSpace"
         @mousedown.native="$event.preventDefault()"
       >
-        <label v-if="textValue" :class="classes('label')">{{ textValue }}</label>
+        <span v-if="textValue" :class="classes('label')">{{ textValue }}</span>
 
         <input
           v-if="search"
