@@ -14,7 +14,7 @@
   border: 1px solid $gray;
   border-radius: 3px;
 
-  box-shadow: 1px 2px 10px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: $popup-box-shadow;
 
   transition: height $duration-normal;
 }
