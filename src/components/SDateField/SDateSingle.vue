@@ -16,14 +16,11 @@
             - date -> String
             - formats input
          -->
-          <s-text-field
-            moment
-            v-model="internalValue"
-            :format="format"
-            :dateLocale="locale"
-            :dateFormat="format"
+          <s-date-to-stringinput
+            :value="date"
+            :locale="locale"
             :label="label"
-            :class="validState(internalValue)"
+            :format="format"
           />
         </div>
       </template>
@@ -32,13 +29,13 @@
       :includeMenu="hasCalendarMenu"
        -->
       <template v-slot:content>
-        <s-datepicker
+        <!-- <s-datepicker
           :rangeSelect="rangeInput"
           :locale="locale"
           :format="format"
-          :date="dateMoment"
+          :date="date"
           @setSelectedDate="setInternalValue"
-        />
+        /> -->
       </template>
 
     </s-menu>
@@ -52,6 +49,7 @@ import { ICalendarPeriod, IMomentPayload } from '../types';
 import SMenu from '../SMenu.vue';
 import SDatepicker from '../SDatepicker.vue';
 import STextField from '../STextField.vue';
+import SDateToStringinput from './SDateToStringinput.vue';
 
 moment.locale('nb');
 
@@ -60,8 +58,8 @@ export default Vue.extend({
 
   components: {
     SMenu,
+    SDateToStringinput,
     SDatepicker,
-    STextField,
   },
 
   data() {
@@ -70,9 +68,7 @@ export default Vue.extend({
       rangeInput: false,
       locale: moment.locale(),
       format: moment.localeData().longDateFormat('L'),
-      internalValue: '',
-      validStyle: 's-input--valid',
-      errorStyle: 's-input--error',
+      internalValue: moment(),
     };
   },
 
@@ -82,49 +78,21 @@ export default Vue.extend({
   },
 
   computed: {
-
-    dateMoment(): Moment | null{
-      if (!this.internalValue || this.internalValue.length !== this.format.length) return null;
-      return this.createMoment(this.internalValue);
-    },
-
-    formatSymbolIndicies(): number[] {
-      const formatRegex = new RegExp(`[${this.formatSymbol}]`, 'g');
-      const splitFormatString = this.format.split('');
-      let formatSymbolIndicies = [];
-      for (let a = 0, b = splitFormatString.length; a < b; a++) {
-        if (splitFormatString[a].match(formatRegex) !== null) {
-          formatSymbolIndicies.push(a);
-        }
-      }
-      return formatSymbolIndicies;
-    },
-
-    formatSymbol(): string | null {
-      let symbol = this.format.match(/[^\w]/g);
-      if (symbol !== null) {
-        return symbol[0];
-      }
-      return null;
-    },
+    // date(): Moment | null {
+    //   if (!moment.isMoment(this.internalValue)) return null;
+    //   return this.internalValue;
+    // },
   },
 
   watch: {
     value(newVal, oldVal) {
       // TODO: Move to string converter
-      this.internalValue = moment(newVal).format(this.format);
+      this.internalValue = moment(newVal);
     },
 
     internalValue(newVal, oldVal) {
-      // EMIT value if valid Moment ?
-
-      // TODO: Move to string converter
-      if (newVal !== oldVal) {
-        this.internalValue = this.formatValue(newVal);
-      }
-      if (newVal.length === Number(this.format.length) &&
-        this.validDate(newVal)) {
-        this.internalValue = this.momentFormatted(this.dateMoment);
+      if (moment.isMoment(this.internalValue)) {
+        this.$emit('input', newVal);
       }
     },
 
@@ -148,45 +116,9 @@ export default Vue.extend({
       return momentDate;
     },
 
-    setInternalValue(payload: Moment) {
-      this.internalValue = moment(payload).format(this.format);
-    },
-
-    formatValue(input: string): string {
-      for (let a = 0, b = this.formatSymbolIndicies.length; a < b; a++) {
-        if (input.length === this.formatSymbolIndicies[a]) {
-          return `${input}${this.formatSymbol}`;
-        }
-      }
-      return input;
-    },
-
-    validState(value: string): string {
-      if (value.length === Number(this.format.length)) {
-        if (this.validDate(value)) {
-          return this.validStyle;
-        } else {
-          return this.errorStyle;
-        }
-      } else {
-        return '';
-      }
-    },
-
-    validDate(value: string): boolean {
-      return moment(value, this.format).isValid();
-    },
-
     toggleOpen() {
       this.isOpen = true;
     },
-  },
-
-  mounted() {
-    if (this.value && moment.isMoment(this.value)) {
-      // TODO: Move to string converter
-      this.internalValue = moment(this.value).format(this.format);
-    }
   },
 });
 </script>
