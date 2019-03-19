@@ -23,6 +23,7 @@ $accordion-border: 1px solid $gray;
   line-height: $accordion-header-height;
   outline: none;
   text-decoration: none;
+  white-space: nowrap;
 
   &:hover {
     // XXX Design system says, "Text opacity: 80%", but this looks a bit weird
