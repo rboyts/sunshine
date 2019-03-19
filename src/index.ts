@@ -11,6 +11,7 @@ import SCalendar from './components/SCalendar.vue';
 import SCheckbox from './components/SCheckbox.vue';
 import SDialog from './components/SDialog.vue';
 import SDropDown from './components/SDropDown.vue';
+import SFilterDropDown from './components/SFilterDropDown.vue';
 import SGrid from './components/SGrid.vue';
 import SGridItem from './components/SGridItem.vue';
 import SIcon from './components/SIcon.vue';
@@ -44,6 +45,7 @@ const plugin = {
     Vue.component('s-checkbox', SCheckbox);
     Vue.component('s-dialog', SDialog);
     Vue.component('s-drop-down', SDropDown);
+    Vue.component('s-filter-drop-down', SFilterDropDown);
     Vue.component('s-grid', SGrid);
     Vue.component('s-grid-item', SGridItem);
     Vue.component('s-icon', SIcon);
