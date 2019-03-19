@@ -22,7 +22,7 @@ Use cases:
         :isEmpty="textValue == '' && text == ''"
         :readonly="!search"
         :inactive="inactive"
-        v-bind="$attrs"
+        :label="label"
         @click.native="onClick"
         @keydown.native.up.prevent="onArrowUp"
         @keydown.native.down.prevent="onArrowDown"
@@ -32,15 +32,18 @@ Use cases:
         @keydown.native.space="onSpace"
         @mousedown.native="$event.preventDefault()"
       >
-        <span v-if="textValue" :class="classes('label')">{{ textValue }}</span>
+        <slot name="selected" v-bind="{ textValue, value: internalValue, toggleChecked }">
+          <span v-if="textValue" :class="classes('label')">{{ textValue }}</span>
+        </slot>
 
         <input
           v-if="search"
           ref="input"
-          class="s-input__input"
+          :class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
           type="text"
           :disabled="inactive"
           :value="filter"
+          v-bind="$attrs"
           @click.stop="onClickSearch"
           @focus="hasFocus = true"
           @blur="hasFocus = false"
@@ -107,6 +110,8 @@ export default mixins(ClassesMixin).extend({
   },
 
   props: {
+    label: String,
+
     items: Array as () => object[],
 
     labelKey: {
@@ -131,6 +136,15 @@ export default mixins(ClassesMixin).extend({
     maxSelectedShown: {
       type: Number,
       default: 2,
+    },
+
+    // Allow items to remain selected, even if removed from available items.
+    // This is an advanced option, mostly for internal use.
+    //
+    // XXX This is a sign that there should maybe be some "internal-drop-down" component
+    allowMissing: {
+      type: Boolean,
+      default: false,
     },
 
     inactive: {
@@ -179,6 +193,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     items(val) {
+      if (this.allowMissing) return;
       if (this.multiple) {
         this.internalValue = this.internalValue.filter((v: any) => val.includes(v));
       } else if (this.internalValue) {
