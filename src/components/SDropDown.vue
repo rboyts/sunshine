@@ -32,7 +32,7 @@ Use cases:
         @keydown.native.space="onSpace"
         @mousedown.native="$event.preventDefault()"
       >
-        <label v-if="textValue" :class="classes('label')">{{ textValue }}</label>
+        <span v-if="textValue" :class="classes('label')">{{ textValue }}</span>
 
         <input
           v-if="search"
@@ -175,6 +175,16 @@ export default mixins(ClassesMixin).extend({
     isOpen(val) {
       if (!val) {
         this.filter = '';
+      }
+    },
+
+    items(val) {
+      if (this.multiple) {
+        this.internalValue = this.internalValue.filter((v: any) => val.includes(v));
+      } else if (this.internalValue) {
+        if (!val.includes(this.internalValue)) {
+          this.internalValue = null;
+        }
       }
     },
   },

@@ -14,6 +14,7 @@ import {
   IColumn,
   IColumns,
   IOrderedColumn,
+  IColumnStateList,
   NO_SELECTION,
 } from './components/types';
 import { joinKeyPath } from './lib/utils';
@@ -57,6 +58,26 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
     const it = options.columns.find(column => column.key === key);
     if (!it) throw new Error(`Column not found: ${key}`);
     return it;
+  };
+
+  const validateSavedColumns = (columns: IColumnStateList): IColumnStateList => {
+    const missingColumns = options.columns
+      .filter(c => !columns.find(o => o.key === c.key))
+      .map(c => {
+        console.warn(`Column ${c.key} was not included in saved state, and will be moved last and hidden.`);
+        return { key: c.key, visible: false };
+      });
+
+    return columns
+      .concat(missingColumns)
+      .filter(o => {
+        if (options.columns.find(c => c.key === o.key)) {
+          return true;
+        } else {
+          console.warn(`Column ${o.key} in saved state does not exist.`);
+          return false;
+        }
+      });
   };
 
   const getStorageKey = (namespace: string) => `s-table@${namespace}`;
@@ -344,6 +365,20 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         localStorage.setItem(getStorageKey(namespace), JSON.stringify(storage));
       },
 
+      async deleteSavedState({ state }, { namespace, label }) {
+        const data = localStorage.getItem(getStorageKey(namespace));
+        if (!data) return;
+
+        let storage = JSON.parse(data).filter((s: any) => s.label !== label);
+
+        // Re-set keys
+        storage.forEach((it: any, i: number) => {
+          it.key = i;
+        });
+
+        localStorage.setItem(getStorageKey(namespace), JSON.stringify(storage));
+      },
+
       async loadState({ commit }, { namespace, label }) {
         const data = localStorage.getItem(getStorageKey(namespace));
         if (!data) return;
@@ -351,7 +386,13 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         const saved = JSON.parse(data).find((s: any) => s.label === label);
         if (!saved) return;
 
-        commit('savedState', saved.state);
+
+        const state = {
+          ...saved.state,
+          columns: validateSavedColumns(saved.state.columns),
+        };
+
+        commit('savedState', state);
       },
 
       ...options.actions,
