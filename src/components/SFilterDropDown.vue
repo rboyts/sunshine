@@ -30,7 +30,7 @@
 
         <div v-for="(section, i) in sections" :key="i"
           :class="classes('tabs', 'tab', { active: i === sectionIndex })">
-          <a @click.prevent="sectionIndex = i">{{ section.label }}</a>
+          <a @click.prevent="onClickTab(i)">{{ section.label }}</a>
         </div>
       </div>
       <s-list-separator />
@@ -88,6 +88,16 @@ export default Vue.extend({
     internalValue(val) {
       if (val !== this.value) {
         this.$emit('input', val);
+      }
+    },
+  },
+
+  methods: {
+    onClickTab(index) {
+      if (this.sectionIndex === index) {
+        this.sectionIndex = -1;
+      } else {
+        this.sectionIndex = index;
       }
     },
   },
