@@ -1,0 +1,42 @@
+@import '../tools.scss';
+
+.s-filter-drop-down__pills {
+  display: inline-flex;
+  padding: 0 2px;
+}
+
+.s-filter-drop-down__pill {
+  @include action-font;
+  white-space: nowrap;
+  vertical-align: center;
+  margin: 0 2px;
+  padding: 4px 8px 4px 2px;
+  background-color: $almost-gray;
+  border: 1px solid $gray;
+  border-radius: 3px;
+}
+
+.s-filter-drop-down__pill-icon {
+  cursor: pointer;
+}
+
+.s-filter-drop-down__tabs {
+  display: flex;
+}
+
+.s-filter-drop-down__tabs__tab {
+  a {
+    @include action-font;
+    display: inline-block;
+    padding: base-spacing(1) base-spacing(2);
+    cursor: pointer;
+    text-decoration: none;
+    color: $almost-black;
+  }
+
+  &--active {
+    a {
+      color: $color-edit;
+    }
+  }
+}

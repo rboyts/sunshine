@@ -3,17 +3,18 @@
     :inactive="inactive"
     :hasFocus="hasFocus"
     :isEmpty="isEmpty"
-    v-bind="$attrs"
+    :label="label"
   >
 
     <input
-      class="s-input__input"
+      :class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
       :type="type"
       :disabled="inactive"
       v-model="internalValue"
       @keypress="onKeyPress"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
+      v-bind="$attrs"
     />
 
     <!-- expected format -->
@@ -38,11 +39,15 @@ import SBaseInput from './SBaseInput.vue';
 export default Vue.extend({
   name: 's-text-field',
 
+  inheritAttrs: false,
+
   components: {
     SBaseInput,
   },
 
   props: {
+    label: String,
+
     value: {
       type: [String, Number],
       default: '',
