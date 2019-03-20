@@ -1,13 +1,18 @@
 <template>
-  <s-drop-down
+  <s-drop-down-internal
     search
     multiple
     allow-missing
     label=""
+    :labelKey="labelKey"
+    :filter.sync="filter"
     :items="items"
     :placeholder="placeholder"
     :max-selected-shown="8"
     v-model="internalValue"
+    @keydown.native.right.prevent="onKeyRight"
+    @keydown.native.left.prevent="onKeyLeft"
+    @closed="sectionIndex = -1"
   >
     <template v-slot:selected="{ value, toggleChecked }">
       <div :class="classes('pills')">
@@ -27,6 +32,10 @@
 
     <template v-slot:above>
       <div :class="classes('tabs')">
+        <div v-show="showSuggestionsTab"
+          :class="classes('tabs', 'tab', { active: sectionIndex === -1 })">
+          <a @click.prevent="onClickTab(-1)">Suggestions</a>
+        </div>
 
         <div v-for="(section, i) in sections" :key="i"
           :class="classes('tabs', 'tab', { active: i === sectionIndex })">
@@ -36,12 +45,20 @@
       <s-list-separator />
     </template>
 
-  </s-drop-down>
+    <template v-slot="{ item, onChange }">
+      <s-list-item @click="onChange(true)">
+        <span v-html="highlightLabel(item)" />
+      </s-list-item>
+    </template>
+
+
+  </s-drop-down-internal>
 </template>
 
 <script>
 import Vue from 'vue';
 import { ClassesMixin } from '../lib/utils';
+import SDropDownInternal from './SDropDown/SDropDownInternal.vue';
 
 
 export default Vue.extend({
@@ -50,6 +67,10 @@ export default Vue.extend({
   mixins: [
     ClassesMixin,
   ],
+
+  components: {
+    SDropDownInternal,
+  },
 
   props: {
     sections: Array,
@@ -61,23 +82,8 @@ export default Vue.extend({
     return {
       internalValue: [],
       sectionIndex: -1,
+      filter: '',
     };
-  },
-
-  computed: {
-    placeholder() {
-      return (this.internalValue.length === 0 ?
-        'Filter input field, with suggestions for filter words such as department, machine type or project name...' :
-        'Add filter...');
-    },
-
-    currentSection() {
-      return this.sections[this.sectionIndex];
-    },
-
-    items() {
-      return this.currentSection ? this.currentSection.items : [];
-    },
   },
 
   watch: {
@@ -92,13 +98,75 @@ export default Vue.extend({
     },
   },
 
+  computed: {
+    placeholder() {
+      return (this.internalValue.length === 0 ?
+        'Filter input field, with suggestions for filter words such as department, machine type or project name...' :
+        'Add filter...');
+    },
+
+    currentSection() {
+      return this.sections[this.sectionIndex];
+    },
+
+    labelKey() {
+      return this.currentSection ? 'label' : 'extendedLabel';
+    },
+
+    items() {
+      if (this.currentSection) {
+        return this.getFilteredItemsFromSection(this.currentSection);
+      } else if (this.filter) {
+        return this.sections.reduce((acc, sec) => (
+          acc.concat(this.getFilteredItemsFromSection(sec))
+        ), []);
+      } else {
+        return [];
+      }
+    },
+
+    showSuggestionsTab() {
+      return !!this.filter;
+    },
+  },
+
   methods: {
+    getFilteredItemsFromSection(section) {
+      const flt = this.filter.toLocaleLowerCase();
+      const { items } = section;
+      return items.filter(i => (
+        !this.internalValue.includes(i) &&
+        i.label.toLocaleLowerCase().indexOf(flt) !== -1));
+    },
+
     onClickTab(index) {
       if (this.sectionIndex === index) {
         this.sectionIndex = -1;
       } else {
         this.sectionIndex = index;
       }
+    },
+
+    onKeyRight() {
+      if (this.sectionIndex < this.sections.length - 1) {
+        this.sectionIndex += 1;
+      }
+    },
+
+    onKeyLeft() {
+      if (this.sectionIndex > -1) {
+        this.sectionIndex -= 1;
+      }
+    },
+
+    highlightLabel(item) {
+      const flt = this.filter.toLocaleLowerCase();
+      let text = item[this.labelKey];
+      const idx = text.toLocaleLowerCase().indexOf(flt);
+      if (idx !== -1) {
+        text = `${text.slice(0, idx)}<b>${text.slice(idx, idx + flt.length)}</b>${text.slice(idx + flt.length)}`;
+      }
+      return text;
     },
   },
 });

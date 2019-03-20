@@ -1,5 +1,5 @@
 <template>
-  <s-menu v-model="isOpen" :class="classes()" :toggleOnClick="false">
+  <s-menu v-model="isOpen" :class="classes()" :toggleOnClick="false" @closed="$emit('closed')">
     <template v-slot:activator>
       <s-base-input
         :class="classes('input')"
@@ -55,18 +55,26 @@
     <template v-slot:content>
       <s-menu-list>
         <slot name="above" />
-        <s-list-item
-          v-for="item in itemValues"
-          :key="item.key"
-          :checkable="multiple"
-          :checked="item.checked"
-          @change="onItemChange(item.item, $event)"
-          @click="onItemClick(item.item)"
-        >
-          <slot v-bind="{label: item[labelKey], item}">
-            {{ item[labelKey] }}
+        <template v-for="node in itemValues">
+          <slot
+            v-bind="{
+              item: node.item,
+              label: node[labelKey],
+              onChange: checked => onItemChange(node.item, checked),
+              onClick: () => onItemClick(node.item),
+            }"
+          >
+            <s-list-item
+              :key="node.key"
+              :checkable="multiple"
+              :checked="node.checked"
+              @change="onItemChange(node.item, $event)"
+              @click="onItemClick(node.item)"
+            >
+              {{ node[labelKey] }}
+            </s-list-item>
           </slot>
-        </s-list-item>
+        </template>
       </s-menu-list>
     </template>
   </s-menu>

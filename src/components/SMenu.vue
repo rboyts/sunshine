@@ -166,6 +166,11 @@ export default mixins(ClassesMixin).extend({
       this.transitioning = false;
       const { height, ...rest } = this.style;
       this.style = rest;
+
+      // Emit event when menu is completely closed
+      if (!this.isOpen) {
+        this.$emit('closed');
+      }
     },
 
     // Close menu when clicking anywhere outside
