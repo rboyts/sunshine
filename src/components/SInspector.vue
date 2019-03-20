@@ -1,6 +1,6 @@
 <template>
   <transition name="slide-in">
-    <div v-show="value" :class="classes()">
+    <div v-if="value" :class="classes()">
       <div :class="classes('content')">
         <div :class="classes('header')">
           <slot name="header">

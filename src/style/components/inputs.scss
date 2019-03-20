@@ -80,7 +80,11 @@ $input-font-size: $paragraph-font-size;
   background-color: transparent;
   color: $almost-black;
 
-  padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+  padding: $input-padding;
+
+  &--with-label {
+    padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+  }
 
   z-index: 1;
 

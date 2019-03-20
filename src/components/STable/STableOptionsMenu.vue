@@ -12,9 +12,12 @@
 
     <template v-slot:content>
       <s-menu-list>
-        <s-list-item v-if="checkable" @click="onSelectAll">Select all</s-list-item>
-        <s-list-item v-if="checkable" @click="onSelectNone">Select none</s-list-item>
+        <s-list-item v-if="checkable" @click="onSelectAll">{{ $t('s-table.select-all') }}</s-list-item>
+        <s-list-item v-if="checkable" @click="onSelectNone">{{ $t('s-table.select-none') }}</s-list-item>
         <s-list-separator v-if="checkable" />
+        <s-list-item>{{ $t('s-table.export-pdf') }}</s-list-item>
+        <s-list-item>{{ $t('s-table.export-excel') }}</s-list-item>
+        <s-list-separator />
         <s-list-item
           v-for="(oc, i) in orderedColumns"
           :key="oc.column.key"
@@ -31,7 +34,7 @@
   </s-menu>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
 import { ClassesMixin } from '../../lib/utils';
 import SMenu from '../SMenu.vue';
@@ -45,6 +48,37 @@ export default Vue.extend({
   mixins: [
     ClassesMixin,
   ],
+
+  i18n: {
+    messages: {
+      en: {
+        's-table': {
+          'select-all': 'Select all',
+          'select-none': 'Select none',
+          'export-pdf': 'Export as PDF',
+          'export-excel': 'Export to Excel',
+        },
+      },
+
+      nb: {
+        's-table': {
+          'select-all': 'Velg alle',
+          'select-none': 'Velg ingen',
+          'export-pdf': 'Eksporter som PDF',
+          'export-excel': 'Eksporter til Excel',
+        },
+      },
+
+      sv: {
+        's-table': {
+          'select-all': 'Markera alla',
+          'select-none': 'Markera ingen',
+          'export-pdf': 'Exportera som PDF',
+          'export-excel': 'Exportera till Excel',
+        },
+      },
+    },
+  },
 
   components: {
     SMenu,
@@ -75,7 +109,7 @@ export default Vue.extend({
       this.$emit('selectNone');
     },
 
-    onToggleColumn(index: number, checked: boolean) {
+    onToggleColumn(index, checked) {
       this.$emit('toggleColumn', { index, checked });
     },
   },

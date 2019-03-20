@@ -11,6 +11,8 @@ export interface ISelection {
   inverted: boolean;
 }
 
+export type IColumnStateList = Array<{ key: string, visible: boolean }>;
+
 export interface IDataModuleState {
   isLoading: boolean;
   offset: number;
@@ -18,7 +20,7 @@ export interface IDataModuleState {
   filter: any[], // TODO type
   items: { [key: string]: IItem[] };
   total: number | null;
-  columns: Array<{ key: string, visible: boolean }>,
+  columns: IColumnStateList;
 
   selection: ISelection;
 }

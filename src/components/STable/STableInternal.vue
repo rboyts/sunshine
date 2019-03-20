@@ -128,7 +128,9 @@
 import Vue, { VNode, VNodeChildrenArrayContents } from 'vue';
 import debounce from 'debounce';
 import mixins from 'vue-typed-mixins';
-import { IColumn, IItem, ISortState, ISelection, NO_SELECTION } from '../types';
+import {
+  IColumn, IItem, ISortState, ISelection, NO_SELECTION,
+} from '../types';
 import { ClassesMixin, joinKeyPath } from '../../lib/utils';
 import SCheckable from '../SCheckable.vue';
 import SIcon from '../SIcon.vue';
@@ -371,7 +373,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     toggleChecked(node: ITableNode) {
-      let selected = this.internalSelection.selected;
+      let { selected } = this.internalSelection;
       if (selected.includes(node.key)) {
         selected = selected.filter(k => k !== node.key);
       } else {
@@ -389,7 +391,7 @@ export default mixins(ClassesMixin).extend({
         ...this.internalSelection,
         inverted: true,
         selected: [],
-      }
+      };
     },
 
     selectNone() {

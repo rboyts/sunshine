@@ -22,7 +22,7 @@ Use cases:
         :isEmpty="textValue == '' && text == ''"
         :readonly="!search"
         :inactive="inactive"
-        v-bind="$attrs"
+        :label="label"
         @click.native="onClick"
         @keydown.native.up.prevent="onArrowUp"
         @keydown.native.down.prevent="onArrowDown"
@@ -32,15 +32,18 @@ Use cases:
         @keydown.native.space="onSpace"
         @mousedown.native="$event.preventDefault()"
       >
-        <label v-if="textValue" :class="classes('label')">{{ textValue }}</label>
+        <slot name="selected" v-bind="{ textValue, value: internalValue, toggleChecked }">
+          <span v-if="textValue" :class="classes('label')">{{ textValue }}</span>
+        </slot>
 
         <input
           v-if="search"
           ref="input"
-          class="s-input__input"
+          :class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
           type="text"
           :disabled="inactive"
           :value="filter"
+          v-bind="$attrs"
           @click.stop="onClickSearch"
           @focus="hasFocus = true"
           @blur="hasFocus = false"
@@ -67,6 +70,7 @@ Use cases:
 
     <template v-slot:content>
       <s-menu-list>
+        <slot name="above" />
         <s-list-item
           v-for="item in itemValues"
           :key="item.key"
@@ -75,7 +79,9 @@ Use cases:
           @change="onItemChange(item.item, $event)"
           @click="onItemClick(item.item)"
         >
-          {{ item[labelKey] }}
+          <slot v-bind="{label: item[labelKey], item}">
+            {{ item[labelKey] }}
+          </slot>
         </s-list-item>
       </s-menu-list>
     </template>
@@ -104,6 +110,8 @@ export default mixins(ClassesMixin).extend({
   },
 
   props: {
+    label: String,
+
     items: Array as () => object[],
 
     labelKey: {
@@ -128,6 +136,15 @@ export default mixins(ClassesMixin).extend({
     maxSelectedShown: {
       type: Number,
       default: 2,
+    },
+
+    // Allow items to remain selected, even if removed from available items.
+    // This is an advanced option, mostly for internal use.
+    //
+    // XXX This is a sign that there should maybe be some "internal-drop-down" component
+    allowMissing: {
+      type: Boolean,
+      default: false,
     },
 
     inactive: {
@@ -158,7 +175,9 @@ export default mixins(ClassesMixin).extend({
     },
 
     internalValue(val) {
-      this.$emit('input', val);
+      if (val !== this.value) {
+        this.$emit('input', val);
+      }
     },
 
     hasFocus(val) {
@@ -172,6 +191,17 @@ export default mixins(ClassesMixin).extend({
         this.filter = '';
       }
     },
+
+    items(val) {
+      if (this.allowMissing) return;
+      if (this.multiple) {
+        this.internalValue = this.internalValue.filter((v: any) => val.includes(v));
+      } else if (this.internalValue) {
+        if (!val.includes(this.internalValue)) {
+          this.internalValue = null;
+        }
+      }
+    },
   },
 
   computed: {
@@ -183,8 +213,7 @@ export default mixins(ClassesMixin).extend({
       if (!this.filter) return this.items;
       const flt = this.filter.toLocaleLowerCase();
       return this.items.filter((i: any) => (
-        i[this.labelKey].toLocaleLowerCase().indexOf(flt) !== -1)
-      );
+        i[this.labelKey].toLocaleLowerCase().indexOf(flt) !== -1));
     },
 
     itemValues(): object[] {

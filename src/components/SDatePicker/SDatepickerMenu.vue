@@ -3,31 +3,27 @@
     <div>
       <p>Valgt periode:</p>
       <p>{{fromDate}} - {{toDate}}</p>
-      <hr />
     </div>
-    <s-radio-group v-model="periodOption">
-      <p>
-        <s-radio-button name="periodOption" value="previous">Forrige</s-radio-button>
-      </p>
-      <p>
-        <s-radio-button name="periodOption" value="current">Denne</s-radio-button>
-      </p>
-      <p>
-        <s-radio-button name="periodOption" value="next">Neste</s-radio-button>
-      </p>
-    </s-radio-group>
+    <hr />
+    <p>
+      <s-radio-button v-model="periodOption" value="previous">Forrige</s-radio-button>
+    </p>
+    <p>
+      <s-radio-button v-model="periodOption" value="current">Denne</s-radio-button>
+    </p>
+    <p>
+      <s-radio-button v-model="periodOption" value="next">Neste</s-radio-button>
+    </p>
     <hr/>
-    <s-radio-group v-model="periodPreselect">
-      <p>
-        <s-radio-button name="periodPreselect" value="day">Dag</s-radio-button>
-      </p>
-      <p>
-        <s-radio-button name="periodPreselect" value="week">Uke</s-radio-button>
-      </p>
-      <p>
-        <s-radio-button name="periodPreselect" value="month">Måned</s-radio-button>
-      </p>
-    </s-radio-group>
+    <p>
+      <s-radio-button v-model="periodPreselect" value="day">Dag</s-radio-button>
+    </p>
+    <p>
+      <s-radio-button v-model="periodPreselect" value="week">Uke</s-radio-button>
+    </p>
+    <p>
+      <s-radio-button v-model="periodPreselect" value="month">Måned</s-radio-button>
+    </p>
   </div>
 </template>
 
@@ -35,14 +31,13 @@
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
 import { IMonth, ICalendarPeriod } from '../types';
-import SRadioGroup from '../SRadioGroup.vue';
 import SRadioButton from '../SRadioButton.vue';
 
 moment.locale('nb');
 
 export default Vue.extend({
   name: 's-datepicker-menu',
-  components: { SRadioGroup, SRadioButton },
+  components: { SRadioButton },
   data() {
     return {
       periodPreselect: 'week' as moment.unitOfTime.DurationConstructor,
