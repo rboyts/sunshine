@@ -42,7 +42,6 @@
           <a @click.prevent="onClickTab(i)">{{ section.label }}</a>
         </div>
       </div>
-      <s-list-separator />
     </template>
 
     <template v-slot="{ item, onChange }">
