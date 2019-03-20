@@ -1,5 +1,7 @@
 <template>
   <s-base-input
+    id="base"
+    ref="baseInput"
     class="s-text-area"
     :style="baseHeight"
     :inactive="inactive"
@@ -15,13 +17,15 @@
   >
     <textarea
       ref="inputArea"
-      class="s-input__input s-input__textarea"
+      :class="{ 's-input__input': true, 's-input__textarea': !scrollBar,
+                's-input__textarea--show-scrollbar': scrollBar }"
       :disabled="inactive"
       :readonly="readonly"
       :placeholder="placeholder"
       v-bind="$attrs"
       v-on="listeners"
       v-model="internalValue"
+      @input="setHeight"
       @focus="hasFocus = true"
       @blur="hasFocus = false">
     </textarea>
@@ -47,13 +51,13 @@ export default Vue.extend({
       type: String,
       default: '',
     },
-    height: {
-      type: String,
-      default: '5em',
+    initHeight: {
+      type: Number,
+      default: 80,
     },
     maxHeight: {
-      type: String,
-      default: '5em',
+      type: Number,
+      default: 200,
     },
     inactive: {
       type: Boolean,
@@ -76,8 +80,23 @@ export default Vue.extend({
   data() {
     return {
       internalValue: this.value,
+      height: this.initHeight,
       hasFocus: false,
+      scrollBar: false,
     };
+  },
+
+  methods: {
+    setHeight(event) {
+      const scrollHeight = event.target.scrollHeight;
+      if (scrollHeight > this.initHeight && scrollHeight < this.maxHeight) {
+        this.height = scrollHeight;
+      } else if (scrollHeight <= this.maxHeight) {
+        this.scrollBar = false;
+      } else {
+        this.scrollBar = true;
+      }
+    },
   },
 
   watch: {
@@ -101,10 +120,11 @@ export default Vue.extend({
     },
     baseHeight() {
       return {
-        height: this.height,
+        height: `${this.height}px`,
       };
     },
   },
+
 });
 
 </script>
