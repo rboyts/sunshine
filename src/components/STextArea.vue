@@ -10,7 +10,7 @@
   >
 
   <div :class="{ 's-input__textarea__wrapper--with-label': !!label,
-              's-input__textarea__wrapper': !label }"
+                 's-input__textarea__wrapper': !label }"
     @click="$refs.inputArea.focus()"
   >
     <textarea
