@@ -9,14 +9,15 @@
     :readonly="readonly"
   >
 
-  <div
-    class="s-input__textarea__wrapper"
+  <div :class="{ 's-input__textarea__wrapper--with-label': !!label,
+              's-input__textarea__wrapper': !label }"
     @click="$refs.inputArea.focus()"
   >
     <textarea
       ref="inputArea"
       class="s-input__input s-input__textarea"
       :disabled="inactive"
+      :readonly="readonly"
       v-bind="$attrs"
       v-on="listeners"
       v-model="internalValue"
@@ -47,11 +48,11 @@ export default Vue.extend({
     },
     height: {
       type: String,
-      default: '10em',
+      default: '5em',
     },
     maxHeight: {
       type: String,
-      default: '10em',
+      default: '5em',
     },
     inactive: {
       type: Boolean,
@@ -63,7 +64,7 @@ export default Vue.extend({
     },
     label: {
       type: String,
-      default: 'Label',
+      default: '',
     },
   },
 
@@ -90,10 +91,7 @@ export default Vue.extend({
       return !this.internalValue;
     },
     listeners() {
-      const
-        {
-          input, ...listeners
-        } = this.$listeners;
+      const { input, ...listeners } = this.$listeners;
       return listeners;
     },
     baseHeight() {
