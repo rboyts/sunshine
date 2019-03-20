@@ -5,6 +5,10 @@ $datepicker-width: 18rem;
 $datepicker-menu-width: 14rem;
 $datepicker-navigation-margin: 1.5rem;
 
+.s-date-field {
+  display: inline-block;
+}
+
 .s-datepicker {
   display: flex;
   flex-direction: row;
