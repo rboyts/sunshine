@@ -4,7 +4,6 @@
     multiple
     allow-missing
     label=""
-    :labelKey="labelKey"
     :filter.sync="filter"
     :items="items"
     :placeholder="placeholder"
@@ -25,7 +24,8 @@
             :class="classes('pill-icon')"
             @click.prevent.stop="toggleChecked(val)"
           />
-          {{ val.extendedLabel || val.label }}
+          {{ val.label }}
+          <span class="s-muted-text"> ({{ val.category }})</span>
         </div>
       </div>
     </template>
@@ -47,7 +47,8 @@
 
     <template v-slot="{ item, onChange }">
       <s-list-item @click="onChange(true)">
-        <span v-html="highlightLabel(item)" />
+        <span v-html="highlightLabelHtml(item)" />
+        <span v-if="sectionIndex === -1" class="s-muted-text">&nbsp;({{ item.category }})</span>
       </s-list-item>
     </template>
 
@@ -109,10 +110,6 @@ export default Vue.extend({
       return this.sections[this.sectionIndex];
     },
 
-    labelKey() {
-      return this.currentSection ? 'label' : 'extendedLabel';
-    },
-
     items() {
       if (this.currentSection) {
         return this.getFilteredItemsFromSection(this.currentSection);
@@ -159,9 +156,9 @@ export default Vue.extend({
       }
     },
 
-    highlightLabel(item) {
+    highlightLabelHtml(item) {
       const flt = this.filter.toLocaleLowerCase();
-      let text = item[this.labelKey];
+      let text = item.label;
       const idx = text.toLocaleLowerCase().indexOf(flt);
       if (idx !== -1) {
         text = `${text.slice(0, idx)}<b>${text.slice(idx, idx + flt.length)}</b>${text.slice(idx + flt.length)}`;
