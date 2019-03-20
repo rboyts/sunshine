@@ -1,15 +1,13 @@
 <template>
-  <div>
-    <s-text-field
-      moment
-      v-model="formattedValue"
-      :format="format"
-      :dateLocale="locale"
-      :dateFormat="format"
-      :label="label"
-      :class="validState(formattedValue)"
-    />
-  </div>
+  <s-text-field
+    moment
+    v-model="formattedValue"
+    :format="format"
+    :dateLocale="locale"
+    :dateFormat="format"
+    :label="label"
+    :class="validState(formattedValue)"
+  />
 </template>
 
 <script lang="ts">

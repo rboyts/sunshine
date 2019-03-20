@@ -26,11 +26,11 @@
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
 import SMenu from '../SMenu.vue';
-import SDatepicker from '../SDatepicker.vue';
+import SDatepicker from './SDatepicker.vue';
 import SDateToStringinput from './SDateToStringinput.vue';
 
 export default Vue.extend({
-  name: 's-date-field',
+  name: 's-date-single',
 
   components: {
     SMenu,
@@ -57,9 +57,9 @@ export default Vue.extend({
       this.internalValue = newVal;
     },
 
-    internalValue(newVal, oldVal) {
-      if (moment(newVal, this.format).isValid()) {
-        this.$emit('input', newVal);
+    isOpen(newVal) {
+      if (!newVal) {
+        this.$emit('input', this.internalValue);
       }
     },
   },

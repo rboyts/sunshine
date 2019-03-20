@@ -26,8 +26,8 @@ import STab from './components/STab.vue';
 import STable from './components/STable/STable.vue';
 import STabs from './components/STabs.vue';
 import STextField from './components/STextField.vue';
-import SDateRange from './components/SDateField/SDateRange.vue';
-import SDateSingle from './components/SDateField/SDateSingle.vue';
+import SDateRange from './components/SDatePicker/SDateRange.vue';
+import SDateSingle from './components/SDatePicker/SDateSingle.vue';
 
 export { createDataModule } from './vuex';
 export * from './components/types';

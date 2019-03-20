@@ -17,26 +17,19 @@
       class="s-datepicker__date"
       v-for="(a, k) in month.daysInMonth"
       :key="'daysInMonth'+month + k"
-      :class="{
-        'saturday': isSaturday(month.month, a, month.year),
-        'sunday': isSunday(month.month, a, month.year),
-        'today': isSameDate(month.month, a, month.year, today),
-        'between': isInPeriod(month.month, a, month.year, fromDate, toDate),
-        'from': isSameDate(month.month, a, month.year, fromDate) && range,
-        'to': isSameDate(month.month, a, month.year, toDate) && range,
-      }"
+      :class="setDateClasses(month.month, a, month.year)"
       @click="mouseClick({ y: month.year, M: month.month, d: a })"
       @mousedown="$emit('mouseDragStart', { y: month.year, M: month.month, d: a })"
       @mouseup="$emit('mouseDragEnd', { y: month.year, M: month.month, d: a })"
       @mouseover="mouseOverEvent({ y: month.year, M: month.month, d: a })"
     >
-      <span v-if="isSameDate(month.month, a, month.year, fromDate) && range" class="circle">
+      <span v-if="range && isSameDate(month.month, a, month.year, fromDate)" class="circle">
         {{a}}
       </span>
-      <span v-else-if="isSameDate(month.month, a, month.year, toDate) && range" class="circle">
+      <span v-else-if="range && isSameDate(month.month, a, month.year, toDate)" class="circle">
         {{a}}
       </span>
-      <span v-else-if="isSameDate(month.month, a, month.year, selectedDate) && !range"
+      <span v-else-if="!range && isSameDate(month.month, a, month.year, selectedDate)"
         class="circle">
         {{a}}
       </span>
@@ -86,6 +79,32 @@ export default Vue.extend({
   },
 
   methods: {
+    setDateClasses(m: number, d: number, y: number) {
+      let classes = [];
+      if (this.range) {
+        if (this.isInPeriod(m, d, y, this.fromDate, this.toDate)) {
+          classes.push('between');
+        }
+        if (this.isSameDate(m, d, y, this.fromDate)) {
+          classes.push('from');
+        }
+        if (this.isSameDate(m, d, y, this.toDate)) {
+          classes.push('to');
+        }
+      }
+      if (this.isSaturday(m, d, y)) {
+        classes.push('saturday');
+      }
+      if (this.isSunday(m, d, y)) {
+        classes.push('sunday');
+      }
+      if (this.isSameDate(m, d, y, this.today)) {
+        classes.push('today');
+      }
+
+      return classes;
+    },
+
     translateMonthName(monthKey: number, year: number) {
       return moment({ y: year, M: (monthKey - 1) }).format('MMMM-YYYY');
     },
@@ -103,14 +122,13 @@ export default Vue.extend({
     },
 
     isSameDate(m: number, d: number, y: number, date: Moment): boolean {
-      if (date === null) return false;
       let dateInMonth = moment({ y, M: (m - 1), d }).format('YYYY-MM-DD');
       let compareDate = moment(date).format('YYYY-MM-DD');
       return moment(dateInMonth).isSame(compareDate);
     },
 
-    isInPeriod(m: number, d: number, y: number, fromDate: Moment, toDate: string): boolean {
-      if (fromDate === null || toDate === null) return false;
+    isInPeriod(m: number, d: number, y: number, fromDate: Moment, toDate: Moment): boolean {
+      if (!this.range) return false;
       let dateInMonth = moment({ y, M: (m - 1), d }).format('YYYY-MM-DD');
       let compareDateFrom = moment(fromDate).format('YYYY-MM-DD');
       let compareDateTo = moment(toDate).format('YYYY-MM-DD');

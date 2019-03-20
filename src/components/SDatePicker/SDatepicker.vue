@@ -30,9 +30,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import { IMonth, ICalendarPeriod, IMomentPayload } from './types';
-import SDatepickerCalendar from './internal/SDatepickerCalendar.vue';
-import SDatepickerMenu from './internal/SDatepickerMenu.vue';
+import { IMonth, ICalendarPeriod, IMomentPayload } from '../types';
+import SDatepickerCalendar from './SDatepickerCalendar.vue';
+import SDatepickerMenu from './SDatepickerMenu.vue';
 
 export default Vue.extend({
   name: 's-datepicker',
@@ -87,10 +87,10 @@ export default Vue.extend({
       },
       set(newValue: any) {
         if (this.range) {
-          this.period.from = newValue.from;
-          this.period.to = newValue.to;
+          this.period = newValue;
+        } else {
+          this.date = newValue;
         }
-        this.date = newValue;
       },
     },
 
@@ -279,7 +279,7 @@ export default Vue.extend({
 
     mouseClick(payload: IMomentPayload) {
       this.internalValue = moment({ y: payload.y, M: (payload.M - 1), d: payload.d });
-      this.$emit('input', moment({ y: payload.y, M: (payload.M - 1), d: payload.d }));
+      this.$emit('input', this.date);
     },
   },
 
