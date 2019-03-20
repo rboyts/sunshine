@@ -11,6 +11,7 @@
       :type="type"
       :disabled="inactive"
       v-model="internalValue"
+      :placeholder="placeholder"
       @keypress="onKeyPress"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
@@ -76,6 +77,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    placeholder: {
+      type: String,
+      default: '',
+    },
   },
 
   data() {
@@ -99,7 +104,7 @@ export default Vue.extend({
 
   computed: {
     isEmpty(): boolean {
-      return !this.internalValue;
+      return !this.internalValue && !this.placeholder;
     },
 
     type(): string {

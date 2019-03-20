@@ -18,6 +18,7 @@
       class="s-input__input s-input__textarea"
       :disabled="inactive"
       :readonly="readonly"
+      :placeholder="placeholder"
       v-bind="$attrs"
       v-on="listeners"
       v-model="internalValue"
@@ -66,6 +67,10 @@ export default Vue.extend({
       type: String,
       default: '',
     },
+    placeholder: {
+      type: String,
+      default: '',
+    },
   },
 
   data() {
@@ -88,7 +93,7 @@ export default Vue.extend({
 
   computed: {
     isEmpty() {
-      return !this.internalValue;
+      return !this.internalValue && !this.placeholder;
     },
     listeners() {
       const { input, ...listeners } = this.$listeners;
