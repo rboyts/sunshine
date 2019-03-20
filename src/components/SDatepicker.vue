@@ -49,20 +49,15 @@ export default Vue.extend({
       dateContext: moment(),
       mouseDrag: false,
       startDragDate: {} as moment.Moment,
-      period: {
-        from: {} as moment.Moment,
-        to: {} as moment.Moment,
-      },
+      date: this.value,
+      period: this.value,
     };
   },
 
   props: {
-    value: String,
+    value: {} as () => any,
     locale: String,
     format: String,
-    date: Object as () => Moment,
-    from: Object as () => Moment,
-    to: Object as () => Moment,
     includeMenu: {
       type: Boolean,
       default: false,
@@ -73,12 +68,34 @@ export default Vue.extend({
     },
   },
 
+  watch: {
+    value(newVal) {
+      this.internalValue = newVal;
+    },
+  },
+
   computed: {
+    internalValue: {
+      get(): Moment | ICalendarPeriod {
+        if (this.range) {
+          return {
+            from: this.value.from,
+            to: this.value.to,
+          };
+        }
+        return this.value;
+      },
+      set(newValue: any) {
+        if (this.range) {
+          this.period.from = newValue.from;
+          this.period.to = newValue.to;
+        }
+        this.date = newValue;
+      },
+    },
+
     selectedPeriod(): ICalendarPeriod {
-      return {
-        from: this.from,
-        to: this.to,
-      };
+      return this.period;
     },
 
     selectedDate(): Moment {
@@ -225,11 +242,11 @@ export default Vue.extend({
     },
 
     selectDateOfPeriod(from: Moment, to: Moment) {
-      this.period = {
+      this.internalValue = {
         from,
         to,
       };
-      this.$emit('setSelectedPeriod', this.period);
+      this.$emit('input', this.period);
     },
 
     mouseDragStart(payload: IMomentPayload) {
@@ -261,8 +278,8 @@ export default Vue.extend({
     },
 
     mouseClick(payload: IMomentPayload) {
-      let date = moment({ y: payload.y, M: (payload.M - 1), d: payload.d });
-      this.$emit('setSelectedDate', date);
+      this.internalValue = moment({ y: payload.y, M: (payload.M - 1), d: payload.d });
+      this.$emit('input', moment({ y: payload.y, M: (payload.M - 1), d: payload.d }));
     },
   },
 

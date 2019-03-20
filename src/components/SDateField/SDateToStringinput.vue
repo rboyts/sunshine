@@ -26,7 +26,7 @@ export default Vue.extend({
 
   data() {
     return {
-      formattedValue: moment(this.value).format(this.format),
+      formattedValue: '',
       validStyle: 's-input--valid',
       errorStyle: 's-input--error',
     };
@@ -46,7 +46,7 @@ export default Vue.extend({
 
     formattedValue(newVal) {
       this.formattedValue = this.formatValue(newVal);
-      if (this.validDate(this.formattedValue)) {
+      if (this.validState(this.formattedValue)) {
         this.$emit('input', moment(this.formattedValue, this.format));
       }
     },
@@ -99,6 +99,11 @@ export default Vue.extend({
     validDate(value: string): boolean {
       return moment(value, this.format).isValid();
     },
+  },
+
+  mounted() {
+    // TODO: if valid and not null
+    this.formattedValue = moment(this.value).format(this.format);
   },
 });
 </script>
