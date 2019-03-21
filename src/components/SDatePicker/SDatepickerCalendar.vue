@@ -22,8 +22,7 @@
         >{{day}}</li>
       </ul>
     </div>
-    <div class="s-datepicker__grid__container"
-      style="height: 390px; overflow: hidden;" v-on:wheel="calendarScroll">
+    <div class="s-datepicker__grid__container" v-on:wheel="calendarScroll">
       <div class="s-datepicker__scroller" ref="calendarList">
         <s-datepicker-month
             class="s-datepicker__grid"
