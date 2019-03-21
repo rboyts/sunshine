@@ -22,6 +22,9 @@
       v-if="menu"
       :today="today"
       :format="format"
+      :locale="locale"
+      :selectedPeriod="selectedPeriod"
+      :selectedDate="selectedDate"
       @setSelectedPeriod="selectDateOfPeriod"
      />
   </div>

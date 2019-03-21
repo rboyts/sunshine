@@ -1,29 +1,32 @@
 <template>
   <div class="s-datepicker__menu">
-    <div>
-      <p>Valgt periode:</p>
-      <p>{{fromDate}} - {{toDate}}</p>
+    <h3>Periodevalg</h3>
+    <div class="s-datepicker__menu__row">
+      <div class="s-datepicker__menu__column">
+        <p>
+          <s-radio-button v-model="periodOption" value="previous">Forrige</s-radio-button>
+        </p>
+        <p>
+          <s-radio-button v-model="periodOption" value="current">Denne</s-radio-button>
+        </p>
+        <p>
+          <s-radio-button v-model="periodOption" value="next">Neste</s-radio-button>
+        </p>
+      </div>
+
+      <div class="s-datepicker__menu__column">
+        <p>
+          <s-radio-button v-model="periodPreselect" value="day">Dag</s-radio-button>
+        </p>
+        <p>
+          <s-radio-button v-model="periodPreselect" value="week">Uke</s-radio-button>
+        </p>
+        <p>
+          <s-radio-button v-model="periodPreselect" value="month">Måned</s-radio-button>
+        </p>
+      </div>
     </div>
-    <hr />
-    <p>
-      <s-radio-button v-model="periodOption" value="previous">Forrige</s-radio-button>
-    </p>
-    <p>
-      <s-radio-button v-model="periodOption" value="current">Denne</s-radio-button>
-    </p>
-    <p>
-      <s-radio-button v-model="periodOption" value="next">Neste</s-radio-button>
-    </p>
-    <hr/>
-    <p>
-      <s-radio-button v-model="periodPreselect" value="day">Dag</s-radio-button>
-    </p>
-    <p>
-      <s-radio-button v-model="periodPreselect" value="week">Uke</s-radio-button>
-    </p>
-    <p>
-      <s-radio-button v-model="periodPreselect" value="month">Måned</s-radio-button>
-    </p>
+    <h3>Egendefinerte</h3>
   </div>
 </template>
 
@@ -33,21 +36,26 @@ import moment, { Moment } from 'moment';
 import { IMonth, ICalendarPeriod } from '../types';
 import SRadioButton from '../SRadioButton.vue';
 
-moment.locale('nb');
-
 export default Vue.extend({
   name: 's-datepicker-menu',
+
   components: { SRadioButton },
+
   data() {
     return {
       periodPreselect: 'week' as moment.unitOfTime.DurationConstructor,
       periodOption: 'current',
     };
   },
+
   props: {
-    today: Object as () => Moment,
-    selectedPeriod: Object as () => ICalendarPeriod,
+    locale: String,
+    format: String,
+    today: {} as () => Moment,
+    selectedPeriod: {} as () => ICalendarPeriod,
+    selectedDate: {} as () => Moment,
   },
+
   computed: {
     toDate(): string {
       return moment(this.selectedPeriod.to).format('L');
@@ -57,6 +65,7 @@ export default Vue.extend({
       return moment(this.selectedPeriod.from).format('L');
     },
   },
+
   watch: {
     periodPreselect(newVal, oldVal) {
       if (newVal !== oldVal) {
@@ -69,6 +78,7 @@ export default Vue.extend({
       }
     },
   },
+
   methods: {
     setDateSelection(option: string, period: moment.unitOfTime.DurationConstructor) {
       let fromDate: Moment;

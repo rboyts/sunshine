@@ -2,7 +2,7 @@
 
 $datepicker-height: 29rem;
 $datepicker-width: 18rem;
-$datepicker-menu-width: 14rem;
+$datepicker-menu-width: 0rem;
 $datepicker-navigation-margin: 1.5rem;
 
 .s-date-field {
@@ -13,14 +13,9 @@ $datepicker-navigation-margin: 1.5rem;
   display: flex;
   flex-direction: row;
   position: relative;
-  width: $datepicker-width;
   height: $datepicker-height;
   //overflow: hidden;
   background: #fff;
-}
-
-.s-datepicker.includeMenu {
-  width: $datepicker-menu-width + $datepicker-width;
 }
 
 .s-datepicker__calendar {
@@ -73,9 +68,22 @@ $datepicker-navigation-margin: 1.5rem;
 }
 
 .s-datepicker__menu {
-  background: #fafafa;
-  width: $datepicker-menu-width;
-  padding: 0 1rem;
+  background-color: $whiteish;
+  padding: 0 1rem 0;
+}
+
+.s-datepicker__menu__row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.s-datepicker__menu__column {
+  width: 48%;
+}
+
+.s-datepicker__menu__column:last-of-type {
+  margin-left: 1rem;
 }
 
 .s-datepicker__grid__container {
