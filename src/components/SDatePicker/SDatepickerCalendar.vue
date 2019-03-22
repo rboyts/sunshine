@@ -120,10 +120,10 @@ export default Vue.extend({
     },
 
     setActiveMonth(calendar: IMonth[]) {
-      this.monthNameInHeader = moment({
-        y: calendar[0].year,
-        M: (calendar[0].month - 1),
-      }).format('MMMM YYYY');
+      this.monthNameInHeader = moment([
+        calendar[0].year,
+        (calendar[0].month - 1),
+      ]).format('MMMM YYYY');
     },
 
     calendarScroll(event: MouseWheelEvent) {

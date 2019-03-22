@@ -106,30 +106,30 @@ export default Vue.extend({
     },
 
     translateMonthName(monthKey: number, year: number) {
-      return moment({ y: year, M: (monthKey - 1) }).format('MMMM-YYYY');
+      return moment([year, (monthKey - 1)]).format('MMMM-YYYY');
     },
 
     dayOfWeek(m: number, d: number, y: number) {
-      return moment({ y, M: (m - 1), d }).day();
+      return moment([y, (m - 1), d]).day();
     },
 
     isSaturday(m: number, d: number, y: number) {
-      return moment({ y, M: (m - 1), d }).day() === 6;
+      return moment([y, (m - 1), d]).day() === 6;
     },
 
     isSunday(m: number, d: number, y: number) {
-      return moment({ y, M: (m - 1), d }).day() === 0;
+      return moment([y, (m - 1), d]).day() === 0;
     },
 
     isSameDate(m: number, d: number, y: number, date: Moment): boolean {
-      let dateInMonth = moment({ y, M: (m - 1), d }).format('YYYY-MM-DD');
+      let dateInMonth = moment([y, (m - 1), d]).format('YYYY-MM-DD');
       let compareDate = moment(date).format('YYYY-MM-DD');
       return moment(dateInMonth).isSame(compareDate);
     },
 
     isInPeriod(m: number, d: number, y: number, fromDate: Moment, toDate: Moment): boolean {
       if (!this.range) return false;
-      let dateInMonth = moment({ y, M: (m - 1), d }).format('YYYY-MM-DD');
+      let dateInMonth = moment([y, (m - 1), d]).format('YYYY-MM-DD');
       let compareDateFrom = moment(fromDate).format('YYYY-MM-DD');
       let compareDateTo = moment(toDate).format('YYYY-MM-DD');
       return moment(dateInMonth).isBetween(compareDateFrom, compareDateTo);

@@ -131,10 +131,9 @@ export default Vue.extend({
   },
 
   methods: {
-
     addPreviousMonth() {
       let firstMonth = this.calendar[0];
-      let firstMonthDate = moment({ y: firstMonth.year, M: (firstMonth.month - 1), d: 1 });
+      let firstMonthDate = moment([firstMonth.year, (firstMonth.month - 1), 1]);
       let previousMonth = moment(firstMonthDate).subtract(1, 'months');
 
       this.calendar.unshift(this.addMonthItem(previousMonth.get('year'), previousMonth.get('month') + 1));
@@ -143,7 +142,7 @@ export default Vue.extend({
 
     addComingMonth() {
       let lastMonth = this.calendar[this.calendar.length - 1];
-      let lastMonthDate = moment({ y: lastMonth.year, M: (lastMonth.month - 1), d: 1 });
+      let lastMonthDate = moment([lastMonth.year, (lastMonth.month - 1), 1]);
       let nextMonth = moment(lastMonthDate).add(1, 'months');
 
       this.calendar.push(this.addMonthItem(nextMonth.get('year'), nextMonth.get('month') + 1));
@@ -156,7 +155,7 @@ export default Vue.extend({
         weeksInMonth: this.addWeekNumbers(year, month),
         firstDay: this.offsetStartDay(year, month),
         lastDay: this.offsetEndDay(year, month),
-        daysInMonth: moment({ y: year, M: (month - 1) }).daysInMonth(),
+        daysInMonth: moment([year, (month - 1)]).daysInMonth(),
         previousMonthDays: this.addOverlapDays(year, month, this.offsetStartDay(year, month)),
         year,
       };
@@ -164,8 +163,8 @@ export default Vue.extend({
 
     addWeekNumbers(year: number, month: number) {
       let weekNumbers = [] as number[];
-      for (let c = 1, d = (moment({ y: year, M: (month - 1) }).daysInMonth()); c <= d; c++) {
-        let week = moment(moment({ y: year, M: (month - 1), d: c })).week();
+      for (let c = 1, d = (moment([year, (month - 1)]).daysInMonth()); c <= d; c++) {
+        let week = moment(moment([year, (month - 1), c])).week();
         if (!weekNumbers.includes(week)) {
           weekNumbers.push(week);
         }
@@ -179,9 +178,9 @@ export default Vue.extend({
       if (month === 1) {
         // If january, get last day from previous years last month
         let lastYear = year - 1;
-        dateToSubtractFrom = moment({ y: lastYear, M: 11 }).daysInMonth();
+        dateToSubtractFrom = moment([lastYear, 11]).daysInMonth();
       } else {
-        dateToSubtractFrom = moment({ y: year, M: (month - 1) }).daysInMonth();
+        dateToSubtractFrom = moment([year, (month - 1)]).daysInMonth();
       }
       if (firstDay > 0) {
         // Add lastdays from previous month
@@ -213,13 +212,13 @@ export default Vue.extend({
     },
 
     offsetStartDay(year: number, month: number) {
-      return moment({ y: year, M: (month - 1) })
+      return moment([year, (month - 1)])
         .startOf('month')
         .weekday();
     },
 
     offsetEndDay(year: number, month: number) {
-      return moment({ y: year, M: (month - 1) })
+      return moment([year, (month - 1)])
         .endOf('month')
         .weekday();
     },
@@ -238,14 +237,14 @@ export default Vue.extend({
 
     mouseDragStart(payload: IMomentPayload) {
       if (!this.range) return;
-      let date = moment({ y: payload.y, M: (payload.M - 1), d: payload.d });
+      let date = moment([payload.y, (payload.M - 1), payload.d]);
       this.mouseDrag = true;
       this.startDragDate = date;
     },
 
     mouseDragEnd(payload: IMomentPayload) {
       if (!this.range) return;
-      let date = moment({ y: payload.y, M: (payload.M - 1), d: payload.d });
+      let date = moment([payload.y, (payload.M - 1), payload.d]);
       if (moment(this.startDragDate).isBefore(date)) {
         this.selectDateOfPeriod(this.startDragDate, date);
       } else {
@@ -256,7 +255,7 @@ export default Vue.extend({
 
     mouseDragging(payload: IMomentPayload) {
       if (!this.range) return;
-      let date = moment({ y: payload.y, M: (payload.M - 1), d: payload.d });
+      let date = moment([payload.y, (payload.M - 1), payload.d]);
       if (moment(this.startDragDate).isBefore(date)) {
         this.selectDateOfPeriod(this.startDragDate, date);
       } else {
@@ -265,7 +264,7 @@ export default Vue.extend({
     },
 
     mouseClick(payload: IMomentPayload) {
-      this.internalValue = moment({ y: payload.y, M: (payload.M - 1), d: payload.d });
+      this.internalValue = moment([payload.y, (payload.M - 1), payload.d]);
       this.$emit('input', this.date);
     },
   },
