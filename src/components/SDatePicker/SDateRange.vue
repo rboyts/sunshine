@@ -2,7 +2,7 @@
   <div class="s-date-field">
     <s-menu v-model="isOpen" :toggleOnClick="false">
       <template v-slot:activator>
-        <div class="s-date-field-range-input" @click="toggleOpen">
+        <div class="s-date-field-range-input" @click="open">
           <s-date-to-stringinput
             v-model="from"
             :locale="locale"
@@ -19,13 +19,13 @@
       </template>
       <template v-slot:content>
         <s-datepicker
-          rangeSelect
-          :includeMenu="menu"
+          range
+          :menu="withMenu"
           :locale="locale"
           :format="format"
           v-model="internalValue"
           :filter="internalFilter"
-          @filterUpdate="filterUpdate"
+          @filter-update="filterUpdate"
         />
       </template>
     </s-menu>
@@ -59,7 +59,7 @@ export default Vue.extend({
   },
 
   props: {
-    includeMenu: {
+    withMenu: {
       type: Boolean,
       default: false,
     },
@@ -92,7 +92,7 @@ export default Vue.extend({
     },
 
     menu(): Boolean {
-      return this.includeMenu;
+      return this.withMenu;
     },
   },
 
@@ -113,7 +113,7 @@ export default Vue.extend({
   },
 
   methods: {
-    toggleOpen() {
+    open() {
       this.isOpen = true;
     },
 

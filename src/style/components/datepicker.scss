@@ -2,7 +2,6 @@
 
 $datepicker-height: 29rem;
 $datepicker-width: 18rem;
-$datepicker-menu-width: 0rem;
 $datepicker-navigation-margin: 1.5rem;
 
 .s-date-field {
@@ -14,7 +13,6 @@ $datepicker-navigation-margin: 1.5rem;
   flex-direction: row;
   position: relative;
   height: $datepicker-height;
-  //overflow: hidden;
   background: #fff;
 }
 

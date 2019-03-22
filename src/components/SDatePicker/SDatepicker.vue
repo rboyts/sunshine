@@ -1,5 +1,5 @@
 <template>
-  <div class="s-datepicker" :class="{includeMenu: menu}">
+  <div class="s-datepicker">
     <s-datepicker-calendar
       :today="today"
       :calendar="calendar"
@@ -69,11 +69,8 @@ export default Vue.extend({
     value: {} as () => any,
     locale: String,
     format: String,
-    includeMenu: {
-      type: Boolean,
-      default: false,
-    },
-    rangeSelect: Boolean,
+    range: Boolean,
+    menu: Boolean,
   },
 
   watch: {
@@ -108,14 +105,6 @@ export default Vue.extend({
 
     selectedDate(): Moment {
       return this.date;
-    },
-
-    menu(): boolean {
-      return this.includeMenu;
-    },
-
-    range(): boolean {
-      return this.rangeSelect;
     },
 
     yearKey(): number {
@@ -221,7 +210,7 @@ export default Vue.extend({
     },
 
     setPeriodFilter(payload: ICalendarFilter) {
-      this.$emit('filterUpdate', payload);
+      this.$emit('filter-update', payload);
     },
 
     setSelectedPeriod(from: Moment, to: Moment) {
