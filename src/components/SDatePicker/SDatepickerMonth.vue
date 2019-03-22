@@ -24,14 +24,20 @@
       @mouseup="$emit('mouseDragEnd', { y: month.year, M: month.month, d: a })"
       @mouseover="mouseOverEvent({ y: month.year, M: month.month, d: a })"
     >
-      <span v-if="range && isSameDate(month.month, a, month.year, fromDate)" class="circle">
+      <span
+        v-if="range && isSameDate(month.month, a, month.year, fromDate)"
+        class="s-datepicker__date--circle"
+      >
         {{a}}
       </span>
-      <span v-else-if="range && isSameDate(month.month, a, month.year, toDate)" class="circle">
+      <span
+        v-else-if="range && isSameDate(month.month, a, month.year, toDate)"
+        class="s-datepicker__date--circle"
+      >
         {{a}}
       </span>
       <span v-else-if="!range && isSameDate(month.month, a, month.year, selectedDate)"
-        class="circle">
+        class="s-datepicker__date--circle">
         {{a}}
       </span>
       <span v-else>{{a}}</span>
@@ -84,23 +90,23 @@ export default Vue.extend({
       let classes = [];
       if (this.range) {
         if (this.isInPeriod(m, d, y, this.fromDate, this.toDate)) {
-          classes.push('between');
+          classes.push('s-datepicker__date--between');
         }
         if (this.isSameDate(m, d, y, this.fromDate)) {
-          classes.push('from');
+          classes.push('s-datepicker__date--from');
         }
         if (this.isSameDate(m, d, y, this.toDate)) {
-          classes.push('to');
+          classes.push('s-datepicker__date--to');
         }
       }
       if (this.isSaturday(m, d, y)) {
-        classes.push('saturday');
+        classes.push('s-datepicker__date--saturday');
       }
       if (this.isSunday(m, d, y)) {
-        classes.push('sunday');
+        classes.push('s-datepicker__date--sunday');
       }
       if (this.isSameDate(m, d, y, this.today)) {
-        classes.push('today');
+        classes.push('s-datepicker__date--today');
       }
 
       return classes;

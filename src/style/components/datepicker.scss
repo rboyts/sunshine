@@ -136,7 +136,7 @@ $datepicker-navigation-margin: 1.5rem;
 .s-datepicker__day,
 .s-datepicker__weeks__week,
 .s-datepicker__date--overlapping,
-.s-datepicker__date .circle {
+.s-datepicker__date .s-datepicker__date--circle {
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -150,26 +150,26 @@ $datepicker-navigation-margin: 1.5rem;
   background: transparent;
 }
 
-.s-datepicker__date:not(.from):not(.to):not(.between):hover {
+.s-datepicker__date:not(.s-datepicker__date--from):not(.s-datepicker__date--to):not(.s-datepicker__date--between):hover {
   border-radius: 50%;
   background: $smartdok-eggs-yellow;
 }
 
-.s-datepicker__day.sunday,
-.s-datepicker__date.sunday {
+.s-datepicker__day--sunday,
+.s-datepicker__date--sunday {
   color: $color-bad;
 }
 
-.s-datepicker__day.saturday,
-.s-datepicker__date.saturday {
+.s-datepicker__day--saturday,
+.s-datepicker__date--saturday {
   color: $grayer;
 }
 
-.s-datepicker__date.today {
+.s-datepicker__date--today {
   position: relative;
 }
 
-.s-datepicker__date.today:after {
+.s-datepicker__date--today:after {
   content: '';
   position: absolute;
   bottom: 7px;
@@ -178,21 +178,21 @@ $datepicker-navigation-margin: 1.5rem;
   background: $almost-black;
 }
 
-.s-datepicker__date.from:not(.to) {
+.s-datepicker__date--from:not(.s-datepicker__date--to) {
   background: linear-gradient(to right, #fff 50%, $smartdok-eggs-yellow 50%);
 }
 
-.s-datepicker__date.to:not(.from) {
+.s-datepicker__date--to:not(.s-datepicker__date--from) {
   background: linear-gradient(to left, #fff 50%, $smartdok-eggs-yellow 50%);
 }
 
-.s-datepicker__date .circle {
+.s-datepicker__date .s-datepicker__date--circle {
   position: relative;
   background: $smartdok-yellow;
   border-radius: 50%;
 }
 
-.s-datepicker__date.between {
+.s-datepicker__date--between {
   background: $smartdok-eggs-yellow;
 }
 
