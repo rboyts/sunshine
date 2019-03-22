@@ -24,6 +24,8 @@
           :locale="locale"
           :format="format"
           v-model="internalValue"
+          :filter="internalFilter"
+          @filterUpdate="filterUpdate"
         />
       </template>
     </s-menu>
@@ -35,7 +37,7 @@ import moment, { Moment } from 'moment';
 import SMenu from '../SMenu.vue';
 import SDatepicker from './SDatepicker.vue';
 import SDateToStringinput from './SDateToStringinput.vue';
-import { ICalendarPeriod } from '../types';
+import { ICalendarPeriod, ICalendarFilter } from '../types';
 
 export default Vue.extend({
   name: 's-date-range',
@@ -49,8 +51,9 @@ export default Vue.extend({
   data() {
     return {
       isOpen: false,
+      internalFilter: this.filter,
       internalValue: this.value as ICalendarPeriod,
-      locale: moment.locale(),
+      locale: moment.locale(this.localeString),
       format: moment.localeData().longDateFormat('L'),
     };
   },
@@ -60,6 +63,8 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    localeString: String,
+    filter: {} as () => ICalendarFilter,
     value: {} as any,
     fromLabel: String,
     toLabel: String,
@@ -75,6 +80,7 @@ export default Vue.extend({
         return this.internalValue.from;
       },
     },
+
     to: {
       set(newValue: Moment) {
         this.internalValue.to = newValue;
@@ -84,12 +90,17 @@ export default Vue.extend({
         return this.internalValue.to;
       },
     },
+
     menu(): Boolean {
       return this.includeMenu;
     },
   },
 
   watch: {
+    filter(newVal) {
+      this.internalFilter = newVal;
+    },
+
     value(newVal) {
       this.internalValue = newVal;
     },
@@ -104,6 +115,11 @@ export default Vue.extend({
   methods: {
     toggleOpen() {
       this.isOpen = true;
+    },
+
+    filterUpdate(payload: any) {
+      this.internalFilter = payload;
+      this.$emit('updateFilter', payload);
     },
   },
 });

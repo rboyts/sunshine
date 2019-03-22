@@ -110,6 +110,23 @@ export interface IMomentPayload {
   d: number
 }
 
+export enum ICalendarOptionFilter {
+  Previous = 'Previous',
+  Current = 'Current',
+  Next = 'Next',
+}
+
+export enum ICalendarPeriodFilter {
+  Day = 'Day',
+  Week = 'Week',
+  Month = 'Month'
+}
+
+export interface ICalendarFilter {
+  option: ICalendarOptionFilter,
+  period: ICalendarPeriodFilter
+}
+
 export interface MouseWheelEvent extends MouseEvent {
   wheelDelta: number;
   wheelDeltaX: number;

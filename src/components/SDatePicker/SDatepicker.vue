@@ -25,7 +25,9 @@
       :locale="locale"
       :selectedPeriod="selectedPeriod"
       :selectedDate="selectedDate"
+      :filter="filter"
       @setSelectedPeriod="selectDateOfPeriod"
+      @setPeriodFilter="setPeriodFilter"
      />
   </div>
 </template>
@@ -33,7 +35,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import { IMonth, ICalendarPeriod, IMomentPayload } from '../types';
+import {
+  IMonth,
+  ICalendarPeriod,
+  IMomentPayload,
+  ICalendarFilter,
+} from '../types';
 import SDatepickerCalendar from './SDatepickerCalendar.vue';
 import SDatepickerMenu from './SDatepickerMenu.vue';
 
@@ -58,6 +65,7 @@ export default Vue.extend({
   },
 
   props: {
+    filter: {} as () => ICalendarFilter,
     value: {} as () => any,
     locale: String,
     format: String,
@@ -242,6 +250,10 @@ export default Vue.extend({
       return moment({ y: year, M: (month - 1) })
         .endOf('month')
         .weekday();
+    },
+
+    setPeriodFilter(payload: ICalendarFilter) {
+      this.$emit('filterUpdate', payload);
     },
 
     selectDateOfPeriod(from: Moment, to: Moment) {

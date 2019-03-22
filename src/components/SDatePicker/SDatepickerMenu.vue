@@ -2,38 +2,34 @@
   <div class="s-datepicker__menu">
     <h3>Periodevalg</h3>
     <div class="s-datepicker__menu__row">
+
       <div class="s-datepicker__menu__column">
-        <p>
-          <s-radio-button v-model="periodOption" value="previous">Forrige</s-radio-button>
-        </p>
-        <p>
-          <s-radio-button v-model="periodOption" value="current">Denne</s-radio-button>
-        </p>
-        <p>
-          <s-radio-button v-model="periodOption" value="next">Neste</s-radio-button>
+        <p v-for="filter in options" :key="filter">
+          <s-radio-button v-model="periodOption" :value="filter">{{filter}}</s-radio-button>
         </p>
       </div>
 
       <div class="s-datepicker__menu__column">
-        <p>
-          <s-radio-button v-model="periodPreselect" value="day">Dag</s-radio-button>
-        </p>
-        <p>
-          <s-radio-button v-model="periodPreselect" value="week">Uke</s-radio-button>
-        </p>
-        <p>
-          <s-radio-button v-model="periodPreselect" value="month">Måned</s-radio-button>
+        <p v-for="filter in periods" :key="filter">
+          <s-radio-button v-model="periodPreselect" :value="filter">{{filter}}</s-radio-button>
         </p>
       </div>
+
     </div>
-    <h3>Egendefinerte</h3>
+    <h3>Egne perioder</h3>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import { IMonth, ICalendarPeriod } from '../types';
+import {
+  IMonth,
+  ICalendarPeriod,
+  ICalendarFilter,
+  ICalendarPeriodFilter,
+  ICalendarOptionFilter,
+} from '../types';
 import SRadioButton from '../SRadioButton.vue';
 
 export default Vue.extend({
@@ -43,12 +39,22 @@ export default Vue.extend({
 
   data() {
     return {
-      periodPreselect: 'week' as moment.unitOfTime.DurationConstructor,
-      periodOption: 'current',
+      options: ICalendarOptionFilter,
+      periods: ICalendarPeriodFilter,
+      periodOption: String(this.filter.option),
+      periodPreselect: String(this.filter.period) as moment.unitOfTime.DurationConstructor,
     };
   },
 
+  mounted() {
+    if (this.filter) {
+      this.setDateSelection(this.filter.option,
+        String(this.filter.period) as moment.unitOfTime.DurationConstructor);
+    }
+  },
+
   props: {
+    filter: {} as () => ICalendarFilter,
     locale: String,
     format: String,
     today: {} as () => Moment,
@@ -56,23 +62,16 @@ export default Vue.extend({
     selectedDate: {} as () => Moment,
   },
 
-  computed: {
-    toDate(): string {
-      return moment(this.selectedPeriod.to).format('L');
-    },
-
-    fromDate(): string {
-      return moment(this.selectedPeriod.from).format('L');
-    },
-  },
-
   watch: {
     periodPreselect(newVal, oldVal) {
+      console.log(newVal, oldVal);
       if (newVal !== oldVal) {
         this.selectPeriod(newVal);
       }
     },
+
     periodOption(newVal, oldVal) {
+      console.log(newVal, oldVal);
       if (newVal !== oldVal) {
         this.handlePeriodOption(newVal);
       }
@@ -85,7 +84,7 @@ export default Vue.extend({
       let toDate: Moment;
       let moveDateAmount = 1;
       switch (option) {
-        case 'previous':
+        case ICalendarOptionFilter.Previous:
           this.$emit(
             'setSelectedPeriod',
             moment(this.today)
@@ -96,14 +95,14 @@ export default Vue.extend({
               .endOf(period),
           );
           break;
-        case 'current':
+        case ICalendarOptionFilter.Current:
           this.$emit(
             'setSelectedPeriod',
             moment(this.today).startOf(period),
             moment(this.today).endOf(period),
           );
           break;
-        case 'next':
+        case ICalendarOptionFilter.Next:
           this.$emit(
             'setSelectedPeriod',
             moment(this.today).add(moveDateAmount, period).startOf(period),
@@ -111,14 +110,16 @@ export default Vue.extend({
           );
           break;
       }
+      this.$emit('setPeriodFilter', { option, period: String(period) });
     },
 
-    handlePeriodOption(option: string) {
+    handlePeriodOption(option: ICalendarOptionFilter) {
       this.setDateSelection(option, this.periodPreselect);
     },
 
-    selectPeriod(period: moment.unitOfTime.DurationConstructor) {
-      this.setDateSelection(this.periodOption, period);
+    selectPeriod(period: ICalendarPeriodFilter) {
+      this.setDateSelection(this.periodOption,
+        String(period) as moment.unitOfTime.DurationConstructor);
     },
   },
 });
