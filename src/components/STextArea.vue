@@ -1,40 +1,40 @@
 <template>
   <s-base-input
-    id="base"
-    ref="baseInput"
     class="s-text-area"
-    :style="baseHeight"
     :inactive="inactive"
     :hasFocus="hasFocus"
     :isEmpty="isEmpty"
     :label="label"
     :readonly="readonly"
   >
-
-  <div :class="{ 's-input__textarea__wrapper--with-label': !!label,
-                 's-input__textarea__wrapper': !label }"
-    @click="$refs.inputArea.focus()"
-  >
-    <textarea
-      ref="inputArea"
-      :class="{ 's-input__input': true, 's-input__textarea': !scrollBar,
-                's-input__textarea--show-scrollbar': scrollBar }"
-      :disabled="inactive"
-      :readonly="readonly"
-      :placeholder="placeholder"
-      v-bind="$attrs"
-      v-on="listeners"
-      v-model="internalValue"
-      @input="setHeight"
-      @focus="hasFocus = true"
-      @blur="hasFocus = false">
-    </textarea>
-  </div>
-
+    <div
+      :class="{ 's-input__textarea__wrapper': true,
+                's-input__textarea__wrapper--with-label': !!label }"
+      @click="$refs.inputArea.focus()"
+    >
+      <textarea
+        ref="inputArea"
+        :class="{ 's-input__input s-input__textarea': true,
+                  's-input__textarea--show-scrollbar': showScrollBar,
+                  's-input__textarea--hide-scrollbar': !showScrollBar }"
+        :style="inputAreaStyle"
+        :rows="initrows"
+        :disabled="inactive"
+        :readonly="readonly"
+        :placeholder="placeholder"
+        v-bind="$attrs"
+        v-on="listeners"
+        v-model="internalValue"
+        @input="updateHeight"
+        @focus="hasFocus = true"
+        @blur="hasFocus = false"
+      >
+      </textarea>
+    </div>
   </s-base-input>
 </template>
-<script>
 
+<script>
 import Vue from 'vue';
 import SBaseInput from './SBaseInput.vue';
 
@@ -51,13 +51,13 @@ export default Vue.extend({
       type: String,
       default: '',
     },
-    initHeight: {
+    initrows: {
       type: Number,
-      default: 80,
+      default: 4,
     },
-    maxHeight: {
+    maxrows: {
       type: Number,
-      default: 200,
+      default: 0,
     },
     inactive: {
       type: Boolean,
@@ -80,23 +80,13 @@ export default Vue.extend({
   data() {
     return {
       internalValue: this.value,
-      height: this.initHeight,
       hasFocus: false,
-      scrollBar: false,
+      curHeight: Number,
+      minHeight: Number,
+      maxHeight: Number,
+      contentHeight: Number,
+      baseHeight: String,
     };
-  },
-
-  methods: {
-    setHeight(event) {
-      const scrollHeight = event.target.scrollHeight;
-      if (scrollHeight > this.initHeight && scrollHeight < this.maxHeight) {
-        this.height = scrollHeight;
-      } else if (scrollHeight <= this.maxHeight) {
-        this.scrollBar = false;
-      } else {
-        this.scrollBar = true;
-      }
-    },
   },
 
   watch: {
@@ -118,13 +108,58 @@ export default Vue.extend({
       const { input, ...listeners } = this.$listeners;
       return listeners;
     },
-    baseHeight() {
+    inputAreaStyle() {
+      let unit = '';
+      if (this.curHeight !== 'auto') {
+        unit = 'px';
+      }
       return {
-        height: `${this.height}px`,
+        height: `${this.curHeight}${unit}`,
       };
+    },
+    // We need to show the scrollbar when the component is first shown,
+    // if the prop value has content longer than maxRows.
+    showScrollBar() {
+      return this.contentHeight > this.maxHeight;
     },
   },
 
-});
+  methods: {
+    async updateHeight(event) {
+      this.curHeight = 'auto';
+      await Vue.nextTick();
+      this.contentHeight = event.target.scrollHeight;
+      if (this.contentHeight <= this.minHeight) {
+        this.curHeight = this.minHeight;
+      } else if (this.contentHeight >= this.maxHeight) {
+        this.curHeight = this.maxHeight;
+      } else {
+        this.curHeight = this.contentHeight;
+      }
+    },
+    // The user sets the height/maxHeight in rows, but we use
+    // pixels internally. The method calculates these values
+    // and assigns the internal variables.
+    setInternalValues() {
+      const { clientHeight, scrollHeight } = this.$refs.inputArea;
+      const lineHeight = clientHeight / this.initrows;
+      this.contentHeight = scrollHeight;
+      this.minHeight = clientHeight;
+      this.maxHeight = lineHeight * this.maxrows;
+      if (this.maxHeight < clientHeight) {
+        this.maxHeight = clientHeight;
+      }
 
+      if (scrollHeight > clientHeight) {
+        this.curHeight = scrollHeight < this.maxHeight ? scrollHeight : this.maxHeight;
+      } else {
+        this.curHeight = clientHeight;
+      }
+    },
+  },
+
+  mounted() {
+    this.setInternalValues();
+  },
+});
 </script>
