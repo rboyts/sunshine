@@ -46,13 +46,6 @@ export default Vue.extend({
     };
   },
 
-  mounted() {
-    if (this.filter) {
-      this.setDateSelection(this.filter.option,
-        String(this.filter.period) as moment.unitOfTime.DurationConstructor);
-    }
-  },
-
   props: {
     filter: {} as () => ICalendarFilter,
     locale: String,
@@ -64,14 +57,12 @@ export default Vue.extend({
 
   watch: {
     periodPreselect(newVal, oldVal) {
-      console.log(newVal, oldVal);
       if (newVal !== oldVal) {
         this.selectPeriod(newVal);
       }
     },
 
     periodOption(newVal, oldVal) {
-      console.log(newVal, oldVal);
       if (newVal !== oldVal) {
         this.handlePeriodOption(newVal);
       }
@@ -121,6 +112,13 @@ export default Vue.extend({
       this.setDateSelection(this.periodOption,
         String(period) as moment.unitOfTime.DurationConstructor);
     },
+  },
+
+  mounted() {
+    if (this.filter) {
+      this.setDateSelection(this.filter.option,
+        String(this.filter.period) as moment.unitOfTime.DurationConstructor);
+    }
   },
 });
 </script>
