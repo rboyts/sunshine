@@ -59,12 +59,14 @@ export default Vue.extend({
     periodPreselect(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.selectPeriod(newVal);
+        this.$emit('set-filter', { option: this.periodOption, period: newVal });
       }
     },
 
     periodOption(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.handlePeriodOption(newVal);
+        this.$emit('set-filter', { option: newVal, period: String(this.periodPreselect) });
       }
     },
   },
@@ -101,7 +103,6 @@ export default Vue.extend({
           );
           break;
       }
-      this.$emit('set-filter', { option, period: String(period) });
     },
 
     handlePeriodOption(option: ICalendarOptionFilter) {
