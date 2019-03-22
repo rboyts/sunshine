@@ -25,7 +25,7 @@
           :format="format"
           v-model="internalValue"
           :filter="internalFilter"
-          @filter-update="filterUpdate"
+          @filter-update="updateFilter"
         />
       </template>
     </s-menu>
@@ -117,9 +117,9 @@ export default Vue.extend({
       this.isOpen = true;
     },
 
-    filterUpdate(payload: any) {
+    updateFilter(payload: any) {
       this.internalFilter = payload;
-      this.$emit('updateFilter', payload);
+      this.$emit('update-filter', payload);
     },
   },
 });
