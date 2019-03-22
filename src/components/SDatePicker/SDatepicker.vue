@@ -26,7 +26,7 @@
       :selectedPeriod="selectedPeriod"
       :selectedDate="selectedDate"
       :filter="filter"
-      @setSelectedPeriod="selectDateOfPeriod"
+      @setSelectedPeriod="setSelectedPeriod"
       @setPeriodFilter="setPeriodFilter"
      />
   </div>
@@ -227,7 +227,7 @@ export default Vue.extend({
       this.$emit('filterUpdate', payload);
     },
 
-    selectDateOfPeriod(from: Moment, to: Moment) {
+    setSelectedPeriod(from: Moment, to: Moment) {
       this.internalValue = {
         from,
         to,
@@ -246,9 +246,9 @@ export default Vue.extend({
       if (!this.range) return;
       let date = moment([payload.y, (payload.M - 1), payload.d]);
       if (moment(this.startDragDate).isBefore(date)) {
-        this.selectDateOfPeriod(this.startDragDate, date);
+        this.setSelectedPeriod(this.startDragDate, date);
       } else {
-        this.selectDateOfPeriod(date, this.startDragDate);
+        this.setSelectedPeriod(date, this.startDragDate);
       }
       this.mouseDrag = false;
     },
@@ -257,9 +257,9 @@ export default Vue.extend({
       if (!this.range) return;
       let date = moment([payload.y, (payload.M - 1), payload.d]);
       if (moment(this.startDragDate).isBefore(date)) {
-        this.selectDateOfPeriod(this.startDragDate, date);
+        this.setSelectedPeriod(this.startDragDate, date);
       } else {
-        this.selectDateOfPeriod(date, this.startDragDate);
+        this.setSelectedPeriod(date, this.startDragDate);
       }
     },
 

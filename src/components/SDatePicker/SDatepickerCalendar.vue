@@ -14,7 +14,7 @@
         <li
           class="s-datepicker__day"
           v-for="(day, i) in days"
-          :key="'Day' + i"
+          :key="`${day}-${i}`"
           :class="{
             'saturday': (i === 5),
             'sunday': (i === 6),
