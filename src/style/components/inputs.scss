@@ -61,6 +61,30 @@ $input-font-size: $paragraph-font-size;
   }
 }
 
+.s-input__counter {
+  position: absolute;
+  color: transparent;
+  right: 0;
+  top: 0;
+
+  padding: ($input-padding / 4) ($input-padding / 2);
+  pointer-events: none;
+  font-size: $input-font-size * (10/14);
+  white-space: nowrap;
+  transition: color  0.5s;
+
+  &--show {
+    color: $gray;
+    transition: color 0.5s;
+  }
+
+  &--stop {
+    color: $color-bad;
+    transition: color 0.5s;
+  }
+
+}
+
 .s-input__input {
   position: relative;
   flex: 1;
