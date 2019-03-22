@@ -4,14 +4,15 @@
     <div class="s-datepicker__weeks">
       <span
         class="s-datepicker__weeks__week"
-        v-for="(w, k) in month.weeksInMonth"
-        :key="`${w}-${k}`"
+        v-for="w in month.weeksInMonth"
+        :key="w"
+        :data-key="w"
       >{{w}}</span>
     </div>
     <span
       class="s-datepicker__date--overlapping"
       v-for="(x, k) in month.previousMonthDays"
-      :key="`${x}-${k}`"
+      :key="`${x}-${month.month}-${k}`"
     >{{x}}</span>
     <span
       class="s-datepicker__date"
@@ -38,8 +39,7 @@
     <span
       class="s-datepicker__date--overlapping"
       v-for="(x, k) in (6 - month.lastDay)"
-      :data-key="`${x}-${k}`"
-      :key="`${x}-${k}`"
+      :key="`${x}-${month.month}-${k}`"
     >{{x}}</span>
   </span>
 </template>
