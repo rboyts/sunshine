@@ -2,11 +2,11 @@
   <div class="s-datepicker__calendar">
     <div class="s-datepicker__header">
       <div class="flex flex-even s-datepicker__navigation">
-          <span class="s-datepicker__navigation-arrow back" @click="$emit('addPreviousMonth')" >
+          <span class="s-datepicker__navigation-arrow back" @click="$emit('add-previous-month')" >
             <s-icon package="sunshine24" name="arrow" />
           </span>
           <h2>{{monthNameInHeader}}</h2>
-          <span class="s-datepicker__navigation-arrow forward" @click="$emit('addComingMonth')" >
+          <span class="s-datepicker__navigation-arrow forward" @click="$emit('add-coming-month')" >
             <s-icon package="sunshine24" name="arrow" />
           </span>
       </div>
@@ -37,10 +37,10 @@
             :mouseDrag="mouseDrag"
             :selectedDate="selectedDate"
             :selectedPeriod="selectedPeriod"
-            @mouseClick="mouseClick"
-            @mouseDragStart="dragStart"
-            @mouseDragEnd="dragEnd"
-            @mouseDragging="dragging"
+            @mouse-click="mouseClick"
+            @mouse-drag-start="dragStart"
+            @mouse-drag-end="dragEnd"
+            @mouse-dragging="dragging"
           >
         </s-datepicker-month>
       </div>
@@ -104,19 +104,19 @@ export default Vue.extend({
 
   methods: {
     dragStart(payload: IMomentPayload) {
-      this.$emit('mouseDragStart', payload);
+      this.$emit('mouse-drag-start', payload);
     },
 
     dragEnd(payload: IMomentPayload) {
-      this.$emit('mouseDragEnd', payload);
+      this.$emit('mouse-drag-end', payload);
     },
 
     dragging(payload: IMomentPayload) {
-      this.$emit('mouseDragging', payload);
+      this.$emit('mouse-dragging', payload);
     },
 
     mouseClick(payload: IMomentPayload) {
-      this.$emit('mouseClick', payload);
+      this.$emit('mouse-click', payload);
     },
 
     setActiveMonth(calendar: IMonth[]) {
@@ -129,9 +129,9 @@ export default Vue.extend({
     calendarScroll(event: MouseWheelEvent) {
       let dragDirection = (event.wheelDelta > 0) ? 'down' : 'up';
       if (dragDirection === 'down') {
-        this.$emit('addPreviousMonth');
+        this.$emit('add-previous-month');
       } else if (dragDirection === 'up') {
-        this.$emit('addComingMonth');
+        this.$emit('add-coming-month');
       }
     },
   },

@@ -20,8 +20,8 @@
       :key="`${a}-${month.month}`"
       :class="setDateClasses(month.month, a, month.year)"
       @click="mouseClick({ y: month.year, M: month.month, d: a })"
-      @mousedown="$emit('mouseDragStart', { y: month.year, M: month.month, d: a })"
-      @mouseup="$emit('mouseDragEnd', { y: month.year, M: month.month, d: a })"
+      @mousedown="$emit('mouse-drag-start', { y: month.year, M: month.month, d: a })"
+      @mouseup="$emit('mouse-drag-end', { y: month.year, M: month.month, d: a })"
       @mouseover="mouseOverEvent({ y: month.year, M: month.month, d: a })"
     >
       <span
@@ -144,12 +144,12 @@ export default Vue.extend({
 
     mouseOverEvent(payload: IMomentPayload) {
       if (!this.mouseDrag) return;
-      this.$emit('mouseDragging', payload);
+      this.$emit('mouse-dragging', payload);
     },
 
     mouseClick(payload: IMomentPayload) {
       if (this.range) return;
-      this.$emit('mouseClick', payload);
+      this.$emit('mouse-click', payload);
     },
   },
 });

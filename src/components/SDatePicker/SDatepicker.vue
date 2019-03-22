@@ -11,12 +11,12 @@
       :range="range"
       :selectedPeriod="selectedPeriod"
       :selectedDate="selectedDate"
-      @addComingMonth="addComingMonth"
-      @addPreviousMonth="addPreviousMonth"
-      @mouseDragStart="mouseDragStart"
-      @mouseDragEnd="mouseDragEnd"
-      @mouseDragging="mouseDragging"
-      @mouseClick="mouseClick"
+      @add-coming-month="addComingMonth"
+      @add-previous-month="addPreviousMonth"
+      @mouse-drag-start="mouseDragStart"
+      @mouse-drag-end="mouseDragEnd"
+      @mouse-dragging="mouseDragging"
+      @mouse-click="mouseClick"
     />
     <s-datepicker-menu
       v-if="menu"
@@ -26,8 +26,8 @@
       :selectedPeriod="selectedPeriod"
       :selectedDate="selectedDate"
       :filter="filter"
-      @setSelectedPeriod="setSelectedPeriod"
-      @setPeriodFilter="setPeriodFilter"
+      @set-period="setSelectedPeriod"
+      @set-filter="setPeriodFilter"
      />
   </div>
 </template>
@@ -73,10 +73,7 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    rangeSelect: {
-      type: Boolean,
-      default: false,
-    },
+    rangeSelect: Boolean,
   },
 
   watch: {

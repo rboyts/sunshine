@@ -77,7 +77,7 @@ export default Vue.extend({
       switch (option) {
         case ICalendarOptionFilter.Previous:
           this.$emit(
-            'setSelectedPeriod',
+            'set-period',
             moment(this.today)
               .subtract(moveDateAmount, period)
               .startOf(period),
@@ -88,20 +88,20 @@ export default Vue.extend({
           break;
         case ICalendarOptionFilter.Current:
           this.$emit(
-            'setSelectedPeriod',
+            'set-period',
             moment(this.today).startOf(period),
             moment(this.today).endOf(period),
           );
           break;
         case ICalendarOptionFilter.Next:
           this.$emit(
-            'setSelectedPeriod',
+            'set-period',
             moment(this.today).add(moveDateAmount, period).startOf(period),
             moment(this.today).add(moveDateAmount, period).endOf(period),
           );
           break;
       }
-      this.$emit('setPeriodFilter', { option, period: String(period) });
+      this.$emit('set-filter', { option, period: String(period) });
     },
 
     handlePeriodOption(option: ICalendarOptionFilter) {
