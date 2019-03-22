@@ -3,7 +3,7 @@
     <s-datepicker-calendar
       :today="today"
       :calendar="calendar"
-      :current-year="yearNum"
+      :current-year="yearKey"
       :current-month="monthKey + 1"
       :mouseDrag="mouseDrag"
       :format="format"
@@ -121,40 +121,12 @@ export default Vue.extend({
       return this.rangeSelect;
     },
 
-    year(): string {
-      return this.dateContext.format('Y');
-    },
-
-    yearNum(): number {
+    yearKey(): number {
       return this.dateContext.get('year');
-    },
-
-    month(): string {
-      return this.dateContext.format('MMMM');
     },
 
     monthKey(): number {
       return this.dateContext.get('month');
-    },
-
-    daysInMonth(): number {
-      return this.dateContext.daysInMonth();
-    },
-
-    currentDate(): number {
-      return this.dateContext.get('date');
-    },
-
-    initialDate(): number {
-      return this.today.get('date');
-    },
-
-    initialMonth(): string {
-      return this.today.format('MMMM');
-    },
-
-    initialYear(): string {
-      return this.today.format('Y');
     },
   },
 
