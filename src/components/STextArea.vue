@@ -16,14 +16,13 @@
         ref="inputArea"
         class="s-input__input s-input__textarea"
         :style="inputAreaStyle"
-        :rows="initrows"
+        :rows="rows"
         :disabled="inactive"
         :readonly="readonly"
         :placeholder="placeholder"
         v-bind="$attrs"
         v-on="listeners"
         v-model="internalValue"
-        @input="updateHeight"
         @focus="hasFocus = true"
         @blur="hasFocus = false"
       >
@@ -51,11 +50,11 @@ export default Vue.extend({
     },
     initrows: {
       type: Number,
-      default: 4,
+      default: 2,
     },
     maxrows: {
       type: Number,
-      default: 0,
+      default: 10,
     },
     inactive: {
       type: Boolean,
@@ -80,8 +79,10 @@ export default Vue.extend({
       internalValue: this.value,
       hasFocus: false,
       curHeight: Number,
-      minHeight: Number,
-      maxHeight: Number,
+      lineHeight: Number,
+
+      // Used initially, to calculate lineHeight
+      rows: 10,
     };
   },
 
@@ -89,10 +90,12 @@ export default Vue.extend({
     value(val) {
       this.internalValue = val;
     },
+
     internalValue(val) {
       if (val !== this.value) {
         this.$emit('input', val);
       }
+      this.updateHeight();
     },
   },
 
@@ -100,57 +103,54 @@ export default Vue.extend({
     isEmpty() {
       return !this.internalValue && !this.placeholder;
     },
+
     listeners() {
       const { input, ...listeners } = this.$listeners;
       return listeners;
     },
+
     inputAreaStyle() {
-      let unit = '';
-      if (this.curHeight !== 'auto') {
-        unit = 'px';
-      }
-      return {
-        height: `${this.curHeight}${unit}`,
-      };
+      const height = this.curHeight ? `${this.curHeight}px` : 'auto';
+      return { height };
+    },
+
+    minHeight() {
+      return this.lineHeight * this.initrows;
+    },
+
+    maxHeight() {
+      return this.lineHeight * this.maxrows;
     },
   },
 
   methods: {
-    async updateHeight(event) {
-      this.curHeight = 'auto';
-      await Vue.nextTick();
-      const contentHeight = event.target.scrollHeight;
-      if (contentHeight <= this.minHeight) {
-        this.curHeight = this.minHeight;
-      } else if (contentHeight >= this.maxHeight) {
-        this.curHeight = this.maxHeight;
-      } else {
-        this.curHeight = contentHeight;
-      }
-    },
-    // The user sets the height/maxHeight in rows, but we use
-    // pixels internally. The method calculates these values
-    // and assigns the internal variables.
-    setInternalValues() {
-      const { clientHeight, scrollHeight } = this.$refs.inputArea;
-      const lineHeight = clientHeight / this.initrows;
-      this.contentHeight = scrollHeight;
-      this.minHeight = clientHeight;
-      this.maxHeight = lineHeight * this.maxrows;
-      if (this.maxHeight < clientHeight) {
-        this.maxHeight = clientHeight;
-      }
+    async updateHeight() {
+      // Temporarly Let the textarea scale down to it's minimum size,
+      // to that we can check scrollHeight
+      this.curHeight = null;
 
-      if (scrollHeight > clientHeight) {
-        this.curHeight = scrollHeight < this.maxHeight ? scrollHeight : this.maxHeight;
-      } else {
-        this.curHeight = clientHeight;
-      }
+      await Vue.nextTick();
+
+      const { scrollHeight } = this.$refs.inputArea;
+      this.curHeight = Math.min(this.maxHeight, Math.max(this.minHeight, scrollHeight));
+    },
+
+    // The user sets the height/maxHeight in rows, but we use
+    // pixels internally. The method calculates the line height
+    // when the component is initially rendered, and then removes the 'rows'
+    // attribute.
+    calculateLineHeight() {
+      const { clientHeight, scrollHeight } = this.$refs.inputArea;
+      this.lineHeight = clientHeight / this.rows;
+
+      // Don't need this anymore
+      this.rows = undefined;
     },
   },
 
   mounted() {
-    this.setInternalValues();
+    this.calculateLineHeight();
+    this.updateHeight();
   },
 });
 </script>
