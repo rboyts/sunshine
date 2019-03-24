@@ -6,6 +6,7 @@ $input-padding: base-spacing(1);
 .s-drop-down__caret {
   display: inline-flex;
   transition: transform $duration-normal;
+  font-size: 24px;
 
   &--open {
     transform: rotate(180deg);

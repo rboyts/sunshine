@@ -13,9 +13,11 @@
         <s-list-separator />
       </template>
 
-      <template v-slot="{label, item}">
-        <span class="flex-grow">{{ label }}</span>
-        <a tabIndex="-1" href="#" @click.prevent.stop="onEdit(item)">{{ $t('update') }}</a>
+      <template v-slot="{label, item, onClick}">
+        <s-list-item @click="onClick">
+          <span class="flex-grow">{{ label }}</span>
+          <a tabIndex="-1" href="#" @click.prevent.stop="onEdit(item)">{{ $t('update') }}</a>
+        </s-list-item>
       </template>
     </s-drop-down>
 
