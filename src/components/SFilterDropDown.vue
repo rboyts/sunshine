@@ -12,12 +12,13 @@
     @keydown.native.right.prevent="onKeyRight"
     @keydown.native.left.prevent="onKeyLeft"
     @closed="sectionIndex = -1"
+    @text-input="onTextInput"
   >
     <template v-slot:selected="{ value, toggleChecked }">
       <div :class="classes('pills')">
         <div
           v-for="(val, i) in value" :key="i"
-          :class="classes('pill')"
+          :class="classes('pill', { [val.type]: true })"
         >
           <span
             class="sunshine24-close"
@@ -25,7 +26,7 @@
             @click.prevent.stop="toggleChecked(val)"
           />
           {{ val.label }}
-          <span class="s-muted-text"> ({{ val.category }})</span>
+          <span v-if="val.category" class="s-muted-text"> ({{ val.category }})</span>
         </div>
       </div>
     </template>
@@ -50,7 +51,6 @@
         <span v-if="sectionIndex === -1" class="s-muted-text">&nbsp;({{ item.category }})</span>
       </s-list-item>
     </template>
-
 
   </s-drop-down-internal>
 </template>
@@ -153,6 +153,16 @@ export default Vue.extend({
       if (this.sectionIndex > -1) {
         this.sectionIndex -= 1;
       }
+    },
+
+    onTextInput(text) {
+      const val = this.internalValue.filter(v => v.type !== 'search');
+      const search = {
+        type: 'search',
+        label: `"${text}"`,
+        value: text,
+      };
+      this.$emit('input', val.concat(search));
     },
 
     highlightLabelHtml(item) {

@@ -15,6 +15,10 @@
   background-color: $almost-gray;
   border: 1px solid $gray;
   border-radius: 3px;
+
+  &--search {
+    background-color: $white;
+  }
 }
 
 .s-filter-drop-down__pill-icon {
