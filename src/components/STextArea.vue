@@ -14,9 +14,7 @@
     >
       <textarea
         ref="inputArea"
-        :class="{ 's-input__input s-input__textarea': true,
-                  's-input__textarea--show-scrollbar': showScrollBar,
-                  's-input__textarea--hide-scrollbar': !showScrollBar }"
+        class="s-input__input s-input__textarea"
         :style="inputAreaStyle"
         :rows="initrows"
         :disabled="inactive"
@@ -84,8 +82,6 @@ export default Vue.extend({
       curHeight: Number,
       minHeight: Number,
       maxHeight: Number,
-      contentHeight: Number,
-      baseHeight: String,
     };
   },
 
@@ -117,24 +113,19 @@ export default Vue.extend({
         height: `${this.curHeight}${unit}`,
       };
     },
-    // We need to show the scrollbar when the component is first shown,
-    // if the prop value has content longer than maxRows.
-    showScrollBar() {
-      return this.contentHeight > this.maxHeight;
-    },
   },
 
   methods: {
     async updateHeight(event) {
       this.curHeight = 'auto';
       await Vue.nextTick();
-      this.contentHeight = event.target.scrollHeight;
-      if (this.contentHeight <= this.minHeight) {
+      const contentHeight = event.target.scrollHeight;
+      if (contentHeight <= this.minHeight) {
         this.curHeight = this.minHeight;
-      } else if (this.contentHeight >= this.maxHeight) {
+      } else if (contentHeight >= this.maxHeight) {
         this.curHeight = this.maxHeight;
       } else {
-        this.curHeight = this.contentHeight;
+        this.curHeight = contentHeight;
       }
     },
     // The user sets the height/maxHeight in rows, but we use
