@@ -28,6 +28,7 @@ import STab from './components/STab.vue';
 import STable from './components/STable/STable.vue';
 import STabs from './components/STabs.vue';
 import STextField from './components/STextField.vue';
+import STextArea from './components/STextArea.vue';
 import SDatepicker from './components/SDatepicker.vue';
 
 export { createDataModule } from './vuex';
@@ -61,6 +62,7 @@ const plugin = {
     Vue.component('s-table', STable);
     Vue.component('s-tabs', STabs);
     Vue.component('s-text-field', STextField);
+    Vue.component('s-text-area', STextArea);
     Vue.component('s-datepicker', SDatepicker);
   },
 };

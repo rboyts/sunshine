@@ -52,7 +52,7 @@ export default Vue.extend({
         await Vue.nextTick();
         this.$el.querySelector('input').focus();
       }
-    }
+    },
   },
 });
 </script>

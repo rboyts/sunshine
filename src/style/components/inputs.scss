@@ -130,3 +130,35 @@ $input-font-size: $paragraph-font-size;
 .s-input__value {
   color: transparent;
 }
+
+.s-text-area {
+  align-items: baseline;
+  height: initial;
+}
+
+.s-input__textarea__wrapper {
+  height: 100%;
+  width: 100%;
+  cursor: text;
+  padding:  $input-padding ($input-padding / 2) ($input-padding / 2) $input-padding;
+  &--with-label {
+    padding: ($input-padding * 2) ($input-padding / 2) ($input-padding / 2) $input-padding;
+  }
+}
+
+.s-input__textarea {
+  resize: none;
+  box-sizing: border-box;
+  padding: 0 $input-padding 0 0;
+  height: 100%;
+  width: 100%;
+
+  // Scrollbar mess with auto-sizing. Simply hide it for now.
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+
+
+
