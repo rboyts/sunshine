@@ -3,8 +3,8 @@
     <s-datepicker-calendar
       :today="today"
       :calendar="calendar"
-      :current-year="yearKey"
-      :current-month="monthKey + 1"
+      :current-year="calendarYear"
+      :current-month="calendarMonth"
       :mouseDrag="mouseDrag"
       :format="format"
       :locale="locale"
@@ -77,6 +77,18 @@ export default Vue.extend({
     value(newVal) {
       this.internalValue = newVal;
     },
+
+    internalValue(newVal) {
+      // Redraw calendar if selected date is not in current viewable month
+      let compareDate = (this.period) ? newVal.from : newVal;
+      let currentMonth = moment([this.calendar[0].year, (this.calendar[0].month - 1), 1]);
+      let nextMonth = moment([this.calendar[1].year, (this.calendar[1].month - 1), 1]);
+      if (!moment(compareDate).isSame(currentMonth, 'month') &&
+        !moment(compareDate).isSame(nextMonth, 'month')) {
+        this.dateContext = moment(compareDate);
+        this.calendar = this.createMonths();
+      }
+    },
   },
 
   computed: {
@@ -107,12 +119,12 @@ export default Vue.extend({
       return this.date;
     },
 
-    yearKey(): number {
+    calendarYear(): number {
       return this.dateContext.get('year');
     },
 
-    monthKey(): number {
-      return this.dateContext.get('month');
+    calendarMonth(): number {
+      return this.dateContext.get('month') + 1;
     },
   },
 
@@ -166,7 +178,7 @@ export default Vue.extend({
         let lastYear = year - 1;
         dateToSubtractFrom = moment([lastYear, 11]).daysInMonth();
       } else {
-        dateToSubtractFrom = moment([year, (month - 1)]).daysInMonth();
+        dateToSubtractFrom = moment([year, (month - 2)]).daysInMonth();
       }
       if (firstDay > 0) {
         // Add lastdays from previous month
@@ -178,8 +190,8 @@ export default Vue.extend({
     },
 
     createMonths() {
-      let year = this.dateContext.get('year');
-      let present = this.dateContext.get('month') + 1;
+      let year = this.calendarYear;
+      let present = this.calendarMonth;
       let months = [];
       for (let a = 0, b = 2; a < b; a++) {
         let tmpMonth: number;
