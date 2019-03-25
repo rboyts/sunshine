@@ -41,6 +41,7 @@ $input-font-size: $paragraph-font-size;
 
 .s-input__label {
   position: absolute;
+  z-index: 2;
   color: $grayest;
   padding: 0 $input-padding;
   pointer-events: none;
