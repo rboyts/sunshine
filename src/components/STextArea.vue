@@ -7,27 +7,22 @@
     :label="label"
     :readonly="readonly"
   >
-    <div
-      :class="{ 's-input__textarea__wrapper': true,
-                's-input__textarea__wrapper--with-label': !!label }"
-      @click="$refs.inputArea.focus()"
+    <textarea
+      ref="inputArea"
+      :class="{ 's-input__input s-input__textarea' : true,
+                's-input__textarea--with-label' : !!label }"
+      :style="inputAreaStyle"
+      :rows="rows"
+      :disabled="inactive"
+      :readonly="readonly"
+      :placeholder="placeholder"
+      v-bind="$attrs"
+      v-on="listeners"
+      v-model="internalValue"
+      @focus="hasFocus = true"
+      @blur="hasFocus = false"
     >
-      <textarea
-        ref="inputArea"
-        class="s-input__input s-input__textarea"
-        :style="inputAreaStyle"
-        :rows="rows"
-        :disabled="inactive"
-        :readonly="readonly"
-        :placeholder="placeholder"
-        v-bind="$attrs"
-        v-on="listeners"
-        v-model="internalValue"
-        @focus="hasFocus = true"
-        @blur="hasFocus = false"
-      >
-      </textarea>
-    </div>
+    </textarea>
   </s-base-input>
 </template>
 
