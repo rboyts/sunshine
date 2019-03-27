@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SAccordion renders item in slot 1`] = `
+<div class="s-accordion">
+  <h1>Test</h1>
+</div>
+`;
