@@ -36,7 +36,7 @@
                     :orderedColumns="orderedColumns"
                     @selectAll="selectAll"
                     @selectNone="selectNone"
-                    @toggleColumn="$listeners.toggleColumn"
+                    @toggleColumn="$emit('toggleColumn', $event)"
                   />
                 </span>
 
@@ -131,7 +131,7 @@ import mixins from 'vue-typed-mixins';
 import {
   IColumn, IItem, ISortState, ISelection, NO_SELECTION,
 } from '../types';
-import { ClassesMixin, joinKeyPath } from '../../lib/utils';
+import { ClassesMixin, get, joinKeyPath } from '../../lib/utils';
 import SCheckable from '../SCheckable.vue';
 import SIcon from '../SIcon.vue';
 import SProgress from '../SProgress.vue';
@@ -622,7 +622,7 @@ export default mixins(ClassesMixin).extend({
       let on: { [key: string]: any } = {};
 
       if (column.sortable) {
-        on.click = (event: MouseEvent) => this.$emit('sort', event, column.key);
+        on.click = (event: MouseEvent) => this.$emit('sort', column.key);
       }
 
       if (this.draggable) {
@@ -645,7 +645,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     getCellValue(node: ITableNode, column: IColumn) {
-      let value = node.item.data[column.key];
+      let value = get(node.item.data, column.key);
       if (column.filter) {
         value = column.filter(value);
       }

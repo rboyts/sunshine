@@ -26,11 +26,13 @@ import SRadioButton from './components/SRadioButton.vue';
 import SSavedSetups from './components/SSavedSetups.vue';
 import STab from './components/STab.vue';
 import STable from './components/STable/STable.vue';
+import STableInternal from './components/STable/STableInternal.vue';
 import STabs from './components/STabs.vue';
 import STextField from './components/STextField.vue';
 import STextArea from './components/STextArea.vue';
 import SDatepicker from './components/SDatepicker.vue';
 
+export { get } from './lib/utils';
 export { createDataModule } from './vuex';
 export * from './components/types';
 
@@ -60,6 +62,7 @@ const plugin = {
     Vue.component('s-saved-setups', SSavedSetups);
     Vue.component('s-tab', STab);
     Vue.component('s-table', STable);
+    Vue.component('s-table-internal', STableInternal);
     Vue.component('s-tabs', STabs);
     Vue.component('s-text-field', STextField);
     Vue.component('s-text-area', STextArea);

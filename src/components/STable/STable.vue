@@ -135,7 +135,7 @@ export default Vue.extend({
       this.dispatchAction('requestLoadSubItems', { keyPath });
     },
 
-    onSort(event: MouseEvent, key: string) {
+    onSort(key: string) {
       this.dispatchAction('sort', key);
     },
 
