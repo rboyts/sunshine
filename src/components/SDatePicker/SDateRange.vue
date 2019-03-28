@@ -90,7 +90,7 @@ export default Vue.extend({
           this.internalValue.from = newValue;
         }
       },
-      get(): Moment | null {
+      get(): Moment | null | string {
         if (!this.internalValue) return null;
         return this.internalValue.from;
       },

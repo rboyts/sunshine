@@ -2,7 +2,7 @@
   <s-text-field
     moment
     v-model="formattedValue"
-    :format="format"
+    :format="format.toLowerCase()"
     :dateLocale="locale"
     :dateFormat="format"
     :label="label"
