@@ -45,12 +45,16 @@ export default Vue.extend({
 
   props: {
     heading: String,
+
+    defaultOpen: {
+      type: Boolean,
+      default: false,
+    },
   },
 
-  // XXX parent should handle state
   data() {
     return {
-      open: false,
+      open: this.defaultOpen,
       height: 0,
       transitioning: false,
     };
@@ -60,6 +64,11 @@ export default Vue.extend({
     async open(val) {
       if (val) {
         this.$parent.notifyOpen(this);
+      }
+
+      // Make sure height is defined at the beginning of the animation
+      if (!val) {
+        this.height = this.$refs.inner.offsetHeight;
       }
 
       this.transitioning = true;
@@ -82,9 +91,6 @@ export default Vue.extend({
       }
     },
   },
-
-  // TODO: We may need to handle resize events here,
-  // to re-calculate height
 
   computed: {
     showBody() {
