@@ -41,8 +41,7 @@ export default Vue.extend({
     return {
       options: ICalendarOptionFilter,
       periods: ICalendarPeriodFilter,
-      periodOption: String(this.filter.option),
-      periodPreselect: String(this.filter.period) as moment.unitOfTime.DurationConstructor,
+      internalFilter: this.filter,
     };
   },
 
@@ -55,7 +54,31 @@ export default Vue.extend({
     selectedDate: {} as () => Moment,
   },
 
+  computed: {
+    periodOption: {
+      set(newVal: ICalendarOptionFilter) {
+        this.internalFilter.option = newVal;
+      },
+      get(): string {
+        return String(this.internalFilter.option);
+      },
+    },
+
+    periodPreselect: {
+      set(newVal: ICalendarPeriodFilter) {
+        this.internalFilter.period = newVal;
+      },
+      get(): string {
+        return String(this.internalFilter.period) as moment.unitOfTime.DurationConstructor;
+      },
+    },
+  },
+
   watch: {
+    filter(newVal) {
+      this.internalFilter = newVal;
+    },
+
     periodPreselect(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.selectPeriod(newVal);
@@ -65,7 +88,7 @@ export default Vue.extend({
 
     periodOption(newVal, oldVal) {
       if (newVal !== oldVal) {
-        this.handlePeriodOption(newVal);
+        this.selectPeriodOption(newVal);
         this.$emit('set-filter', { option: newVal, period: String(this.periodPreselect) });
       }
     },
@@ -105,8 +128,8 @@ export default Vue.extend({
       }
     },
 
-    handlePeriodOption(option: ICalendarOptionFilter) {
-      this.setDateSelection(option, this.periodPreselect);
+    selectPeriodOption(option: ICalendarOptionFilter) {
+      this.setDateSelection(option, this.periodPreselect as moment.unitOfTime.DurationConstructor);
     },
 
     selectPeriod(period: ICalendarPeriodFilter) {

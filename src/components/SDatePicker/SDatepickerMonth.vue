@@ -76,11 +76,11 @@ export default Vue.extend({
   },
 
   computed: {
-    fromDate(): Moment {
+    fromDate(): Moment | null {
       return this.selectedPeriod.from;
     },
 
-    toDate(): Moment {
+    toDate(): Moment | null {
       return this.selectedPeriod.to;
     },
   },
@@ -88,7 +88,7 @@ export default Vue.extend({
   methods: {
     setDateClasses(m: number, d: number, y: number) {
       let classes = [];
-      if (this.range) {
+      if (this.range && this.fromDate && this.toDate) {
         if (this.isInPeriod(m, d, y, this.fromDate, this.toDate)) {
           classes.push('s-datepicker__date--between');
         }
@@ -129,12 +129,14 @@ export default Vue.extend({
     },
 
     isSameDate(m: number, d: number, y: number, date: Moment): boolean {
+      if (!date) return false;
       let dateInMonth = moment([y, (m - 1), d]).format('YYYY-MM-DD');
       let compareDate = moment(date).format('YYYY-MM-DD');
       return moment(dateInMonth).isSame(compareDate);
     },
 
     isInPeriod(m: number, d: number, y: number, fromDate: Moment, toDate: Moment): boolean {
+      if (!fromDate || !toDate) return false;
       if (!this.range) return false;
       let dateInMonth = moment([y, (m - 1), d]).format('YYYY-MM-DD');
       let compareDateFrom = moment(fromDate).format('YYYY-MM-DD');

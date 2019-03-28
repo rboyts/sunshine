@@ -100,8 +100,8 @@ export interface IMonth {
 }
 
 export interface ICalendarPeriod {
-  from: Moment;
-  to: Moment;
+  from: Moment | null;
+  to: Moment | null;
 }
 
 export interface IMomentPayload {
@@ -119,12 +119,12 @@ export enum ICalendarOptionFilter {
 export enum ICalendarPeriodFilter {
   Day = 'Day',
   Week = 'Week',
-  Month = 'Month'
+  Month = 'Month',
 }
 
 export interface ICalendarFilter {
-  option: ICalendarOptionFilter,
-  period: ICalendarPeriodFilter
+  option: ICalendarOptionFilter | '',
+  period: ICalendarPeriodFilter | ''
 }
 
 export interface MouseWheelEvent extends MouseEvent {

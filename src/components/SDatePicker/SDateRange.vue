@@ -2,19 +2,29 @@
   <div class="s-date-field">
     <s-menu v-model="isOpen" :toggleOnClick="false">
       <template v-slot:activator>
-        <div class="s-date-field-range-input" @click="open">
-          <s-date-to-stringinput
-            v-model="from"
-            :locale="locale"
-            :label="fromLabel"
-            :format="format"
-          />
-          <s-date-to-stringinput
-            v-model="to"
-            :locale="locale"
-            :label="toLabel"
-            :format="format"
-          />
+        <div
+          class="s-date-field-range-input"
+          :class="{'s-date-field-range-input--focus': isOpen}"
+          @click="open"
+        >
+          <span class="s-input__label"
+            :class="{'s-input__label--aside': !isEmpty || isOpen}"
+          >{{ label }}</span>
+          <div class="s-date-field-period">
+            <s-date-to-stringinput
+              v-model="from"
+              :locale="locale"
+              :format="format"
+              @filter-update="updateFilter"
+            />
+            <span class="s-date-field-range-symbol">-</span>
+            <s-date-to-stringinput
+              v-model="to"
+              :locale="locale"
+              :format="format"
+              @filter-update="updateFilter"
+            />
+          </div>
         </div>
       </template>
       <template v-slot:content>
@@ -38,6 +48,8 @@ import SMenu from '../SMenu.vue';
 import SDatepicker from './SDatepicker.vue';
 import SDateToStringinput from './SDateToStringinput.vue';
 import { ICalendarPeriod, ICalendarFilter } from '../types';
+
+// TODO: Reset filter when user selects range manually
 
 export default Vue.extend({
   name: 's-date-range',
@@ -66,27 +78,34 @@ export default Vue.extend({
     localeString: String,
     filter: {} as () => ICalendarFilter,
     value: {} as any,
-    fromLabel: String,
-    toLabel: String,
+    label: String,
   },
 
   computed: {
     from: {
       set(newValue: Moment) {
-        this.internalValue.from = newValue;
+        if (newValue === null) {
+          this.internalValue.from = null;
+        } else {
+          this.internalValue.from = newValue;
+        }
       },
-      get(): Moment {
-        if (!this.internalValue) return moment();
+      get(): Moment | null {
+        if (!this.internalValue) return null;
         return this.internalValue.from;
       },
     },
 
     to: {
       set(newValue: Moment) {
-        this.internalValue.to = newValue;
+        if (newValue === null) {
+          this.internalValue.to = null;
+        } else {
+          this.internalValue.to = newValue;
+        }
       },
-      get(): Moment {
-        if (!this.internalValue) return moment();
+      get(): Moment | null {
+        if (!this.internalValue) return null;
         return this.internalValue.to;
       },
     },
@@ -94,13 +113,13 @@ export default Vue.extend({
     menu(): Boolean {
       return this.withMenu;
     },
+
+    isEmpty(): Boolean {
+      return !this.from && !this.to;
+    },
   },
 
   watch: {
-    filter(newVal) {
-      this.internalFilter = newVal;
-    },
-
     value(newVal) {
       this.internalValue = newVal;
     },
@@ -109,6 +128,10 @@ export default Vue.extend({
       if (!newVal) {
         this.$emit('input', this.internalValue);
       }
+    },
+
+    filter(newVal) {
+      this.internalFilter = newVal;
     },
   },
 

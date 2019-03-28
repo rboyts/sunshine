@@ -1,5 +1,5 @@
 <template>
-  <div class="s-datepicker">
+  <div class="s-datepicker" :class="{'s-datepicker-menu-active': filterSelected}">
     <s-datepicker-calendar
       :today="today"
       :calendar="calendar"
@@ -78,9 +78,15 @@ export default Vue.extend({
       this.internalValue = newVal;
     },
 
-    internalValue(newVal) {
-      // Redraw calendar if selected date is not in current viewable month
-      let compareDate = (this.period) ? newVal.from : newVal;
+    internalValue(newVal, oldVal) {
+      if (!newVal) return;
+      if (!newVal.from && this.range) {
+        this.internalValue.from = moment();
+      } else if (!newVal.to && this.range) {
+        this.internalValue.to = moment();
+      }
+      // Redraw calendar if selected date is not in current viewable months
+      let compareDate = (this.range) ? newVal.from : newVal;
       let currentMonth = moment([this.calendar[0].year, (this.calendar[0].month - 1), 1]);
       let nextMonth = moment([this.calendar[1].year, (this.calendar[1].month - 1), 1]);
       if (!moment(compareDate).isSame(currentMonth, 'month') &&
@@ -125,6 +131,10 @@ export default Vue.extend({
 
     calendarMonth(): number {
       return this.dateContext.get('month') + 1;
+    },
+
+    filterSelected(): boolean {
+      return this.filter.option !== '' && this.filter.period !== '';
     },
   },
 
@@ -238,6 +248,7 @@ export default Vue.extend({
       let date = moment([payload.y, (payload.M - 1), payload.d]);
       this.mouseDrag = true;
       this.startDragDate = date;
+      this.$emit('filter-update', { option: '', period: '' });
     },
 
     mouseDragEnd(payload: IMomentPayload) {

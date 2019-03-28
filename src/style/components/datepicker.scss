@@ -8,12 +8,67 @@ $datepicker-navigation-margin: 1.5rem;
   display: inline-block;
 }
 
+.s-date-field-single-input, .s-date-field-range-input {
+  border: 1px solid $gray;
+  border-radius: 4px;
+}
+
+.s-date-field-range-input {
+  max-width: 240px;
+}
+
+.s-date-field-range-input--focus, .s-date-field-range-input:hover {
+  border-color: $color-edit;
+}
+
+.s-date-field-range-input .s-input__label {
+  z-index: 1;
+}
+
+.s-date-field-range-period {
+  position: relative;
+}
+
+.s-date-field-period {
+  display: flex;
+}
+
+.s-date-field-range-symbol {
+  user-select: none;
+  font-size: 0.875rem;
+  padding-top: 0.5rem;
+  align-self: center;
+  width: 4%;
+}
+
+.s-date-field-range-input .s-input {
+  border: none;
+  width: 48%;
+  padding: 1rem 0.5rem 0.25rem 0rem;
+}
+
+.s-date-field-range-input .s-input:last-child {
+  margin-left: 1rem;
+}
+
+.s-date-field-single-input .s-input {
+  border: none;
+}
+
+.s-date-field-range-input .s-input:hover {
+  border: none;
+}
+
 .s-datepicker {
   display: flex;
   flex-direction: row;
   position: relative;
   height: $datepicker-height;
   background: #fff;
+}
+
+.s-datepicker.s-datepicker-menu-active {
+  background: $whiteish;
 }
 
 .s-datepicker__calendar {
@@ -28,7 +83,6 @@ $datepicker-navigation-margin: 1.5rem;
   z-index: 3;
   display: flex;
   flex-direction: column;
-  background: #fff;
 }
 
 .s-datepicker__navigation {
@@ -68,6 +122,10 @@ $datepicker-navigation-margin: 1.5rem;
 .s-datepicker__menu {
   background-color: $whiteish;
   padding: 0 1rem 0;
+}
+
+.s-datepicker.s-datepicker-menu-active .s-datepicker__menu {
+  background-color: $white;
 }
 
 .s-datepicker__menu__row {
@@ -114,8 +172,7 @@ $datepicker-navigation-margin: 1.5rem;
   padding-left: 2.5rem;
   margin: 0;
   width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #fafafa;
+  border-bottom: 1px solid #efefef;
 }
 
 .s-datepicker__weeks {
@@ -177,17 +234,21 @@ $datepicker-navigation-margin: 1.5rem;
 }
 
 .s-datepicker__date--from:not(.s-datepicker__date--to) {
-  background: linear-gradient(to right, #fff 50%, $smartdok-eggs-yellow 50%);
+  background: linear-gradient(to right,transparent 50%, $smartdok-eggs-yellow 50%);
 }
 
 .s-datepicker__date--to:not(.s-datepicker__date--from) {
-  background: linear-gradient(to left, #fff 50%, $smartdok-eggs-yellow 50%);
+  background: linear-gradient(to left, transparent 50%, $smartdok-eggs-yellow 50%);
 }
 
 .s-datepicker__date .s-datepicker__date--circle {
   position: relative;
   background: $smartdok-yellow;
   border-radius: 50%;
+}
+
+.s-datepicker.s-datepicker-menu-active .s-datepicker__date--circle {
+  background: $smartdok-eggs-yellow;
 }
 
 .s-datepicker__date--between {

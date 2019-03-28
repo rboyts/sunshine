@@ -27,6 +27,7 @@ export default Vue.extend({
       formattedValue: '',
       validStyle: 's-input--valid',
       errorStyle: 's-input--error',
+      focus: false,
     };
   },
 
@@ -38,14 +39,25 @@ export default Vue.extend({
   },
 
   watch: {
+
+    // TODO: Show format when date is null
+    // TODO: Remove filter when user inputs dates
+
     value(newVal) {
-      this.formattedValue = moment(newVal).format(this.format);
+      if (!newVal) {
+        this.formattedValue = '';
+      } else {
+        this.formattedValue = moment(newVal).format(this.format);
+      }
     },
 
     formattedValue(newVal) {
       this.formattedValue = this.formatValue(newVal);
-      if (this.validState(this.formattedValue)) {
+      if (this.validDate(this.formattedValue) &&
+        this.formattedValue.length === this.format.length) {
         this.$emit('input', moment(this.formattedValue, this.format));
+      } else if (this.formattedValue.length === 0) {
+        this.$emit('input', null);
       }
     },
   },
