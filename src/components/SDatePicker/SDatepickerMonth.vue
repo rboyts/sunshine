@@ -20,7 +20,7 @@
       :key="`${a}-${month.month}`"
       :class="setDateClasses(month.month, a, month.year)"
       @click="mouseClick({ y: month.year, M: month.month, d: a })"
-      @mousedown="$emit('mouse-drag-start', { y: month.year, M: month.month, d: a })"
+      @mousedown="mousedown({ y: month.year, M: month.month, d: a }, $event)"
       @mouseup="$emit('mouse-drag-end', { y: month.year, M: month.month, d: a })"
       @mouseover="mouseOverEvent({ y: month.year, M: month.month, d: a })"
     >
@@ -142,6 +142,11 @@ export default Vue.extend({
       let compareDateFrom = moment(fromDate).format('YYYY-MM-DD');
       let compareDateTo = moment(toDate).format('YYYY-MM-DD');
       return moment(dateInMonth).isBetween(compareDateFrom, compareDateTo);
+    },
+
+    mousedown(payload: IMomentPayload, event: any) {
+      if (event.button > 0) return;
+      this.$emit('mouse-drag-start', payload);
     },
 
     mouseOverEvent(payload: IMomentPayload) {
