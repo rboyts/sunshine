@@ -32,15 +32,21 @@
     </template>
 
     <template v-slot:above>
-      <div :class="classes('tabs')">
-        <div v-show="showSuggestionsTab"
-          :class="classes('tabs', 'tab', { active: sectionIndex === -1 })">
-          <a @click.prevent="onClickTab(-1)">Suggestions</a>
+      <div :class="classes('header')">
+        <div :class="classes('tabs')">
+          <div v-show="showSuggestionsTab"
+            :class="classes('tabs', 'tab', { active: sectionIndex === -1 })">
+            <a @click.prevent="onClickTab(-1)">Suggestions</a>
+          </div>
+
+          <div v-for="(section, i) in sections" :key="i"
+            :class="classes('tabs', 'tab', { active: i === sectionIndex })">
+            <a @click.prevent="onClickTab(i)">{{ section.label }}</a>
+          </div>
         </div>
 
-        <div v-for="(section, i) in sections" :key="i"
-          :class="classes('tabs', 'tab', { active: i === sectionIndex })">
-          <a @click.prevent="onClickTab(i)">{{ section.label }}</a>
+        <div :class="classes('loading')">
+          <div v-if="loading" :class="classes('loading-progress')" />
         </div>
       </div>
     </template>
@@ -76,6 +82,11 @@ export default Vue.extend({
     sections: Array,
     value: Array,
     label: String,
+
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
