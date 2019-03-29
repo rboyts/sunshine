@@ -11,8 +11,6 @@ export interface ISelection {
   inverted: boolean;
 }
 
-export type IColumnStateList = Array<{ key: string, visible: boolean }>;
-
 export interface IDataModuleState {
   isLoading: boolean;
   offset: number;
@@ -37,6 +35,11 @@ export interface IColumn {
 
 export interface IColumns {
   columns: IColumn[],
+}
+
+export interface IColumnState {
+  key: string;
+  visible: boolean;
 }
 
 export interface IOrderedColumn {

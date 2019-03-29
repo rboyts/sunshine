@@ -20,7 +20,7 @@
         <thead>
           <tr>
             <th
-              v-for="(column, index) in columns"
+              v-for="(column, index) in visibleColumns"
               :key="column.key"
               :class="getColumnClass(column, index)"
               v-on="getHeaderListeners(column, index)"
@@ -36,7 +36,7 @@
                     :orderedColumns="orderedColumns"
                     @selectAll="selectAll"
                     @selectNone="selectNone"
-                    @toggleColumn="$emit('toggleColumn', $event)"
+                    @toggleColumn="toggleColumn"
                   />
                 </span>
 
@@ -76,7 +76,7 @@
           >
 
             <td
-              v-for="(column, index) in columns"
+              v-for="(column, index) in visibleColumns"
               :key="column.key"
               :class="getColumnClass(column, index)"
             >
@@ -138,6 +138,7 @@ import SProgress from '../SProgress.vue';
 import STableOutline from './STableOutline.vue';
 import STableToggle from './STableToggle.vue';
 import STableOptionsMenu from './STableOptionsMenu.vue';
+import STableColumnsMixin from './STableColumnsMixin';
 
 const MAX_PLACEHOLDER_ROWS = 0;
 const SCROLL_DEBOUNCE = 250;
@@ -173,7 +174,7 @@ const hash = (x: number, y: number): number => mod(((x << 24) ^ (y << 8)), 41);
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
 
-export default mixins(ClassesMixin).extend({
+export default mixins(ClassesMixin, STableColumnsMixin).extend({
   name: 's-table',
 
   components: {
@@ -186,8 +187,9 @@ export default mixins(ClassesMixin).extend({
   },
 
   props: {
-    columns: Array as () => IColumn[],
-    orderedColumns: Array as () => IColumn[],
+    // columns: Array as () => IColumn[],
+    // orderedColumns: Array as () => IColumn[],
+
     items: Array as () => IItem[],
     total: Number as () => number | null,
     offset: Number,
@@ -288,7 +290,7 @@ export default mixins(ClassesMixin).extend({
 
     colWidths(): string[] {
       const defaultWidth = this.fixed ? '150px' : 'auto';
-      return this.columns.map(column => (
+      return this.visibleColumns.map(column => (
         column.width != null ? `${column.width}px` : defaultWidth
       ));
     },
@@ -490,8 +492,7 @@ export default mixins(ClassesMixin).extend({
       if (to > from) to--;
       if (to === from) return;
 
-      // TODO sync
-      this.$emit('move-column', { from, to });
+      this.moveColumn({ from, to });
     },
 
     onPointerMove(event: PointerEvent) {
@@ -594,7 +595,7 @@ export default mixins(ClassesMixin).extend({
         const el = h('tr', {
           key: row,
         }, [
-          this.columns.map((column, index) => h('td', {
+          this.visibleColumns.map((column, index) => h('td', {
             key: column.key,
             class: this.getColumnClass(column, index),
           }, [

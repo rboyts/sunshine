@@ -14,7 +14,7 @@ import {
   IColumn,
   IColumns,
   IOrderedColumn,
-  IColumnStateList,
+  IColumnState,
   NO_SELECTION,
 } from './components/types';
 import { joinKeyPath } from './lib/utils';
@@ -60,7 +60,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
     return it;
   };
 
-  const validateSavedColumns = (columns: IColumnStateList): IColumnStateList => {
+  const validateSavedColumns = (columns: IColumnState[]): IColumnState[] => {
     const missingColumns = options.columns
       .filter(c => !columns.find(o => o.key === c.key))
       .map(c => {
@@ -128,7 +128,6 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
           .filter(oc => oc.visible)
           .map(oc => findColumn(oc.key));
       },
-
 
       items(state) {
         return getItems([], state);
