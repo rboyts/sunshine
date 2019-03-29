@@ -34,6 +34,7 @@
     "d3": "^5.9.1",
     "eslint": "^5.14.1",
     "eslint-plugin-vue": "^5.2.2",
+    "lint-staged": "^8.1.4",
     "jest": "^24.1.0",
     "moment": "^2.24.0",
     "node-sass": "^4.9.0",
@@ -61,5 +62,14 @@
     "moment": "^2.22.2",
     "vue": "^2.5.17",
     "vuex": "^3.1.0"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,js,vue}": [
+      "vue-cli-service lint",
+      "git add"
+    ]
   }
 }
