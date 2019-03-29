@@ -4,7 +4,6 @@ $list-item-height: base-spacing(4);
 
 .s-list {
   @include paragraph-font;
-
   list-style: none;
   margin: 0;
   padding: 0;
@@ -26,10 +25,25 @@ $list-item-height: base-spacing(4);
   // Invisible border, to prevent content moving on hover
   border: 1px solid rgba(0, 0, 0, 0);
 
-  &--selected {
-    background-color: $color-editish;
-
+  &:hover:not(.s-list-item--selected) {
+    background-color: $smartdok-eggs-yellow;
     border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  &--active:not(.s-list-item--selected) {
+    background-color: $smartdok-eggs-yellow;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  &--selected {
+  //  background-color: $color-editish;
+    background-color: $smartdok-yellow;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  // EGGS design is inconsitent with this?
+  &--separator {
+    border-bottom: 1px dotted $gray;
   }
 
   > .s-checkable {
@@ -42,3 +56,33 @@ $list-item-height: base-spacing(4);
   height: 1px;
   background-color: $almost-gray;
 }
+
+.s-list-selector__row {
+  display: grid;
+  grid-template-columns: 1fr 0.2fr 1fr;
+  grid-column-gap: .5em;
+}
+
+.s-list-selector__button-container {
+  justify-content: center;
+}
+
+.s-list__container {
+  border: 1px $gray solid;
+  border-radius: 4px;
+  background-color: white;
+  overflow-y: scroll;
+  height: 13em;
+  width: 20em;
+
+}
+
+.s-list__search {
+  border: 1px $gray solid;
+  border-radius: 4px;
+  width: 20.5em;
+  height: 3em;
+  padding-left: 10px;
+  margin-bottom: 50px;
+}
+
