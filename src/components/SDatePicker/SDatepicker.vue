@@ -66,6 +66,7 @@ export default Vue.extend({
 
   props: {
     filter: {} as () => ICalendarFilter,
+    filterSelected: Boolean,
     value: {} as () => any,
     locale: String,
     format: String,
@@ -131,10 +132,6 @@ export default Vue.extend({
 
     calendarMonth(): number {
       return this.dateContext.get('month') + 1;
-    },
-
-    filterSelected(): boolean {
-      return this.filter.option !== '' && this.filter.period !== '';
     },
   },
 

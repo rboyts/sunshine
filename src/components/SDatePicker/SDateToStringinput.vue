@@ -15,6 +15,8 @@ import Vue from 'vue';
 import moment, { Moment } from 'moment';
 import STextField from '../STextField.vue';
 
+// TODO: Hide format when filter is displayed in input
+
 export default Vue.extend({
   name: 's-date-to-stringinput',
 
@@ -36,6 +38,7 @@ export default Vue.extend({
     format: String,
     locale: String,
     label: String,
+    filter: String,
   },
 
   watch: {
@@ -52,7 +55,11 @@ export default Vue.extend({
     },
 
     formattedValue(newVal) {
-      this.formattedValue = this.formatValue(newVal);
+      if (this.filter) {
+        this.formattedValue = this.filter;
+      } else {
+        this.formattedValue = this.formatValue(newVal);
+      }
       if (this.validDate(this.formattedValue) &&
         this.formattedValue.length === this.format.length) {
         this.$emit('input', moment(this.formattedValue, this.format));

@@ -41,10 +41,22 @@ $datepicker-navigation-margin: 1.5rem;
   width: 4%;
 }
 
+.s-date-field-range-input.s-date-field-filter-selected .s-date-field-range-symbol {
+  display: none;
+}
+
 .s-date-field-range-input .s-input {
   border: none;
   width: 50%;
   padding: 1rem 0rem 0.25rem 0rem;
+}
+
+.s-date-field-range-input.s-date-field-filter-selected .s-input {
+  width: 35%;
+
+  &:last-child {
+    margin-left: 0;
+  }
 }
 
 .s-date-field-range-input .s-input:last-child {

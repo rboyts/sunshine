@@ -4,7 +4,10 @@
       <template v-slot:activator>
         <div
           class="s-date-field-range-input"
-          :class="{'s-date-field-range-input--focus': isOpen}"
+          :class="{
+            's-date-field-range-input--focus': isOpen,
+            's-date-field-filter-selected': filterSelected,
+          }"
           @click="open"
         >
           <span class="s-input__label"
@@ -15,6 +18,7 @@
               v-model="from"
               :locale="locale"
               :format="format"
+              :filter="internalFilter.option"
               @filter-update="updateFilter"
             />
             <span class="s-date-field-range-symbol">-</span>
@@ -22,6 +26,7 @@
               v-model="to"
               :locale="locale"
               :format="format"
+              :filter="internalFilter.period"
               @filter-update="updateFilter"
             />
           </div>
@@ -35,6 +40,7 @@
           :format="format"
           v-model="internalValue"
           :filter="internalFilter"
+          :filterSelected="filterSelected"
           @filter-update="updateFilter"
         />
       </template>
@@ -116,6 +122,10 @@ export default Vue.extend({
 
     isEmpty(): Boolean {
       return !this.from && !this.to;
+    },
+
+    filterSelected(): boolean {
+      return this.internalFilter.option !== '' && this.internalFilter.period !== '';
     },
   },
 
