@@ -31,17 +31,14 @@ export default Vue.extend({
   watch: {
     // TODO We probably need to handle this better, if we actually need to handle it
     columns: {
-      handler(val: IColumn[]) {
-        this.internalColumnsState = val.map(column => ({ key: column.key, visible: true }));
+      handler() {
+        this.initColumnsState();
       },
       immediate: true,
     },
 
-    columnsState: {
-      handler(val) {
-        this.internalColumnsState = val;
-      },
-      immediate: true,
+    columnsState(val) {
+      this.internalColumnsState = val;
     },
 
     internalColumnsState(val) {
@@ -52,6 +49,17 @@ export default Vue.extend({
   },
 
   methods: {
+    async initColumnsState() {
+      if (this.columnsState && this.columnsState.length) {
+        this.internalColumnsState = this.columnsState;
+      } else if (this.internalColumnsState.length === 0) {
+        await Vue.nextTick();
+        this.internalColumnsState = this.columns.map(column => (
+          { key: column.key, visible: !column.hidden }
+        ));
+      }
+    },
+
     moveColumn({ from, to }: { from: number, to: number}) {
       const fromKey = this.visibleColumns[from].key;
       const fromIndex = this.orderedColumns.findIndex(oc => oc.column.key === fromKey);

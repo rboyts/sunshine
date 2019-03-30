@@ -93,8 +93,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         } as ISortState,
         filter: [],
 
-        columnsState: options.columns
-          .map(column => ({ key: column.key, visible: !column.hidden })),
+        columnsState: [],
 
         selection: NO_SELECTION,
 
