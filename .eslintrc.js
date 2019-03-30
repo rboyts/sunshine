@@ -24,11 +24,6 @@ module.exports = {
     'default-case': 'off',
     'linebreak-style': [1, os.platform() === 'win32' ? 'windows' : 'unix'],
     'no-restricted-syntax': 'off',
-    'no-param-reassign': [2, {
-      ignorePropertyModificationsFor: [
-        'state', // vuex state mutations
-      ],
-    }],
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',
