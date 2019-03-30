@@ -28,6 +28,7 @@ export interface IColumn {
   title: string;
   sortable?: boolean;
   export?: boolean;
+  hidden?: boolean;
   width?: number;
   align?: 'left' | 'right' | 'center';
   filter?: (value: any) => any;
