@@ -5,24 +5,20 @@
     :total="total"
     :offset="offset"
     :sorting="sorting"
-    :columns="visibleColumns"
-    :orderedColumns="orderedColumns"
+    :columns="columns"
     :checkable="checkable"
     :selection.sync="selection"
+    :columns-state.sync="columnsState"
     @sort="onSort"
     @visible-rows="onVisibleRows"
-    @move-column="onMoveColumn"
     @open-item="onOpenItem"
-    @toggleColumn="onToggleColumn"
 
     v-bind="$attrs"
   >
-
     <!-- Pass on all slots -->
     <template v-for="slot in Object.keys($scopedSlots)" v-slot:[slot]="scope">
       <slot :name="slot" v-bind="scope"/>
     </template>
-
   </s-table-internal>
 </template>
 
@@ -72,14 +68,6 @@ export default Vue.extend({
   },
 
   computed: {
-    visibleColumns(): IColumn[] {
-      return this.getState('visibleColumns');
-    },
-
-    orderedColumns(): IOrderedColumn[] {
-      return this.getState('orderedColumns');
-    },
-
     columns(): IColumn[] {
       return this.getState('columns');
     },
@@ -102,6 +90,7 @@ export default Vue.extend({
 
     ...mapToStore([
       'selection',
+      'columnsState',
     ]),
   },
 
@@ -115,15 +104,15 @@ export default Vue.extend({
   },
 
   methods: {
-    getState(key: string): any {
+    getState(this: any, key: string): any {
       return this.$store.getters[`${this.module}/${key}`];
     },
 
-    dispatchAction(name: string, payload?: any) {
+    dispatchAction(this: any, name: string, payload?: any) {
       this.$store.dispatch(`${this.module}/${name}`, payload);
     },
 
-    commitMutation(name: string, payload?: any) {
+    commitMutation(this: any, name: string, payload?: any) {
       this.$store.commit(`${this.module}/${name}`, payload);
     },
 

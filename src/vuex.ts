@@ -54,12 +54,6 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
 ): Module<ModuleState & IDataModuleState, RootState> => {
   const mutex = new Mutex();
 
-  const findColumn = (key: string): IColumn => {
-    const it = options.columns.find(column => column.key === key);
-    if (!it) throw new Error(`Column not found: ${key}`);
-    return it;
-  };
-
   const validateSavedColumns = (columns: IColumnState[]): IColumnState[] => {
     const missingColumns = options.columns
       .filter(c => !columns.find(o => o.key === c.key))
@@ -99,7 +93,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         } as ISortState,
         filter: [],
 
-        columns: options.columns.map(column => ({ key: column.key, visible: true })),
+        columnsState: options.columns.map(column => ({ key: column.key, visible: true })),
 
         selection: NO_SELECTION,
 
@@ -116,24 +110,13 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         return options.columns;
       },
 
-      orderedColumns(state): IOrderedColumn[] {
-        return state.columns.map(oc => ({
-          column: findColumn(oc.key),
-          visible: oc.visible,
-        }));
-      },
-
-      visibleColumns(state, getters): IColumn[] {
-        return state.columns
-          .filter(oc => oc.visible)
-          .map(oc => findColumn(oc.key));
-      },
-
       items(state) {
         return getItems([], state);
       },
 
       selection: state => state.selection,
+
+      columnsState: state => state.columnsState,
 
       selectedItems: state => {
         // TODO Include sub-items
@@ -171,17 +154,12 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         state.filter = filter;
       },
 
-      moveColumn: (state, { fromIndex, toIndex }: { fromIndex: number, toIndex: number}) => {
-        const moved = state.columns.splice(fromIndex, 1);
-        state.columns.splice(toIndex, 0, ...moved);
-      },
-
-      toggleColumn: (state, { index, checked }: { index: number, checked: boolean }) => {
-        state.columns[index].visible = checked;
-      },
-
       selection: (state, selection) => {
         state.selection = selection;
+      },
+
+      columnsState: (state, columnsState) => {
+        state.columnsState = columnsState;
       },
 
       loadStart: state => {
@@ -356,7 +334,7 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
           key: storage.length,
           label,
           state: {
-            columns: state.columns,
+            columnsState: state.columnsState,
             filter: state.filter,
           },
         });
@@ -385,10 +363,9 @@ export const createDataModule = <ModuleState = {}, RootState = any>(
         const saved = JSON.parse(data).find((s: any) => s.label === label);
         if (!saved) return;
 
-
         const state = {
           ...saved.state,
-          columns: validateSavedColumns(saved.state.columns),
+          columnsState: validateSavedColumns(saved.state.columnsState),
         };
 
         commit('savedState', state);

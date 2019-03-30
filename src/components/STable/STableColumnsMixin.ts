@@ -4,24 +4,25 @@ import { IColumn, IOrderedColumn, IColumnState } from '../types';
 export default Vue.extend({
   props: {
     columns: Array as () => IColumn[],
+    columnsState: Array as () => IColumnState[],
   },
 
   data() {
     return {
-      columnsState: [] as IColumnState[],
+      internalColumnsState: [] as IColumnState[],
     };
   },
 
   computed: {
     orderedColumns(): IOrderedColumn[] {
-      return this.columnsState.map(oc => ({
+      return this.internalColumnsState.map(oc => ({
         column: this.findColumn(oc.key),
         visible: oc.visible,
       }));
     },
 
     visibleColumns(): IColumn[] {
-      return this.columnsState
+      return this.internalColumnsState
         .filter(oc => oc.visible)
         .map(oc => this.findColumn(oc.key));
     },
@@ -31,9 +32,22 @@ export default Vue.extend({
     // TODO We probably need to handle this better, if we actually need to handle it
     columns: {
       handler(val: IColumn[]) {
-        this.columnsState = val.map(column => ({ key: column.key, visible: true }));
+        this.internalColumnsState = val.map(column => ({ key: column.key, visible: true }));
       },
       immediate: true,
+    },
+
+    columnsState: {
+      handler(val) {
+        this.internalColumnsState = val;
+      },
+      immediate: true,
+    },
+
+    internalColumnsState(val) {
+      if (val !== this.columnsState) {
+        this.$emit('update:columns-state', val);
+      }
     },
   },
 
@@ -50,12 +64,12 @@ export default Vue.extend({
         toIndex = this.orderedColumns.findIndex(oc => oc.column.key === afterKey) + 1;
       }
 
-      const moved = this.columnsState.splice(fromIndex, 1);
-      this.columnsState.splice(toIndex, 0, ...moved);
+      const moved = this.internalColumnsState.splice(fromIndex, 1);
+      this.internalColumnsState.splice(toIndex, 0, ...moved);
     },
 
     toggleColumn({ index, checked }: { index: number, checked: boolean }) {
-      this.columnsState[index].visible = checked;
+      this.internalColumnsState[index].visible = checked;
     },
 
     findColumn(key: string): IColumn {

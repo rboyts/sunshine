@@ -18,7 +18,7 @@ export interface IDataModuleState {
   filter: any[], // TODO type
   items: { [key: string]: IItem[] };
   total: number | null;
-  columns: IColumnStateList;
+  columnsState: IColumnState[];
 
   selection: ISelection;
 }
