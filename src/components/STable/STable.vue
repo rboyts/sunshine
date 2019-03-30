@@ -187,7 +187,11 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
   },
 
   props: {
-    items: Array as () => IItem[],
+    items: {
+      type: Array as () => IItem[],
+      required: true,
+    },
+
     total: Number as () => number | null,
     offset: Number,
     sorting: Object as () => ISortState,

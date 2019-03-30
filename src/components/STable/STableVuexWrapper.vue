@@ -1,5 +1,5 @@
 <template>
-  <s-table-internal
+  <s-table
     class="flex-grow"
     :items="items"
     :total="total"
@@ -19,12 +19,12 @@
     <template v-for="slot in Object.keys($scopedSlots)" v-slot:[slot]="scope">
       <slot :name="slot" v-bind="scope"/>
     </template>
-  </s-table-internal>
+  </s-table>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import STableInternal from './STableInternal.vue';
+import STable from './STable.vue';
 import {
   ISortState, IItem, IColumn, IRequestLoadItemsPayload, IOrderedColumn,
 } from '../types';
@@ -48,11 +48,11 @@ const mapToStore = (keys: string[]) => {
 };
 
 export default Vue.extend({
-  name: 's-table',
+  name: 's-table-vuex-wrapper',
   inheritAttrs: false,
 
   components: {
-    STableInternal,
+    STable,
   },
 
   props: {

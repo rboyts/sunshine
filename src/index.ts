@@ -25,8 +25,8 @@ import SProgress from './components/SProgress.vue';
 import SRadioButton from './components/SRadioButton.vue';
 import SSavedSetups from './components/SSavedSetups.vue';
 import STab from './components/STab.vue';
+import STable from './components/STable/STable.vue';
 import STableVuexWrapper from './components/STable/STableVuexWrapper.vue';
-import STableInternal from './components/STable/STableInternal.vue';
 import STabs from './components/STabs.vue';
 import STextField from './components/STextField.vue';
 import STextArea from './components/STextArea.vue';
@@ -62,7 +62,7 @@ const plugin = {
     Vue.component('s-saved-setups', SSavedSetups);
     Vue.component('s-tab', STab);
     Vue.component('s-table-vuex-wrapper', STableVuexWrapper);
-    Vue.component('s-table-internal', STableInternal);
+    Vue.component('s-table', STable);
     Vue.component('s-tabs', STabs);
     Vue.component('s-text-field', STextField);
     Vue.component('s-text-area', STextArea);
