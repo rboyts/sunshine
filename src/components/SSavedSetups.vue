@@ -21,7 +21,11 @@
       </template>
     </s-drop-down>
 
-    <s-dialog v-model="showDialog" :heading="headingText">
+    <s-dialog
+      v-model="showDialog"
+      :heading="headingText"
+      @submit.prevent="onSave"
+    >
       <div class="flex-layout-down" :style="{width: '330px'}">
         <div>
           You can save table views with selected filters,
@@ -31,7 +35,7 @@
         <s-text-field v-model="editText" label="Name" />
         <div class="flex-layout flex-end">
           <s-button v-if="editItem" danger @click="onDelete">Delete</s-button>
-          <s-button primary :inactive="!hasValidName" @click="onSave">Save</s-button>
+          <s-button primary submit :inactive="!hasValidName">Save</s-button>
         </div>
       </div>
     </s-dialog>
@@ -49,13 +53,13 @@ export default Vue.extend({
       en: {
         'saved-setups': 'Saved setups',
         'add-as-new': 'Save current setup',
-        'update': 'Update',
+        update: 'Update',
       },
 
       nb: {
         'saved-setups': 'Lagrede oppsett',
         'add-as-new': 'Lagre gjeldende oppsett',
-        'update': 'Oppdater',
+        update: 'Oppdater',
       },
     },
   },

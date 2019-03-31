@@ -9,7 +9,9 @@
         <span :class="classes('heading')">{{ heading }}</span>
         <s-icon @click="close" package="sunshine24" name="close" />
       </div>
-      <slot v-bind="{ close }" />
+      <form v-bind="$attrs" v-on="$listeners">
+        <slot v-bind="{ close }" />
+      </form>
     </div>
   </div>
 </template>
@@ -20,6 +22,7 @@ import { ClassesMixin } from '../lib/utils';
 
 export default Vue.extend({
   name: 's-dialog',
+  inheritAttrs: false,
 
   mixins: [
     ClassesMixin,
