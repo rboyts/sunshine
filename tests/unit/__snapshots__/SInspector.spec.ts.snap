@@ -4,10 +4,10 @@ exports[`SInspector inspector is not showing 1`] = `undefined`;
 
 exports[`SInspector inspector is visible and show header, content and footer content 1`] = `
 <div class="s-inspector" name="slide-in">
-  <div class="s-inspector__content">
+  <form class="s-inspector__content">
     <div class="s-inspector__header">Header</div>
     <div class="s-inspector__main">Content</div>
     <div class="s-inspector__footer">Footer</div>
-  </div>
+  </form>
 </div>
 `;

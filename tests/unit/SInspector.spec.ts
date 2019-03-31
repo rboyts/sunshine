@@ -9,7 +9,7 @@ describe('SInspector', () => {
         transition: TransitionStub,
       },
       propsData: {
-        value: true,
+        show: true,
       },
       slots: {
         header: 'Header',
@@ -24,7 +24,7 @@ describe('SInspector', () => {
   });
 
   it('inspector is not showing', () => {
-    wrapper.setProps({ value: false });
+    wrapper.setProps({ show: false });
     expect(wrapper.html()).toMatchSnapshot();
   });
 });
