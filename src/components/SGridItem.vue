@@ -4,14 +4,16 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
-import { classHelper } from '../lib/utils';
-
-const itemClassHelper = classHelper('grid-item');
+import { ClassesMixin } from '../lib/utils';
 
 export default Vue.extend({
   name: 's-grid-item',
+
+  mixins: [
+    ClassesMixin,
+  ],
 
   props: {
     span: {
@@ -21,8 +23,8 @@ export default Vue.extend({
   },
 
   computed: {
-    itemClass(): object {
-      return itemClassHelper({
+    itemClass() {
+      return this.classes({
         [`span-${this.span}`]: true,
       });
     },
