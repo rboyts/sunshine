@@ -1,3 +1,11 @@
+<!--
+
+FIXME:
+Handle identical keys in different sections.
+Incoming keys only need to be unique withing each section.
+
+-->
+
 <template>
   <s-drop-down-internal
     search
