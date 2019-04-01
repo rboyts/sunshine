@@ -79,6 +79,10 @@ $input-font-size: $paragraph-font-size;
     padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
   }
 
+  &--transparent {
+    color: transparent;
+  }
+
   z-index: 1;
 
   &::-webkit-outer-spin-button,

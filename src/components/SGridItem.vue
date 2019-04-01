@@ -17,7 +17,7 @@ export default Vue.extend({
 
   props: {
     span: {
-      type: Number,
+      type: [Number, String],
       default: 1,
     },
   },

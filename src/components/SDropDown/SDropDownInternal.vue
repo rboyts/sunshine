@@ -5,7 +5,7 @@
         :class="classes('input')"
         :hasFocus="hasFocus"
         :isEmpty="textValue == '' && text == ''"
-        :readonly="!search"
+        :readonly="!(search && isOpen)"
         :inactive="inactive"
         :label="label"
         @click.native="onClick"
@@ -24,7 +24,11 @@
         <input
           v-if="search"
           ref="input"
-          :class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
+          :class="{
+            's-input__input': true,
+            's-input__input--with-label': !!label,
+            's-input__input--transparent': !isOpen,
+          }"
           type="text"
           :disabled="inactive"
           :value="filter"
@@ -130,15 +134,6 @@ export default mixins(ClassesMixin).extend({
       default: 2,
     },
 
-    // Allow items to remain selected, even if removed from available items.
-    // This is an advanced option, mostly for internal use.
-    //
-    // XXX This is a sign that there should maybe be some "internal-drop-down" component
-    allowMissing: {
-      type: Boolean,
-      default: false,
-    },
-
     inactive: {
       type: Boolean,
       default: false,
@@ -180,17 +175,6 @@ export default mixins(ClassesMixin).extend({
     isOpen(val) {
       if (!val) {
         this.clearFilter();
-      }
-    },
-
-    items(val) {
-      if (this.allowMissing) return;
-      if (this.multiple) {
-        this.internalValue = this.internalValue.filter((v: any) => val.includes(v));
-      } else if (this.internalValue) {
-        if (!val.includes(this.internalValue)) {
-          this.internalValue = null;
-        }
       }
     },
   },

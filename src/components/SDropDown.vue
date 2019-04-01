@@ -15,11 +15,13 @@ Use cases:
 
 <template>
   <s-drop-down-internal
+    v-model="internalValue"
+    :items="filteredItems"
+    :multiple="multiple"
     :filter.sync="filter"
     :labelKey="labelKey"
-    :items="filteredItems"
+
     v-bind="$attrs"
-    v-on="$listeners"
   >
 
     <!-- Pass on all slots -->
@@ -43,6 +45,11 @@ export default Vue.extend({
 
   props: {
     items: Array as () => object[],
+
+    value: [Object, Array],
+
+    multiple: Boolean,
+
     labelKey: {
       type: String,
       default: 'label',
@@ -52,7 +59,37 @@ export default Vue.extend({
   data() {
     return {
       filter: '',
+      internalValue: null as any,
     };
+  },
+
+  watch: {
+    value: {
+      handler(val) {
+        if (this.multiple) {
+          this.internalValue = val || [];
+        } else {
+          this.internalValue = val;
+        }
+      },
+      immediate: true,
+    },
+
+    internalValue(val) {
+      if (val !== this.value) {
+        this.$emit('input', val);
+      }
+    },
+
+    items(val) {
+      if (this.multiple) {
+        this.internalValue = this.internalValue.filter((v: any) => val.includes(v));
+      } else if (this.internalValue) {
+        if (!val.includes(this.internalValue)) {
+          this.internalValue = null;
+        }
+      }
+    },
   },
 
   computed: {
