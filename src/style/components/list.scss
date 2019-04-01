@@ -26,24 +26,14 @@ $list-item-height: base-spacing(4);
   border: 1px solid rgba(0, 0, 0, 0);
 
   &:hover:not(.s-list-item--selected) {
-    background-color: $smartdok-eggs-yellow;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-  }
-
-  &--active:not(.s-list-item--selected) {
-    background-color: $smartdok-eggs-yellow;
+    // hover color?
+    background-color: $color-edit;
     border: 1px solid rgba(0, 0, 0, 0.05);
   }
 
   &--selected {
-  //  background-color: $color-editish;
-    background-color: $smartdok-yellow;
+    background-color: $color-editish;
     border: 1px solid rgba(0, 0, 0, 0.05);
-  }
-
-  // EGGS design is inconsitent with this?
-  &--separator {
-    border-bottom: 1px dotted $gray;
   }
 
   > .s-checkable {
@@ -57,32 +47,32 @@ $list-item-height: base-spacing(4);
   background-color: $almost-gray;
 }
 
-.s-list-selector__row {
-  display: grid;
-  grid-template-columns: 1fr 0.2fr 1fr;
-  grid-column-gap: .5em;
-}
-
-.s-list-selector__button-container {
-  justify-content: center;
-}
-
+// Scroll bars always visible in the design
+// but didnt want to mess with s-list so created a
+// wrapper/container
 .s-list__container {
   border: 1px $gray solid;
   border-radius: 4px;
   background-color: white;
+  min-height: 10em;
   overflow-y: scroll;
-  height: 13em;
-  width: 20em;
+}
+
+.s-multiselector__row {
+display: grid;
+  grid-template-columns: 1fr 3rem 1fr;
+  grid-column-gap: .5em;
+  width: 100%;
+  height: 100%;
 
 }
 
-.s-list__search {
-  border: 1px $gray solid;
-  border-radius: 4px;
-  width: 20.5em;
-  height: 3em;
-  padding-left: 10px;
-  margin-bottom: 50px;
+.s-multiselector__button-container {
+  justify-content: center;
+}
+
+.s-multiselector__title {
+  @include paragraph-font;
+  font-weight:$action-font-weight;
 }
 

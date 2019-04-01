@@ -1,37 +1,29 @@
 <!--
   Example: <s-list :items="items" v-model="selected" :filter="keyword" checkable/>
 
-  Currently if user adds items to the 'selected' array attached to v-model,
-  the items won't be added to the 'items' list. Should this be default behaviour?
-
-  @keydown.down="nextItem"
-    @keydown.up="prevItem"
-    @keydown.space="onSpace"
-
-    class -> 's-list-item--active': index === curIndex && hasFocus
-
-
-    @focus="hasFocus = true"
-    @blur="hasFocus = false"
-
-    filter til småbokstaver
-
+ items     - The items to show in the list
+ v-model   - The items in the list that is selected/checked.
+             If some items are to be preselected, they have to
+             be added to items to be visible in the list
+ filter    - Only show items containing the filter keyword
+ checkable - Checkboxes beside all items.
 -->
 
 <template>
   <ul
-    ref="list"
     tabIndex="0"
     :class="classes()"
   >
     <s-list-item
-      v-for="(item, index) in visibleItems"
+      v-for="item in visibleItems"
       :key="item.key"
-      :class="{ 's-list-item--separator': true }"
       :checkable="checkable"
-      :checked="isSelected(item)"
+      :checked="isChecked(item)"
       :selected="isSelected(item)"
-      @click="itemClicked(item, index)"
+      @click.exact="itemClicked(item)"
+      @click.ctrl.exact="itemCtrlClicked(item)"
+      @click.shift.exact="itemShiftClicked(item)"
+      @dblclick.native.exact="itemDblClicked(item)"
       @change="itemClicked(item)"
     >
       {{ item.label }}
@@ -45,18 +37,11 @@ import mixins from 'vue-typed-mixins';
 import { ClassesMixin } from '../lib/utils';
 import SListItem from './SListItem.vue';
 
-const activeItemClass = 's-list-item--active';
-
 export default mixins(ClassesMixin).extend({
   name: 's-list',
 
   components: {
     SListItem,
-  },
-
-  model: {
-    prop: 'selected',
-    event: 'selected',
   },
 
   props: {
@@ -65,7 +50,7 @@ export default mixins(ClassesMixin).extend({
       default: () => [],
     },
 
-    selected: {
+    value: {
       type: Array,
       default: () => [],
     },
@@ -84,42 +69,69 @@ export default mixins(ClassesMixin).extend({
   data() {
     return {
       selection: [],
-      curIndex: 0,
-      hasFocus: false,
     };
   },
 
+  // 1. Is it worth it performance-wise to keep only the keys in the selection array?
+  // I assume we want to emit the key label pairs.
+  //
+  // In selection we then have to do something like this:
+  // const items = this.items.filter(i => this.selection.includes(i.key));
+  // this.$emit('input', items)
+  //
+  // And in value (The user can put preselected items here):
+  // this.selection = val.map(i => i.key);
+  //
+  // In the value watch, we should only assign selection = val if val is not equal this.value,
+  // since we're creating new arrays this would require a deep array comparison?
+  //
+  // 2. Should value and selection watch have the deep: true option, in case data is changed?
+  // 3. Are props watched deep?
+  //
+
   watch: {
-    selected: {
+    value: {
       handler(val) {
-        if (val) {
-          this.selection = val;
-        }
+        this.selection = val;
       },
       immediate: true,
     },
 
-    selection: {
-      handler(val) {
-        if (val !== this.selected) {
-          this.$emit('selected', val);
-        }
-      },
+    selection(val) {
+      this.$emit('input', val);
     },
   },
 
   computed: {
     visibleItems() {
-      return this.items.filter(i => i.label.includes(this.filter));
+      return this.items.filter(i => i.label.toLowerCase().includes(this.filter.toLowerCase()));
     },
   },
 
   methods: {
     isSelected(item) {
+      if (this.checkable) return false;
+      return this.selection.map(i => i.key).includes(item.key);
+    },
+
+    isChecked(item) {
+      if (!this.checkable) return false;
       return this.selection.map(i => i.key).includes(item.key);
     },
 
     itemClicked(item, index) {
+      if (this.checkable) {
+        this.itemCtrlClicked(item);
+        return;
+      }
+      if (this.selection.map(i => i.key).includes(item.key)) {
+        this.selection = [];
+      } else {
+        this.selection = [item];
+      }
+    },
+
+    itemCtrlClicked(item, index) {
       if (this.selection.map(i => i.key).includes(item.key)) {
         this.selection = this.selection.filter(i => i.key !== item.key);
       } else {
@@ -127,35 +139,13 @@ export default mixins(ClassesMixin).extend({
       }
     },
 
-    nextItem() {
-      if (this.curIndex < this.visibleItems.length - 1) {
-        this.curIndex++;
-      }
-    //  this.ensureItemVisible();
+    itemShiftClicked(item, index) {
+      // implement
     },
 
-    prevItem() {
-      if (this.curIndex > 0) {
-        this.curIndex--;
-      }
-   //   this.ensureItemVisible();
+    itemDblClicked(item) {
+      this.$emit('dblclick', item);
     },
-
-    onSpace() {
-      const item = this.visibleItems[this.curIndex];
-      this.itemClicked(item);
-    },
-
-    ensureItemVisible() {
-      const { list } = this.$refs;
-      const item = list.querySelector(`.${activeItemClass}`);
-      if (item.offsetTop < list.scrollTop) {
-        item.scrollIntoView(true);
-      } else if (item.offsetTop + item.offsetHeight > list.scrollTop + list.offsetHeight) {
-        item.scrollIntoView(false);
-      }
-    },
-
   },
 });
 
