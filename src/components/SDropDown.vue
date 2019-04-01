@@ -38,6 +38,7 @@ import SDropDownInternal from './SDropDown/SDropDownInternal.vue';
 
 export default Vue.extend({
   name: 's-drop-down',
+  inheritAttrs: false,
 
   components: {
     SDropDownInternal,
@@ -81,13 +82,13 @@ export default Vue.extend({
       }
     },
 
+    // Update selection when data is changed.
     items(val) {
+      const byKey = (needle: any) => val.find((it: any) => it.key === needle.key) || null;
       if (this.multiple) {
-        this.internalValue = this.internalValue.filter((v: any) => val.includes(v));
+        this.internalValue = this.internalValue.map(byKey).filter((v: any) => !!v);
       } else if (this.internalValue) {
-        if (!val.includes(this.internalValue)) {
-          this.internalValue = null;
-        }
+        this.internalValue = byKey(this.internalValue);
       }
     },
   },

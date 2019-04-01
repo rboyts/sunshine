@@ -93,8 +93,19 @@ import SMenu from '../SMenu.vue';
 import SMenuList from '../SMenuList.vue';
 import { ClassesMixin } from '../../lib/utils';
 
+interface IListItem {
+  key: string;
+  label: string;
+}
+
+const validateUniqueKeys = (val: IListItem[]) => (
+  val.every((it: IListItem, index: number) => !!it.key &&
+   val.findIndex((o: IListItem) => o.key === it.key) === index)
+);
+
 export default mixins(ClassesMixin).extend({
   name: 's-drop-down',
+  inheritAttrs: false,
 
   components: {
     SBaseInput,
@@ -106,7 +117,10 @@ export default mixins(ClassesMixin).extend({
   props: {
     label: String,
 
-    items: Array as () => object[],
+    items: {
+      type: Array as () => IListItem[],
+      validator: validateUniqueKeys,
+    },
 
     filter: String,
 
@@ -306,13 +320,13 @@ export default mixins(ClassesMixin).extend({
       }
     },
 
-    getPreviousItem(item: object | null): object {
+    getPreviousItem(item: IListItem | null): object {
       let index = item == null ? -1 : this.items.indexOf(item);
       if (index === -1) index = this.items.length;
       return this.items[Math.max(0, index - 1)];
     },
 
-    getNextItem(item: object | null): object {
+    getNextItem(item: IListItem | null): object {
       let index = item == null ? -1 : this.items.indexOf(item);
       return this.items[Math.min(index + 1, this.items.length - 1)];
     },
