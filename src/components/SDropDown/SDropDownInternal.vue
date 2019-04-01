@@ -8,6 +8,7 @@
         :readonly="!(search && isOpen)"
         :inactive="inactive"
         :label="label"
+        :error="error"
         @click.native="onClick"
         @keydown.native.up.prevent="onArrowUp"
         @keydown.native.down.prevent="onArrowDown"
@@ -116,6 +117,8 @@ export default mixins(ClassesMixin).extend({
 
   props: {
     label: String,
+
+    error: String,
 
     items: {
       type: Array as () => IListItem[],

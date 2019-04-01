@@ -5,6 +5,7 @@
     :hasFocus="hasFocus"
     :isEmpty="isEmpty"
     :label="label"
+    :error="error"
     :readonly="readonly"
   >
     <div
@@ -39,6 +40,12 @@ export default Vue.extend({
   name: 's-text-area',
   inheritAttrs: false,
 
+  $_veeValidate: {
+    value() {
+      return this.internalValue;
+    },
+  },
+
   components: {
     SBaseInput,
   },
@@ -48,6 +55,9 @@ export default Vue.extend({
       type: String,
       default: '',
     },
+
+    error: String,
+
     initrows: {
       type: Number,
       default: 2,

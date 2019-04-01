@@ -3,7 +3,7 @@
     :inactive="inactive"
     :hasFocus="hasFocus"
     :isEmpty="isEmpty"
-    :errors="errors"
+    :error="error"
     :label="label"
   >
 
@@ -43,13 +43,20 @@ export default Vue.extend({
 
   inheritAttrs: false,
 
+  $_veeValidate: {
+    value() {
+      return this.internalValue;
+    },
+  },
+
   components: {
     SBaseInput,
   },
 
   props: {
-    errors: Array,
     label: String,
+    error: String,
+
     value: {
       type: [String, Number],
       default: '',

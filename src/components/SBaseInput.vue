@@ -1,9 +1,11 @@
 <template>
-  <div :class="inputClass">
-    <span v-if="label" :class="labelClass">{{ label }}</span>
-    <slot />
-    <div v-if="showErrors" class="s-input__error">
-      <div v-for="(err, i) in errors" :key="i" >{{ err }}</div>
+  <div>
+    <div :class="inputClass">
+      <span v-if="label" :class="labelClass">{{ label }}</span>
+      <slot />
+    </div>
+    <div v-if="error" class="s-input__error">
+      {{ error }}
     </div>
   </div>
 </template>
@@ -20,10 +22,8 @@ export default Vue.extend({
 
   props: {
     label: String,
-    errors: {
-      type: Array,
-      default: () => [],
-    },
+    error: String,
+
     hasFocus: {
       type: Boolean,
       default: false,
@@ -50,18 +50,14 @@ export default Vue.extend({
       return inputClassHelper({
         focus: this.hasFocus,
         inactive: this.inactive,
-        error: !!this.errors.length,
+        error: !!this.error,
       });
     },
 
     labelClass(): object {
       return labelClassHelper({
-        aside: (this.hasFocus && !this.readonly) || !this.isEmpty || !!this.errors.length,
+        aside: (this.hasFocus && !this.readonly) || !this.isEmpty,
       });
-    },
-
-    showErrors(): boolean {
-      return !!this.errors.length && !(this.hasFocus && !this.readonly);
     },
   },
 

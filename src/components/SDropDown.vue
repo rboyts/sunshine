@@ -40,6 +40,12 @@ export default Vue.extend({
   name: 's-drop-down',
   inheritAttrs: false,
 
+  $_veeValidate: {
+    value() {
+      return this.internalValue;
+    },
+  },
+
   components: {
     SDropDownInternal,
   },
