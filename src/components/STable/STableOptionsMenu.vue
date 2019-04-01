@@ -12,8 +12,12 @@
 
     <template v-slot:content>
       <s-menu-list>
-        <s-list-item v-if="checkable" @click="onSelectAll">{{ $t('s-table.select-all') }}</s-list-item>
-        <s-list-item v-if="checkable" @click="onSelectNone">{{ $t('s-table.select-none') }}</s-list-item>
+        <s-list-item v-if="checkable" @click="onSelectAll">
+          {{ $t('s-table.select-all') }}
+        </s-list-item>
+        <s-list-item v-if="checkable" @click="onSelectNone">
+          {{ $t('s-table.select-none') }}
+        </s-list-item>
         <s-list-separator v-if="checkable" />
         <s-list-item>{{ $t('s-table.export-pdf') }}</s-list-item>
         <s-list-item>{{ $t('s-table.export-excel') }}</s-list-item>

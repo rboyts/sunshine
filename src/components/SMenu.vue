@@ -1,8 +1,8 @@
 <template>
-  <span :class="classes()">
-    <span @click="onClick">
+  <div :class="classes()">
+    <div @click="onClick">
       <slot name="activator" />
-    </span>
+    </div>
 
     <div
       v-if="showContent"
@@ -26,7 +26,7 @@
       v-if="showContent"
       @trigger="onWatcher"
     />
-  </span>
+  </div>
 </template>
 
 <script lang="ts">
@@ -166,6 +166,11 @@ export default mixins(ClassesMixin).extend({
       this.transitioning = false;
       const { height, ...rest } = this.style;
       this.style = rest;
+
+      // Emit event when menu is completely closed
+      if (!this.isOpen) {
+        this.$emit('closed');
+      }
     },
 
     // Close menu when clicking anywhere outside

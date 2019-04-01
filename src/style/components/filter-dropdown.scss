@@ -1,0 +1,99 @@
+@import '../tools.scss';
+@import './list.scss';
+
+.s-filter-drop-down__pills {
+  display: inline-flex;
+  padding: 0 2px;
+}
+
+.s-filter-drop-down__pill {
+  @include action-font;
+  white-space: nowrap;
+  vertical-align: center;
+  margin: 0 2px;
+  padding: 4px 8px 4px 2px;
+  background-color: $almost-gray;
+  border: 1px solid $gray;
+  border-radius: 3px;
+
+  &--search {
+    background-color: $white;
+  }
+}
+
+.s-filter-drop-down__pill-icon {
+  cursor: pointer;
+}
+
+.s-filter-drop-down .s-list {
+  padding-top: $list-item-height;
+}
+
+.s-filter-drop-down__header {
+  position: sticky;
+  top: 0;
+  background-color: $white;
+  border-bottom: 1px solid $almost-gray;
+}
+
+.s-filter-drop-down__tabs {
+  display: flex;
+}
+
+.s-filter-drop-down__tabs__tab {
+  a {
+    @include action-font;
+    display: inline-block;
+    padding: base-spacing(1) base-spacing(2);
+    cursor: pointer;
+    text-decoration: none;
+    color: $almost-black;
+  }
+
+  &--active {
+    a {
+      color: $color-edit;
+    }
+  }
+}
+
+.s-filter-drop-down__loading {
+  height: 2px;
+  width: 100%;
+}
+
+.s-filter-drop-down__loading-progress {
+  height: 2px;
+  margin-left: 0;
+  margin-right: 0;
+  background-color: $color-edit;
+
+  animation: progress 1.5s infinite;
+}
+
+@keyframes progress {
+  0% {
+    margin-left: 0;
+    margin-right: 80%;
+  }
+
+  25% {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  50% {
+    margin-left: 80%;
+    margin-right: 0;
+  }
+
+  75% {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  100% {
+    margin-left: 0;
+    margin-right: 80%;
+  }
+}

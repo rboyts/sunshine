@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SRadioButton render checked 1`] = `
+<label class="s-radio-button"><input type="radio" name=""> <span class="s-radio-button__box"><svg width="16" height="16" class="s-radio-button__selected" name="fade"><path fill="#1C1C1C" d="M8,11 C6.34314575,11 5,9.65685425 5,8 C5,6.34314575
+            6.34314575,5 8,5 C9.65685425,5 11,6.34314575 11,8 C11,9.65685425
+            9.65685425,11 8,11 Z"></path></svg></span> </label>
+`;
+
+exports[`SRadioButton render checked dot when selected 1`] = `
+<label class="s-radio-button"><input type="radio" name=""> <span class="s-radio-button__box"><svg width="16" height="16" class="s-radio-button__selected" name="fade"><path fill="#1C1C1C" d="M8,11 C6.34314575,11 5,9.65685425 5,8 C5,6.34314575
+            6.34314575,5 8,5 C9.65685425,5 11,6.34314575 11,8 C11,9.65685425
+            9.65685425,11 8,11 Z"></path></svg></span> </label>
+`;
+
+exports[`SRadioButton render unchecked 1`] = `<label class="s-radio-button"><input type="radio" name=""> <span class="s-radio-button__box"><!----></span> </label>`;
+
+exports[`SRadioButton slot content is rendered 1`] = `
+<label class="s-radio-button"><input type="radio" name=""> <span class="s-radio-button__box"><svg width="16" height="16" class="s-radio-button__selected" name="fade"><path fill="#1C1C1C" d="M8,11 C6.34314575,11 5,9.65685425 5,8 C5,6.34314575
+            6.34314575,5 8,5 C9.65685425,5 11,6.34314575 11,8 C11,9.65685425
+            9.65685425,11 8,11 Z"></path></svg></span>
+  <h1>Test</h1></label>
+`;

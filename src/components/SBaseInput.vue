@@ -1,6 +1,6 @@
 <template>
   <div :class="inputClass">
-    <span :class="labelClass">{{ label }}</span>
+    <span v-if="label" :class="labelClass">{{ label }}</span>
     <slot />
     <div v-if="showErrors" class="s-input__error">
       <div v-for="(err, i) in errors" :key="i" >{{ err }}</div>

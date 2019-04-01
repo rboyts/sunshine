@@ -1,7 +1,8 @@
 @import '../tools.scss';
 
 $outer-border : 1px solid $gray;
-$inner-border : 1px solid $almost-gray;
+$inner-border : 1px solid rgba(0, 0, 0, .07);
+// $inner-border : 1px solid $almost-gray;
 $th-inner-border : 1px solid $gray;
 
 $table-padding: 1rem;
@@ -12,8 +13,16 @@ $table-condensed-row-height: 1.5rem;
 
 $table-toggle-width: base-spacing(5);
 
+$table-hover-color: $whiteish;
+$table-highlight-color: mix($color-editish, $white, 25%);
+$table-highlight-hover-color: mix($color-editish, $whiteish, 25%);
+$table-selection-outline-color: $color-edit;
+
+$table-selection-outline-width: 1px;
+
 .s-table {
   @include paragraph-font;
+  cursor: default;
 
   position: relative;
 
@@ -34,10 +43,16 @@ $table-toggle-width: base-spacing(5);
   }
 
   &:not(.s-table--dragging) {
-    .s-table__table {
-      tr:not(.s-table__row--active):hover {
+    .s-table__row {
+      &:hover {
         td {
-          background-color: $smartdok-eggs-yellow;
+          background-color: $table-hover-color;
+        }
+      }
+
+      &--checked:hover {
+        td {
+          background-color: $table-highlight-hover-color;
         }
       }
     }
@@ -67,8 +82,7 @@ $table-toggle-width: base-spacing(5);
 
   td {
     background-color: $white;
-    overflow: hidden;
-    z-index: 1;
+    z-index: 0;
   }
 
   th {
@@ -125,17 +139,61 @@ $table-toggle-width: base-spacing(5);
 }
 
 .s-table__row {
-  &--checked {
-    td {
-      background-color: $smartdok-eggs-yellow;
+
+  td {
+    &::before {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      content: '';
+      background-color: rgba(0, 0, 0, .07);
+    }
+
+    &::after {
+      position: absolute;
+      z-index: 3;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      content: '';
+      background-color: rgba(0, 0, 0, .07);
     }
   }
 
-  &--active {
+  &--checked {
     td {
-      background-color: $smartdok-yellow;
+      background-color: $table-highlight-color;
     }
   }
+
+  td {
+    position: relative;
+  }
+
+
+  &--first-checked td {
+    &::before {
+      height: $table-selection-outline-width;
+      background-color: $table-selection-outline-color;
+    }
+  }
+
+  &--last-checked td {
+    &::after {
+      height: $table-selection-outline-width;
+      background-color: $table-selection-outline-color;
+    }
+  }
+
+  // &--active {
+  //   td {
+  //     background-color: $smartdok-yellow;
+  //   }
+  // }
 }
 
 .s-table__cell-wrapper {
@@ -147,7 +205,7 @@ $table-toggle-width: base-spacing(5);
   height: $table-normal-row-height;
   flex: 1;
   padding: 0 $table-padding;
-  border-bottom: $inner-border;
+  // border-bottom: $inner-border;
 }
 
 .s-table__table tr:last-child {

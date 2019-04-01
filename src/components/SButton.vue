@@ -1,5 +1,10 @@
 <template>
-  <button :class="buttonClasses" :disabled="inactive" v-on="$listeners">
+  <button
+    :type="type"
+    :class="buttonClasses"
+    :disabled="inactive"
+    v-on="$listeners"
+  >
     <span :class="contentClasses" tabindex="-1">
       <slot name="left" />
       <span class="flex-grow">
@@ -24,22 +29,39 @@ export default mixins(ClassesMixin).extend({
       type: Boolean,
       default: false,
     },
+
     primary: {
       type: Boolean,
       default: false,
     },
+
+    danger: {
+      type: Boolean,
+      default: false,
+    },
+
     inactive: {
+      type: Boolean,
+      default: false,
+    },
+
+    submit: {
       type: Boolean,
       default: false,
     },
   },
 
   computed: {
+    type(): string {
+      return this.submit ? 'submit' : 'button';
+    },
+
     buttonClasses(): object {
       return this.classes({
         small: this.small,
-        normal: !this.primary,
+        normal: !this.primary && !this.danger,
         primary: this.primary,
+        danger: this.danger,
         inactive: this.inactive,
       });
     },

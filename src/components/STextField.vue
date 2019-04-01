@@ -8,14 +8,14 @@
   >
 
     <input
-      class="s-input__input"
+      :class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
       :type="type"
       :disabled="inactive"
       v-model="internalValue"
+      :placeholder="placeholder"
       @keypress="onKeyPress"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
-
       v-bind="$attrs"
     />
 
@@ -78,6 +78,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    placeholder: {
+      type: String,
+      default: '',
+    },
   },
 
   data() {
@@ -101,7 +105,7 @@ export default Vue.extend({
 
   computed: {
     isEmpty(): boolean {
-      return !this.internalValue;
+      return !this.internalValue && !this.placeholder;
     },
 
     type(): string {

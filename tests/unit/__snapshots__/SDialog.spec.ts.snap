@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SDialog displays heading 1`] = `
+<div class="s-dialog__wrapper">
+  <div class="s-dialog s-dialog--visible">
+    <div class="s-dialog__header"><span class="s-dialog__heading">header</span>
+      <s-icon-stub package="sunshine24" name="close"></s-icon-stub>
+    </div>
+    <form></form>
+  </div>
+</div>
+`;
+
+exports[`SDialog displays slot content 1`] = `
+<div class="s-dialog__wrapper">
+  <div class="s-dialog s-dialog--visible">
+    <div class="s-dialog__header"><span class="s-dialog__heading"></span>
+      <s-icon-stub package="sunshine24" name="close"></s-icon-stub>
+    </div>
+    <form><button>OK</button></form>
+  </div>
+</div>
+`;
+
+exports[`SDialog is hidden 1`] = `undefined`;
+
+exports[`SDialog is visible 1`] = `
+<div class="s-dialog__wrapper">
+  <div class="s-dialog s-dialog--visible">
+    <div class="s-dialog__header"><span class="s-dialog__heading"></span>
+      <s-icon-stub package="sunshine24" name="close"></s-icon-stub>
+    </div>
+    <form></form>
+  </div>
+</div>
+`;

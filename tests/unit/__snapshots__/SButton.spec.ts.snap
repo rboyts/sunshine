@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SButton renders normal button 1`] = `<button class="s-button s-button--normal"><span tabindex="-1" class="s-button__content"> <span class="flex-grow">Normal button</span> </span></button>`;
+exports[`SButton renders normal button 1`] = `<button type="button" class="s-button s-button--normal"><span tabindex="-1" class="s-button__content"> <span class="flex-grow">Normal button</span> </span></button>`;
 
-exports[`SButton renders primary button 1`] = `<button class="s-button s-button--primary"><span tabindex="-1" class="s-button__content"> <span class="flex-grow">Primary button</span> </span></button>`;
+exports[`SButton renders primary button 1`] = `<button type="button" class="s-button s-button--primary"><span tabindex="-1" class="s-button__content"> <span class="flex-grow">Primary button</span> </span></button>`;
 
-exports[`SButton renders small button 1`] = `<button class="s-button s-button--small s-button--normal"><span tabindex="-1" class="s-button__content"> <span class="flex-grow">Small button</span> </span></button>`;
+exports[`SButton renders small button 1`] = `<button type="button" class="s-button s-button--small s-button--normal"><span tabindex="-1" class="s-button__content"> <span class="flex-grow">Small button</span> </span></button>`;

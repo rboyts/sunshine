@@ -11,6 +11,25 @@
   flex-direction: row;
 }
 
+// flex-layout with gap between items
+// TODO: Need to design a generic layout system
+.flex-layout {
+  display: flex;
+
+  > * {
+    margin: base-spacing(.5);
+  }
+}
+
+.flex-layout-down {
+  display: flex;
+  flex-direction: column;
+
+  > * {
+    margin: base-spacing(.5) 0;
+  }
+}
+
 .inline-flex {
   display: inline-flex;
   align-items: center;
@@ -36,14 +55,14 @@
   justify-content: space-evenly;
 }
 
-.grid {
+.s-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-gap: 1rem;
 }
 
 @for $i from 1 through 12 {
-  .grid-item--span-#{$i} {
+  .s-grid-item--span-#{$i} {
     grid-column: span $i;
 
     // TODO: Find out the proper way to make content fill item
@@ -63,4 +82,8 @@
     border-bottom: 2px solid $smartdok-yellow;
     text-decoration: none;
   }
+}
+
+.s-muted-text {
+  color: $grayer;
 }
