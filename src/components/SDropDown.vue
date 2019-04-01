@@ -32,7 +32,7 @@ Use cases:
   </s-drop-down-internal>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
 import SDropDownInternal from './SDropDown/SDropDownInternal.vue';
 
@@ -51,7 +51,7 @@ export default Vue.extend({
   },
 
   props: {
-    items: Array as () => object[],
+    items: Array,
 
     value: [Object, Array],
 
@@ -66,7 +66,7 @@ export default Vue.extend({
   data() {
     return {
       filter: '',
-      internalValue: null as any,
+      internalValue: null,
     };
   },
 
@@ -90,9 +90,9 @@ export default Vue.extend({
 
     // Update selection when data is changed.
     items(val) {
-      const byKey = (needle: any) => val.find((it: any) => it.key === needle.key) || null;
+      const byKey = needle => val.find(it => it.key === needle.key) || null;
       if (this.multiple) {
-        this.internalValue = this.internalValue.map(byKey).filter((v: any) => !!v);
+        this.internalValue = this.internalValue.map(byKey).filter(v => !!v);
       } else if (this.internalValue) {
         this.internalValue = byKey(this.internalValue);
       }
@@ -100,11 +100,11 @@ export default Vue.extend({
   },
 
   computed: {
-    filteredItems(): object[] {
+    filteredItems() {
       if (!this.filter) return this.items;
       const flt = this.filter.toLocaleLowerCase();
-      return this.items.filter((i: any) => (
-        i[this.labelKey].toLocaleLowerCase().indexOf(flt) !== -1));
+      return this.items.filter(it => (
+        it[this.labelKey].toLocaleLowerCase().indexOf(flt) !== -1));
     },
   },
 });

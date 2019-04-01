@@ -34,7 +34,7 @@
   </s-base-input>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
 import SBaseInput from './SBaseInput.vue';
 
@@ -111,11 +111,11 @@ export default Vue.extend({
   },
 
   computed: {
-    isEmpty(): boolean {
+    isEmpty() {
       return !this.internalValue && !this.placeholder;
     },
 
-    type(): string {
+    type() {
       switch (true) {
         case this.number:
           return 'number';
@@ -130,20 +130,20 @@ export default Vue.extend({
       }
     },
 
-    remainingFormat(): string {
+    remainingFormat() {
       if (!this.format) return '';
       return this.format.substring(`${this.internalValue}`.length);
     },
   },
 
   methods: {
-    onKeyPress(event: KeyboardEvent) {
+    onKeyPress(event) {
       if (!this.isValidKey(event.keyCode)) {
         event.preventDefault();
       }
     },
 
-    isValidKey(keyCode: number): boolean {
+    isValidKey(keyCode) {
       if (this.phone) {
         return (
           keyCode === 43 ||
