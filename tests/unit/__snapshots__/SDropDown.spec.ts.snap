@@ -1,29 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SDropDown maintains selection when filtering 1`] = `
-<div class="s-menu s-drop-down">
-  <div>
-    <div class="s-input s-input--focus s-drop-down__input"><span class="s-input__label s-input__label--aside">Choose country</span>
-      <!----> <input type="text" class="s-input__input s-input__input--with-label"> <span class="sunshine24-dropdownarrow s-drop-down__caret s-drop-down__caret--open"></span></div>
-  </div>
-  <div class="s-menu__popup" style="bottom: 0px; left: 0px; min-width: 0px; height: 0px;">
-    <div class="s-menu__popup__content" style="opacity: 1;">
-      <div>
-        <!---->
-        <ul class="s-list">
-          <li class="s-list-item">
-            <!---->
-            Sverige
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <!---->
-  <!---->
-</div>
-`;
-
 exports[`SDropDown renders dropdown list 1`] = `
 <div class="s-menu s-drop-down">
   <div>
@@ -58,30 +34,6 @@ exports[`SDropDown renders dropdown list 1`] = `
 `;
 
 exports[`SDropDown renders filtered list 1`] = `
-<div class="s-menu s-drop-down">
-  <div>
-    <div class="s-input s-input--focus s-drop-down__input"><span class="s-input__label s-input__label--aside">Choose country</span>
-      <!----> <input type="text" class="s-input__input s-input__input--with-label"> <span class="sunshine24-dropdownarrow s-drop-down__caret s-drop-down__caret--open"></span></div>
-  </div>
-  <div class="s-menu__popup" style="bottom: 0px; left: 0px; min-width: 0px; height: 0px;">
-    <div class="s-menu__popup__content" style="opacity: 1;">
-      <div>
-        <!---->
-        <ul class="s-list">
-          <li class="s-list-item">
-            <!---->
-            Sverige
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <!---->
-  <!---->
-</div>
-`;
-
-exports[`SDropDown renders filtered list 2`] = `
 <div class="s-menu s-drop-down">
   <div>
     <div class="s-input s-input--focus s-drop-down__input"><span class="s-input__label s-input__label--aside">Choose country</span>
