@@ -1,12 +1,8 @@
 <template>
-  <div>
-    <div :class="inputClass">
-      <span v-if="label" :class="labelClass">{{ label }}</span>
-      <slot />
-    </div>
-    <div v-if="error" class="s-input__error">
-      {{ error }}
-    </div>
+  <div :class="inputClass">
+    <span v-if="label" :class="labelClass">{{ label }}</span>
+    <slot/>
+    <div v-if="error" class="s-input__error">{{ error }}</div>
   </div>
 </template>
 
@@ -60,6 +56,5 @@ export default Vue.extend({
       });
     },
   },
-
 });
 </script>

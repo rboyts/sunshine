@@ -1,37 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`STextArea doesnt change value when inactive 1`] = `
-<div class="s-text-area">
-  <div class="s-input s-input--inactive"><span class="s-input__label">Text Area</span>
-    <div class="s-input__textarea__wrapper s-input__textarea__wrapper--with-label"><textarea disabled="disabled" placeholder="" class="s-input__input s-input__textarea" style="height: auto;"></textarea></div>
-  </div>
+<div class="s-text-area s-input s-input--inactive"><span class="s-input__label">Text Area</span>
+  <div class="s-input__textarea__wrapper s-input__textarea__wrapper--with-label"><textarea disabled="disabled" placeholder="" class="s-input__input s-input__textarea" style="height: auto;"></textarea></div>
   <!---->
 </div>
 `;
 
 exports[`STextArea doesnt change value when read only 1`] = `
-<div class="s-text-area">
-  <div class="s-input"><span class="s-input__label s-input__label--aside">Text Area</span>
-    <div class="s-input__textarea__wrapper s-input__textarea__wrapper--with-label"><textarea readonly="readonly" placeholder="" class="s-input__input s-input__textarea" style="height: auto;"></textarea></div>
-  </div>
+<div class="s-text-area s-input"><span class="s-input__label s-input__label--aside">Text Area</span>
+  <div class="s-input__textarea__wrapper s-input__textarea__wrapper--with-label"><textarea readonly="readonly" placeholder="" class="s-input__input s-input__textarea" style="height: auto;"></textarea></div>
   <!---->
 </div>
 `;
 
 exports[`STextArea renders empty text field 1`] = `
-<div class="s-text-area">
-  <div class="s-input"><span class="s-input__label">Text Area</span>
-    <div class="s-input__textarea__wrapper s-input__textarea__wrapper--with-label"><textarea rows="10" placeholder="" class="s-input__input s-input__textarea"></textarea></div>
-  </div>
+<div class="s-text-area s-input"><span class="s-input__label">Text Area</span>
+  <div class="s-input__textarea__wrapper s-input__textarea__wrapper--with-label"><textarea rows="10" placeholder="" class="s-input__input s-input__textarea"></textarea></div>
   <!---->
 </div>
 `;
 
 exports[`STextArea renders text field with text 1`] = `
-<div class="s-text-area">
-  <div class="s-input"><span class="s-input__label s-input__label--aside">Text Area</span>
-    <div class="s-input__textarea__wrapper s-input__textarea__wrapper--with-label"><textarea placeholder="" class="s-input__input s-input__textarea" style="height: auto;"></textarea></div>
-  </div>
+<div class="s-text-area s-input"><span class="s-input__label s-input__label--aside">Text Area</span>
+  <div class="s-input__textarea__wrapper s-input__textarea__wrapper--with-label"><textarea placeholder="" class="s-input__input s-input__textarea" style="height: auto;"></textarea></div>
   <!---->
 </div>
 `;

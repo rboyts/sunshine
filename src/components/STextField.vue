@@ -5,6 +5,7 @@
     :isEmpty="isEmpty"
     :error="error"
     :label="label"
+    class="s-text-field"
   >
 
     <input

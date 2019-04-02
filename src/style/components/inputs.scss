@@ -17,9 +17,9 @@ $input-font-size: $paragraph-font-size;
   color: $input-fg-color;
   // min-width: 150px;
   // max-width: 250px;
-  // margin-bottom: base-spacing();
+  margin-bottom: base-spacing();
   height: $input-height;
-  overflow: hidden;
+  overflow: visible;
   vertical-align: bottom;
 
   &--focus,
@@ -117,6 +117,8 @@ $input-font-size: $paragraph-font-size;
 }
 
 .s-input__error {
+  position: absolute;
+  bottom: -1.25rem;
   white-space: nowrap;
   font-size: .75rem;
   color: $color-bad;
@@ -149,7 +151,3 @@ $input-font-size: $paragraph-font-size;
     display: none;
   }
 }
-
-
-
-

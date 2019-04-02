@@ -36,3 +36,12 @@ $input-padding: base-spacing(1);
 .s-drop-down__spacer {
   flex: 1;
 }
+
+// HACK: Prevent the menu popup from appearing below the margin
+.s-drop-down {
+  margin-bottom: base-spacing();
+
+  .s-input {
+    margin-bottom: 0;
+  }
+}
