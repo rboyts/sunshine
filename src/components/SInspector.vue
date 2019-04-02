@@ -33,6 +33,8 @@ export default mixins(ClassesMixin).extend({
   name: 's-inspector',
   inheritAttrs: false,
 
+  inject: ['$validator'],
+
   model: {
     prop: 'show',
     event: 'toggle',

@@ -11,6 +11,8 @@ import { ClassesMixin } from '../lib/utils';
 export default Vue.extend({
   name: 's-grid-item',
 
+  inject: ['$validator'],
+
   mixins: [
     ClassesMixin,
   ],

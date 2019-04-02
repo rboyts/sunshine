@@ -35,6 +35,8 @@ import SIcon from './SIcon.vue';
 export default Vue.extend({
   name: 's-accordion-item',
 
+  inject: ['$validator'],
+
   mixins: [
     ClassesMixin,
   ],
