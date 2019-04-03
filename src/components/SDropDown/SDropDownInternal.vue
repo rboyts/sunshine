@@ -19,7 +19,9 @@
         @mousedown.native="$event.preventDefault()"
       >
         <slot name="selected" v-bind="{ textValue, value: internalValue, toggleChecked }">
-          <span v-if="textValue" :class="classes('label')">{{ textValue }}</span>
+          <span v-if="textValue" :class="classes('label', { 'with-label': !!label })">
+            {{ textValue }}
+          </span>
         </slot>
 
         <input
