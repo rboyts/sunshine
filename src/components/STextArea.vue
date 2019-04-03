@@ -6,6 +6,8 @@
     :isEmpty="isEmpty"
     :label="label"
     :readonly="readonly"
+    :maxLength="maxLength"
+    :currentLength="currentLength"
   >
     <div
       :class="{ 's-input__textarea__wrapper': true,
@@ -48,13 +50,17 @@ export default Vue.extend({
       type: String,
       default: '',
     },
-    initrows: {
+    initRows: {
       type: Number,
       default: 2,
     },
-    maxrows: {
+    maxRows: {
       type: Number,
       default: 10,
+    },
+    maxLength: {
+      type: Number,
+      default: 0,
     },
     inactive: {
       type: Boolean,
@@ -115,11 +121,15 @@ export default Vue.extend({
     },
 
     minHeight() {
-      return this.lineHeight * this.initrows;
+      return this.lineHeight * this.initRows;
     },
 
     maxHeight() {
-      return this.lineHeight * this.maxrows;
+      return this.lineHeight * this.maxRows;
+    },
+
+    currentLength() {
+      return this.internalValue.length;
     },
   },
 

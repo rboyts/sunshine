@@ -1,7 +1,7 @@
 <template>
   <div :class="inputClass">
     <span v-if="label" :class="labelClass">{{ label }}</span>
-    <span v-if="maxchar > 0" :class="counterClass">{{ count }}/{{ maxchar }}</span>
+    <span v-if="maxLength && label" :class="counterClass">{{ currentLength }}/{{ maxLength }}</span>
     <slot />
   </div>
 </template>
@@ -31,11 +31,11 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    maxchar: {
+    maxLength: {
       type: Number,
       default: 0,
     },
-    count: {
+    currentLength: {
       type: Number,
       default: 0,
     },
@@ -49,7 +49,6 @@ export default Vue.extend({
   },
 
   computed: {
-
     inputClass(): object {
       return inputClassHelper({
         focus: this.hasFocus,
@@ -62,13 +61,13 @@ export default Vue.extend({
         aside: (this.hasFocus && !this.readonly) || !this.isEmpty,
       });
     },
+
     counterClass(): object {
-      const usedField = this.count / this.maxchar;
       let show = false;
       let stop = false;
-      if (usedField >= 1) {
+      if (this.currentLength > this.maxLength) {
         stop = true;
-      } else if (usedField >= 0.8) {
+      } else if (this.currentLength / this.maxLength >= 0.8) {
         show = true;
       }
       return counterClassHelper({

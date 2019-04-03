@@ -4,6 +4,8 @@
     :hasFocus="hasFocus"
     :isEmpty="isEmpty"
     :label="label"
+    :maxLength="maxLength"
+    :currentLength="currentLength"
   >
 
     <input
@@ -81,11 +83,15 @@ export default Vue.extend({
       type: String,
       default: '',
     },
+    maxLength: {
+      type: Number,
+      default: 0,
+    },
   },
 
   data() {
     return {
-      internalValue: this.value,
+      internalValue: this.value as any,
       hasFocus: false,
     };
   },
@@ -125,6 +131,11 @@ export default Vue.extend({
     remainingFormat(): string {
       if (!this.format) return '';
       return this.format.substring(`${this.internalValue}`.length);
+    },
+
+    currentLength() : number {
+      let val = this.internalValue;
+      return val instanceof String ? val.length : val.toString().length;
     },
   },
 

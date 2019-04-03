@@ -67,15 +67,14 @@ $input-font-size: $paragraph-font-size;
   right: 0;
   top: 0;
 
-  padding: ($input-padding / 4) ($input-padding / 2);
+  padding: ($input-padding / 6) ($input-padding / 2);
   pointer-events: none;
-  font-size: $input-font-size * (10/14);
+  font-size: .6rem;
   white-space: nowrap;
   transition: color  0.5s;
 
   &--show {
     color: $gray;
-    transition: color 0.5s;
   }
 
   &--stop {
