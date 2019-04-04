@@ -5,6 +5,8 @@
     :isEmpty="isEmpty"
     :error="error"
     :label="label"
+    :maxLength="maxLength"
+    :currentLength="currentLength"
     class="s-text-field"
   >
 
@@ -90,6 +92,10 @@ export default Vue.extend({
       type: String,
       default: '',
     },
+    maxLength: {
+      type: Number,
+      default: 0,
+    },
   },
 
   data() {
@@ -134,6 +140,11 @@ export default Vue.extend({
     remainingFormat() {
       if (!this.format) return '';
       return this.format.substring(`${this.internalValue}`.length);
+    },
+
+    currentLength() {
+      let val = this.internalValue;
+      return val instanceof String ? val.length : val.toString().length;
     },
   },
 
