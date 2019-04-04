@@ -16,25 +16,33 @@ Incoming keys only need to be unique withing each section.
     :items="items"
     :placeholder="placeholder"
     :max-selected-shown="8"
-    v-model="internalValue"
+    v-model="internalValue.filters"
     @keydown.native.right.prevent="onKeyRight"
     @keydown.native.left.prevent="onKeyLeft"
     @closed="sectionIndex = -1"
     @text-input="onTextInput"
   >
-    <template v-slot:selected="{ value, toggleChecked }">
+    <template v-slot:selected="{ toggleChecked }">
       <div :class="classes('pills')">
         <div
-          v-for="(val, i) in value" :key="i"
+          v-for="val in selectedItems" :key="val.key"
           :class="classes('pill', { [val.type]: true })"
         >
           <span
             class="sunshine24-close"
             :class="classes('pill-icon')"
-            @click.prevent.stop="toggleChecked(val)"
+            @click.prevent.stop="toggleChecked(val.key)"
           />
           {{ val.label }}
           <span v-if="val.category" class="s-muted-text"> ({{ val.category }})</span>
+        </div>
+        <div v-if="internalValue.search" :class="classes('pill', { 'search': true })">
+          <span
+            class="sunshine24-close"
+            :class="classes('pill-icon')"
+            @click.prevent.stop="internalValue.search = ''"
+          />
+          {{ internalValue.search }}
         </div>
       </div>
     </template>
@@ -88,7 +96,7 @@ export default Vue.extend({
 
   props: {
     sections: Array,
-    value: Array,
+    value: Object,
     label: String,
 
     loading: {
@@ -99,7 +107,10 @@ export default Vue.extend({
 
   data() {
     return {
-      internalValue: [],
+      internalValue: {
+        filters: [],
+        search: null,
+      },
       sectionIndex: -1,
       filter: '',
     };
@@ -110,16 +121,19 @@ export default Vue.extend({
       this.internalValue = val;
     },
 
-    internalValue(val) {
-      if (val !== this.value) {
-        this.$emit('input', val);
-      }
+    internalValue: {
+      handler(val) {
+        if (val !== this.value) {
+          this.$emit('input', val);
+        }
+      },
+      deep: true,
     },
   },
 
   computed: {
     placeholder() {
-      return (this.internalValue.length === 0 ?
+      return (this.internalValue.filters.length === 0 ?
         'Filter input field, with suggestions for filter words such as department, machine type or project name...' :
         'Add filter...');
     },
@@ -129,31 +143,36 @@ export default Vue.extend({
     },
 
     items() {
-      if (this.currentSection) {
-        return this.getFilteredItemsFromSection(this.currentSection);
-      } else if (this.filter) {
-        return this.sections.reduce((acc, sec) => (
-          acc.concat(this.getFilteredItemsFromSection(sec))
-        ), []);
-      } else {
-        return [];
-      }
+      if (!(this.currentSection || this.filter)) return [];
+
+      const flt = this.filter.toLocaleLowerCase();
+      return this.allItems
+        .filter(it => !this.currentSection || it.sectionKey === this.currentSection.key)
+        .filter(it => !this.internalValue.filters.includes(it.key) &&
+          it.label.toLocaleLowerCase().includes(flt));
+    },
+
+    selectedItems() {
+      return this.internalValue.filters.map(key => this.allItems.find(it => it.key === key));
     },
 
     showSuggestionsTab() {
       return !!this.filter;
     },
+
+    allItems() {
+      return this.sections.reduce((acc, sec) => (
+        acc.concat(sec.items.map(item => ({
+          ...item,
+          sectionKey: sec.key,
+          itemKey: item.key,
+          key: `${sec.key}:${item.key}`,
+        })))
+      ), []);
+    },
   },
 
   methods: {
-    getFilteredItemsFromSection(section) {
-      const flt = this.filter.toLocaleLowerCase();
-      const { items } = section;
-      return items.filter(i => (
-        !this.internalValue.includes(i) &&
-        i.label.toLocaleLowerCase().indexOf(flt) !== -1));
-    },
-
     onClickTab(index) {
       if (this.sectionIndex === index) {
         this.sectionIndex = -1;
@@ -175,13 +194,7 @@ export default Vue.extend({
     },
 
     onTextInput(text) {
-      const val = this.internalValue.filter(v => v.type !== 'search');
-      const search = {
-        type: 'search',
-        label: `"${text}"`,
-        value: text,
-      };
-      this.$emit('input', val.concat(search));
+      this.internalValue.search = text;
     },
 
     highlightLabelHtml(item) {

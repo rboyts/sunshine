@@ -53,7 +53,7 @@ export default Vue.extend({
   props: {
     items: Array,
 
-    value: [Object, Array],
+    value: [String, Array],
 
     multiple: Boolean,
 
@@ -90,11 +90,13 @@ export default Vue.extend({
 
     // Update selection when data is changed.
     items(val) {
-      const byKey = needle => val.find(it => it.key === needle.key) || null;
+      const keys = val.map(it => it.key);
       if (this.multiple) {
-        this.internalValue = this.internalValue.map(byKey).filter(v => !!v);
+        this.internalValue = this.internalValue.filter(k => keys.includes(k));
       } else if (this.internalValue) {
-        this.internalValue = byKey(this.internalValue);
+        if (!keys.includes(this.internalValue)) {
+          this.internalValue = null;
+        }
       }
     },
   },

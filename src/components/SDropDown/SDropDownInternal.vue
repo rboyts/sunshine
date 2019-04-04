@@ -67,16 +67,16 @@
             v-bind="{
               item: node.item,
               label: node[labelKey],
-              onChange: checked => onItemChange(node.item, checked),
-              onClick: () => onItemClick(node.item),
+              onChange: checked => onItemChange(node.key, checked),
+              onClick: () => onItemClick(node.key),
             }"
           >
             <s-list-item
               :key="node.key"
               :checkable="multiple"
               :checked="node.checked"
-              @change="onItemChange(node.item, $event)"
-              @click="onItemClick(node.item)"
+              @change="onItemChange(node.key, $event)"
+              @click="onItemClick(node.key)"
             >
               {{ node[labelKey] }}
             </s-list-item>
@@ -135,7 +135,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     value: {
-      type: [Object, Array],
+      type: [String, Array],
     },
 
     search: {
@@ -205,7 +205,7 @@ export default mixins(ClassesMixin).extend({
 
     itemValues(): object[] {
       return this.items.map(item => {
-        let checked = this.multiple && this.internalValue.includes(item);
+        let checked = this.multiple && this.internalValue.includes(item.key);
         return {
           ...item,
           item,
@@ -224,25 +224,20 @@ export default mixins(ClassesMixin).extend({
       // Hide when typing in single-select mode
       if (!this.multiple && this.search && this.isOpen) return '';
 
+      const getLabel = (key: string) => {
+        const item = this.items.find(it => it.key === key) as any;
+        return item ? item[this.labelKey] : '** ERROR **';
+      };
+
       if (this.multiple) {
         if (this.internalValue.length > this.maxSelectedShown) {
           // TODO customize/i18n
           return `${this.internalValue.length} selected`;
         } else {
-          return this.internalValue.map((v: any) => v[this.labelKey]).join(', ');
+          return this.internalValue.map(getLabel).join(', ');
         }
       } else {
-        return this.internalValue[this.labelKey];
-      }
-    },
-
-    labels(): string[] {
-      if (!this.multiple) return [];
-
-      if (this.internalValue.length > this.maxSelectedShown) {
-        return [`${this.internalValue.length} selected`];
-      } else {
-        return this.internalValue.map((v: any) => v[this.labelKey]);
+        return getLabel(this.internalValue);
       }
     },
   },
@@ -325,15 +320,15 @@ export default mixins(ClassesMixin).extend({
       }
     },
 
-    getPreviousItem(item: IListItem | null): object {
-      let index = item == null ? -1 : this.items.indexOf(item);
+    getPreviousItem(key: string | null): string {
+      let index = key == null ? -1 : this.items.findIndex(it => it.key === key);
       if (index === -1) index = this.items.length;
-      return this.items[Math.max(0, index - 1)];
+      return this.items[Math.max(0, index - 1)].key;
     },
 
-    getNextItem(item: IListItem | null): object {
-      let index = item == null ? -1 : this.items.indexOf(item);
-      return this.items[Math.min(index + 1, this.items.length - 1)];
+    getNextItem(key: string | null): string {
+      let index = key == null ? -1 : this.items.findIndex(it => it.key === key);
+      return this.items[Math.min(index + 1, this.items.length - 1)].key;
     },
 
     onCaretClick(event: PointerEvent) {
@@ -351,9 +346,9 @@ export default mixins(ClassesMixin).extend({
       this.clearFilter();
     },
 
-    onItemClick(item: any) {
+    onItemClick(key: string) {
       if (!this.multiple) {
-        this.internalValue = item;
+        this.internalValue = key;
       }
 
       this.clearFilter();
@@ -370,22 +365,24 @@ export default mixins(ClassesMixin).extend({
       this.$emit('update:filter', val);
     },
 
-    toggleChecked(item: any) {
+    toggleChecked(key: string) {
       if (!this.multiple) throw new Error('Expected multiple to be true');
 
-      const currentValue = this.internalValue as object[] || [];
-      this.setChecked(item, currentValue.indexOf(item) === -1);
+      const currentValue = this.internalValue as string[] || [];
+      this.setChecked(key, currentValue.indexOf(key) === -1);
     },
 
-    setChecked(item: any, checked: boolean) {
+    setChecked(key: string, checked: boolean) {
       if (!this.multiple) throw new Error('Expected multiple to be true');
 
-      const currentValue = this.internalValue as object[] || [];
-      let newValue: object[];
+      const currentValue = this.internalValue as string[] || [];
+      let newValue: string[];
       if (checked) {
-        newValue = (currentValue.indexOf(item) === -1) ? currentValue.concat(item) : currentValue;
+        newValue = (currentValue.indexOf(key) === -1) ?
+          currentValue.concat(key) :
+          currentValue;
       } else {
-        newValue = currentValue.filter(i => i !== item);
+        newValue = currentValue.filter(i => i !== key);
       }
       this.internalValue = newValue;
     },

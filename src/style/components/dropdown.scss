@@ -15,6 +15,7 @@ $input-padding: base-spacing(1);
 
 .s-drop-down__label {
   @include action-font;
+  cursor: default;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
