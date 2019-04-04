@@ -138,7 +138,10 @@ export default Vue.extend({
     },
 
     moveToRight() {
-      this.internalValue = [...this.leftChecked, ...this.internalValue];
+      const items = this.leftChecked.map(
+        key => this.leftList.find(i => key === i.key),
+      );
+      this.internalValue = [...items, ...this.internalValue];
       this.leftChecked = [];
     },
 
@@ -149,7 +152,7 @@ export default Vue.extend({
 
     moveToLeft() {
       this.internalValue = this.internalValue.filter(
-        item => !this.rightChecked.map(i => i.key).includes(item.key),
+        item => !this.rightChecked.includes(item.key),
       );
       this.rightChecked = [];
     },
@@ -160,12 +163,12 @@ export default Vue.extend({
     },
 
     onLeftDblClick(item) {
-      this.leftChecked = [item];
+      this.leftChecked = [item.key];
       this.moveToRight();
     },
 
     onRightDblClick(item) {
-      this.rightChecked = [item];
+      this.rightChecked = [item.key];
       this.moveToLeft();
     },
   },

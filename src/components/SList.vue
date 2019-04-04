@@ -2,10 +2,10 @@
   Example: <s-list :items="items" v-model="selected" :filter="keyword" checkable/>
 
  items     - The items to show in the list
- v-model   - The items in the list that is selected/checked.
-             If some items are to be preselected, they have to
-             be added to items to be visible in the list
- filter    - Only show items containing the filter keyword
+ v-model   - The keys of the items in the list that is selected.
+             If some items are to be preselected, these items has
+             to be added to items array to be visible in the list.
+ filter    - Only show items containing the filter keyword.
 -->
 
 <template>
@@ -91,21 +91,21 @@ export default mixins(ClassesMixin).extend({
 
   methods: {
     isSelected(item) {
-      return this.internalValue.map(i => i.key).includes(item.key);
+      return this.internalValue.includes(item.key);
     },
 
     onItemClick(event, item) {
       if (event.detail > 1) {
         this.$emit('dblclick', item);
       } else {
-        this.internalValue = this.isSelected(item) ? [] : [item];
+        this.internalValue = this.isSelected(item) ? [] : [item.key];
       }
     },
 
     onItemCtrlClick(item) {
       this.internalValue = this.isSelected(item) ?
-        this.internalValue.filter(i => i.key !== item.key) :
-        this.internalValue.concat(item);
+        this.internalValue.filter(key => key !== item.key) :
+        this.internalValue.concat(item.key);
     },
 
     onItemShiftClick(item) {
