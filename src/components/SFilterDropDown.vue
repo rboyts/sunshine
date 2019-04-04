@@ -7,80 +7,114 @@ Incoming keys only need to be unique withing each section.
 -->
 
 <template>
-  <s-drop-down-internal
-    search
-    multiple
-    allow-missing
-    label=""
-    :filter.sync="filter"
-    :items="items"
-    :placeholder="placeholder"
-    :max-selected-shown="8"
-    v-model="internalValue.filters"
-    @keydown.native.right.prevent="onKeyRight"
-    @keydown.native.left.prevent="onKeyLeft"
-    @closed="sectionIndex = -1"
-    @text-input="onTextInput"
-  >
-    <template v-slot:selected="{ toggleChecked }">
-      <div :class="classes('pills')">
-        <div
-          v-for="val in selectedItems" :key="val.key"
-          :class="classes('pill', { [val.type]: true })"
+  <s-menu v-model="isOpen" :class="classes()" :toggleOnClick="false" @closed="$emit('closed')">
+    <template v-slot:activator>
+      <s-base-input
+        :class="classes('input')"
+        :hasFocus="hasFocus"
+        :isEmpty="false"
+        :readonly="!isOpen"
+        :inactive="inactive"
+        :error="error"
+        @click.native="onClick"
+        @keydown.native.up.prevent="onArrowUp"
+        @keydown.native.down.prevent="onArrowDown"
+        @keydown.native.right.prevent="onKeyRight"
+        @keydown.native.left.prevent="onKeyLeft"
+        @keydown.native.enter.prevent="onEnter"
+        @keydown.native.esc.prevent="onEscape"
+        @keydown.native.backspace="onBackspace"
+        @keydown.native.space="onSpace"
+        @mousedown.native.prevent=""
+      >
+        <div :class="classes('pills')">
+          <div
+            v-for="val in selectedItems" :key="val.key"
+            :class="classes('pill', { [val.type]: true })"
+          >
+            <span
+              class="sunshine24-close"
+              :class="classes('pill-icon')"
+              @click.prevent.stop="onItemRemove(val)"
+            />
+            {{ val.label }}
+            <span v-if="val.category" class="s-muted-text"> ({{ val.category }})</span>
+          </div>
+          <div v-if="internalValue.search" :class="classes('pill', { 'search': true })">
+            <span
+              class="sunshine24-close"
+              :class="classes('pill-icon')"
+              @click.prevent.stop="internalValue.search = ''"
+            />
+            {{ internalValue.search }}
+          </div>
+        </div>
+
+        <input
+          ref="input"
+          :class="{
+            's-input__input': true,
+            's-input__input--with-label': !!label,
+            's-input__input--transparent': !isOpen,
+          }"
+          type="text"
+          :disabled="inactive"
+          :placeholder="placeholder"
+          v-model="filter"
+          @click.stop="onClick"
+          @focus="hasFocus = true"
+          @blur="hasFocus = false"
+        />
+          <!-- @input="onInput" -->
+
+        <span
+          class="sunshine24-dropdownarrow"
+          :class="classes('caret', { open: isOpen })"
+          @click.stop="onCaretClick"
+        />
+      </s-base-input>
+    </template>
+
+    <template v-slot:content>
+      <s-menu-list>
+        <div :class="classes('header')">
+          <div :class="classes('tabs')">
+            <div v-show="showSuggestionsTab"
+              :class="classes('tabs', 'tab', { active: sectionIndex === -1 })">
+              <a @click.prevent="onClickTab(-1)">Suggestions</a>
+            </div>
+
+            <div v-for="(section, i) in sections" :key="i"
+              :class="classes('tabs', 'tab', { active: i === sectionIndex })">
+              <a @click.prevent="onClickTab(i)">{{ section.label }}</a>
+            </div>
+          </div>
+
+          <div :class="classes('loading')">
+            <div v-if="loading" :class="classes('loading-progress')" />
+          </div>
+        </div>
+
+        <s-list-item
+          v-for="item in items"
+          :key="item.key"
+          @click="onItemClick(item)"
         >
-          <span
-            class="sunshine24-close"
-            :class="classes('pill-icon')"
-            @click.prevent.stop="toggleChecked(val.key)"
-          />
-          {{ val.label }}
-          <span v-if="val.category" class="s-muted-text"> ({{ val.category }})</span>
-        </div>
-        <div v-if="internalValue.search" :class="classes('pill', { 'search': true })">
-          <span
-            class="sunshine24-close"
-            :class="classes('pill-icon')"
-            @click.prevent.stop="internalValue.search = ''"
-          />
-          {{ internalValue.search }}
-        </div>
-      </div>
+          <span v-html="highlightLabelHtml(item)" />
+          <span v-if="sectionIndex === -1" class="s-muted-text">&nbsp;({{ item.category }})</span>
+        </s-list-item>
+      </s-menu-list>
     </template>
-
-    <template v-slot:above>
-      <div :class="classes('header')">
-        <div :class="classes('tabs')">
-          <div v-show="showSuggestionsTab"
-            :class="classes('tabs', 'tab', { active: sectionIndex === -1 })">
-            <a @click.prevent="onClickTab(-1)">Suggestions</a>
-          </div>
-
-          <div v-for="(section, i) in sections" :key="i"
-            :class="classes('tabs', 'tab', { active: i === sectionIndex })">
-            <a @click.prevent="onClickTab(i)">{{ section.label }}</a>
-          </div>
-        </div>
-
-        <div :class="classes('loading')">
-          <div v-if="loading" :class="classes('loading-progress')" />
-        </div>
-      </div>
-    </template>
-
-    <template v-slot="{ item, onChange }">
-      <s-list-item @click="onChange(true)">
-        <span v-html="highlightLabelHtml(item)" />
-        <span v-if="sectionIndex === -1" class="s-muted-text">&nbsp;({{ item.category }})</span>
-      </s-list-item>
-    </template>
-
-  </s-drop-down-internal>
+  </s-menu>
 </template>
 
 <script>
 import Vue from 'vue';
 import { ClassesMixin } from '../lib/utils';
-import SDropDownInternal from './SDropDown/SDropDownInternal.vue';
+import SBaseInput from './SBaseInput.vue';
+import SListItem from './SListItem.vue';
+import SMenu from './SMenu.vue';
+import SMenuList from './SMenuList.vue';
 
 
 export default Vue.extend({
@@ -91,15 +125,25 @@ export default Vue.extend({
   ],
 
   components: {
-    SDropDownInternal,
+    SBaseInput,
+    SListItem,
+    SMenu,
+    SMenuList,
   },
 
   props: {
     sections: Array,
     value: Object,
+
     label: String,
+    error: String,
 
     loading: {
+      type: Boolean,
+      default: false,
+    },
+
+    inactive: {
       type: Boolean,
       default: false,
     },
@@ -113,6 +157,8 @@ export default Vue.extend({
       },
       sectionIndex: -1,
       filter: '',
+      hasFocus: false,
+      isOpen: false,
     };
   },
 
@@ -128,6 +174,24 @@ export default Vue.extend({
         }
       },
       deep: true,
+    },
+
+    filter(val) {
+      if (val) {
+        this.isOpen = true;
+      }
+    },
+
+    hasFocus(val) {
+      if (!val) {
+        this.isOpen = false;
+      }
+    },
+
+    isOpen(val) {
+      if (!val) {
+        this.clearFilter();
+      }
     },
   },
 
@@ -173,11 +237,80 @@ export default Vue.extend({
   },
 
   methods: {
+    onClick() {
+      if (this.inactive) return;
+
+      this.isOpen = true;
+      this.setFocus();
+    },
+
+    onCaretClick(event) {
+      if (this.inactive) return;
+      this.isOpen = !this.isOpen;
+    },
+
+    setFocus() {
+      this.$refs.input.focus();
+    },
+
     onClickTab(index) {
       if (this.sectionIndex === index) {
         this.sectionIndex = -1;
       } else {
         this.sectionIndex = index;
+      }
+    },
+
+    onArrowUp() {
+      if (!this.isOpen) {
+        this.isOpen = true;
+      }
+    },
+
+    onArrowDown() {
+      if (!this.isOpen) {
+        this.isOpen = true;
+      }
+    },
+
+    onSpace() {
+      if (!this.isOpen) {
+        this.isOpen = true;
+      }
+    },
+
+    onEnter() {
+      if (this.filter) {
+        this.internalValue.search = this.filter;
+        this.filter = '';
+      }
+      this.isOpen = true;
+    },
+
+    onEscape() {
+      if (this.isOpen) {
+        if (this.filter) {
+          this.filter = '';
+        } else {
+          this.isOpen = false;
+        }
+      }
+    },
+
+    onBackspace(event) {
+      if (this.isOpen) {
+        if (!this.filter) {
+          if (this.internalValue.search) {
+            this.internalValue.search = '';
+          } else {
+            this.internalValue.filters =
+              this.internalValue.filters.slice(0, this.internalValue.filters.length - 1);
+          }
+          event.preventDefault();
+        }
+      } else {
+        this.isOpen = true;
+        event.preventDefault();
       }
     },
 
@@ -193,8 +326,13 @@ export default Vue.extend({
       }
     },
 
-    onTextInput(text) {
-      this.internalValue.search = text;
+    onItemClick(item) {
+      this.internalValue.filters = this.internalValue.filters.concat(item.key);
+      this.filter = '';
+    },
+
+    onItemRemove(item) {
+      this.internalValue.filters = this.internalValue.filters.filter(it => it !== item.key);
     },
 
     highlightLabelHtml(item) {
