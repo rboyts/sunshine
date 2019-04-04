@@ -55,24 +55,29 @@ $list-item-height: base-spacing(4);
   border-radius: 4px;
   background-color: white;
   min-height: 10em;
-  overflow-y: scroll;
 }
 
-.s-multiselector__row {
-display: grid;
+.s-multiselect__row {
+  display: grid;
   grid-template-columns: 1fr 3rem 1fr;
-  grid-column-gap: .5em;
+  grid-column-gap: base-spacing(1);
   width: 100%;
   height: 100%;
 
 }
 
-.s-multiselector__button-container {
+.s-multiselect__button-container {
   justify-content: center;
 }
 
-.s-multiselector__title {
+.s-multiselect__title {
   @include paragraph-font;
-  font-weight:$action-font-weight;
+  font-weight: $action-font-weight;
 }
+
+.s-multiselect__searchbar {
+  width: 15rem;
+  margin: 1rem;
+}
+
 

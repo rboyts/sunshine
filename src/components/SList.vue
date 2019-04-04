@@ -6,7 +6,6 @@
              If some items are to be preselected, they have to
              be added to items to be visible in the list
  filter    - Only show items containing the filter keyword
- checkable - Checkboxes beside all items.
 -->
 
 <template>
@@ -17,14 +16,10 @@
     <s-list-item
       v-for="item in visibleItems"
       :key="item.key"
-      :checkable="checkable"
-      :checked="isChecked(item)"
       :selected="isSelected(item)"
-      @click.exact="itemClicked(item)"
-      @click.ctrl.exact="itemCtrlClicked(item)"
-      @click.shift.exact="itemShiftClicked(item)"
-      @dblclick.native.exact="itemDblClicked(item)"
-      @change="itemClicked(item)"
+      @click.exact="onItemClick($event, item)"
+      @click.ctrl.exact="onItemCtrlClick(item)"
+      @click.shift.exact="onItemShiftClick(item)"
     >
       {{ item.label }}
     </s-list-item>
@@ -47,12 +42,12 @@ export default mixins(ClassesMixin).extend({
   props: {
     items: {
       type: Array,
-      default: () => [],
+      required: true,
     },
 
     value: {
       type: Array,
-      default: () => [],
+      required: true,
     },
 
     checkable: {
@@ -68,83 +63,53 @@ export default mixins(ClassesMixin).extend({
 
   data() {
     return {
-      selection: [],
+      internalValue: [],
     };
   },
-
-  // 1. Is it worth it performance-wise to keep only the keys in the selection array?
-  // I assume we want to emit the key label pairs.
-  //
-  // In selection we then have to do something like this:
-  // const items = this.items.filter(i => this.selection.includes(i.key));
-  // this.$emit('input', items)
-  //
-  // And in value (The user can put preselected items here):
-  // this.selection = val.map(i => i.key);
-  //
-  // In the value watch, we should only assign selection = val if val is not equal this.value,
-  // since we're creating new arrays this would require a deep array comparison?
-  //
-  // 2. Should value and selection watch have the deep: true option, in case data is changed?
-  // 3. Are props watched deep?
-  //
 
   watch: {
     value: {
       handler(val) {
-        this.selection = val;
+        this.internalValue = val;
       },
       immediate: true,
     },
 
-    selection(val) {
-      this.$emit('input', val);
+    internalValue(val) {
+      if (val !== this.value) {
+        this.$emit('input', val);
+      }
     },
   },
 
   computed: {
     visibleItems() {
-      return this.items.filter(i => i.label.toLowerCase().includes(this.filter.toLowerCase()));
+      const filter = this.filter.toLowerCase();
+      return this.items.filter(i => i.label.toLowerCase().includes(filter));
     },
   },
 
   methods: {
     isSelected(item) {
-      if (this.checkable) return false;
-      return this.selection.map(i => i.key).includes(item.key);
+      return this.internalValue.map(i => i.key).includes(item.key);
     },
 
-    isChecked(item) {
-      if (!this.checkable) return false;
-      return this.selection.map(i => i.key).includes(item.key);
-    },
-
-    itemClicked(item, index) {
-      if (this.checkable) {
-        this.itemCtrlClicked(item);
-        return;
-      }
-      if (this.selection.map(i => i.key).includes(item.key)) {
-        this.selection = [];
+    onItemClick(event, item) {
+      if (event.detail > 1) {
+        this.$emit('dblclick', item);
       } else {
-        this.selection = [item];
+        this.internalValue = this.isSelected(item) ? [] : [item];
       }
     },
 
-    itemCtrlClicked(item, index) {
-      if (this.selection.map(i => i.key).includes(item.key)) {
-        this.selection = this.selection.filter(i => i.key !== item.key);
-      } else {
-        this.selection = this.selection.concat(item);
-      }
+    onItemCtrlClick(item) {
+      this.internalValue = this.isSelected(item) ?
+        this.internalValue.filter(i => i.key !== item.key) :
+        this.internalValue.concat(item);
     },
 
-    itemShiftClicked(item, index) {
+    onItemShiftClick(item) {
       // implement
-    },
-
-    itemDblClicked(item) {
-      this.$emit('dblclick', item);
     },
   },
 });
