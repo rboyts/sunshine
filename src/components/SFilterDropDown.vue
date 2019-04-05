@@ -190,7 +190,7 @@ export default Vue.extend({
 
     isOpen(val) {
       if (!val) {
-        this.clearFilter();
+        this.filter = '';
       }
     },
   },
