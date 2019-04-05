@@ -12,8 +12,11 @@
   >
     <textarea
       ref="inputArea"
-      :class="{ 's-input__input s-input__textarea' : true,
-                's-input__textarea--with-label' : !!label }"
+      :class="{
+        's-input__input': true,
+        's-input__textarea': true,
+        's-input__textarea--with-label': !!label,
+      }"
       :style="inputAreaStyle"
       :rows="rows"
       :disabled="inactive"
@@ -24,8 +27,7 @@
       v-model="internalValue"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
-    >
-    </textarea>
+    />
   </s-base-input>
 </template>
 
