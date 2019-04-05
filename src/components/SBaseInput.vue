@@ -7,16 +7,16 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
-import { classHelper } from '../lib/utils';
-
-const inputClassHelper = classHelper('s-input');
-const labelClassHelper = classHelper('s-input', 'label');
-const counterClassHelper = classHelper('s-input', 'counter');
+import { ClassesMixin } from '../lib/utils';
 
 export default Vue.extend({
-  name: 's-base-input',
+  name: 's-input',
+
+  mixins: [
+    ClassesMixin,
+  ],
 
   props: {
     label: String,
@@ -52,31 +52,32 @@ export default Vue.extend({
   },
 
   computed: {
-    inputClass(): object {
-      return inputClassHelper({
+    inputClass() {
+      return this.classes({
         focus: this.hasFocus,
         inactive: this.inactive,
         error: !!this.error,
       });
     },
 
-    labelClass(): object {
-      return labelClassHelper({
+    labelClass() {
+      return this.classes('label', {
         aside: (this.hasFocus && !this.readonly) || !this.isEmpty,
       });
     },
 
-    counterClass(): object {
-      let show = false;
-      let stop = false;
-      if (this.currentLength > this.maxLength) {
-        stop = true;
-      } else if (this.currentLength / this.maxLength >= 0.8) {
-        show = true;
-      }
-      return counterClassHelper({
-        show,
-        stop,
+    showCounter() {
+      return this.currentLength / this.maxLength >= 0.8;
+    },
+
+    showCounterStop() {
+      return this.currentLength > this.maxLength;
+    },
+
+    counterClass() {
+      return this.classes('counter', {
+        show: this.showCounter,
+        stop: this.showCounterStop,
       });
     },
   },
