@@ -91,7 +91,7 @@ export default Vue.extend({
 
     height: {
       type: String,
-      default: '12em',
+      default: '12rem',
     },
   },
 
