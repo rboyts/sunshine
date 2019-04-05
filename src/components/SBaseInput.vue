@@ -1,7 +1,8 @@
 <template>
   <div :class="inputClass" v-on="$listeners">
     <span v-if="label" :class="labelClass">{{ label }}</span>
-    <slot/>
+    <span v-if="maxLength && label" :class="counterClass">{{ currentLength }}/{{ maxLength }}</span>
+    <slot />
     <div v-if="error" class="s-input__error">{{ error }}</div>
   </div>
 </template>
@@ -12,6 +13,7 @@ import { classHelper } from '../lib/utils';
 
 const inputClassHelper = classHelper('s-input');
 const labelClassHelper = classHelper('s-input', 'label');
+const counterClassHelper = classHelper('s-input', 'counter');
 
 export default Vue.extend({
   name: 's-base-input',
@@ -31,6 +33,14 @@ export default Vue.extend({
     inactive: {
       type: Boolean,
       default: false,
+    },
+    maxLength: {
+      type: Number,
+      default: 0,
+    },
+    currentLength: {
+      type: Number,
+      default: 0,
     },
 
     // If readonly, the label is shown full size even when the input has focus,
@@ -53,6 +63,20 @@ export default Vue.extend({
     labelClass(): object {
       return labelClassHelper({
         aside: (this.hasFocus && !this.readonly) || !this.isEmpty,
+      });
+    },
+
+    counterClass(): object {
+      let show = false;
+      let stop = false;
+      if (this.currentLength > this.maxLength) {
+        stop = true;
+      } else if (this.currentLength / this.maxLength >= 0.8) {
+        show = true;
+      }
+      return counterClassHelper({
+        show,
+        stop,
       });
     },
   },
