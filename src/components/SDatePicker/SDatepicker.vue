@@ -242,9 +242,17 @@ export default Vue.extend({
 
     mouseDragStart(payload: IMomentPayload) {
       if (!this.range) return;
+
       let date = moment([payload.y, (payload.M - 1), payload.d]);
-      this.mouseDrag = true;
-      this.startDragDate = date;
+
+      if (moment(this.period.from).isSame(this.period.to)) {
+        // Treat click as period selecting
+        this.setSelectedPeriod(this.period.from, date);
+      } else {
+        this.mouseDrag = true;
+        this.startDragDate = date;
+      }
+      console.log('Drag click: ', this.startDragDate);
       this.$emit('filter-update', { option: '', period: '' });
     },
 
