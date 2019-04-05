@@ -58,6 +58,7 @@ export default Vue.extend({
     periodOption: {
       set(newVal: ICalendarOptionFilter) {
         this.internalFilter.option = newVal;
+        if (!this.internalFilter.period) this.internalFilter.period = ICalendarPeriodFilter.Day;
       },
       get(): string {
         return String(this.internalFilter.option);
@@ -67,6 +68,7 @@ export default Vue.extend({
     periodPreselect: {
       set(newVal: ICalendarPeriodFilter) {
         this.internalFilter.period = newVal;
+        if (!this.internalFilter.option) this.internalFilter.option = ICalendarOptionFilter.Current;
       },
       get(): string {
         return String(this.internalFilter.period) as moment.unitOfTime.DurationConstructor;
