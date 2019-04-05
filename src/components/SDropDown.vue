@@ -148,9 +148,10 @@ export default Vue.extend({
       default: 'label',
     },
 
-    value: {
-      type: [String, Array],
-    },
+    // value must be an array of T if `multiple` is true, of a single instance
+    // of T otherwise, where T is the type of the `key` attribute in each item.
+    // Typically, T is either String or Number.
+    value: null,
 
     search: {
       type: Boolean,
@@ -225,6 +226,14 @@ export default Vue.extend({
     },
   },
 
+  beforeMount() {
+    this.validateProps();
+  },
+
+  beforeUpdate() {
+    this.validateProps();
+  },
+
   computed: {
     filteredItems() {
       if (!this.filter) return this.items;
@@ -260,7 +269,7 @@ export default Vue.extend({
 
       const getLabel = key => {
         const item = this.items.find(it => it.key === key);
-        return item ? item[this.labelKey] : '** ERROR **';
+        return item ? item[this.labelKey] : key;
       };
 
       if (this.multiple) {
@@ -421,6 +430,43 @@ export default Vue.extend({
 
     clearFilter() {
       this.filter = '';
+    },
+
+    // During debugging, we'll do some heavy valudation of item key and value types
+    validateProps() {
+      if (process.env.NODE_ENV === 'production') return;
+
+      // Show warnings like Vue prop validation
+      const warn = msg => Vue.util.warn(msg, this);
+
+      const { items, multiple, value } = this;
+
+      if (multiple) {
+        if (!Array.isArray(value)) {
+          warn('Invalid prop: When "multiple" is true, "value" must be an array.');
+        }
+      }
+
+      if (items.length === 0) return;
+
+      const first = items[0];
+
+      const item = items.find(it => typeof it.key !== typeof first.key);
+      if (item) {
+        warn('Invalid prop: All items must have the same type of "key". ' +
+          `Found ${first.key} (${typeof first.key}) and ${item.key} (${typeof item.key}).`);
+      }
+
+      if (multiple) {
+        const val = value.find(v => typeof v !== typeof first.key);
+        if (valueType) {
+          warn('Invalid prop: Values must have the same type as keys. ' +
+            `Found ${val} (${typeof val}) and ${first.key} (${typeof first.key}).`);
+        }
+      } else if (value != null && typeof value !== typeof first.key) {
+        warn('Invalid prop: "value" must have the same type as keys. ' +
+          `Found ${value} (${typeof value}) and ${first.key} (${typeof first.key}).`);
+      }
     },
   },
 });
