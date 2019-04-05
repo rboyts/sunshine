@@ -146,7 +146,7 @@ export default Vue.extend({
     },
 
     moveAllToRight() {
-      this.internalValue = [...this.leftList];
+      this.internalValue = [...this.internalValue, ...this.leftList];
       this.leftChecked = [];
     },
 
