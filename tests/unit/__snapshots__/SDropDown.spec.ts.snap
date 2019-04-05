@@ -5,6 +5,7 @@ exports[`SDropDown renders dropdown list 1`] = `
   <div>
     <div class="s-input s-input--focus s-drop-down__input"><span class="s-input__label">Choose country</span>
       <!---->
+      <!---->
       <div tabindex="0" class="s-drop-down__spacer"></div> <span class="sunshine24-dropdownarrow s-drop-down__caret s-drop-down__caret--open"></span>
       <!---->
     </div>
@@ -39,6 +40,7 @@ exports[`SDropDown renders filtered list 1`] = `
 <div class="s-menu s-drop-down">
   <div>
     <div class="s-input s-input--focus s-drop-down__input"><span class="s-input__label s-input__label--aside">Choose country</span>
+      <!---->
       <!----> <input type="text" class="s-input__input s-input__input--with-label"> <span class="sunshine24-dropdownarrow s-drop-down__caret s-drop-down__caret--open"></span>
       <!---->
     </div>
