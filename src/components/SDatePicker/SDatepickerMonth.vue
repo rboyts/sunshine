@@ -6,7 +6,6 @@
         class="s-datepicker__weeks__week"
         v-for="w in month.weeksInMonth"
         :key="w"
-        :data-key="w"
       >{{w}}</span>
     </div>
     <span
@@ -71,6 +70,7 @@ export default Vue.extend({
     lastScrollPosition: Number,
     scrollHeight: Number,
     mouseDrag: Boolean,
+    mouseDragOutbounds: Boolean,
     selectedDate: {} as () => Moment,
     selectedPeriod: {} as () => ICalendarPeriod,
   },

@@ -23,7 +23,7 @@
       </ul>
     </div>
     <div class="s-datepicker__grid__container" v-on:wheel="calendarScroll">
-      <div class="s-datepicker__scroller" ref="calendarList">
+      <div class="s-datepicker__scroller" ref="calendarList" @mouseleave="mouseleave">
         <s-datepicker-month
             class="s-datepicker__grid"
             v-for="month in calendar"
@@ -37,6 +37,7 @@
             :mouseDrag="mouseDrag"
             :selectedDate="selectedDate"
             :selectedPeriod="selectedPeriod"
+            :mouseDragOutbounds="mouseDragOutbounds"
             @mouse-click="mouseClick"
             @mouse-drag-start="dragStart"
             @mouse-drag-end="dragEnd"
@@ -78,6 +79,7 @@ export default Vue.extend({
       lastScrollPosition: 0,
       scrollHeight: 0,
       monthNameInHeader: '',
+      mouseDragOutbounds: false,
     };
   },
 
@@ -103,6 +105,24 @@ export default Vue.extend({
   },
 
   methods: {
+    mouseleave() {
+      if (this.mouseDrag && this.selectedPeriod.from && this.selectedPeriod.to) {
+        // Make sure we don't interupt the dragging event at a wrong time
+        // emit correct events to cancel mouseDrag
+        this.$emit('mouse-drag-start', {
+          y: moment(this.selectedPeriod.from).year(),
+          M: (moment(this.selectedPeriod.from).month() + 1),
+          d: moment(this.selectedPeriod.from).date(),
+        });
+        this.$emit('mouse-drag-end', {
+          y: moment(this.selectedPeriod.to).year(),
+          M: (moment(this.selectedPeriod.to).month() + 1),
+          d: moment(this.selectedPeriod.to).date(),
+        });
+      }
+    },
+
+
     dragStart(payload: IMomentPayload) {
       this.$emit('mouse-drag-start', payload);
     },

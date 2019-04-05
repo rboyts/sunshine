@@ -1,5 +1,8 @@
 <template>
-  <div class="s-datepicker" :class="{'s-datepicker-menu-active': filterSelected}">
+  <div
+    class="s-datepicker"
+    :class="{'s-datepicker-menu-active': filterSelected}"
+  >
     <s-datepicker-calendar
       :today="today"
       :calendar="calendar"
@@ -252,7 +255,6 @@ export default Vue.extend({
         this.mouseDrag = true;
         this.startDragDate = date;
       }
-      console.log('Drag click: ', this.startDragDate);
       this.$emit('filter-update', { option: '', period: '' });
     },
 
