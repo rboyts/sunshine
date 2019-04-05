@@ -23,14 +23,14 @@ Use cases:
         :inactive="inactive"
         :label="label"
         :error="error"
-        @click.native="onClick"
-        @keydown.native.up.prevent="onArrowUp"
-        @keydown.native.down.prevent="onArrowDown"
-        @keydown.native.enter.prevent="onEnter"
-        @keydown.native.esc.prevent="onEscape"
-        @keydown.native.backspace="onBackspace"
-        @keydown.native.space="onSpace"
-        @mousedown.native="$event.preventDefault()"
+        @click="onClick"
+        @keydown.up.prevent="onArrowUp"
+        @keydown.down.prevent="onArrowDown"
+        @keydown.enter.prevent="onEnter"
+        @keydown.esc.prevent="onEscape"
+        @keydown.backspace="onBackspace"
+        @keydown.space="onSpace"
+        @mousedown="$event.preventDefault()"
       >
         <span v-if="textValue" :class="classes('label', { 'with-label': !!label })">
           {{ textValue }}

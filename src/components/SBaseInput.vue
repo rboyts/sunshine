@@ -1,5 +1,5 @@
 <template>
-  <div :class="inputClass">
+  <div :class="inputClass" v-on="$listeners">
     <span v-if="label" :class="labelClass">{{ label }}</span>
     <slot/>
     <div v-if="error" class="s-input__error">{{ error }}</div>
