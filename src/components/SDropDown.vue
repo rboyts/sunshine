@@ -442,8 +442,9 @@ export default Vue.extend({
       const { items, multiple, value } = this;
 
       if (multiple) {
-        if (!Array.isArray(value)) {
-          warn('Invalid prop: When "multiple" is true, "value" must be an array.');
+        if (typeof value !== 'undefined' && !Array.isArray(value)) {
+          warn('Invalid prop: When "multiple" is true, "value" must be an array. ' +
+            `Found ${value} (${typeof value}).`);
         }
       }
 
@@ -458,10 +459,12 @@ export default Vue.extend({
       }
 
       if (multiple) {
-        const val = value.find(v => typeof v !== typeof first.key);
-        if (valueType) {
-          warn('Invalid prop: Values must have the same type as keys. ' +
-            `Found ${val} (${typeof val}) and ${first.key} (${typeof first.key}).`);
+        if (value) {
+          const val = value.find(v => typeof v !== typeof first.key);
+          if (val) {
+            warn('Invalid prop: Values must have the same type as keys. ' +
+              `Found ${val} (${typeof val}) and ${first.key} (${typeof first.key}).`);
+          }
         }
       } else if (value != null && typeof value !== typeof first.key) {
         warn('Invalid prop: "value" must have the same type as keys. ' +
