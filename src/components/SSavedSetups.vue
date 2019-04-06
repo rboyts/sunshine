@@ -116,7 +116,7 @@ export default Vue.extend({
       this.showDialog = false;
       // HACK Relies on the key being idenitcal to the label
       Vue.nextTick(() => {
-        this.selected = this.items.find(i => i.label === label);
+        this.selected = label;
       });
     },
 

@@ -3,6 +3,7 @@
 
 .s-filter-drop-down__pills {
   display: inline-flex;
+  overflow: hidden;
   padding: 0 2px;
 }
 
@@ -23,10 +24,6 @@
 
 .s-filter-drop-down__pill-icon {
   cursor: pointer;
-}
-
-.s-filter-drop-down .s-list {
-  padding-top: $list-item-height;
 }
 
 .s-filter-drop-down__header {

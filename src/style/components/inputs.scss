@@ -98,10 +98,12 @@ $input-font-size: $paragraph-font-size;
   background-color: transparent;
   color: $almost-black;
 
-  padding: $input-padding;
+  padding: 0;
+  border: solid transparent;
+  border-width: $input-padding;
 
   &--with-label {
-    padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+    border-width: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
   }
 
   &--transparent {
@@ -127,7 +129,10 @@ $input-font-size: $paragraph-font-size;
   width: 100%;
   height: 100%;
   font-size: $input-font-size;
-  padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+
+  // FIXME without label
+  border: solid transparent;
+  border-width: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -150,22 +155,19 @@ $input-font-size: $paragraph-font-size;
   height: initial;
 }
 
-.s-input__textarea__wrapper {
-  height: 100%;
-  width: 100%;
-  cursor: text;
-  padding:  $input-padding ($input-padding / 2) ($input-padding / 2) $input-padding;
-  &--with-label {
-    padding: ($input-padding * 2) ($input-padding / 2) ($input-padding / 2) $input-padding;
-  }
-}
-
 .s-input__textarea {
   resize: none;
-  box-sizing: border-box;
-  padding: 0 $input-padding 0 0;
+  box-sizing: content-box;
+
+  border: solid transparent;
+  border-width: $input-padding;
+
   height: 100%;
   width: 100%;
+
+  &--with-label {
+    border-width: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+  }
 
   // Scrollbar mess with auto-sizing. Simply hide it for now.
   &::-webkit-scrollbar {

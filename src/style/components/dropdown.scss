@@ -3,7 +3,8 @@
 // DRY
 $input-padding: base-spacing(1);
 
-.s-drop-down__caret {
+.s-drop-down__caret,
+.s-filter-drop-down__caret {
   display: inline-flex;
   transition: transform $duration-normal;
   font-size: 24px;
@@ -15,11 +16,17 @@ $input-padding: base-spacing(1);
 
 .s-drop-down__label {
   @include action-font;
+  cursor: default;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: ($input-padding * 2) ($input-padding / 2) ($input-padding / 2) $input-padding;
+
+  padding: $input-padding;
+
+  &--with-label {
+    padding: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+  }
 
   // Remove padding of search input, when shown after label
   margin-right: -$input-padding;
@@ -38,7 +45,8 @@ $input-padding: base-spacing(1);
 }
 
 // HACK: Prevent the menu popup from appearing below the margin
-.s-drop-down {
+.s-drop-down,
+.s-filter-drop-down {
   margin-bottom: base-spacing();
 
   .s-input {

@@ -71,11 +71,7 @@ describe('SDropDown', () => {
     wrapper.findAll('.s-list-item').trigger('click');
 
     // All are selected
-    expect(wrapper.vm.$data.selected).toEqual([
-      { key: 'no', label: 'Norge' },
-      { key: 'sv', label: 'Sverige' },
-      { key: 'en', label: 'England' },
-    ]);
+    expect(wrapper.vm.$data.selected).toEqual(['no', 'sv', 'en']);
 
     // New data arrives
     wrapper.setData({
@@ -86,9 +82,7 @@ describe('SDropDown', () => {
     });
 
     // Items that remains present shall still be selected, with updated label
-    expect(wrapper.vm.$data.selected).toEqual([
-      { key: 'no', label: 'Norway' },
-    ]);
+    expect(wrapper.vm.$data.selected).toEqual(['no']);
   });
 
   it('maintains selected item when data is updated', () => {
@@ -116,9 +110,7 @@ describe('SDropDown', () => {
     wrapper.find('.s-input').trigger('click');
     wrapper.find('.s-list-item').trigger('click');
 
-    expect(wrapper.vm.$data.selected).toEqual(
-      { key: 'no', label: 'Norge' },
-    );
+    expect(wrapper.vm.$data.selected).toEqual('no');
 
     // New data arrives
     wrapper.setData({
@@ -129,9 +121,7 @@ describe('SDropDown', () => {
     });
 
     // Item still selected, with updated label
-    expect(wrapper.vm.$data.selected).toEqual(
-      { key: 'no', label: 'Norway' },
-    );
+    expect(wrapper.vm.$data.selected).toEqual('no');
   });
 
   it('maintains selection when filtering', async () => {
@@ -167,8 +157,6 @@ describe('SDropDown', () => {
     input.setValue('sve');
 
     // Still selected
-    expect(wrapper.vm.$data.selected).toEqual([
-      { key: 'no', label: 'Norge' },
-    ]);
+    expect(wrapper.vm.$data.selected).toEqual(['no']);
   });
 });
