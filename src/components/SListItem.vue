@@ -1,6 +1,14 @@
 <template>
-  <li :class="classes({selected})" @click="onClick" @accept="onAccept">
-    <s-checkable v-if="checkable" :checked="checked" :inactive="inactive" />
+  <li
+    :class="classes({selected})"
+    @click="onClick"
+    @accept="onAccept"
+  >
+    <s-checkable
+      v-if="checkable"
+      :checked="checked"
+      :inactive="inactive"
+    />
     <slot />
   </li>
 </template>

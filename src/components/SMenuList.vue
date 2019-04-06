@@ -25,7 +25,7 @@ const itemClass = 's-list-item';
 const selectedItemClass = 's-list-item--selected';
 
 export default Vue.extend({
-  name: 's-menu-list',
+  name: 'SMenuList',
 
   components: {
     SList,

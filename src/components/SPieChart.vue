@@ -1,8 +1,16 @@
 <template>
   <div>
-    <svg :width="size" :height="size">
+    <svg
+      :width="size"
+      :height="size"
+    >
       <g :transform="transform">
-        <path v-for="(d, i) in arcs" :key="i" :fill="scheme[i % scheme.length]" :d="d" />
+        <path
+          v-for="(d, i) in arcs"
+          :key="i"
+          :fill="scheme[i % scheme.length]"
+          :d="d"
+        />
       </g>
     </svg>
   </div>
@@ -18,10 +26,13 @@ interface IData {
 }
 
 export default Vue.extend({
-  name: 's-pie-chart',
+  name: 'SPieChart',
 
   props: {
-    data: Array as () => IData[],
+    data: {
+      type: Array as () => IData[],
+      required: true,
+    },
 
     scheme: {
       type: Array as () => ReadonlyArray<string>,

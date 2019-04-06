@@ -1,5 +1,8 @@
 <template>
-  <span :class="classes()" v-on="$listeners"><span :class="iconClass" /></span>
+  <span
+    :class="classes()"
+    v-on="$listeners"
+  ><span :class="iconClass" /></span>
 </template>
 
 <script lang="ts">

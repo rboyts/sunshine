@@ -6,7 +6,7 @@
       :current-year="yearNum"
       :current-month="monthKey + 1"
       :selected-period="selectedPeriod"
-      :mouseDrag="mouseDrag"
+      :mouse-drag="mouseDrag"
       @addComingMonth="addComingMonth"
       @addPreviousMonth="addPreviousMonth"
       @mouseDragEvent="mouseDragEvent"
@@ -15,7 +15,7 @@
       :today="today"
       :selected-period="selectedPeriod"
       @setSelectedPeriod="selectDateOfPeriod"
-     />
+    />
   </div>
 </template>
 
@@ -31,7 +31,7 @@ import SDatepickerMenu from './internal/SDatepickerMenu.vue';
 moment.locale('nb');
 
 export default Vue.extend({
-  name: 's-datepicker',
+  name: 'SDatepicker',
   components: {
     SDatepickerCalendar,
     SDatepickerMenu,

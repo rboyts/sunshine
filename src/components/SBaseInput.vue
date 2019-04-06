@@ -1,9 +1,23 @@
 <template>
-  <div :class="inputClass" v-on="$listeners">
-    <span v-if="label" :class="labelClass">{{ label }}</span>
-    <span v-if="maxLength && label" :class="counterClass">{{ currentLength }}/{{ maxLength }}</span>
+  <div
+    :class="inputClass"
+    v-on="$listeners"
+  >
+    <span
+      v-if="label"
+      :class="labelClass"
+    >{{ label }}</span>
+    <span
+      v-if="maxLength && label"
+      :class="counterClass"
+    >{{ currentLength }}/{{ maxLength }}</span>
     <slot />
-    <div v-if="error" class="s-input__error">{{ error }}</div>
+    <div
+      v-if="error"
+      class="s-input__error"
+    >
+      {{ error }}
+    </div>
   </div>
 </template>
 
@@ -12,32 +26,43 @@ import Vue from 'vue';
 import { ClassesMixin } from '../lib/utils';
 
 export default Vue.extend({
-  name: 's-input',
+  name: 'SInput',
 
   mixins: [
     ClassesMixin,
   ],
 
   props: {
-    label: String,
-    error: String,
+    label: {
+      type: String,
+      default: '',
+    },
+
+    error: {
+      type: String,
+      default: undefined,
+    },
 
     hasFocus: {
       type: Boolean,
       default: false,
     },
+
     isEmpty: {
       type: Boolean,
       default: true,
     },
+
     inactive: {
       type: Boolean,
       default: false,
     },
+
     maxLength: {
       type: Number,
       default: 0,
     },
+
     currentLength: {
       type: Number,
       default: 0,

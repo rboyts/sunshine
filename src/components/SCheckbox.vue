@@ -1,5 +1,6 @@
 <template>
-  <label :class="classes(modifiers)"
+  <label
+    :class="classes(modifiers)"
     @mousedown.native="$event.preventDefault()"
   >
     <input
@@ -8,8 +9,12 @@
       v-model="isChecked"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
+    >
+    <s-checkable
+      :inactive="inactive"
+      :checked="isChecked"
+      :has-focus="hasFocus"
     />
-    <s-checkable :inactive="inactive" :checked="isChecked" :hasFocus="hasFocus" />
     <span>
       <slot />
     </span>

@@ -1,6 +1,5 @@
 <template>
   <div :class="classes({ condensed, fixed, dragging: drag != null })">
-
     <vue-global-events
       @keydown.up.exact.prevent="onKeyArrowUp"
       @keydown.down.exact.prevent="onKeyArrowDown"
@@ -15,7 +14,10 @@
       :style="moveCursorStyle"
     />
 
-    <div :class="classes('wrapper')" @scroll="debounceOnScroll">
+    <div
+      :class="classes('wrapper')"
+      @scroll="debounceOnScroll"
+    >
       <table
         ref="table"
         @mousedown.shift.prevent=""
@@ -24,9 +26,12 @@
         @pointerup="onCellMouseUp"
         @click.stop=""
       >
-
         <colgroup>
-          <col v-for="(width, i) in colWidths" :key="i" :style="{ width }" />
+          <col
+            v-for="(width, i) in colWidths"
+            :key="i"
+            :style="{ width }"
+          >
         </colgroup>
 
         <thead>
@@ -45,7 +50,7 @@
                 >
                   <s-table-options-menu
                     :checkable="checkable"
-                    :orderedColumns="orderedColumns"
+                    :ordered-columns="orderedColumns"
                     @selectAll="selectAll"
                     @selectNone="selectNone"
                     @toggleColumn="toggleColumn"
@@ -61,7 +66,10 @@
                     reverse: sorting.reverse,
                   })"
                 >
-                  <s-icon package="sunshine24" name="sortcolumn" />
+                  <s-icon
+                    package="sunshine24"
+                    name="sortcolumn"
+                  />
                 </span>
 
               </span>
@@ -70,10 +78,19 @@
         </thead>
 
         <tbody>
-          <tr v-if="topSpacerRows > 0" :style="{ height: getSpacerHeight(topSpacerRows) }" />
-          <tr v-if="topSpacerRows > 0" ref="top-spacer" />
+          <tr
+            v-if="topSpacerRows > 0"
+            :style="{ height: getSpacerHeight(topSpacerRows) }"
+          />
+          <tr
+            v-if="topSpacerRows > 0"
+            ref="top-spacer"
+          />
 
-          <slot v-if="rootNodes.length === 0" name="empty" />
+          <slot
+            v-if="rootNodes.length === 0"
+            name="empty"
+          />
 
           <tr
             v-for="(node, row) in rootNodes"
@@ -84,7 +101,6 @@
             @click.exact.shift.stop.prevent="onShiftClick(node)"
             @pointerdown.exact.prevent="onCellMouseDown(row, $event)"
           >
-
             <td
               v-for="(column, index) in visibleColumns"
               :key="column.key"
@@ -94,22 +110,25 @@
                 <s-table-toggle
                   v-if="outline && index === 0"
                   :node="node"
-                  :isOpen="isOpen(node)"
+                  :is-open="isOpen(node)"
                   @toggle="toggleOpen(node)"
                 />
 
                 <s-table-outline
                   v-if="outline && index === 0"
                   :node="node"
-                  :rowHeight="rowHeight"
-                  :isOpen="isOpen(node)"
+                  :row-height="rowHeight"
+                  :is-open="isOpen(node)"
                 />
 
                 <span :class="classes('cell-content')">
-                  <slot :name="`~${column.key}`" v-bind="{
-                    value: getCellValue(node, column),
-                    item: node.item,
-                  }">
+                  <slot
+                    :name="`~${column.key}`"
+                    v-bind="{
+                      value: getCellValue(node, column),
+                      item: node.item,
+                    }"
+                  >
                     <span>{{ getCellValue(node, column) }}</span>
                   </slot>
                 </span>
@@ -117,10 +136,15 @@
             </td>
           </tr>
 
-          <tr v-if="bottomSpacerRows > 0" ref="bottom-spacer" />
-          <tr v-if="bottomSpacerRows > 0" :style="{ height: getSpacerHeight(bottomSpacerRows) }" />
+          <tr
+            v-if="bottomSpacerRows > 0"
+            ref="bottom-spacer"
+          />
+          <tr
+            v-if="bottomSpacerRows > 0"
+            :style="{ height: getSpacerHeight(bottomSpacerRows) }"
+          />
         </tbody>
-
       </table>
     </div>
   </div>

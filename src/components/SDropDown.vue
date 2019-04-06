@@ -13,12 +13,17 @@ Use cases:
 -->
 
 <template>
-  <s-menu v-model="isOpen" :class="classes()" :toggleOnClick="false" @closed="$emit('closed')">
+  <s-menu
+    v-model="isOpen"
+    :class="classes()"
+    :toggle-on-click="false"
+    @closed="$emit('closed')"
+  >
     <template v-slot:activator>
       <s-base-input
         :class="classes('input')"
-        :hasFocus="hasFocus"
-        :isEmpty="textValue == '' && text == ''"
+        :has-focus="hasFocus"
+        :is-empty="textValue == '' && text == ''"
         :readonly="!(search && isOpen)"
         :inactive="inactive"
         :label="label"
@@ -32,7 +37,10 @@ Use cases:
         @keydown.space="onSpace"
         @mousedown="$event.preventDefault()"
       >
-        <span v-if="textValue" :class="classes('label', { 'with-label': !!label })">
+        <span
+          v-if="textValue"
+          :class="classes('label', { 'with-label': !!label })"
+        >
           {{ textValue }}
         </span>
 
@@ -52,7 +60,7 @@ Use cases:
           @focus="hasFocus = true"
           @blur="hasFocus = false"
           @input="onInput"
-        />
+        >
 
         <div
           v-else
@@ -113,7 +121,7 @@ const validateUniqueKeys = val => (
 );
 
 export default Vue.extend({
-  name: 's-drop-down',
+  name: 'SDropDown',
   inheritAttrs: false,
 
   $_veeValidate: {
@@ -134,12 +142,19 @@ export default Vue.extend({
   },
 
   props: {
-    label: String,
+    label: {
+      type: String,
+      default: '',
+    },
 
-    error: String,
+    error: {
+      type: String,
+      default: undefined,
+    },
 
     items: {
       type: Array,
+      required: true,
       validator: validateUniqueKeys,
     },
 
@@ -151,7 +166,10 @@ export default Vue.extend({
     // value must be an array of T if `multiple` is true, of a single instance
     // of T otherwise, where T is the type of the `key` attribute in each item.
     // Typically, T is either String or Number.
-    value: null,
+    value: {
+      type: null,
+      default: undefined,
+    },
 
     search: {
       type: Boolean,

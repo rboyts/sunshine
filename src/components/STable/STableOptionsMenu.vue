@@ -1,24 +1,31 @@
 <template>
-  <s-menu v-model="menuOpen" :class="classes({ open: menuOpen })">
+  <s-menu
+    v-model="menuOpen"
+    :class="classes({ open: menuOpen })"
+  >
     <template v-slot:activator>
-      <a tabIndex="0"
+      <a
+        tabIndex="0"
         @keydown.enter.space.prevent="menuOpen = true"
         @keydown.escape="menuOpen = false"
         @blur="menuOpen = false"
       >
-        <s-icon package="sunshine24" name="more" />
+        <s-icon
+          package="sunshine24"
+          name="more"
+        />
       </a>
     </template>
 
     <template v-slot:content>
       <s-menu-list>
-        <s-list-item v-if="checkable" @click="onSelectAll">
+        <s-list-item @click="onSelectAll">
           {{ $t('s-table.select-all') }}
         </s-list-item>
-        <s-list-item v-if="checkable" @click="onSelectNone">
+        <s-list-item @click="onSelectNone">
           {{ $t('s-table.select-none') }}
         </s-list-item>
-        <s-list-separator v-if="checkable" />
+        <s-list-separator />
         <s-list-item>{{ $t('s-table.export-pdf') }}</s-list-item>
         <s-list-item>{{ $t('s-table.export-excel') }}</s-list-item>
         <s-list-separator />
@@ -47,7 +54,7 @@ import SMenuList from '../SMenuList.vue';
 import SListSeparator from '../SListSeparator.vue';
 
 export default Vue.extend({
-  name: 's-table-options-menu',
+  name: 'STableOptionsMenu',
 
   mixins: [
     ClassesMixin,
@@ -92,8 +99,10 @@ export default Vue.extend({
   },
 
   props: {
-    checkable: Boolean,
-    orderedColumns: Array,
+    orderedColumns: {
+      type: Array,
+      required: true,
+    },
   },
 
   data() {

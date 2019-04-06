@@ -2,27 +2,57 @@
   <div class="s-datepicker__menu">
     <div>
       <p>Valgt periode:</p>
-      <p>{{fromDate}} - {{toDate}}</p>
+      <p>{{ fromDate }} - {{ toDate }}</p>
     </div>
-    <hr />
+    <hr>
     <p>
-      <s-radio-button v-model="periodOption" value="previous">Forrige</s-radio-button>
+      <s-radio-button
+        v-model="periodOption"
+        value="previous"
+      >
+        Forrige
+      </s-radio-button>
     </p>
     <p>
-      <s-radio-button v-model="periodOption" value="current">Denne</s-radio-button>
+      <s-radio-button
+        v-model="periodOption"
+        value="current"
+      >
+        Denne
+      </s-radio-button>
     </p>
     <p>
-      <s-radio-button v-model="periodOption" value="next">Neste</s-radio-button>
+      <s-radio-button
+        v-model="periodOption"
+        value="next"
+      >
+        Neste
+      </s-radio-button>
     </p>
-    <hr/>
+    <hr>
     <p>
-      <s-radio-button v-model="periodPreselect" value="day">Dag</s-radio-button>
+      <s-radio-button
+        v-model="periodPreselect"
+        value="day"
+      >
+        Dag
+      </s-radio-button>
     </p>
     <p>
-      <s-radio-button v-model="periodPreselect" value="week">Uke</s-radio-button>
+      <s-radio-button
+        v-model="periodPreselect"
+        value="week"
+      >
+        Uke
+      </s-radio-button>
     </p>
     <p>
-      <s-radio-button v-model="periodPreselect" value="month">Måned</s-radio-button>
+      <s-radio-button
+        v-model="periodPreselect"
+        value="month"
+      >
+        Måned
+      </s-radio-button>
     </p>
   </div>
 </template>
@@ -36,7 +66,7 @@ import SRadioButton from '../SRadioButton.vue';
 moment.locale('nb');
 
 export default Vue.extend({
-  name: 's-datepicker-menu',
+  name: 'SDatepickerMenu',
   components: { SRadioButton },
   data() {
     return {

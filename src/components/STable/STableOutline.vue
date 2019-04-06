@@ -1,15 +1,27 @@
 <template>
   <span class="s-table__outline">
-    <span v-for="(segment, i) in segments" :key="i"
+    <span
+      v-for="(segment, i) in segments"
+      :key="i"
       class="s-table__outline__section"
     >
-      <svg :width="width" :height="rowHeight">
-        <line v-for="(line, j) in segment" :key="j" v-bind="line" />
+      <svg
+        :width="width"
+        :height="rowHeight"
+      >
+        <line
+          v-for="(line, j) in segment"
+          :key="j"
+          v-bind="line"
+        />
       </svg>
     </span>
 
     <span class="s-table__icon">
-      <s-icon v-if="node.item.icon" :name="node.item.icon" />
+      <s-icon
+        v-if="node.item.icon"
+        :name="node.item.icon"
+      />
     </span>
   </span>
 </template>
@@ -20,7 +32,7 @@ import Vue from 'vue';
 const OUTLINE_WIDTH = 24; // Must correspond to CSS
 
 export default Vue.extend({
-  name: 's-table-outline',
+  name: 'STableOutline',
 
   props: {
     node: {

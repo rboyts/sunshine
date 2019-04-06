@@ -16,7 +16,11 @@
       <template v-slot="{label, item, onClick}">
         <s-list-item @click="onClick">
           <span class="flex-grow">{{ label }}</span>
-          <a tabIndex="-1" href="#" @click.prevent.stop="onEdit(item)">{{ $t('update') }}</a>
+          <a
+            tabIndex="-1"
+            href="#"
+            @click.prevent.stop="onEdit(item)"
+          >{{ $t('update') }}</a>
         </s-list-item>
       </template>
     </s-drop-down>
@@ -26,16 +30,34 @@
       :heading="headingText"
       @submit.prevent="onSave"
     >
-      <div class="flex-layout-down" :style="{width: '330px'}">
+      <div
+        class="flex-layout-down"
+        :style="{width: '330px'}"
+      >
         <div>
           You can save table views with selected filters,
           sortings, and period selections. Give this table a
           suitable name so you can find it later.
         </div>
-        <s-text-field v-model="editText" label="Name" />
+        <s-text-field
+          v-model="editText"
+          label="Name"
+        />
         <div class="flex-layout flex-end">
-          <s-button v-if="editItem" danger @click="onDelete">Delete</s-button>
-          <s-button primary submit :inactive="!hasValidName">Save</s-button>
+          <s-button
+            v-if="editItem"
+            danger
+            @click="onDelete"
+          >
+            Delete
+          </s-button>
+          <s-button
+            primary
+            submit
+            :inactive="!hasValidName"
+          >
+            Save
+          </s-button>
         </div>
       </div>
     </s-dialog>
@@ -46,7 +68,7 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 's-saved-setups',
+  name: 'SSavedSetups',
 
   i18n: {
     messages: {
@@ -65,7 +87,10 @@ export default Vue.extend({
   },
 
   props: {
-    items: Array,
+    items: {
+      type: Array,
+      required: true,
+    },
   },
 
   data() {

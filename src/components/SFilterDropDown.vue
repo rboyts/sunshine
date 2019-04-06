@@ -7,12 +7,17 @@ Incoming keys only need to be unique withing each section.
 -->
 
 <template>
-  <s-menu v-model="isOpen" :class="classes()" :toggleOnClick="false" @closed="$emit('closed')">
+  <s-menu
+    v-model="isOpen"
+    :class="classes()"
+    :toggle-on-click="false"
+    @closed="$emit('closed')"
+  >
     <template v-slot:activator>
       <s-base-input
         :class="classes('input')"
-        :hasFocus="hasFocus"
-        :isEmpty="false"
+        :has-focus="hasFocus"
+        :is-empty="false"
         :readonly="!isOpen"
         :inactive="inactive"
         :error="error"
@@ -29,7 +34,8 @@ Incoming keys only need to be unique withing each section.
       >
         <div :class="classes('pills')">
           <div
-            v-for="val in selectedItems" :key="val.key"
+            v-for="val in selectedItems"
+            :key="val.key"
             :class="classes('pill', { [val.type]: true })"
           >
             <span
@@ -38,9 +44,15 @@ Incoming keys only need to be unique withing each section.
               @click.prevent.stop="onItemRemove(val)"
             />
             {{ val.label }}
-            <span v-if="val.category" class="s-muted-text"> ({{ val.category }})</span>
+            <span
+              v-if="val.category"
+              class="s-muted-text"
+            > ({{ val.category }})</span>
           </div>
-          <div v-if="internalValue.search" :class="classes('pill', { 'search': true })">
+          <div
+            v-if="internalValue.search"
+            :class="classes('pill', { 'search': true })"
+          >
             <span
               class="sunshine24-close"
               :class="classes('pill-icon')"
@@ -64,8 +76,8 @@ Incoming keys only need to be unique withing each section.
           @click.stop="onClick"
           @focus="hasFocus = true"
           @blur="hasFocus = false"
-        />
-          <!-- @input="onInput" -->
+        >
+        <!-- @input="onInput" -->
 
         <span
           class="sunshine24-dropdownarrow"
@@ -79,19 +91,27 @@ Incoming keys only need to be unique withing each section.
       <s-menu-list>
         <div :class="classes('header')">
           <div :class="classes('tabs')">
-            <div v-show="showSuggestionsTab"
-              :class="classes('tabs', 'tab', { active: sectionIndex === -1 })">
+            <div
+              v-show="showSuggestionsTab"
+              :class="classes('tabs', 'tab', { active: sectionIndex === -1 })"
+            >
               <a @click.prevent="onClickTab(-1)">Suggestions</a>
             </div>
 
-            <div v-for="(section, i) in sections" :key="i"
-              :class="classes('tabs', 'tab', { active: i === sectionIndex })">
+            <div
+              v-for="(section, i) in sections"
+              :key="i"
+              :class="classes('tabs', 'tab', { active: i === sectionIndex })"
+            >
               <a @click.prevent="onClickTab(i)">{{ section.label }}</a>
             </div>
           </div>
 
           <div :class="classes('loading')">
-            <div v-if="loading" :class="classes('loading-progress')" />
+            <div
+              v-if="loading"
+              :class="classes('loading-progress')"
+            />
           </div>
         </div>
 
@@ -101,7 +121,10 @@ Incoming keys only need to be unique withing each section.
           @click="onItemClick(item)"
         >
           <span v-html="highlightLabelHtml(item)" />
-          <span v-if="sectionIndex === -1" class="s-muted-text">&nbsp;({{ item.category }})</span>
+          <span
+            v-if="sectionIndex === -1"
+            class="s-muted-text"
+          >&nbsp;({{ item.category }})</span>
         </s-list-item>
       </s-menu-list>
     </template>
@@ -118,7 +141,7 @@ import SMenuList from './SMenuList.vue';
 
 
 export default Vue.extend({
-  name: 's-filter-drop-down',
+  name: 'SFilterDropDown',
 
   mixins: [
     ClassesMixin,
@@ -132,11 +155,25 @@ export default Vue.extend({
   },
 
   props: {
-    sections: Array,
-    value: Object,
+    sections: {
+      type: Array,
+      required: true,
+    },
 
-    label: String,
-    error: String,
+    value: {
+      type: Object,
+      default: undefined,
+    },
+
+    label: {
+      type: String,
+      default: '',
+    },
+
+    error: {
+      type: String,
+      default: undefined,
+    },
 
     loading: {
       type: Boolean,

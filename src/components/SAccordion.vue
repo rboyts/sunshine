@@ -9,7 +9,7 @@ import Vue from 'vue';
 import { ClassesMixin } from '../lib/utils';
 
 export default Vue.extend({
-  name: 's-accordion',
+  name: 'SAccordion',
 
   inject: ['$validator'],
 

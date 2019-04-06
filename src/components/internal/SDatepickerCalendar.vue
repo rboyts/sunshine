@@ -2,13 +2,25 @@
   <div class="s-datepicker__calendar">
     <div class="s-datepicker__header">
       <div class="flex flex-even s-datepicker__navigation">
-          <span class="s-datepicker__navigation-arrow back" @click="$emit('addPreviousMonth')" >
-            <s-icon package="sunshine24" name="arrow" />
-          </span>
-          <h4>{{monthNameInHeader}}</h4>
-          <span class="s-datepicker__navigation-arrow forward" @click="$emit('addComingMonth')" >
-            <s-icon package="sunshine24" name="arrow" />
-          </span>
+        <span
+          class="s-datepicker__navigation-arrow back"
+          @click="$emit('addPreviousMonth')"
+        >
+          <s-icon
+            package="sunshine24"
+            name="arrow"
+          />
+        </span>
+        <h4>{{ monthNameInHeader }}</h4>
+        <span
+          class="s-datepicker__navigation-arrow forward"
+          @click="$emit('addComingMonth')"
+        >
+          <s-icon
+            package="sunshine24"
+            name="arrow"
+          />
+        </span>
       </div>
       <ul class="s-datepicker__days">
         <li
@@ -19,24 +31,31 @@
             'saturday': (i === 5),
             'sunday': (i === 6),
           }"
-        >{{day}}</li>
+        >
+          {{ day }}
+        </li>
       </ul>
     </div>
-    <div class="s-datepicker__grid__container"
-      style="height: 390px; overflow: hidden;" v-on:wheel="calendarScroll">
-      <div class="s-datepicker__scroller" ref="calendarList">
+    <div
+      class="s-datepicker__grid__container"
+      style="height: 390px; overflow: hidden;"
+      @wheel="calendarScroll"
+    >
+      <div
+        class="s-datepicker__scroller"
+        ref="calendarList"
+      >
         <s-datepicker-month
-            class="s-datepicker__grid"
-            v-for="(month, monthKey) in calendar"
-            :today="today"
-            :selected-period="selectedPeriod"
-            :ref="month.month + '-' + month.year"
-            :key="'month' + month.month + '-' + month.year"
-            :month="month"
-            :mouseDrag="mouseDrag"
-            @mouseDragEvent="mouseDragEvent"
-          >
-        </s-datepicker-month>
+          class="s-datepicker__grid"
+          v-for="(month, monthKey) in calendar"
+          :today="today"
+          :selected-period="selectedPeriod"
+          :ref="month.month + '-' + month.year"
+          :key="'month' + month.month + '-' + month.year"
+          :month="month"
+          :mouse-drag="mouseDrag"
+          @mouseDragEvent="mouseDragEvent"
+        />
       </div>
     </div>
   </div>
@@ -57,7 +76,7 @@ const PADDING_TOP = 30;
 moment.locale('nb');
 
 export default Vue.extend({
-  name: 's-datepicker-calendar',
+  name: 'SDatepickerCalendar',
   components: {
     SDatepickerMonth,
     SIcon,

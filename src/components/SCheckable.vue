@@ -1,7 +1,15 @@
 <template>
-  <span :class="classes(modifiers)" v-on="$listeners">
+  <span
+    :class="classes(modifiers)"
+    v-on="$listeners"
+  >
     <transition name="fade">
-      <svg v-if="checked === true" :class="classes('checkmark')" width="16" height="16">
+      <svg
+        v-if="checked === true"
+        :class="classes('checkmark')"
+        width="16"
+        height="16"
+      >
         <path
           fill="#1E1E1E"
           d="M11.5396349,5.27801179 C11.938378,4.89588301
@@ -14,7 +22,12 @@
         />
       </svg>
 
-      <svg v-else-if="checked === null" :class="classes('checkmark')" width="16" height="16">
+      <svg
+        v-else-if="checked === null"
+        :class="classes('checkmark')"
+        width="16"
+        height="16"
+      >
         <path
           fill="#1C1C1C"
           d="M5,7 L11,7 C11.5522847,7 12,7.44771525 12,8 C12,8.55228475

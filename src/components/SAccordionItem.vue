@@ -9,7 +9,9 @@
       <slot name="heading">
         {{ heading }}
       </slot>
-      <s-icon package="sunshine24" name="arrow"
+      <s-icon
+        package="sunshine24"
+        name="arrow"
         :class="classes('chevron', chevronOptions)"
       />
     </a>
@@ -20,7 +22,10 @@
       :style="bodyStyle"
       @transitionend="onTransitionEnd"
     >
-      <div ref="inner" :class="classes('content')">
+      <div
+        ref="inner"
+        :class="classes('content')"
+      >
         <slot />
       </div>
     </div>
@@ -33,7 +38,7 @@ import { ClassesMixin } from '../lib/utils';
 import SIcon from './SIcon.vue';
 
 export default Vue.extend({
-  name: 's-accordion-item',
+  name: 'SAccordionItem',
 
   inject: ['$validator'],
 
@@ -46,7 +51,10 @@ export default Vue.extend({
   },
 
   props: {
-    heading: String,
+    heading: {
+      type: String,
+      default: '',
+    },
 
     // Set to true, if one input inside failed form validation
     invalid: {

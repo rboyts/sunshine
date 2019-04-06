@@ -11,8 +11,12 @@
       @click.stop="onContentClick"
       @transitionend="onTransitionEnd"
     >
-      <div ref="content" :class="classes('popup', 'content')" :style="contentStyle">
-        <slot name="content"></slot>
+      <div
+        ref="content"
+        :class="classes('popup', 'content')"
+        :style="contentStyle"
+      >
+        <slot name="content" />
       </div>
     </div>
 

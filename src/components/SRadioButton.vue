@@ -8,11 +8,16 @@
       @change="onChange"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
-    />
+    >
 
     <span :class="classes('box')">
       <transition name="fade">
-        <svg v-if="checked" :class="classes('selected')" width="16" height="16">
+        <svg
+          v-if="checked"
+          :class="classes('selected')"
+          width="16"
+          height="16"
+        >
           <path
             fill="#1C1C1C"
             d="M8,11 C6.34314575,11 5,9.65685425 5,8 C5,6.34314575
@@ -22,7 +27,7 @@
         </svg>
       </transition>
     </span>
-    <slot/>
+    <slot />
   </label>
 </template>
 

@@ -7,9 +7,16 @@
     <div :class="classes({ visible })">
       <div :class="classes('header')">
         <span :class="classes('heading')">{{ heading }}</span>
-        <s-icon @click="close" package="sunshine24" name="close" />
+        <s-icon
+          @click="close"
+          package="sunshine24"
+          name="close"
+        />
       </div>
-      <form v-bind="$attrs" v-on="$listeners">
+      <form
+        v-bind="$attrs"
+        v-on="$listeners"
+      >
         <slot v-bind="{ close }" />
       </form>
     </div>
@@ -21,7 +28,7 @@ import Vue from 'vue';
 import { ClassesMixin } from '../lib/utils';
 
 export default Vue.extend({
-  name: 's-dialog',
+  name: 'SDialog',
   inheritAttrs: false,
 
   mixins: [
@@ -39,7 +46,10 @@ export default Vue.extend({
       default: true,
     },
 
-    heading: String,
+    heading: {
+      type: String,
+      default: '',
+    },
   },
 
   methods: {

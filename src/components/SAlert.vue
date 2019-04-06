@@ -4,7 +4,10 @@
 
     <div :class="classes('content')">
       <slot name="icon">
-        <s-icon v-if="icon" :name="icon" />
+        <s-icon
+          v-if="icon"
+          :name="icon"
+        />
         <s-progress v-else-if="progress" />
       </slot>
 

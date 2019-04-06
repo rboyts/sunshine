@@ -2,13 +2,13 @@
   <s-base-input
     class="s-text-area"
     :inactive="inactive"
-    :hasFocus="hasFocus"
-    :isEmpty="isEmpty"
+    :has-focus="hasFocus"
+    :is-empty="isEmpty"
     :label="label"
     :error="error"
     :readonly="readonly"
-    :maxLength="maxLength"
-    :currentLength="currentLength"
+    :max-length="maxLength"
+    :current-length="currentLength"
   >
     <textarea
       ref="inputArea"
@@ -36,7 +36,7 @@ import Vue from 'vue';
 import SBaseInput from './SBaseInput.vue';
 
 export default Vue.extend({
-  name: 's-text-area',
+  name: 'STextArea',
   inheritAttrs: false,
 
   $_veeValidate: {
@@ -55,7 +55,10 @@ export default Vue.extend({
       default: '',
     },
 
-    error: String,
+    error: {
+      type: String,
+      default: undefined,
+    },
 
     initRows: {
       type: Number,

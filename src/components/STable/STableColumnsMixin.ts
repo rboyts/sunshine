@@ -3,8 +3,15 @@ import { IColumn, IOrderedColumn, IColumnState } from '../types';
 
 export default Vue.extend({
   props: {
-    columns: Array as () => IColumn[],
-    columnsState: Array as () => IColumnState[],
+    columns: {
+      type: Array as () => IColumn[],
+      required: true,
+    },
+
+    columnsState: {
+      type: Array as () => IColumnState[],
+      default: undefined,
+    },
   },
 
   data() {

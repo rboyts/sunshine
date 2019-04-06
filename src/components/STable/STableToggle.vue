@@ -4,7 +4,11 @@
     @click.stop="$emit('toggle')"
   >
     <s-progress v-if="isLoading" />
-    <s-icon v-else-if="hasArrow" package="sunshine24" name="arrow" />
+    <s-icon
+      v-else-if="hasArrow"
+      package="sunshine24"
+      name="arrow"
+    />
     <i v-else>&nbsp;</i>
   </span>
 </template>
@@ -13,7 +17,7 @@
 import { ClassesMixin } from '../../lib/utils';
 
 export default {
-  name: 's-table__toggle',
+  name: 'STableToggle',
 
   mixins: [
     ClassesMixin,

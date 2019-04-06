@@ -3,10 +3,13 @@ import Vue, { VNode } from 'vue';
 import moment from 'moment';
 
 export default Vue.extend({
-  name: 's-calendar-internal',
+  name: 'SCalendarInternal',
 
   props: {
-    date: Object as () => moment.Moment,
+    date: {
+      type: Object as () => moment.Moment,
+      default: () => moment(),
+    },
   },
 
   methods: {

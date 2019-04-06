@@ -1,14 +1,16 @@
 <template>
   <transition name="slide-in">
-    <div v-if="show" :class="classes()">
+    <div
+      v-if="show"
+      :class="classes()"
+    >
       <form
         :class="classes('content')"
         v-bind="$attrs"
         v-on="$listeners"
       >
         <div :class="classes('header')">
-          <slot name="header">
-          </slot>
+          <slot name="header" />
         </div>
 
         <div :class="classes('main')">
@@ -16,8 +18,7 @@
         </div>
 
         <div :class="classes('footer')">
-          <slot name="footer">
-          </slot>
+          <slot name="footer" />
         </div>
       </form>
     </div>

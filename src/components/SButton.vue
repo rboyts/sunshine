@@ -5,7 +5,10 @@
     :disabled="inactive"
     v-on="$listeners"
   >
-    <span :class="contentClasses" tabindex="-1">
+    <span
+      :class="contentClasses"
+      tabindex="-1"
+    >
       <slot name="left" />
       <span class="flex-grow">
         <slot />

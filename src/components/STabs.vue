@@ -2,7 +2,11 @@
   <div :class="classes()">
     <slot />
     <div :class="classes('border')">
-      <div v-if="highlight.width !== '-1'" :class="classes('highlight')" :style="highlight" />
+      <div
+        v-if="highlight.width !== '-1'"
+        :class="classes('highlight')"
+        :style="highlight"
+      />
     </div>
   </div>
 </template>

@@ -1,15 +1,14 @@
 <template>
   <s-base-input
     :inactive="inactive"
-    :hasFocus="hasFocus"
-    :isEmpty="isEmpty"
+    :has-focus="hasFocus"
+    :is-empty="isEmpty"
     :error="error"
     :label="label"
-    :maxLength="maxLength"
-    :currentLength="currentLength"
+    :max-length="maxLength"
+    :current-length="currentLength"
     class="s-text-field"
   >
-
     <input
       :class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
       :type="type"
@@ -20,7 +19,7 @@
       @focus="hasFocus = true"
       @blur="hasFocus = false"
       v-bind="$attrs"
-    />
+    >
 
     <!-- expected format -->
     <span
@@ -33,7 +32,6 @@
         remainingFormat
       }}</span>
     </span>
-
   </s-base-input>
 </template>
 
@@ -42,7 +40,7 @@ import Vue from 'vue';
 import SBaseInput from './SBaseInput.vue';
 
 export default Vue.extend({
-  name: 's-text-field',
+  name: 'STextField',
 
   inheritAttrs: false,
 
@@ -57,8 +55,15 @@ export default Vue.extend({
   },
 
   props: {
-    label: String,
-    error: String,
+    label: {
+      type: String,
+      default: '',
+    },
+
+    error: {
+      type: String,
+      default: undefined,
+    },
 
     value: {
       type: [String, Number],
