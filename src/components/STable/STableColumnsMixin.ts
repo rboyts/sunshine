@@ -79,12 +79,18 @@ export default Vue.extend({
         toIndex = this.orderedColumns.findIndex(oc => oc.column.key === afterKey) + 1;
       }
 
-      const moved = this.internalColumnsState.splice(fromIndex, 1);
-      this.internalColumnsState.splice(toIndex, 0, ...moved);
+      const newState = this.internalColumnsState.slice(0);
+      const moved = newState.splice(fromIndex, 1);
+      newState.splice(toIndex, 0, ...moved);
+
+      this.internalColumnsState = newState;
     },
 
     toggleColumn({ index, checked }: { index: number, checked: boolean }) {
-      this.internalColumnsState[index].visible = checked;
+      // XXX Something like immutable.js would be helpful here
+      this.internalColumnsState = this.internalColumnsState.map((col, i) => (
+        i === index ? { ...col, visible: !col.visible } : col
+      ));
     },
 
     findColumn(key: string): IColumn {

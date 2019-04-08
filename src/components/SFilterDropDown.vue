@@ -56,7 +56,7 @@ Incoming keys only need to be unique withing each section.
             <span
               class="sunshine24-close"
               :class="classes('pill-icon')"
-              @click.prevent.stop="internalValue.search = ''"
+              @click.prevent.stop="clearSearch"
             />
             {{ internalValue.search }}
           </div>
@@ -204,13 +204,10 @@ export default Vue.extend({
       this.internalValue = val;
     },
 
-    internalValue: {
-      handler(val) {
-        if (val !== this.value) {
-          this.$emit('input', val);
-        }
-      },
-      deep: true,
+    internalValue(val) {
+      if (val !== this.value) {
+        this.$emit('input', val);
+      }
     },
 
     filter(val) {
@@ -318,7 +315,7 @@ export default Vue.extend({
 
     onEnter() {
       if (this.filter) {
-        this.internalValue.search = this.filter;
+        this.setSearch(this.filter);
         this.filter = '';
       }
       this.isOpen = true;
@@ -338,10 +335,11 @@ export default Vue.extend({
       if (this.isOpen) {
         if (!this.filter) {
           if (this.internalValue.search) {
-            this.internalValue.search = '';
+            this.clearSearch();
           } else {
-            this.internalValue.filters =
-              this.internalValue.filters.slice(0, this.internalValue.filters.length - 1);
+            this.setFilters(
+              this.internalValue.filters.slice(0, this.internalValue.filters.length - 1),
+            );
           }
           event.preventDefault();
         }
@@ -364,12 +362,30 @@ export default Vue.extend({
     },
 
     onItemClick(item) {
-      this.internalValue.filters = this.internalValue.filters.concat(item.key);
+      this.setFilters(this.internalValue.filters.concat(item.key));
       this.filter = '';
     },
 
     onItemRemove(item) {
-      this.internalValue.filters = this.internalValue.filters.filter(it => it !== item.key);
+      this.setFilters(this.internalValue.filters.filter(it => it !== item.key));
+    },
+
+    setFilters(filters) {
+      this.internalValue = {
+        ...this.internalValue,
+        filters,
+      };
+    },
+
+    setSearch(search) {
+      this.internalValue = {
+        ...this.internalValue,
+        search,
+      };
+    },
+
+    clearSearch() {
+      this.setSearch('');
     },
 
     highlightLabelHtml(item) {
