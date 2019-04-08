@@ -96,7 +96,7 @@
             v-for="(node, row) in rootNodes"
             :key="node.key"
             :class="getRowClass(node, row)"
-            @click.exact.prevent="onClick($event, node)"
+            @click.exact="onClick($event, node)"
             @click.exact.ctrl.prevent="onCtrlClick(node)"
             @click.exact.shift.stop.prevent="onShiftClick(node)"
             @pointerdown.exact.prevent="onCellMouseDown(row, $event)"
@@ -586,15 +586,15 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       this.select = {
         startRow: row,
       };
-
-      const table = this.$refs.table as HTMLElement;
-      table.setPointerCapture(event.pointerId);
     },
 
     onCellMouseMove(event: PointerEvent) {
       if (!this.select) return;
 
+      // Capture mouse pointer, to make sure we receive pointerup
       const table = this.$refs.table as HTMLElement;
+      table.setPointerCapture(event.pointerId);
+
       const el = document.elementFromPoint(event.clientX, event.clientY);
       if (!(el && table.contains(el))) return;
 

@@ -19,6 +19,9 @@ import { ClassesMixin } from '../../lib/utils';
 export default {
   name: 'STableToggle',
 
+  // Override name used by the `classes` method.
+  $_className: 's-table__toggle',
+
   mixins: [
     ClassesMixin,
   ],
