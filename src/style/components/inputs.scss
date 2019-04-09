@@ -117,6 +117,15 @@ $input-font-size: $paragraph-font-size;
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
   }
+
+  // Prevent webkit autofill styling.
+  // Ref: https://stackoverflow.com/questions/2781549/removing-input-background-colour-for-chrome-autocomplete
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+  }
 }
 
 .s-input__format {
