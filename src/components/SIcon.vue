@@ -8,7 +8,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
-import { ClassesMixin } from '../lib/utils';
+import ClassesMixin from './internal/ClassesMixin';
 
 import '../icons/icon54/style.css';
 import '../icons/sunshine24/css/sunshine24-embedded.css';

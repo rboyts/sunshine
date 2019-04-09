@@ -38,7 +38,7 @@ import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import GlobalEvents from 'vue-global-events';
 import Watcher from './internal/Watcher';
-import { ClassesMixin } from '../lib/utils';
+import ClassesMixin from './internal/ClassesMixin';
 
 export default mixins(ClassesMixin).extend({
   name: 's-menu',

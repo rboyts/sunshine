@@ -113,7 +113,7 @@ import SBaseInput from './SBaseInput.vue';
 import SListItem from './SListItem.vue';
 import SMenu from './SMenu.vue';
 import SMenuList from './SMenuList.vue';
-import { ClassesMixin } from '../lib/utils';
+import ClassesMixin from './internal/ClassesMixin';
 
 const validateUniqueKeys = val => (
   val.every((it, index) => !!it.key &&

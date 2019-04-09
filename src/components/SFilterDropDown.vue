@@ -133,7 +133,7 @@ Incoming keys only need to be unique withing each section.
 
 <script>
 import Vue from 'vue';
-import { ClassesMixin } from '../lib/utils';
+import ClassesMixin from './internal/ClassesMixin';
 import SBaseInput from './SBaseInput.vue';
 import SListItem from './SListItem.vue';
 import SMenu from './SMenu.vue';

@@ -47,7 +47,7 @@
 
 <script>
 import Vue from 'vue';
-import { ClassesMixin } from '../../lib/utils';
+import ClassesMixin from '../internal/ClassesMixin';
 import SMenu from '../SMenu.vue';
 import SListItem from '../SListItem.vue';
 import SMenuList from '../SMenuList.vue';

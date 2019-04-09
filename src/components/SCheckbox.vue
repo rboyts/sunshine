@@ -25,7 +25,7 @@
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import SCheckable from './SCheckable.vue';
-import { ClassesMixin } from '../lib/utils';
+import ClassesMixin from './internal/ClassesMixin';
 
 export default mixins(ClassesMixin).extend({
   name: 's-checkbox',

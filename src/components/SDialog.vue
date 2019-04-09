@@ -25,7 +25,7 @@
 
 <script>
 import Vue from 'vue';
-import { ClassesMixin } from '../lib/utils';
+import ClassesMixin from './internal/ClassesMixin';
 
 export default Vue.extend({
   name: 'SDialog',

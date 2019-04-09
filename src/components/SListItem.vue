@@ -16,7 +16,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
-import { ClassesMixin } from '../lib/utils';
+import ClassesMixin from './internal/ClassesMixin';
 import SCheckable from './SCheckable.vue';
 
 export default mixins(ClassesMixin).extend({

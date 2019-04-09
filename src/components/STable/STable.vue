@@ -158,7 +158,8 @@ import mixins from 'vue-typed-mixins';
 import {
   IColumn, IItem, ISortState, ISelection, NO_SELECTION,
 } from '../types';
-import { ClassesMixin, get, joinKeyPath } from '../../lib/utils';
+import ClassesMixin from '../internal/ClassesMixin';
+import { get, joinKeyPath } from '../../lib/utils';
 import SIcon from '../SIcon.vue';
 import SProgress from '../SProgress.vue';
 import STableOutline from './STableOutline.vue';

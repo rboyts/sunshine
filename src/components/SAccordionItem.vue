@@ -34,7 +34,7 @@
 
 <script>
 import Vue from 'vue';
-import { ClassesMixin } from '../lib/utils';
+import ClassesMixin from './internal/ClassesMixin';
 import SIcon from './SIcon.vue';
 
 export default Vue.extend({
