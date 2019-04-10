@@ -29,7 +29,7 @@
     </div>
     <div class="s-multiselect__row">
       <s-list
-        class="s-list__container"
+        class="s-multiselect__list"
         :style="listStyle"
         :items="leftList"
         :filter="filter"
@@ -43,7 +43,7 @@
         <s-button small @click="moveAllToRight">&gt;&gt;</s-button>
       </div>
       <s-list
-        class="s-list__container"
+        class="s-multiselect__list"
         :style="listStyle"
         :filter="filter"
         :items="internalValue"
