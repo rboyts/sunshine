@@ -31,6 +31,7 @@ import STabs from './components/STabs.vue';
 import STextField from './components/STextField.vue';
 import STextArea from './components/STextArea.vue';
 import SDatepicker from './components/SDatepicker.vue';
+import SMultiselect from './components/SMultiselect.vue';
 
 export { get } from './lib/utils';
 export * from './components/types';
@@ -94,6 +95,7 @@ const plugin = {
     Vue.component('s-text-field', STextField);
     Vue.component('s-text-area', STextArea);
     Vue.component('s-datepicker', SDatepicker);
+    Vue.component('s-multiselect', SMultiselect);
   },
 };
 

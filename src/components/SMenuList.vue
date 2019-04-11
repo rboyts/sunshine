@@ -10,16 +10,18 @@
       @keydown.capture.enter.prevent="onEnter"
     />
 
-    <s-list ref="list">
+    <div
+      class="s-list"
+      ref="list"
+    >
       <slot />
-    </s-list>
+    </div>
   </div>
 </template>
 
 <script>
 import Vue from 'vue';
 import GlobalEvents from 'vue-global-events';
-import SList from './SList.vue';
 
 const itemClass = 's-list-item';
 const selectedItemClass = 's-list-item--selected';
@@ -28,7 +30,6 @@ export default Vue.extend({
   name: 'SMenuList',
 
   components: {
-    SList,
     GlobalEvents,
   },
 

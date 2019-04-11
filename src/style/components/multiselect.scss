@@ -1,0 +1,30 @@
+
+.s-multiselect__list {
+    border: 1px $gray solid;
+    border-radius: 4px;
+    background-color: white;
+    min-height: 10em;
+  }
+
+  .s-multiselect__row {
+    display: grid;
+    grid-template-columns: 1fr 3rem 1fr;
+    grid-column-gap: base-spacing(1);
+    width: 100%;
+    height: 100%;
+
+  }
+
+  .s-multiselect__button-container {
+    justify-content: center;
+  }
+
+  .s-multiselect__title {
+    @include paragraph-font;
+    font-weight: $action-font-weight;
+  }
+
+  .s-multiselect__searchbar {
+    width: 20rem;
+    margin-bottom: 1.5rem;
+  }

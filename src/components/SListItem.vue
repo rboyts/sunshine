@@ -54,13 +54,13 @@ export default mixins(ClassesMixin).extend({
   },
 
   methods: {
-    onClick() {
+    onClick(event: MouseEvent) {
       if (this.inactive) return;
 
       if (this.checkable) {
         this.$emit('change', !this.checked);
       } else {
-        this.$emit('click');
+        this.$emit('click', event);
       }
     },
 

@@ -4,7 +4,6 @@ $list-item-height: base-spacing(4);
 
 .s-list {
   @include paragraph-font;
-
   list-style: none;
   margin: 0;
   padding: 0;
@@ -26,9 +25,14 @@ $list-item-height: base-spacing(4);
   // Invisible border, to prevent content moving on hover
   border: 1px solid rgba(0, 0, 0, 0);
 
+  &:hover:not(.s-list-item--selected) {
+    // hover color?
+    background-color: $color-edit;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
   &--selected {
     background-color: $color-editish;
-
     border: 1px solid rgba(0, 0, 0, 0.05);
   }
 
@@ -42,3 +46,6 @@ $list-item-height: base-spacing(4);
   height: 1px;
   background-color: $almost-gray;
 }
+
+
+
