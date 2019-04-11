@@ -10,12 +10,12 @@
       @keydown.capture.enter.prevent="onEnter"
     />
 
-    <div
+    <ul
       class="s-list"
       ref="list"
     >
       <slot />
-    </div>
+    </ul>
   </div>
 </template>
 
