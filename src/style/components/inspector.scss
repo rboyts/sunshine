@@ -1,7 +1,7 @@
 @import '../tools.scss';
 
-$inspector-width: base-spacing(48);
-$inspector-padding: base-spacing(3);
+$inspector-width: base-spacing(46);
+$inspector-padding: base-spacing(4);
 $inspector-header-margin: base-spacing(4);
 
 .s-inspector {
@@ -15,21 +15,21 @@ $inspector-header-margin: base-spacing(4);
   padding: $inspector-padding;
 }
 
-.s-inspector__content {
+.s-inspector-page {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.s-inspector__header {
+.s-inspector-page__header {
   margin-bottom: $inspector-header-margin;
 }
 
-.s-inspector__main {
+.s-inspector-page__main {
   overflow-y: auto;
   flex: 1;
 }
 
-.s-inspector__footer {
+.s-inspector-page__footer {
   margin-top: 1rem;
 }

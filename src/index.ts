@@ -16,6 +16,7 @@ import SGrid from './components/SGrid.vue';
 import SGridItem from './components/SGridItem.vue';
 import SIcon from './components/SIcon.vue';
 import SInspector from './components/SInspector.vue';
+import SInspectorPage from './components/SInspectorPage.vue';
 import SList from './components/SList.vue';
 import SListItem from './components/SListItem.vue';
 import SListSeparator from './components/SListSeparator.vue';
@@ -48,6 +49,7 @@ export {
   SGridItem,
   SIcon,
   SInspector,
+  SInspectorPage,
   SList,
   SListItem,
   SListSeparator,
@@ -77,6 +79,7 @@ const plugin = {
     Vue.component('s-grid-item', SGridItem);
     Vue.component('s-icon', SIcon);
     Vue.component('s-inspector', SInspector);
+    Vue.component('s-inspector-page', SInspectorPage);
     Vue.component('s-list', SList);
     Vue.component('s-list-item', SListItem);
     Vue.component('s-list-separator', SListSeparator);

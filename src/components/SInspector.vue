@@ -4,37 +4,22 @@
       v-if="show"
       :class="classes()"
     >
-      <form
-        :class="classes('content')"
-        v-bind="$attrs"
-        v-on="$listeners"
-      >
-        <div :class="classes('header')">
-          <slot name="header" />
-        </div>
-
-        <div :class="classes('main')">
-          <slot />
-        </div>
-
-        <div :class="classes('footer')">
-          <slot name="footer" />
-        </div>
-      </form>
+      <slot />
     </div>
   </transition>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
 import ClassesMixin from './internal/ClassesMixin';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-inspector',
+export default Vue.extend({
+  name: 'SInspector',
   inheritAttrs: false,
 
-  inject: ['$validator'],
+  mixins: [
+    ClassesMixin,
+  ],
 
   model: {
     prop: 'show',
