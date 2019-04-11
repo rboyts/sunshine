@@ -159,6 +159,12 @@ $input-font-size: $paragraph-font-size;
   color: $color-bad;
 }
 
+.s-input__error-svg {
+  position: absolute;
+  right: 0.4rem;
+  top: 0.4rem;
+}
+
 .s-text-area {
   align-items: baseline;
   height: initial;
