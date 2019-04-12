@@ -1,13 +1,10 @@
 <template>
   <div :class="classes()">
+    <span class="sunshine24-navigateback" />
     <router-link
       :to="to"
       class="s-link"
     >
-      <s-icon
-        name="navigateback"
-        package="sunshine24"
-      />
       <span :class="classes('label')">
         <slot />
       </span>
