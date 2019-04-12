@@ -1,10 +1,18 @@
 
-.s-breadcrumb {
-    margin-top: 1rem;
-    margin-bottom: 2rem;
- }
+@import '../tools.scss';
 
- .s-breadcrumb__label {
-   display: inline-block;
-   font-size: $h2-font-size;
- }
+.s-breadcrumb {
+  margin-top: base-spacing(1);
+  margin-bottom: base-spacing(2);
+
+  // nested rule, becuase it needs higher specificity than icon css
+  .s-breadcrumb__icon:before {
+    margin-left: 0;
+  }
+}
+
+.s-breadcrumb__label {
+  display: inline-block;
+  font-size: $h2-font-size;
+}
+
