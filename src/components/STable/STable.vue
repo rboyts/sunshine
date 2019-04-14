@@ -156,7 +156,9 @@ import debounce from 'debounce';
 import VueGlobalEvents from 'vue-global-events';
 import mixins from 'vue-typed-mixins';
 import {
-  IColumn, IItem, ISortState, ISelection, NO_SELECTION,
+  IColumn, IItem, ISortState, ISelection,
+  IVisibleRowsPayload,
+  NO_SELECTION,
 } from '../types';
 import ClassesMixin from '../internal/ClassesMixin';
 import { get, joinKeyPath } from '../../lib/utils';
@@ -554,7 +556,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
           let firstRow = this.offset + this.rootNodes.length + rowOffset;
           let lastRow = firstRow + rows;
 
-          const args = { firstRow, lastRow };
+          const args: IVisibleRowsPayload = { firstRow, lastRow };
           this.$emit('visible-rows', args);
         }
       }
@@ -571,7 +573,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
           let lastRow = this.offset - rowOffset;
           let firstRow = Math.floor(scrollTop / this.rowHeight);
 
-          const args = { firstRow, lastRow };
+          const args: IVisibleRowsPayload = { firstRow, lastRow };
           this.$emit('visible-rows', args);
         }
       }
@@ -697,7 +699,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     getNodes(parent: ITableNode | null, items: IItem[]): ITableNode[] {
       const keyPath = parent != null ? parent.keyPath : [];
       return items.reduce((value: ITableNode[], item: IItem, i: number): ITableNode[] => {
-        const itemKeyPath = keyPath.concat(item.key);
+        const itemKeyPath = keyPath.concat(item.id);
         const node: ITableNode = {
           key: joinKeyPath(itemKeyPath),
           keyPath: itemKeyPath,

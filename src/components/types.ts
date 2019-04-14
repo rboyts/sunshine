@@ -1,5 +1,10 @@
 import { Moment } from 'moment';
 
+export interface IVisibleRowsPayload {
+  firstRow: Number;
+  lastRow: Number;
+}
+
 export interface ISortState {
   key: string | null;
   reverse: boolean;
@@ -41,7 +46,7 @@ export interface IItemData {
 }
 
 export interface IItem {
-  key: string;
+  id: string;
   icon?: string;
 
   // Sub-items for hierarchical data tables.
