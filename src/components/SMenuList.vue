@@ -87,7 +87,7 @@ export default Vue.extend({
     },
 
     ensureItemVisible(item) {
-      const list = this.$refs.list.$el;
+      const { list } = this.$refs;
       if (item.offsetTop < list.scrollTop) {
         item.scrollIntoView(true);
       } else if (item.offsetTop + item.offsetHeight > list.scrollTop + list.offsetHeight) {
