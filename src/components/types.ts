@@ -5,7 +5,7 @@ export interface IVisibleRowsPayload {
   lastRow: Number;
 }
 
-export interface ISortState {
+export interface ISortingState {
   key: string | null;
   reverse: boolean;
 }

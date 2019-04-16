@@ -62,8 +62,8 @@
                 <span
                   v-if="column.sortable"
                   :class="classes('sortcolumn', {
-                    active: sorting.key === column.key,
-                    reverse: sorting.reverse,
+                    active: internalSortingState.key === column.key,
+                    reverse: internalSortingState.reverse,
                   })"
                 >
                   <s-icon
@@ -156,7 +156,7 @@ import debounce from 'debounce';
 import VueGlobalEvents from 'vue-global-events';
 import mixins from 'vue-typed-mixins';
 import {
-  IColumn, IItem, ISortState, ISelection,
+  IColumn, IItem, ISortingState, ISelection,
   IVisibleRowsPayload,
   NO_SELECTION,
 } from '../types';
@@ -232,7 +232,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       default: 0,
     },
 
-    sorting: Object as () => ISortState,
+    sortingState: Object as () => ISortingState,
     draggable: Boolean,
     condensed: Boolean,
 
@@ -263,13 +263,16 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       openNodes: [] as string[],
 
       internalSelection: NO_SELECTION,
+      internalSortingState: { key: null, reverse: false } as ISortingState,
     };
   },
 
   watch: {
     selection: {
       handler(val) {
-        this.internalSelection = val || NO_SELECTION;
+        if (val) {
+          this.internalSelection = val;
+        }
       },
       immediate: true,
     },
@@ -277,6 +280,21 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     internalSelection(val) {
       if (val !== this.selection) {
         this.$emit('update:selection', val);
+      }
+    },
+
+    sortingState: {
+      handler(val) {
+        if (val) {
+          this.internalSortingState = val;
+        }
+      },
+      immediate: true,
+    },
+
+    internalSortingState(val) {
+      if (val !== this.sortingState) {
+        this.$emit('update:sorting-state', val);
       }
     },
   },
@@ -641,6 +659,13 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       this.goToRow(this.getNextIndex(), true);
     },
 
+    onSortableColumnClick(key: string) {
+      this.internalSortingState = {
+        key,
+        reverse: this.internalSortingState.key === key ? !this.internalSortingState.reverse : false,
+      };
+    },
+
     onGlobalClick(event: MouseEvent) {
       // XXX Disabled, because of many undesired side-effects
       // this.selectNone();
@@ -759,7 +784,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       let on: { [key: string]: any } = {};
 
       if (column.sortable) {
-        on.click = (event: MouseEvent) => this.$emit('sort', column.key);
+        on.click = (event: MouseEvent) => this.onSortableColumnClick(column.key);
       }
 
       if (this.draggable) {
