@@ -1,4 +1,4 @@
-<!--
+  <!--
 
     Example:  <s-multiselect :items="items" v-model="selected"/>
 

@@ -1,7 +1,7 @@
 @import '../settings.scss';
 
-$tabs-height: 2.5rem;
-$tabs-line-height: $tabs-height - 0.5rem;
+$tabs-height: 2.9375rem;
+$tabs-line-height: $tabs-height;
 $tabs-margin-bottom: 1.5rem;
 $tabs-highlight-width: 3px;
 $tabs-border-width: 1px;
@@ -13,9 +13,26 @@ $tabs-link-active-color: $almost-black;
   position: relative;
   margin-bottom: $tabs-margin-bottom;
   white-space: nowrap;
+  overflow: hidden;
+}
+
+.s-tabs__main {
+  display: flex;
+  align-items: stretch;
+}
+
+.s-tabs__menu {
+  height: 100%;
+  transition: left $duration-normal;
+  // float: left;
+
+  // &--overflowleft {
+  //   float: right;
+  // }
 }
 
 .s-tabs__border {
+  clear: both;
   width: inherit;
   height: $tabs-border-width;
   background-color: $almost-gray;
@@ -30,8 +47,36 @@ $tabs-link-active-color: $almost-black;
   transition: $duration-normal;
 }
 
+.s-tabs__button {
+  flex: 0 0 2.9375rem;
+  height: 2.9375rem;
+  width: 2.9375rem;
+  background-color: $whiteish;
+}
+
+.s-tabs__arrow-icon-left {
+  transform: rotate(-90deg);
+  font-size: 24px;
+  opacity: 1;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.s-tabs__arrow-icon-right {
+  transform: rotate(90deg);
+  font-size: 24px;
+  opacity: 1;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
 .s-tab__link {
   display: inline-block;
+  @include action-font;
   height: $tabs-height;
   line-height: $tabs-line-height;
 
