@@ -10,6 +10,7 @@
     class="s-text-field"
   >
     <input
+      :maxlength="maxLength"
       :class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
       :type="type"
       :disabled="inactive"
@@ -107,6 +108,7 @@ export default Vue.extend({
     return {
       internalValue: this.value,
       hasFocus: false,
+      formattedValue: this.value,
     };
   },
 
@@ -137,6 +139,8 @@ export default Vue.extend({
           return 'password';
         case this.email:
           return 'email';
+        case this.moment:
+          return 'text';
         default:
           return 'text';
       }
@@ -150,6 +154,15 @@ export default Vue.extend({
     currentLength() {
       let val = this.internalValue;
       return val instanceof String ? val.length : val.toString().length;
+    },
+
+    computedMaxLength() {
+      if (this.maxLength) {
+        return this.maxLength;
+      } else if (this.format) {
+        return String(this.format.length);
+      }
+      return undefined;
     },
   },
 
@@ -167,6 +180,8 @@ export default Vue.extend({
           keyCode === 45 ||
           (keyCode >= 48 && keyCode <= 57)
         );
+      } else if (this.format) {
+        return keyCode !== 32; // forbid space in formatted input
       } else {
         return true;
       }

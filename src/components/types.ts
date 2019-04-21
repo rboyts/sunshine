@@ -70,8 +70,31 @@ export interface IMonth {
 }
 
 export interface ICalendarPeriod {
-  from: Moment;
-  to: Moment;
+  from: Moment | null;
+  to: Moment | null;
+}
+
+export interface IMomentPayload {
+  y: number,
+  M: number,
+  d: number
+}
+
+export enum ICalendarOptionFilter {
+  Previous = 'Previous',
+  Current = 'Current',
+  Next = 'Next',
+}
+
+export enum ICalendarPeriodFilter {
+  Day = 'Day',
+  Week = 'Week',
+  Month = 'Month',
+}
+
+export interface ICalendarFilter {
+  option: ICalendarOptionFilter | '',
+  period: ICalendarPeriodFilter | ''
 }
 
 export interface MouseWheelEvent extends MouseEvent {

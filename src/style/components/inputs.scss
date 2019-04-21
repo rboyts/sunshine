@@ -41,6 +41,10 @@ $input-font-size: $paragraph-font-size;
   &--error {
     border-color: $color-bad;
   }
+
+  &--valid {
+    border-color: $color-good;
+  }
 }
 
 .s-input__label {

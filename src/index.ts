@@ -9,6 +9,8 @@ import SBaseInput from './components/SBaseInput.vue';
 import SButton from './components/SButton.vue';
 import SCalendar from './components/SCalendar.vue';
 import SCheckbox from './components/SCheckbox.vue';
+import SDateRange from './components/SDatepicker/SDateRange.vue';
+import SDateSingle from './components/SDatepicker/SDateSingle.vue';
 import SDialog from './components/SDialog.vue';
 import SDropDown from './components/SDropDown.vue';
 import SFilterDropDown from './components/SFilterDropDown.vue';
@@ -67,13 +69,15 @@ export {
 
 const plugin = {
   install: (Vue: VueConstructor) => {
-    Vue.component('s-button', SButton);
     Vue.component('s-accordion', SAccordion);
     Vue.component('s-accordion-item', SAccordionItem);
     Vue.component('s-alert', SAlert);
     Vue.component('s-base-input', SBaseInput);
+    Vue.component('s-button', SButton);
     Vue.component('s-calendar', SCalendar);
     Vue.component('s-checkbox', SCheckbox);
+    Vue.component('s-date-range', SDateRange);
+    Vue.component('s-date-single', SDateSingle);
     Vue.component('s-dialog', SDialog);
     Vue.component('s-drop-down', SDropDown);
     Vue.component('s-filter-drop-down', SFilterDropDown);
