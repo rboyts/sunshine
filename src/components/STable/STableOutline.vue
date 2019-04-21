@@ -84,7 +84,7 @@ export default Vue.extend({
       }
 
       // Render start line that child items will connect to, if any.
-      const hasTail = (this.isOpen && this.node.subItems && this.node.subItems.length);
+      const hasTail = (this.isOpen && this.node.item.subItems && this.node.item.subItems.length);
       segments.push(hasTail ? this.getTailSegment() : []);
 
       return segments;

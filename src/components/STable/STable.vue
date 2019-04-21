@@ -320,7 +320,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       let { drag, firstContentColumn } = this;
       let { currentDropIndex } = drag;
 
-      let width = 6;
+      let width = 4;
       if (currentDropIndex === drag.dragColumnIndex + 1) {
         currentDropIndex = drag.dragColumnIndex;
       }
