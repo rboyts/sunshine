@@ -4,26 +4,8 @@ $datepicker-height: 29rem;
 $datepicker-width: 18rem;
 $datepicker-navigation-margin: 1.5rem;
 
-.s-date-field {
-  display: inline-block;
-}
-
-.s-date-field-single-input, .s-date-field-range-input {
-  border: 1px solid $gray;
-  border-radius: 4px;
-}
-
-.s-date-field-range-input {
-  max-width: 200px;
-}
-
-.s-date-field-range-input--focus, .s-date-field-range-input:hover {
-  border-color: $color-edit;
-}
-
-.s-date-field-range-input .s-input__label {
-  z-index: 1;
-}
+// FIXME DRY
+$input-padding: .5rem;
 
 .s-date-field-range-period {
   position: relative;
@@ -31,44 +13,32 @@ $datepicker-navigation-margin: 1.5rem;
 
 .s-date-field-period {
   display: flex;
+  width: 100%;
+  height: 100%;
 }
 
 .s-date-field-range-symbol {
+  display: inline-block;
   user-select: none;
   font-size: 0.875rem;
-  padding-top: 0.5rem;
-  align-self: center;
-  width: 4%;
+
+  border: solid transparent;
+  border-width: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
 }
 
+// FIXME use v-if in template instead of this
 .s-date-field-range-input.s-date-field-filter-selected .s-date-field-range-symbol {
   display: none;
 }
 
-.s-date-field-range-input .s-input {
-  border: none;
-  width: 50%;
-  padding: 1rem 0rem 0.25rem 0rem;
-}
+.s-date-field-range-input .s-format-input {
+  flex: 1;
+  height: 100%;
 
-.s-date-field-range-input.s-date-field-filter-selected .s-input {
-  width: 35%;
-
-  &:last-child {
-    margin-left: 0;
+  // FIXME use input-class
+  input {
+    border-width: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
   }
-}
-
-.s-date-field-range-input .s-input:last-child {
-  margin-left: .25rem;
-}
-
-.s-date-field-single-input .s-input {
-  border: none;
-}
-
-.s-date-field-range-input .s-input:hover {
-  border: none;
 }
 
 .s-datepicker {

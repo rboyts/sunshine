@@ -5,8 +5,10 @@
       :toggle-on-click="false"
     >
       <template v-slot:activator>
-        <div
+        <s-base-input
           class="s-date-field-single-input"
+          :label="label"
+          :is-empty="false"
           @click="toggleOpen"
         >
           <s-date-to-stringinput
@@ -15,7 +17,7 @@
             :label="label"
             :format="format"
           />
-        </div>
+        </s-base-input>
       </template>
       <template v-slot:content>
         <s-datepicker

@@ -1,19 +1,16 @@
 <template>
-  <s-text-field
-    moment
+  <s-format-input
     v-model="formattedValue"
     :format="format.toLowerCase()"
-    :date-locale="locale"
-    :date-format="format"
-    :label="label"
     :class="validState(formattedValue)"
+    :input-class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
   />
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import STextField from '../STextField.vue';
+import SFormatInput from '../internal/SFormatInput.vue';
 
 // TODO: Hide format when filter is displayed in input
 
@@ -21,7 +18,7 @@ export default Vue.extend({
   name: 'SDateToStringinput',
 
   components: {
-    STextField,
+    SFormatInput,
   },
 
   data() {
@@ -104,7 +101,11 @@ export default Vue.extend({
     validState(value: string): string {
       if (value.length === Number(this.format.length)) {
         if (this.validDate(value)) {
-          return this.validStyle;
+          return '';
+
+          // XXX This should only be used if somehow triggered by a validation action.
+          // It looks very weird if the border is always green, if the date is valid.
+          // return this.validStyle;
         } else {
           return this.errorStyle;
         }

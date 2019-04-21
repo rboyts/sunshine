@@ -5,18 +5,16 @@
       :toggle-on-click="false"
     >
       <template v-slot:activator>
-        <div
+        <s-base-input
           class="s-date-field-range-input"
           :class="{
             's-date-field-range-input--focus': isOpen,
             's-date-field-filter-selected': filterSelected,
           }"
+          :label="label"
+          :is-empty="false"
           @click="open"
         >
-          <span
-            class="s-input__label"
-            :class="{'s-input__label--aside': !isEmpty || isOpen}"
-          >{{ label }}</span>
           <div class="s-date-field-period">
             <s-date-to-stringinput
               v-model="from"
@@ -34,7 +32,7 @@
               @filter-update="updateFilter"
             />
           </div>
-        </div>
+        </s-base-input>
       </template>
       <template v-slot:content>
         <s-datepicker
@@ -60,6 +58,11 @@ import SDateToStringinput from './SDateToStringinput.vue';
 import { ICalendarPeriod, ICalendarFilter } from '../types';
 
 // TODO: Reset filter when user selects range manually
+
+// TODO (Robin):
+// - Remove all the locale stuff. Should use moment or vue-i18n config
+// - Look into v-model data structure
+// - When a period is selected, use _one_ input to show the value as a text
 
 export default Vue.extend({
   name: 'SDateRange',
