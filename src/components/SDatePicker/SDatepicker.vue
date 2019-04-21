@@ -8,12 +8,12 @@
       :calendar="calendar"
       :current-year="calendarYear"
       :current-month="calendarMonth"
-      :mouseDrag="mouseDrag"
+      :mouse-drag="mouseDrag"
       :format="format"
       :locale="locale"
       :range="range"
-      :selectedPeriod="selectedPeriod"
-      :selectedDate="selectedDate"
+      :selected-period="selectedPeriod"
+      :selected-date="selectedDate"
       @add-coming-month="addComingMonth"
       @add-previous-month="addPreviousMonth"
       @mouse-drag-start="mouseDragStart"
@@ -26,12 +26,12 @@
       :today="today"
       :format="format"
       :locale="locale"
-      :selectedPeriod="selectedPeriod"
-      :selectedDate="selectedDate"
+      :selected-period="selectedPeriod"
+      :selected-date="selectedDate"
       :filter="filter"
       @set-period="setSelectedPeriod"
       @set-filter="setPeriodFilter"
-     />
+    />
   </div>
 </template>
 
@@ -48,7 +48,7 @@ import SDatepickerCalendar from './SDatepickerCalendar.vue';
 import SDatepickerMenu from './SDatepickerMenu.vue';
 
 export default Vue.extend({
-  name: 's-datepicker',
+  name: 'SDatepicker',
 
   components: {
     SDatepickerCalendar,

@@ -1,18 +1,18 @@
 <template>
   <span class="s-datepicker__grid">
-    <h3  class="s-datepicker__month">{{translateMonthName(month.month, month.year)}}</h3>
+    <h3 class="s-datepicker__month">{{ translateMonthName(month.month, month.year) }}</h3>
     <div class="s-datepicker__weeks">
       <span
         class="s-datepicker__weeks__week"
         v-for="w in month.weeksInMonth"
         :key="w"
-      >{{w}}</span>
+      >{{ w }}</span>
     </div>
     <span
       class="s-datepicker__date--overlapping"
       v-for="(x, k) in month.previousMonthDays"
       :key="`${x}-${month.month}-${k}`"
-    >{{x}}</span>
+    >{{ x }}</span>
     <span
       class="s-datepicker__date"
       v-for="a in month.daysInMonth"
@@ -27,25 +27,27 @@
         v-if="range && isSameDate(month.month, a, month.year, fromDate)"
         class="s-datepicker__date--circle"
       >
-        {{a}}
+        {{ a }}
       </span>
       <span
         v-else-if="range && isSameDate(month.month, a, month.year, toDate)"
         class="s-datepicker__date--circle"
       >
-        {{a}}
+        {{ a }}
       </span>
-      <span v-else-if="!range && isSameDate(month.month, a, month.year, selectedDate)"
-        class="s-datepicker__date--circle">
-        {{a}}
+      <span
+        v-else-if="!range && isSameDate(month.month, a, month.year, selectedDate)"
+        class="s-datepicker__date--circle"
+      >
+        {{ a }}
       </span>
-      <span v-else>{{a}}</span>
+      <span v-else>{{ a }}</span>
     </span>
     <span
       class="s-datepicker__date--overlapping"
       v-for="(x, k) in (6 - month.lastDay)"
       :key="`${x}-${month.month}-${k}`"
-    >{{x}}</span>
+    >{{ x }}</span>
   </span>
 </template>
 
@@ -59,7 +61,7 @@ import { IMonth, ICalendarPeriod, IMomentPayload } from '../types';
  */
 
 export default Vue.extend({
-  name: 's-datepicker-month',
+  name: 'SDatepickerMonth',
 
   props: {
     format: String,

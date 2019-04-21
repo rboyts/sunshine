@@ -1,8 +1,14 @@
 <template>
   <div class="s-date-field">
-    <s-menu v-model="isOpen" :toggleOnClick="false">
+    <s-menu
+      v-model="isOpen"
+      :toggle-on-click="false"
+    >
       <template v-slot:activator>
-        <div class="s-date-field-single-input" @click="toggleOpen">
+        <div
+          class="s-date-field-single-input"
+          @click="toggleOpen"
+        >
           <s-date-to-stringinput
             v-model="internalValue"
             :locale="locale"
@@ -13,7 +19,7 @@
       </template>
       <template v-slot:content>
         <s-datepicker
-          :includeMenu="menu"
+          :include-menu="menu"
           :locale="locale"
           :format="format"
           v-model="internalValue"
@@ -31,7 +37,7 @@ import SDatepicker from './SDatepicker.vue';
 import SDateToStringinput from './SDateToStringinput.vue';
 
 export default Vue.extend({
-  name: 's-date-single',
+  name: 'SDateSingle',
 
   components: {
     SMenu,

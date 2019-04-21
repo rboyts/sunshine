@@ -1,6 +1,9 @@
 <template>
   <div class="s-date-field">
-    <s-menu v-model="isOpen" :toggleOnClick="false">
+    <s-menu
+      v-model="isOpen"
+      :toggle-on-click="false"
+    >
       <template v-slot:activator>
         <div
           class="s-date-field-range-input"
@@ -10,7 +13,8 @@
           }"
           @click="open"
         >
-          <span class="s-input__label"
+          <span
+            class="s-input__label"
             :class="{'s-input__label--aside': !isEmpty || isOpen}"
           >{{ label }}</span>
           <div class="s-date-field-period">
@@ -40,7 +44,7 @@
           :format="format"
           v-model="internalValue"
           :filter="internalFilter"
-          :filterSelected="filterSelected"
+          :filter-selected="filterSelected"
           @filter-update="updateFilter"
         />
       </template>
@@ -58,7 +62,7 @@ import { ICalendarPeriod, ICalendarFilter } from '../types';
 // TODO: Reset filter when user selects range manually
 
 export default Vue.extend({
-  name: 's-date-range',
+  name: 'SDateRange',
 
   components: {
     SMenu,

@@ -2,19 +2,33 @@
   <div class="s-datepicker__menu">
     <h3>Periodevalg</h3>
     <div class="s-datepicker__menu__row">
-
       <div class="s-datepicker__menu__column">
-        <p v-for="filter in options" :key="filter">
-          <s-radio-button v-model="periodOption" :value="filter">{{filter}}</s-radio-button>
+        <p
+          v-for="filter in options"
+          :key="filter"
+        >
+          <s-radio-button
+            v-model="periodOption"
+            :value="filter"
+          >
+            {{ filter }}
+          </s-radio-button>
         </p>
       </div>
 
       <div class="s-datepicker__menu__column">
-        <p v-for="filter in periods" :key="filter">
-          <s-radio-button v-model="periodPreselect" :value="filter">{{filter}}</s-radio-button>
+        <p
+          v-for="filter in periods"
+          :key="filter"
+        >
+          <s-radio-button
+            v-model="periodPreselect"
+            :value="filter"
+          >
+            {{ filter }}
+          </s-radio-button>
         </p>
       </div>
-
     </div>
     <h3>Egne perioder</h3>
   </div>
@@ -33,7 +47,7 @@ import {
 import SRadioButton from '../SRadioButton.vue';
 
 export default Vue.extend({
-  name: 's-datepicker-menu',
+  name: 'SDatepickerMenu',
 
   components: { SRadioButton },
 

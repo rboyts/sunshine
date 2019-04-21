@@ -3,8 +3,8 @@
     moment
     v-model="formattedValue"
     :format="format.toLowerCase()"
-    :dateLocale="locale"
-    :dateFormat="format"
+    :date-locale="locale"
+    :date-format="format"
     :label="label"
     :class="validState(formattedValue)"
   />
@@ -18,7 +18,7 @@ import STextField from '../STextField.vue';
 // TODO: Hide format when filter is displayed in input
 
 export default Vue.extend({
-  name: 's-date-to-stringinput',
+  name: 'SDateToStringinput',
 
   components: {
     STextField,
