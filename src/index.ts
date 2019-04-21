@@ -6,6 +6,7 @@ import SAccordion from './components/SAccordion.vue';
 import SAccordionItem from './components/SAccordionItem.vue';
 import SAlert from './components/SAlert.vue';
 import SBaseInput from './components/SBaseInput.vue';
+import SBreadcrumb from './components/SBreadcrumb.vue';
 import SButton from './components/SButton.vue';
 import SCalendar from './components/SCalendar.vue';
 import SCheckbox from './components/SCheckbox.vue';
@@ -23,6 +24,7 @@ import SList from './components/SList.vue';
 import SListItem from './components/SListItem.vue';
 import SListSeparator from './components/SListSeparator.vue';
 import SMenu from './components/SMenu.vue';
+import SMultiselect from './components/SMultiselect.vue';
 import SPieChart from './components/SPieChart.vue';
 import SProgress from './components/SProgress.vue';
 import SRadioButton from './components/SRadioButton.vue';
@@ -30,11 +32,8 @@ import SSavedSetups from './components/SSavedSetups.vue';
 import STab from './components/STab.vue';
 import STable from './components/STable/STable.vue';
 import STabs from './components/STabs.vue';
-import STextField from './components/STextField.vue';
 import STextArea from './components/STextArea.vue';
-import SDatepicker from './components/SDatepicker.vue';
-import SMultiselect from './components/SMultiselect.vue';
-import SBreadcrumb from './components/SBreadcrumb.vue';
+import STextField from './components/STextField.vue';
 
 export { get } from './lib/utils';
 export * from './components/types';
@@ -44,10 +43,12 @@ export {
   SAccordionItem,
   SAlert,
   SBaseInput,
+  SBreadcrumb,
   SButton,
   SCalendar,
   SCheckbox,
-  SDatepicker,
+  SDateRange,
+  SDateSingle,
   SDropDown,
   SGrid,
   SGridItem,
@@ -58,6 +59,7 @@ export {
   SListItem,
   SListSeparator,
   SMenu,
+  SMultiselect,
   SPieChart,
   SProgress,
   SRadioButton,
@@ -73,6 +75,7 @@ const plugin = {
     Vue.component('s-accordion-item', SAccordionItem);
     Vue.component('s-alert', SAlert);
     Vue.component('s-base-input', SBaseInput);
+    Vue.component('s-breadcrumb', SBreadcrumb);
     Vue.component('s-button', SButton);
     Vue.component('s-calendar', SCalendar);
     Vue.component('s-checkbox', SCheckbox);
@@ -90,6 +93,7 @@ const plugin = {
     Vue.component('s-list-item', SListItem);
     Vue.component('s-list-separator', SListSeparator);
     Vue.component('s-menu', SMenu);
+    Vue.component('s-multiselect', SMultiselect);
     Vue.component('s-pie-chart', SPieChart);
     Vue.component('s-progress', SProgress);
     Vue.component('s-radio-button', SRadioButton);
@@ -97,11 +101,8 @@ const plugin = {
     Vue.component('s-tab', STab);
     Vue.component('s-table', STable);
     Vue.component('s-tabs', STabs);
-    Vue.component('s-text-field', STextField);
     Vue.component('s-text-area', STextArea);
-    Vue.component('s-datepicker', SDatepicker);
-    Vue.component('s-multiselect', SMultiselect);
-    Vue.component('s-breadcrumb', SBreadcrumb);
+    Vue.component('s-text-field', STextField);
   },
 };
 
