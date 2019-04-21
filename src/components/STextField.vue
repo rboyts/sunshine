@@ -9,36 +9,26 @@
     :current-length="currentLength"
     class="s-text-field"
   >
-    <input
-      :maxlength="maxLength"
-      :class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
+    <s-format-input
+      v-model="internalValue"
+      :format="hasFocus ? format : ''"
+      :maxlength="computedMaxLength"
       :type="type"
       :disabled="inactive"
-      v-model="internalValue"
       :placeholder="placeholder"
+      :input-class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
       @keypress="onKeyPress"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
       v-bind="$attrs"
-    >
-
-    <!-- expected format -->
-    <span
-      v-if="hasFocus && format"
-      class="s-input__format"
-    >
-      <span class="s-input__value">{{
-        internalValue
-      }}</span><span class="s-input__format__remaining">{{
-        remainingFormat
-      }}</span>
-    </span>
+    />
   </s-base-input>
 </template>
 
 <script>
 import Vue from 'vue';
 import SBaseInput from './SBaseInput.vue';
+import SFormatInput from './internal/SFormatInput.vue';
 
 export default Vue.extend({
   name: 'STextField',
@@ -53,6 +43,7 @@ export default Vue.extend({
 
   components: {
     SBaseInput,
+    SFormatInput,
   },
 
   props: {
@@ -144,11 +135,6 @@ export default Vue.extend({
         default:
           return 'text';
       }
-    },
-
-    remainingFormat() {
-      if (!this.format) return '';
-      return this.format.substring(`${this.internalValue}`.length);
     },
 
     currentLength() {

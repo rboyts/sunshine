@@ -132,29 +132,6 @@ $input-font-size: $paragraph-font-size;
   }
 }
 
-.s-input__format {
-  position: absolute;
-  display: block;
-  color: $gray;
-  white-space: nowrap;
-  top: -$input-border-width;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  font-size: $input-font-size;
-
-  // FIXME without label
-  border: solid transparent;
-  border-width: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.s-input__value {
-  color: transparent;
-}
-
 .s-input__error {
   position: absolute;
   bottom: -1.25rem;
@@ -186,4 +163,30 @@ $input-font-size: $paragraph-font-size;
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.s-format-input {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+}
+
+.s-format-input__format,
+.s-format-input__input {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.s-format-input__format {
+  color: $gray;
+}
+
+.s-format-input__input {
+  background-color: transparent;
 }
