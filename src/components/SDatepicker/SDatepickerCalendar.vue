@@ -52,12 +52,11 @@
           :range="range"
           :locale="locale"
           :today="today"
-          :ref="month.month + '-' + month.year"
-          :key="'month' + month.month + '-' + month.year"
+          :key="month.month + '-' + month.year"
           :month="month"
           :mouse-drag="mouseDrag"
-          :selected-date="selectedDate"
-          :selected-period="selectedPeriod"
+          :selected-date="range ? undefined : internalValue"
+          :selected-period="range ? internalValue : undefined"
           :mouse-drag-outbounds="mouseDragOutbounds"
           @mouse-click="mouseClick"
           @mouse-drag-start="dragStart"
@@ -90,9 +89,32 @@ export default Vue.extend({
     SIcon,
   },
 
+  props: {
+    /**
+     * Input value, same as for SDatepicker.
+     */
+    value: {
+      type: Object,
+      required: true,
+    },
+
+    calendar: Array as () => IMonth[],
+    today: Object as () => Moment,
+    currentMonth: Number,
+    currentYear: Number,
+    mouseDrag: Boolean,
+    format: String,
+    locale: String,
+
+    range: Boolean,
+  },
+
   data() {
     return {
-      days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
+      days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'], // TODO i18n
+
+      internalValue: this.value,
+
       dateContext: moment(),
       activeMonth: this.currentMonth,
       activeYear: this.currentYear,
@@ -103,45 +125,40 @@ export default Vue.extend({
     };
   },
 
-  props: {
-    calendar: Array as () => IMonth[],
-    today: Object as () => Moment,
-    currentMonth: Number,
-    currentYear: Number,
-    mouseDrag: Boolean,
-    format: String,
-    locale: String,
-    range: Boolean,
-    selectedDate: {} as () => Moment,
-    selectedPeriod: {} as () => ICalendarPeriod,
-  },
-
   watch: {
     calendar: {
       handler(newVal: IMonth[], oldVal: IMonth[]) {
         this.setActiveMonth(newVal);
       },
     },
+
+    value(val) {
+      this.internalValue = val;
+    },
   },
 
   methods: {
     mouseleave() {
-      if (this.mouseDrag && this.selectedPeriod.from && this.selectedPeriod.to) {
+      // FIXME: Implement properly with capture
+
+      if (!this.mouseDrag) return;
+
+      const { from, to } = this.internalValue;
+      if (from && to) {
         // Make sure we don't interupt the dragging event at a wrong time
         // emit correct events to cancel mouseDrag
         this.$emit('mouse-drag-start', {
-          y: moment(this.selectedPeriod.from).year(),
-          M: (moment(this.selectedPeriod.from).month() + 1),
-          d: moment(this.selectedPeriod.from).date(),
+          y: moment(from).year(),
+          M: (moment(from).month() + 1),
+          d: moment(from).date(),
         });
         this.$emit('mouse-drag-end', {
-          y: moment(this.selectedPeriod.to).year(),
-          M: (moment(this.selectedPeriod.to).month() + 1),
-          d: moment(this.selectedPeriod.to).date(),
+          y: moment(to).year(),
+          M: (moment(to).month() + 1),
+          d: moment(to).date(),
         });
       }
     },
-
 
     dragStart(payload: IMomentPayload) {
       this.$emit('mouse-drag-start', payload);

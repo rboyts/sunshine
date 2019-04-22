@@ -12,8 +12,6 @@ import Vue from 'vue';
 import moment, { Moment } from 'moment';
 import SFormatInput from '../internal/SFormatInput.vue';
 
-// TODO: Hide format when filter is displayed in input
-
 export default Vue.extend({
   name: 'SDateToStringinput',
 
@@ -21,42 +19,39 @@ export default Vue.extend({
     SFormatInput,
   },
 
-  data() {
-    return {
-      formattedValue: '',
-      validStyle: 's-input--valid',
-      errorStyle: 's-input--error',
-      focus: false,
-    };
-  },
-
   props: {
     value: {} as () => Moment,
     format: String,
     locale: String,
     label: String,
-    filter: String,
+  },
+
+  data() {
+    return {
+      formattedValue: '',
+      focus: false,
+    };
   },
 
   watch: {
 
     // TODO: Show format when date is null
-    // TODO: Remove filter when user inputs dates
 
-    value(newVal) {
-      if (!newVal) {
-        this.formattedValue = '';
-      } else {
-        this.formattedValue = moment(newVal).format(this.format);
-      }
+    value: {
+      handler(newVal) {
+        if (!newVal) {
+          this.formattedValue = '';
+        } else {
+          this.formattedValue = moment(newVal).format(this.format);
+        }
+      },
+      immediate: true,
     },
 
     formattedValue(newVal) {
-      if (this.filter) {
-        this.formattedValue = this.filter;
-      } else {
-        this.formattedValue = this.formatValue(newVal);
-      }
+      // XXX Dangerously changing watched value
+      this.formattedValue = this.formatValue(newVal);
+
       if (this.validDate(this.formattedValue) &&
         this.formattedValue.length === this.format.length) {
         this.$emit('input', moment(this.formattedValue, this.format));
@@ -105,9 +100,9 @@ export default Vue.extend({
 
           // XXX This should only be used if somehow triggered by a validation action.
           // It looks very weird if the border is always green, if the date is valid.
-          // return this.validStyle;
+          // return 's-input--valid';
         } else {
-          return this.errorStyle;
+          return 's-input--error';
         }
       } else {
         return '';
@@ -117,11 +112,6 @@ export default Vue.extend({
     validDate(value: string): boolean {
       return moment(value, this.format).isValid();
     },
-  },
-
-  mounted() {
-    // TODO: if valid and not null
-    this.formattedValue = moment(this.value).format(this.format);
   },
 });
 </script>

@@ -26,11 +26,6 @@ $input-padding: .5rem;
   border-width: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
 }
 
-// FIXME use v-if in template instead of this
-.s-date-field-range-input.s-date-field-filter-selected .s-date-field-range-symbol {
-  display: none;
-}
-
 .s-date-field-range-input .s-format-input {
   flex: 1;
   height: 100%;

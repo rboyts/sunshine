@@ -21,10 +21,9 @@
       </template>
       <template v-slot:content>
         <s-datepicker
-          :include-menu="menu"
+          v-model="internalValue"
           :locale="locale"
           :format="format"
-          v-model="internalValue"
         />
       </template>
     </s-menu>
@@ -57,10 +56,6 @@ export default Vue.extend({
   },
 
   props: {
-    includeMenu: {
-      type: Boolean,
-      default: false,
-    },
     value: {} as any,
     label: String,
   },
@@ -74,12 +69,6 @@ export default Vue.extend({
       if (!newVal) {
         this.$emit('input', this.internalValue);
       }
-    },
-  },
-
-  computed: {
-    menu(): Boolean {
-      return this.includeMenu;
     },
   },
 

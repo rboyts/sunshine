@@ -80,21 +80,27 @@ export interface IMomentPayload {
   d: number
 }
 
-export enum ICalendarOptionFilter {
+export enum CalendarOption {
   Previous = 'Previous',
   Current = 'Current',
   Next = 'Next',
 }
 
-export enum ICalendarPeriodFilter {
+export enum CalendarPeriod {
   Day = 'Day',
   Week = 'Week',
   Month = 'Month',
 }
 
-export interface ICalendarFilter {
-  option: ICalendarOptionFilter | '',
-  period: ICalendarPeriodFilter | ''
+export interface IDateRangePreset {
+  option: CalendarOption,
+  period: CalendarPeriod,
+}
+
+export interface IDateRangeValue {
+  from: Moment | null;
+  to: Moment | null;
+  preset: IDateRangePreset | null;
 }
 
 export interface MouseWheelEvent extends MouseEvent {

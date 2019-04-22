@@ -1,7 +1,7 @@
 <template>
   <div
     class="s-datepicker"
-    :class="{'s-datepicker-menu-active': filterSelected}"
+    :class="{'s-datepicker-menu-active': !!internalValue.preset}"
   >
     <s-datepicker-calendar
       :today="today"
@@ -12,8 +12,7 @@
       :format="format"
       :locale="locale"
       :range="range"
-      :selected-period="selectedPeriod"
-      :selected-date="selectedDate"
+      :value="internalValue"
       @add-coming-month="addComingMonth"
       @add-previous-month="addPreviousMonth"
       @mouse-drag-start="mouseDragStart"
@@ -22,15 +21,9 @@
       @mouse-click="mouseClick"
     />
     <s-datepicker-menu
-      v-if="menu"
+      v-if="withMenu"
+      v-model="internalValue"
       :today="today"
-      :format="format"
-      :locale="locale"
-      :selected-period="selectedPeriod"
-      :selected-date="selectedDate"
-      :filter="filter"
-      @set-period="setSelectedPeriod"
-      @set-filter="setPeriodFilter"
     />
   </div>
 </template>
@@ -42,10 +35,16 @@ import {
   IMonth,
   ICalendarPeriod,
   IMomentPayload,
-  ICalendarFilter,
+  IDateRangeValue,
 } from '../types';
 import SDatepickerCalendar from './SDatepickerCalendar.vue';
 import SDatepickerMenu from './SDatepickerMenu.vue';
+
+// TODO (Robin)
+// - Encapsulate mouse event handling in Calendar component?
+// - Rename all event handlers, adding 'on' prefix
+// - User Moment as event payload, instead of {y,M,d}
+
 
 export default Vue.extend({
   name: 'SDatepicker',
@@ -55,8 +54,30 @@ export default Vue.extend({
     SDatepickerMenu,
   },
 
+  props: {
+    value: {
+      type: Object,
+      required: true,
+    },
+
+    range: {
+      type: Boolean,
+      default: false,
+    },
+
+    locale: String,
+    format: String,
+
+    // XXX Always menu if range?
+    withMenu: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   data() {
     return {
+      internalValue: undefined as IDateRangeValue | Moment | undefined,
       calendar: [] as IMonth[],
       today: moment(),
       dateContext: moment(),
@@ -67,68 +88,28 @@ export default Vue.extend({
     };
   },
 
-  props: {
-    filter: {} as () => ICalendarFilter,
-    filterSelected: Boolean,
-    value: {} as () => any,
-    locale: String,
-    format: String,
-    range: Boolean,
-    menu: Boolean,
-  },
-
   watch: {
-    value(newVal) {
-      this.internalValue = newVal;
+    value: {
+      handler(newVal) {
+        if (newVal) {
+          this.internalValue = newVal;
+        } else {
+          this.internalValue = this.getDefaultValue();
+        }
+      },
+      immediate: true,
     },
 
     internalValue(newVal, oldVal) {
-      if (!newVal) return;
-      if (!newVal.from && this.range) {
-        this.internalValue.from = moment();
-      } else if (!newVal.to && this.range) {
-        this.internalValue.to = moment();
+      if (newVal !== this.value) {
+        this.$emit('input', newVal);
       }
-      // Redraw calendar if selected date is not in current viewable months
-      let compareDate = (this.range) ? newVal.from : newVal;
-      let currentMonth = moment([this.calendar[0].year, (this.calendar[0].month - 1), 1]);
-      let nextMonth = moment([this.calendar[1].year, (this.calendar[1].month - 1), 1]);
-      if (!moment(compareDate).isSame(currentMonth, 'month') &&
-        !moment(compareDate).isSame(nextMonth, 'month')) {
-        this.dateContext = moment(compareDate);
-        this.calendar = this.createMonths();
-      }
+
+      this.ensureSelectionVisible();
     },
   },
 
   computed: {
-    internalValue: {
-      get(): Moment | ICalendarPeriod {
-        if (this.range) {
-          return {
-            from: this.value.from,
-            to: this.value.to,
-          };
-        }
-        return this.value;
-      },
-      set(newValue: any) {
-        if (this.range) {
-          this.period = newValue;
-        } else {
-          this.date = newValue;
-        }
-      },
-    },
-
-    selectedPeriod(): ICalendarPeriod {
-      return this.period;
-    },
-
-    selectedDate(): Moment {
-      return this.date;
-    },
-
     calendarYear(): number {
       return this.dateContext.get('year');
     },
@@ -139,6 +120,15 @@ export default Vue.extend({
   },
 
   methods: {
+    getDefaultValue(): any {
+      const today = moment().startOf('day');
+      return this.range ? {
+        from: today,
+        to: today,
+        preset: null,
+      } : today;
+    },
+
     addPreviousMonth() {
       let firstMonth = this.calendar[0];
       let firstMonthDate = moment([firstMonth.year, (firstMonth.month - 1), 1]);
@@ -231,16 +221,14 @@ export default Vue.extend({
         .weekday();
     },
 
-    setPeriodFilter(payload: ICalendarFilter) {
-      this.$emit('filter-update', payload);
-    },
-
     setSelectedPeriod(from: Moment, to: Moment) {
+      if (!this.range) throw new Error('Expected range to be true');
+
       this.internalValue = {
         from,
         to,
+        preset: null,
       };
-      this.$emit('input', this.period);
     },
 
     mouseDragStart(payload: IMomentPayload) {
@@ -255,7 +243,6 @@ export default Vue.extend({
         this.mouseDrag = true;
         this.startDragDate = date;
       }
-      this.$emit('filter-update', { option: '', period: '' });
     },
 
     mouseDragEnd(payload: IMomentPayload) {
@@ -280,8 +267,20 @@ export default Vue.extend({
     },
 
     mouseClick(payload: IMomentPayload) {
+      if (this.range) throw new Error('Expected range to be false');
+
       this.internalValue = moment([payload.y, (payload.M - 1), payload.d]);
-      this.$emit('input', this.date);
+    },
+
+    ensureSelectionVisible() {
+      let compareDate = this.range ? this.internalValue.from : this.internalValue;
+      let currentMonth = moment([this.calendar[0].year, (this.calendar[0].month - 1), 1]);
+      let nextMonth = moment([this.calendar[1].year, (this.calendar[1].month - 1), 1]);
+      if (!moment(compareDate).isSame(currentMonth, 'month') &&
+        !moment(compareDate).isSame(nextMonth, 'month')) {
+        this.dateContext = moment(compareDate);
+        this.calendar = this.createMonths();
+      }
     },
   },
 
