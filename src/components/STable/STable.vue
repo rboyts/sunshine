@@ -24,6 +24,7 @@
         :class="classes('table')"
         @pointermove="onCellMouseMove"
         @pointerup="onCellMouseUp"
+        @pointerleave="onCellMouseLeave"
         @click.stop=""
       >
         <colgroup>
@@ -612,10 +613,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     onCellMouseMove(event: PointerEvent) {
       if (!this.select) return;
 
-      // Capture mouse pointer, to make sure we receive pointerup
       const table = this.$refs.table as HTMLElement;
-      table.setPointerCapture(event.pointerId);
-
       const el = document.elementFromPoint(event.clientX, event.clientY);
       if (!(el && table.contains(el))) return;
 
@@ -641,6 +639,16 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       this.select = null;
       const table = this.$refs.table as HTMLElement;
       table.releasePointerCapture(event.pointerId);
+    },
+
+    onCellMouseLeave(event: PointerEvent) {
+      if (!this.select) return;
+
+      // XXX Do we need to prevent this from happening multiple times?
+
+      // Capture mouse pointer, to make sure we receive pointerup
+      const table = this.$refs.table as HTMLElement;
+      table.setPointerCapture(event.pointerId);
     },
 
     onKeyArrowUp() {
