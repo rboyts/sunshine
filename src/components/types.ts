@@ -11,7 +11,6 @@ export interface ISortingState {
 }
 
 export interface ISelection {
-  active: string | null;
   selected: string[];
   inverted: boolean;
 }
@@ -125,7 +124,6 @@ export interface MouseWheelEvent extends MouseEvent {
 }
 
 export const NO_SELECTION: ISelection = Object.freeze({
-  active: null,
   selected: [],
   inverted: false,
 });

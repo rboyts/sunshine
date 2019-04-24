@@ -265,6 +265,8 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
 
       internalSelection: NO_SELECTION,
       internalSortingState: { key: null, reverse: false } as ISortingState,
+
+      activeRow: null as string | null,
     };
   },
 
@@ -365,19 +367,6 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
         this.internalSelection.selected.length !== 0
       );
     },
-
-    activeRow: {
-      get(): string | null {
-        return this.internalSelection.active;
-      },
-
-      set(val: string | null) {
-        this.internalSelection = {
-          ...this.internalSelection,
-          active: val,
-        };
-      },
-    },
   },
 
   methods: {
@@ -451,8 +440,8 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     },
 
     onClick(event: UIEvent, node: ITableNode) {
+      this.activeRow = node.key;
       this.internalSelection = {
-        active: node.key,
         selected: [node.key],
         inverted: false,
       };
@@ -539,6 +528,13 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       if (to > from) to--;
       if (to === from) return;
 
+      // FIXME
+      // Project -> Place/Calculated columns
+      // Move one column on place to the left, then move the same column on
+      // place to the right, back to the original position.
+      // AR: Nothing happens
+      // Try one more time:
+      // AR: Column is moved.
       this.moveColumn({ from, to });
     },
 
@@ -695,10 +691,10 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
         selected = [selectNode.key];
       }
 
+      this.activeRow = selectNode.key;
       this.internalSelection = {
         inverted,
         selected,
-        active: selectNode.key,
       };
     },
 
