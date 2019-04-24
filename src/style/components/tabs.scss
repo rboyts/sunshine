@@ -11,28 +11,31 @@ $tabs-link-active-color: $almost-black;
 
 .s-tabs {
   position: relative;
-  margin-bottom: $tabs-margin-bottom;
   white-space: nowrap;
-  overflow: hidden;
+  margin-bottom: $tabs-margin-bottom;
 }
 
 .s-tabs__main {
   display: flex;
   align-items: stretch;
+  // Padding to make the whole button focus border visible.
+  padding: 1px 1px 0 1px;
+
 }
 
-.s-tabs__menu {
-  height: 100%;
-  transition: left $duration-normal;
-  // float: left;
+.s-tabs__wrapper {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  height: $tabs-height;
+}
 
-  // &--overflowleft {
-  //   float: right;
-  // }
+.s-tabs__tabs {
+  font-size: 0;
+  transition: left $duration-normal;
 }
 
 .s-tabs__border {
-  clear: both;
   width: inherit;
   height: $tabs-border-width;
   background-color: $almost-gray;
@@ -48,14 +51,14 @@ $tabs-link-active-color: $almost-black;
 }
 
 .s-tabs__button {
-  flex: 0 0 2.9375rem;
-  height: 2.9375rem;
-  width: 2.9375rem;
+  height: $tabs-height;
+  width: $tabs-height;
+  border: 1px solid $almost-gray;
   background-color: $whiteish;
 }
 
-.s-tabs__arrow-icon-left {
-  transform: rotate(-90deg);
+@mixin arrow-icon($deg) {
+  transform: rotate($deg);
   font-size: 24px;
   opacity: 1;
 
@@ -63,15 +66,20 @@ $tabs-link-active-color: $almost-black;
     opacity: 0.8;
   }
 }
+.s-tabs__arrow-icon-left {
+  @include arrow-icon(-90deg)
+}
 
 .s-tabs__arrow-icon-right {
-  transform: rotate(90deg);
-  font-size: 24px;
-  opacity: 1;
+  @include arrow-icon(90deg)
+}
 
-  &:hover {
-    opacity: 0.8;
-  }
+// Margins here, since having them directly
+// in s-tab__link causes non-clickable
+// space/margin between items.
+.s-tab__title {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
 }
 
 .s-tab__link {
@@ -88,7 +96,16 @@ $tabs-link-active-color: $almost-black;
     color: $tabs-link-active-color;
   }
 
-  &:not(:first-child) {
-    margin-left: 1.5rem;
+  &:first-child {
+    .s-tab__title {
+      margin-left: 0;
+    }
+  }
+
+  &:last-of-type {
+    .s-tab__title {
+      margin-right: 0;
+    }
   }
 }
+

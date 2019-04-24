@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div>ScrollPos: {{ curScroll }} </div>
     <div
       :class="classes()"
     >
@@ -20,14 +19,13 @@
           />
         </div>
         <div
-          ref="tabs"
-          :style="{ flex: 1 }"
-          style="overflow: hidden; position: relative"
+          ref="wrapper"
+          :class="classes('wrapper')"
         >
           <div
-            ref="menu"
-            :class="classes('menu', { overflowleft })"
-            :style="menuStyle"
+            ref="tabs"
+            :class="classes('tabs')"
+            :style="tabsStyle"
           >
             <slot />
             <div :class="classes('border')">
@@ -80,13 +78,19 @@ export default mixins(ClassesMixin).extend({
     };
   },
 
+  watch: {
+    curScroll(val, oldVal) {
+      if (val !== oldVal) {
+        this.curScroll = Math.round(val);
+      }
+    },
+  },
+
   computed: {
-    menuStyle(this: any) {
+    tabsStyle(this: any) {
       return {
         position: 'absolute',
         left: `${-this.curScroll}px`,
-        // paddingRight: `${this.curScroll}px`,
-        // marginRight: `${-this.maxScroll}px`,
       };
     },
 
@@ -95,10 +99,6 @@ export default mixins(ClassesMixin).extend({
         width: `${this.highlight.width}px`,
         left: `${this.highlight.left}px`,
       };
-    },
-
-    overflowleft(this: any) {
-      return this.maxScroll > 0;
     },
 
     showLeftBtn(this: any) {
@@ -127,7 +127,7 @@ export default mixins(ClassesMixin).extend({
     updateHighlight(this: any) {
       if (!this.activeTab) return;
 
-      let el = this.activeTab.$el;
+      let el = this.activeTab.$refs.title;
       if (el == null) return;
 
       if (this.highlight.width === '-1') {
@@ -137,35 +137,44 @@ export default mixins(ClassesMixin).extend({
       }
     },
 
-    ensureVisible(this: any, elem: any) {
-      const { offsetLeft, offsetWidth } = elem;
-      if (offsetLeft < 0) {
-        this.curScroll = Math.max(0, this.curScroll + offsetLeft);
-      } else if (offsetLeft + offsetWidth > this.$refs.tabs.clientWidth) {
+    async ensureVisible(this: any, elem: any) {
+      await Vue.nextTick();
+      const elemOffset = elem.getBoundingClientRect();
+      const wrapperOffset = this.$refs.wrapper.getBoundingClientRect();
+      if (elemOffset.left < wrapperOffset.left) {
+        this.curScroll = Math.max(0, this.curScroll - wrapperOffset.left + elemOffset.left);
+      } else if (elemOffset.right > wrapperOffset.right) {
+        if (!this.showLeftBtn) {
+          this.curScroll += this.$refs.button.offsetWidth;
+        }
         this.curScroll = Math.min(this.maxScroll,
-          this.curScroll + offsetLeft + offsetWidth - this.$refs.tabs.clientWidth);
+          this.curScroll + elemOffset.right - wrapperOffset.right);
       }
     },
 
     async setScrollValues(this: any) {
       const oldMaxScroll = this.maxScroll;
       const oldCurScroll = this.curScroll;
-      this.maxScroll = 0;
       this.curScroll = 0;
       await Vue.nextTick();
-      this.maxScroll = Math.max(0, this.$refs.menu.clientWidth - this.$refs.tabs.clientWidth);
+      this.maxScroll = Math.max(0, this.$refs.tabs.clientWidth - this.$refs.wrapper.clientWidth);
+
+      // In the first calculation of maxscroll no buttons are visible, but added
+      // afterwards if maxScroll > 0. We need to recalculate to get the correct maxScroll
+      // with buttons. Ok to just recalculate maxScroll in the next tick?
       await Vue.nextTick();
+      this.maxScroll = Math.max(0, this.$refs.tabs.clientWidth - this.$refs.wrapper.clientWidth);
       if (this.maxScroll && oldMaxScroll) {
         this.curScroll = oldCurScroll * (this.maxScroll / oldMaxScroll);
       }
     },
 
     onLeftClick() {
-      this.curScroll = Math.max(0, this.curScroll - this.$refs.menu.clientWidth / 3);
+      this.curScroll = Math.max(0, this.curScroll - this.$refs.tabs.clientWidth / 3);
     },
 
     onRightClick() {
-      this.curScroll = Math.min(this.maxScroll, this.curScroll + this.$refs.menu.clientWidth / 3);
+      this.curScroll = Math.min(this.maxScroll, this.curScroll + this.$refs.tabs.clientWidth / 3);
     },
   },
 
@@ -179,12 +188,12 @@ export default mixins(ClassesMixin).extend({
       this.updateHighlight();
     }, 250);
 
-    // use a watch on clientWidth instead?
-    window.addEventListener('resize', () => { this.setScrollValues(); });
+    window.addEventListener('resize', this.setScrollValues);
     this.setScrollValues();
   },
 
   beforeDestroy(this: any) {
+    window.removeEventListener('resize', this.setScrollValues);
     clearInterval(this.timerId);
   },
 });

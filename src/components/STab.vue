@@ -3,7 +3,12 @@
     :class="classes('link')"
     :to="to"
   >
-    <slot />
+    <span
+      ref="title"
+      :class="classes('title')"
+    >
+      <slot />
+    </span>
   </router-link>
 </template>
 
