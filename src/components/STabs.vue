@@ -28,14 +28,13 @@
             :style="tabsStyle"
           >
             <slot />
-            <div :class="classes('border')">
-              <div
-                v-if="highlight.width !== -1"
-                :class="classes('highlight')"
-                :style="highlightStyle"
-              />
-            </div>
+            <div
+              v-if="highlight.width !== -1"
+              :class="classes('highlight')"
+              :style="highlightStyle"
+            />
           </div>
+          <div :class="classes('border')" />
         </div>
         <div
           ref="button"

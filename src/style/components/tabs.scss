@@ -36,15 +36,18 @@ $tabs-link-active-color: $almost-black;
 }
 
 .s-tabs__border {
-  width: inherit;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
   height: $tabs-border-width;
   background-color: $almost-gray;
 }
 
 .s-tabs__highlight {
   position: absolute;
+  bottom: 0px;
+  z-index: 1000;
   height: $tabs-highlight-width;
-  bottom: 0;
   background-color: $smartdok-yellow;
 
   transition: $duration-normal;
