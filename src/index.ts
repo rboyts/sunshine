@@ -24,6 +24,8 @@ import SList from './components/SList.vue';
 import SListItem from './components/SListItem.vue';
 import SListSeparator from './components/SListSeparator.vue';
 import SMenu from './components/SMenu.vue';
+import SMenuList from './components/SMenuList.vue';
+import SMenuBuilder from './components/SMenuBuilder.vue';
 import SMultiselect from './components/SMultiselect.vue';
 import SPieChart from './components/SPieChart.vue';
 import SProgress from './components/SProgress.vue';
@@ -31,6 +33,7 @@ import SRadioButton from './components/SRadioButton.vue';
 import SSavedSetups from './components/SSavedSetups.vue';
 import STab from './components/STab.vue';
 import STable from './components/STable/STable.vue';
+import STableColumnsMenu from './components/STable/STableColumnsMenu.vue';
 import STabs from './components/STabs.vue';
 import STextArea from './components/STextArea.vue';
 import STextField from './components/STextField.vue';
@@ -59,12 +62,15 @@ export {
   SListItem,
   SListSeparator,
   SMenu,
+  SMenuList,
+  SMenuBuilder,
   SMultiselect,
   SPieChart,
   SProgress,
   SRadioButton,
   STab,
   STable,
+  STableColumnsMenu,
   STabs,
   STextField,
 };
@@ -93,6 +99,8 @@ const plugin = {
     Vue.component('s-list-item', SListItem);
     Vue.component('s-list-separator', SListSeparator);
     Vue.component('s-menu', SMenu);
+    Vue.component('s-menu-list', SMenuList);
+    Vue.component('s-menu-builder', SMenuBuilder);
     Vue.component('s-multiselect', SMultiselect);
     Vue.component('s-pie-chart', SPieChart);
     Vue.component('s-progress', SProgress);
@@ -100,6 +108,7 @@ const plugin = {
     Vue.component('s-saved-setups', SSavedSetups);
     Vue.component('s-tab', STab);
     Vue.component('s-table', STable);
+    Vue.component('s-table-columns-menu', STableColumnsMenu);
     Vue.component('s-tabs', STabs);
     Vue.component('s-text-area', STextArea);
     Vue.component('s-text-field', STextField);

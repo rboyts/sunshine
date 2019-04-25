@@ -60,37 +60,6 @@ export default Vue.extend({
     ClassesMixin,
   ],
 
-  i18n: {
-    messages: {
-      en: {
-        's-table': {
-          'select-all': 'Select all',
-          'select-none': 'Select none',
-          'export-pdf': 'Export as PDF',
-          'export-excel': 'Export to Excel',
-        },
-      },
-
-      nb: {
-        's-table': {
-          'select-all': 'Velg alle',
-          'select-none': 'Velg ingen',
-          'export-pdf': 'Eksporter som PDF',
-          'export-excel': 'Eksporter til Excel',
-        },
-      },
-
-      sv: {
-        's-table': {
-          'select-all': 'Markera alla',
-          'select-none': 'Markera ingen',
-          'export-pdf': 'Exportera som PDF',
-          'export-excel': 'Exportera till Excel',
-        },
-      },
-    },
-  },
-
   components: {
     SMenu,
     SMenuList,

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="s-saved-setups">
     <s-drop-down
       search
       v-model="selected"

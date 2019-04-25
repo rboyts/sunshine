@@ -44,20 +44,6 @@
               v-on="getHeaderListeners(column, index)"
             >
               <span :class="classes('cell-wrapper')">
-                <span
-                  v-if="index === 0"
-                  @click.stop=""
-                  @pointerdown.stop=""
-                >
-                  <s-table-options-menu
-                    :checkable="checkable"
-                    :ordered-columns="orderedColumns"
-                    @selectAll="selectAll"
-                    @selectNone="selectNone"
-                    @toggleColumn="toggleColumn"
-                  />
-                </span>
-
                 <span :class="classes('cell-content')">{{ column.title }}</span>
 
                 <span

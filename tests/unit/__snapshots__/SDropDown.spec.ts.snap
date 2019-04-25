@@ -10,9 +10,9 @@ exports[`SDropDown renders dropdown list 1`] = `
       <!---->
     </div>
   </div>
-  <div class="s-menu__popup" style="bottom: 0px; left: 0px; min-width: 0px; height: 0px;">
+  <div class="s-menu__popup" style="left: 0px; bottom: 0px; min-width: 0px; height: 0px;">
     <div class="s-menu__popup__content" style="opacity: 0;">
-      <div>
+      <div class="s-menu-list">
         <!---->
         <ul class="s-list">
           <li class="s-list-item">
@@ -45,9 +45,9 @@ exports[`SDropDown renders filtered list 1`] = `
       <!---->
     </div>
   </div>
-  <div class="s-menu__popup" style="bottom: 0px; left: 0px; min-width: 0px; height: 0px;">
+  <div class="s-menu__popup" style="left: 0px; bottom: 0px; min-width: 0px; height: 0px;">
     <div class="s-menu__popup__content" style="opacity: 1;">
-      <div>
+      <div class="s-menu-list">
         <!---->
         <ul class="s-list">
           <li class="s-list-item">

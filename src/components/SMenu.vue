@@ -24,6 +24,7 @@
       v-if="isOpen"
       target="window"
       @pointerdown.capture="onWindowClick"
+      @focus.capture="onWindowClick"
     />
 
     <watcher
@@ -52,6 +53,14 @@ export default mixins(ClassesMixin).extend({
     value: {
       type: Boolean,
       required: false,
+    },
+
+    /**
+     * Align menu towards the left, instead of right.
+     */
+    left: {
+      type: Boolean,
+      default: false,
     },
 
     // TODO default false?
@@ -103,24 +112,27 @@ export default mixins(ClassesMixin).extend({
       let rect = activator.getBoundingClientRect();
 
       const height = document.documentElement.clientHeight;
+      const width = document.documentElement.clientWidth;
 
       const spaceDown = height - rect.bottom;
       const spaceUp = rect.top;
 
+      const align = this.left ? { right: `${width - rect.right}px` } : { left: `${rect.left}px` };
+
       if (spaceDown > spaceUp || spaceDown > 300) {
         this.style = {
           ...this.style,
+          ...align,
           top: `${rect.bottom}px`,
           bottom: undefined,
-          left: `${rect.left}px`,
           minWidth: `${rect.width}px`,
         };
       } else {
         this.style = {
           ...this.style,
+          ...align,
           top: undefined,
           bottom: `${height - rect.top}px`,
-          left: `${rect.left}px`,
           minWidth: `${rect.width}px`,
         };
       }
@@ -178,7 +190,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     // Close menu when clicking anywhere outside
-    onWindowClick(event: MouseEvent) {
+    onWindowClick(event: UIEvent) {
       // Ignore clicks on the menu/activator itself
       let el = this.$el as HTMLElement;
       if (el.contains(event.target as HTMLElement)) return;

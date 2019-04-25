@@ -1,5 +1,6 @@
 <template>
   <div
+    class="s-menu-list"
     @mouseover="onMouseOver"
     @mousedown.prevent=""
   >
