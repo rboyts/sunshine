@@ -18,7 +18,7 @@ $btn-danger-border-color: $color-bad;
 // https://stackoverflow.com/a/45191208/137627
 
 @mixin btn-overlay() {
-  &:after {
+  .s-button__content:after {
     content: '';
     position: absolute;
     top: 0;
@@ -97,14 +97,14 @@ $btn-danger-border-color: $color-bad;
   // Roundness
 
   border-radius: ($btn-normal-height / 2);
-  &:after {
+  .s-button__content:after {
     border-radius: ($btn-normal-height / 2);
   }
 
   &--square {
     border-radius: 2px;
 
-    &:after {
+    .s-button__content:after {
       border-radius: 2px;
     }
   }
@@ -139,7 +139,6 @@ $btn-danger-border-color: $color-bad;
   outline: none;
   user-select: none;
   cursor: default;
-
 }
 
 .s-button:focus {
