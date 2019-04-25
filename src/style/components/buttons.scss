@@ -18,14 +18,13 @@ $btn-danger-border-color: $color-bad;
 // https://stackoverflow.com/a/45191208/137627
 
 @mixin btn-overlay() {
-  :after {
+  &:after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: ($btn-normal-height / 2);
 
     @content;
   }
@@ -40,7 +39,8 @@ $btn-danger-border-color: $color-bad;
   position: relative;
 
   height: $btn-normal-height;
-  border-radius: ($btn-normal-height / 2);
+
+  border: 1px solid;
   min-width: $btn-normal-min-width;
 
   &--small {
@@ -67,36 +67,61 @@ $btn-danger-border-color: $color-bad;
   &--normal {
     background-color: $btn-normal-bg-color;
     color: $btn-normal-fg-color;
-
-    // Implement the border as a pseudo-element, to prevent the content
-    // from moving when the border thickness is changed due to tab selection.
-    @include btn-overlay {
-      border: 1px solid $btn-normal-border-color;
-    }
+    border-color: $btn-normal-border-color;
   }
 
   &--primary {
-    border: none;
     background-color: $btn-primary-bg-color;
     color: $btn-primary-fg-color;
+    border-color: $btn-primary-bg-color;
   }
 
   &--danger {
     background-color: $btn-danger-bg-color;
     color: $btn-danger-fg-color;
-
-    // Implement the border as a pseudo-element, to prevent the content
-    // from moving when the border thickness is changed due to tab selection.
-    @include btn-overlay {
-      border: 1px solid $btn-danger-border-color;
-    }
+    border-color: $btn-danger-border-color;
   }
 
   &--inactive {
-    border: none;
-
     background-color: $gray;
     color: $grayer;
+    border-color: $gray;
+  }
+
+  &--round {
+    background-color: $white;
+    color: $btn-normal-fg-color;
+    border-color: $btn-normal-border-color;
+  }
+
+  // Roundness
+
+  border-radius: ($btn-normal-height / 2);
+  &:after {
+    border-radius: ($btn-normal-height / 2);
+  }
+
+  &--square {
+    border-radius: 2px;
+
+    &:after {
+      border-radius: 2px;
+    }
+  }
+}
+
+.s-button--round,
+.s-button--square {
+  min-width: $btn-normal-height;
+  width: $btn-normal-height;
+
+  &.s-button--small {
+    min-width: $btn-small-height;
+    width: $btn-small-height;
+  }
+
+  .s-button__content {
+    padding: 0;
   }
 }
 
@@ -118,7 +143,5 @@ $btn-danger-border-color: $color-bad;
 }
 
 .s-button:focus {
-  @include btn-overlay {
-    border: .125rem solid $color-edit;
-  }
+  border-color: $color-edit;
 }

@@ -38,6 +38,16 @@ export default mixins(ClassesMixin).extend({
       default: false,
     },
 
+    round: {
+      type: Boolean,
+      default: false,
+    },
+
+    square: {
+      type: Boolean,
+      default: false,
+    },
+
     danger: {
       type: Boolean,
       default: false,
@@ -62,6 +72,8 @@ export default mixins(ClassesMixin).extend({
     buttonClasses(): object {
       return this.classes({
         small: this.small,
+        round: this.round,
+        square: this.square,
         normal: !this.primary && !this.danger,
         primary: this.primary,
         danger: this.danger,
