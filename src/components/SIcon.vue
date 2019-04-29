@@ -1,8 +1,13 @@
 <template>
   <span
     :class="classes()"
+
     v-on="$listeners"
-  ><span :class="iconClass" /></span>
+  ><span
+    :style="iconStyle"
+    :class="iconClass"
+  />
+  </span>
 </template>
 
 <script lang="ts">
@@ -27,11 +32,23 @@ export default mixins(ClassesMixin).extend({
       type: String,
       required: true,
     },
+
+    rotate: {
+      type: Number,
+      default: 0,
+    },
   },
 
   computed: {
     iconClass(): string {
       return `${this.package}-${this.name}`;
+    },
+
+    iconStyle(): any {
+      return {
+        display: 'inline-block',
+        transform: `rotate(${this.rotate}deg)`,
+      };
     },
   },
 });
