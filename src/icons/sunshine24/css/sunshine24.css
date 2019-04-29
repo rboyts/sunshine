@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'sunshine24';
-  src: url('../font/sunshine24.eot?32920322');
-  src: url('../font/sunshine24.eot?32920322#iefix') format('embedded-opentype'),
-       url('../font/sunshine24.woff2?32920322') format('woff2'),
-       url('../font/sunshine24.woff?32920322') format('woff'),
-       url('../font/sunshine24.ttf?32920322') format('truetype'),
-       url('../font/sunshine24.svg?32920322#sunshine24') format('svg');
+  src: url('../font/sunshine24.eot?25030170');
+  src: url('../font/sunshine24.eot?25030170#iefix') format('embedded-opentype'),
+       url('../font/sunshine24.woff2?25030170') format('woff2'),
+       url('../font/sunshine24.woff?25030170') format('woff'),
+       url('../font/sunshine24.ttf?25030170') format('truetype'),
+       url('../font/sunshine24.svg?25030170#sunshine24') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'sunshine24';
-    src: url('../font/sunshine24.svg?32920322#sunshine24') format('svg');
+    src: url('../font/sunshine24.svg?25030170#sunshine24') format('svg');
   }
 }
 */
@@ -68,6 +68,9 @@
 .sunshine24-sortcolumn:before { content: '\e80c'; } /* '' */
 .sunshine24-readmessage:before { content: '\e80f'; } /* '' */
 .sunshine24-readmessagebg:before { content: '\e810'; } /* '' */
+.sunshine24-export:before { content: '\e822'; } /* '' */
+.sunshine24-columns:before { content: '\e823'; } /* '' */
+.sunshine24-double-arrow:before { content: '\e824'; } /* '' */
 .sunshine24-datepicker:before { content: '\e82b'; } /* '' */
 .sunshine24-hide-inspector:before { content: '\e82c'; } /* '' */
 .sunshine24-show-inspector:before { content: '\e82d'; } /* '' */
