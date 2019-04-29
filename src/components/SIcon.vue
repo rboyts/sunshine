@@ -1,7 +1,6 @@
 <template>
   <span
     :class="classes()"
-
     v-on="$listeners"
   ><span
     :style="iconStyle"
