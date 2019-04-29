@@ -37,6 +37,7 @@ import STableColumnsMenu from './components/STable/STableColumnsMenu.vue';
 import STabs from './components/STabs.vue';
 import STextArea from './components/STextArea.vue';
 import STextField from './components/STextField.vue';
+import SToolMenuButton from './components/SToolMenuButton.vue';
 
 export { get } from './lib/utils';
 export * from './components/types';
@@ -73,6 +74,7 @@ export {
   STableColumnsMenu,
   STabs,
   STextField,
+  SToolMenuButton,
 };
 
 const plugin = {
@@ -112,6 +114,7 @@ const plugin = {
     Vue.component('s-tabs', STabs);
     Vue.component('s-text-area', STextArea);
     Vue.component('s-text-field', STextField);
+    Vue.component('s-tool-menu-button', SToolMenuButton);
   },
 };
 

@@ -16,7 +16,14 @@
         :class="classes('popup', 'content')"
         :style="contentStyle"
       >
-        <slot name="content" />
+        <!--
+          XXX Using a scoped slot here may cause expensive redendering on every
+          animation frame. Need to profile this.
+        -->
+        <slot
+          name="content"
+          v-bind="{ hide }"
+        />
       </div>
     </div>
 
