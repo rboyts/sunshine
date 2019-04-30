@@ -4,6 +4,7 @@
       v-for="(item, i) in items"
       :key="item.key || i"
       :checkable="item.checkable"
+      :checked="item.checked"
       @change="checked => {
         if (item.onChange) item.onChange(checked);
         $emit('onChange', item, checked);
