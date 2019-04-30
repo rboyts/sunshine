@@ -1,69 +1,76 @@
-<!--
-
-    Example:  <s-multiselect :items="items" v-model="selected"/>
-
-    items: The items to be shown in the left list
-    v-model: the items to be shown i the right list
-    leftLabel: Lable over the left list
-    rightLabel: Lable over the left list
-    height: The height of the component
--->
-
 <template>
   <div>
     <div class="flex">
       <s-text-field
-        class="s-multiselect__searchbar"
+        :class="classes('searchbar')"
         placeholder="Søk.."
         v-model="filter"
       />
     </div>
-    <div class="s-multiselect__row">
-      <div class="s-multiselect__title">
+    <div :class="classes('row')">
+      <div :class="classes('title')">
         {{ leftLabel }}
       </div>
       <div />
-      <div class="s-multiselect__title">
+      <div :class="classes('title')">
         {{ rightLabel }}
       </div>
     </div>
-    <div class="s-multiselect__row">
+    <div :class="classes('row')">
       <s-list
-        class="s-multiselect__list"
+        :class="classes('list')"
         :style="listStyle"
         :items="leftList"
         :filter="filter"
         v-model="leftChecked"
         @dblclick="onLeftDblClick"
       />
-      <div class="flex-layout-down s-multiselect__button-container">
+      <div
+        class="flex-layout-down"
+        :class="classes('button-container')"
+      >
         <s-button
-          small
+          square
           @click="moveToRight"
         >
-          &gt;
+          <s-icon
+            name="arrow"
+            package="sunshine24"
+            :rotate="90"
+          />
         </s-button>
         <s-button
-          small
+          square
           @click="moveToLeft"
         >
-          &lt;
+          <s-icon
+            name="arrow"
+            package="sunshine24"
+            :rotate="-90"
+          />
         </s-button>
         <s-button
-          small
-          @click="moveAllToLeft"
-        >
-          &lt;&lt;
-        </s-button>
-        <s-button
-          small
+          square
           @click="moveAllToRight"
         >
-          &gt;&gt;
+          <s-icon
+            name="double-arrow"
+            package="sunshine24"
+          />
+        </s-button>
+        <s-button
+          square
+          @click="moveAllToLeft"
+        >
+          <s-icon
+            name="double-arrow"
+            package="sunshine24"
+            :rotate="-180"
+          />
         </s-button>
       </div>
       <s-list
-        class="s-multiselect__list"
+        :class="classes('list')"
         :style="listStyle"
         :filter="filter"
         :items="internalValue"
@@ -76,12 +83,17 @@
 
 <script>
 import Vue from 'vue';
+import ClassesMixin from './internal/ClassesMixin';
 import SListItem from './SListItem.vue';
 import SList from './SList.vue';
 import SButton from './SButton.vue';
 
 export default Vue.extend({
   name: 'SMultiselect',
+
+  mixins: [
+    ClassesMixin,
+  ],
 
   components: {
     SList,
@@ -111,7 +123,7 @@ export default Vue.extend({
 
     height: {
       type: String,
-      default: '12rem',
+      default: '14rem',
     },
   },
 
