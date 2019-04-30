@@ -153,7 +153,6 @@ import SIcon from '../SIcon.vue';
 import SProgress from '../SProgress.vue';
 import STableOutline from './STableOutline.vue';
 import STableToggle from './STableToggle.vue';
-import STableOptionsMenu from './STableOptionsMenu.vue';
 import STableColumnsMixin from './STableColumnsMixin';
 
 const MAX_PLACEHOLDER_ROWS = 0;
@@ -202,7 +201,6 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     SProgress,
     STableOutline,
     STableToggle,
-    STableOptionsMenu,
     VueGlobalEvents,
   },
 

@@ -4,7 +4,7 @@
       <s-button round>
         <s-icon
           package="sunshine24"
-          name="more"
+          :name="iconName"
         />
       </s-button>
     </template>

@@ -2,7 +2,10 @@
   <s-menu left>
     <template v-slot:activator>
       <s-button round>
-        <s-icon name="Grid-Tool" />
+        <s-icon
+          package="sunshine24"
+          name="columns"
+        />
       </s-button>
     </template>
 
