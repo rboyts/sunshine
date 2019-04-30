@@ -83,14 +83,17 @@
 
 <script>
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
 import ClassesMixin from './internal/ClassesMixin';
 import SListItem from './SListItem.vue';
 import SList from './SList.vue';
 import SButton from './SButton.vue';
 
-export default mixins(ClassesMixin).extend({
+export default Vue.extend({
   name: 'SMultiselect',
+
+  mixins: [
+    ClassesMixin,
+  ],
 
   components: {
     SList,
