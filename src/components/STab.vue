@@ -4,6 +4,7 @@
     :to="to"
   >
     <span
+      tabIndex="-1"
       ref="title"
       :class="classes('title')"
     >
@@ -24,6 +25,12 @@ export default mixins(ClassesMixin).extend({
     to: String,
   },
 
+  data() {
+    return {
+      nofocus: false,
+    };
+  },
+
   watch: {
     $route: {
       async handler(route) {
@@ -34,6 +41,12 @@ export default mixins(ClassesMixin).extend({
         }
       },
       immediate: true,
+    },
+  },
+
+  methods: {
+    getTitleElement() {
+      return this.$refs.title;
     },
   },
 });
