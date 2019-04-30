@@ -3,9 +3,16 @@
     <s-drop-down
       search
       v-model="selected"
-      :label="$t('saved-setups')"
+      :placeholder="selected ? '' : $t('saved-setups')"
       :items="items"
     >
+      <template v-slot:icon>
+        <s-icon
+          package="sunshine24"
+          name="saved-setups"
+        />
+      </template>
+
       <template v-slot:above>
         <s-list-item @click="onNew">
           <b>+ {{ $t('add-as-new') }}</b>

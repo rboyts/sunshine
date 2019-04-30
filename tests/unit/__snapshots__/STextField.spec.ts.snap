@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`STextField renders empty text field 1`] = `
-<div class="s-text-field s-input"><span class="s-input__label">Text field</span>
+<div class="s-text-field s-input"> <span class="s-input__label">Text field</span>
   <!---->
   <div class="s-format-input">
     <!----> <input type="text" placeholder="" class="s-input__input s-input__input--with-label s-format-input__input"></div>
@@ -10,7 +10,7 @@ exports[`STextField renders empty text field 1`] = `
 `;
 
 exports[`STextField renders text field with text 1`] = `
-<div class="s-text-field s-input"><span class="s-input__label s-input__label--aside">Text field</span>
+<div class="s-text-field s-input"> <span class="s-input__label s-input__label--aside">Text field</span>
   <!---->
   <div class="s-format-input">
     <!----> <input type="text" placeholder="" class="s-input__input s-input__input--with-label s-format-input__input"></div>

@@ -37,6 +37,10 @@ Use cases:
         @keydown.space="onSpace"
         @mousedown="$event.preventDefault()"
       >
+        <template v-slot:icon>
+          <slot name="icon" />
+        </template>
+
         <span
           v-if="textValue"
           :class="classes('label', { 'with-label': !!label })"

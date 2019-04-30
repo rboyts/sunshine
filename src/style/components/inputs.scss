@@ -6,6 +6,7 @@ $input-height: base-spacing(5);
 $input-border-width: 1px;
 $input-line-height: calc(#{base-spacing(5)} - #{2 * $input-border-width});
 $input-font-size: $paragraph-font-size;
+$icon-width: calc(.2rem + 24px + .2rem);
 
 .s-input {
   position: relative;
@@ -129,6 +130,23 @@ $input-font-size: $paragraph-font-size;
   &:-webkit-autofill:focus,
   &:-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
+  }
+}
+
+.s-input > .s-icon {
+  position: absolute;
+
+  ~ .s-input__label {
+    left: $icon-width;
+  }
+
+  ~ .s-input__input,
+  ~ .s-format-input input {
+    border-left-width: calc(#{$icon-width} + .5rem);
+  }
+
+  ~ .s-drop-down__label {
+    padding-left: calc(#{$icon-width} + .5rem);
   }
 }
 
