@@ -34,7 +34,7 @@ export default mixins(ClassesMixin).extend({
 
     rotate: {
       type: Number,
-      default: 0,
+      default: undefined,
     },
   },
 
@@ -44,6 +44,8 @@ export default mixins(ClassesMixin).extend({
     },
 
     iconStyle(): any {
+      if (!this.rotate) return {};
+
       return {
         display: 'inline-block',
         transform: `rotate(${this.rotate}deg)`,
