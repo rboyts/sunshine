@@ -1,36 +1,13 @@
 <template>
-  <s-menu left>
-    <template v-slot:activator>
-      <s-button round>
-        <s-icon
-          package="sunshine24"
-          name="columns"
-        />
-      </s-button>
-    </template>
-
-    <template v-slot:content>
-      <s-menu-list>
-        <s-list-item
-          v-for="(oc, i) in orderedColumns"
-          :key="oc.column.key"
-          checkable
-          :inactive="i === 0"
-          :checked="oc.visible"
-          @change="toggleColumn({ index: i, changed: $event })"
-        >
-          {{ oc.column.title }}
-        </s-list-item>
-      </s-menu-list>
-    </template>
-  </s-menu>
+  <SToolMenuButton
+    icon-name="columns"
+    :items="items"
+  />
 </template>
 
 <script>
 import Vue from 'vue';
-import SMenu from '../SMenu.vue';
-import SListItem from '../SListItem.vue';
-import SMenuList from '../SMenuList.vue';
+import SToolMenuButton from '../SToolMenuButton.vue';
 import STableColumnsMixin from './STableColumnsMixin';
 
 export default Vue.extend({
@@ -41,9 +18,20 @@ export default Vue.extend({
   ],
 
   components: {
-    SMenu,
-    SMenuList,
-    SListItem,
+    SToolMenuButton,
+  },
+
+  computed: {
+    items() {
+      return this.orderedColumns.map((c, index) => ({
+        key: c.column.key,
+        label: c.column.title,
+        checkable: true,
+        checked: c.visible,
+        inactive: index === 0,
+        onChange: checked => this.toggleColumn({ index, checked }),
+      }));
+    },
   },
 });
 </script>

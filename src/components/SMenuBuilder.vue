@@ -5,6 +5,7 @@
       :key="item.key || i"
       :checkable="item.checkable"
       :checked="item.checked"
+      :inactive="item.inactive || false"
       @change="checked => {
         if (item.onChange) item.onChange(checked);
         $emit('onChange', item, checked);
