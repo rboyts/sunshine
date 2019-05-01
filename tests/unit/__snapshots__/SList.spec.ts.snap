@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SList renders empty list 1`] = `<ul tabindex="0" class="s-list"></ul>`;
+
+exports[`SList renders list 1`] = `
+<ul tabindex="0" class="s-list">
+  <li class="s-list-item">
+    <!---->
+    Argentina
+  </li>
+  <li class="s-list-item">
+    <!---->
+    Belgium
+  </li>
+  <li class="s-list-item">
+    <!---->
+    Canada
+  </li>
+  <li class="s-list-item">
+    <!---->
+    Denmark
+  </li>
+  <li class="s-list-item">
+    <!---->
+    France
+  </li>
+  <li class="s-list-item">
+    <!---->
+    Germany
+  </li>
+</ul>
+`;
+
+exports[`SList renders list with preselected items 1`] = `
+<ul tabindex="0" class="s-list">
+  <li class="s-list-item">
+    <!---->
+    Argentina
+  </li>
+  <li class="s-list-item s-list-item--selected">
+    <!---->
+    Belgium
+  </li>
+  <li class="s-list-item s-list-item--selected">
+    <!---->
+    Canada
+  </li>
+  <li class="s-list-item">
+    <!---->
+    Denmark
+  </li>
+  <li class="s-list-item">
+    <!---->
+    France
+  </li>
+  <li class="s-list-item">
+    <!---->
+    Germany
+  </li>
+</ul>
+`;
+
+exports[`SList renders list with selected item by click 1`] = `
+<ul tabindex="0" class="s-list">
+  <li class="s-list-item s-list-item--selected">
+    <!---->
+    Argentina
+  </li>
+  <li class="s-list-item">
+    <!---->
+    Belgium
+  </li>
+  <li class="s-list-item">
+    <!---->
+    Canada
+  </li>
+  <li class="s-list-item">
+    <!---->
+    Denmark
+  </li>
+  <li class="s-list-item">
+    <!---->
+    France
+  </li>
+  <li class="s-list-item">
+    <!---->
+    Germany
+  </li>
+</ul>
+`;

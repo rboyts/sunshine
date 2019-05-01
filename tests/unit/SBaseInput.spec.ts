@@ -10,7 +10,7 @@ describe('SBaseInput', () => {
   it('shows label if set', () => {
     const wrapper = shallowMount(SbaseInput, {
       propsData: {
-        label: 'This is a lable',
+        label: 'This is a label',
       },
     });
 
@@ -32,7 +32,7 @@ describe('SBaseInput', () => {
     const wrapper = shallowMount(SbaseInput, {
       propsData: {
         isEmpty: true,
-        label: 'This is a lable',
+        label: 'This is a label',
       },
     });
     expect(wrapper.html()).toMatchSnapshot();
@@ -42,7 +42,7 @@ describe('SBaseInput', () => {
     const wrapper = shallowMount(SbaseInput, {
       propsData: {
         isEmpty: false,
-        label: 'This is a lable',
+        label: 'This is a label',
       },
     });
     expect(wrapper.html()).toMatchSnapshot();
@@ -52,7 +52,7 @@ describe('SBaseInput', () => {
     const wrapper = shallowMount(SbaseInput, {
       propsData: {
         hasFocus: true,
-        label: 'This is a lable',
+        label: 'This is a label',
       },
     });
     expect(wrapper.html()).toMatchSnapshot();
@@ -63,7 +63,7 @@ describe('SBaseInput', () => {
       propsData: {
         hasFocus: true,
         isEmpty: false,
-        label: 'This is a lable',
+        label: 'This is a label',
       },
     });
     expect(wrapper.html()).toMatchSnapshot();
