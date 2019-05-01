@@ -5,10 +5,14 @@
   >
     <span
       tabIndex="-1"
-      ref="title"
-      :class="classes('title')"
+      :class="classes('wrapper')"
     >
-      <slot />
+      <span
+        ref="title"
+        :class="classes('title')"
+      >
+        <slot />
+      </span>
     </span>
   </router-link>
 </template>

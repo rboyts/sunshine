@@ -78,11 +78,20 @@ $tabs-link-active-color: $almost-black;
   @include arrow-icon(90deg)
 }
 
+.s-tab__wrapper {
+ display: inline-block;
+ position: relative;
+ outline: none;
+ height: $tabs-height;
+}
+
 .s-tab__title {
   display: inline-block;
+  position: relative;
   height: inherit;
   outline: none;
-
+  border: 1px solid transparent;
+  z-index: 2;
 }
 
 .s-tab__link {
@@ -98,7 +107,7 @@ $tabs-link-active-color: $almost-black;
   &:focus {
     .s-tab__title {
       border: 1px solid $color-edit;
-      border-bottom: 3px solid $color-edit
+      border-bottom: 3px solid $color-edit;
     }
   }
 
@@ -108,11 +117,15 @@ $tabs-link-active-color: $almost-black;
   }
 
   &:not(:first-child) {
-    padding-left: 0.75rem;
+    .s-tab__wrapper {
+      padding-left: 0.75rem;
+    }
   }
 
   &:not(:last-child) {
-    padding-right: 0.75rem;
+    .s-tab__wrapper {
+      padding-right: 0.75rem;
+    }
   }
 }
 
