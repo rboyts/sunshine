@@ -1,9 +1,8 @@
 <template>
   <div class="s-saved-setups">
     <s-drop-down
-      search
       v-model="selected"
-      :placeholder="selected ? '' : $t('saved-setups')"
+      :label="$t('saved-setups')"
       :items="items"
     >
       <template v-slot:icon>
