@@ -15,5 +15,6 @@ exports[`STabs renders content in slot 1`] = `
       <!---->
     </div>
   </div>
+  <global-events-stub target="window" filter="function (e) { return true; }"></global-events-stub>
 </div>
 `;
