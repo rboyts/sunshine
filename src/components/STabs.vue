@@ -18,7 +18,7 @@
         <div
           ref="wrapper"
           :class="classes('wrapper')"
-          @keyup.tab.exact="onTab"
+          @focusin="onFocus"
         >
           <div
             ref="tabs"
@@ -163,7 +163,6 @@ export default mixins(ClassesMixin).extend({
     async setScrollValues(this: any) {
       const oldMaxScroll = this.maxScroll;
       const oldCurScroll = this.curScroll;
-      this.curScroll = 0;
       await Vue.nextTick();
       this.maxScroll = this.getMaxScroll();
 
@@ -172,9 +171,9 @@ export default mixins(ClassesMixin).extend({
       // with buttons.
       await Vue.nextTick();
       this.maxScroll = this.getMaxScroll();
-      if (this.maxScroll && oldMaxScroll) {
-        this.curScroll = oldCurScroll * (this.maxScroll / oldMaxScroll);
-      }
+      this.curScroll = this.maxScroll && oldMaxScroll ?
+        oldCurScroll * (this.maxScroll / oldMaxScroll) :
+        0;
     },
 
     resize() {
@@ -183,7 +182,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     // When the content of the tabs is larger than the wrapper, we set a max scroll value;
-    // if its less or equal the tabs fits the wrapper and max scroll is 0.
+    // if its less or equal the tabs fits within the wrapper and max scroll is 0.
     getMaxScroll() {
       return Math.max(0, this.$refs.tabs.clientWidth - this.$refs.wrapper.clientWidth);
     },
@@ -198,9 +197,9 @@ export default mixins(ClassesMixin).extend({
       this.curScroll = scroll >= this.maxScroll - 100 ? this.maxScroll : scroll;
     },
 
-    onTab(event: Event) {
+    onFocus(event: FocusEvent) {
       // Prevent native scrolling when pressing tab
-      // this.$refs.wrapper.scrollLeft = 0;
+      this.$refs.wrapper.scrollLeft = 0;
       this.ensureVisible(event.target);
     },
   },
