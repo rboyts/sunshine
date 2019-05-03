@@ -44,21 +44,22 @@
               v-on="getHeaderListeners(column, index)"
             >
               <span :class="classes('cell-wrapper')">
-                <span :class="classes('cell-content')">{{ column.title }}</span>
+                <span :class="classes('cell-content')">
+                  {{ column.title }}
 
-                <span
-                  v-if="column.sortable"
-                  :class="classes('sortcolumn', {
-                    active: internalSortingState.key === column.key,
-                    reverse: internalSortingState.reverse,
-                  })"
-                >
-                  <s-icon
-                    package="sunshine24"
-                    name="sortcolumn"
-                  />
+                  <span
+                    v-if="column.sortable"
+                    :class="classes('sortcolumn', {
+                      active: internalSortingState.key === column.key,
+                      reverse: internalSortingState.reverse,
+                    })"
+                  >
+                    <s-icon
+                      package="sunshine24"
+                      name="sortcolumn"
+                    />
+                  </span>
                 </span>
-
               </span>
             </th>
           </tr>
