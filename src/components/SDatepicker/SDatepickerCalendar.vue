@@ -36,35 +36,39 @@
         </li>
       </ul>
     </div>
-    <div
-      class="s-datepicker__grid__container"
-      @wheel="calendarScroll"
-    >
+
+    <transition :name="transition">
       <div
-        class="s-datepicker__scroller"
-        ref="calendarList"
-        @mouseleave="mouseleave"
+        class="s-datepicker__grid__container"
+        :key="dateContext.valueOf()"
+        @wheel="calendarScroll"
       >
-        <s-datepicker-month
-          class="s-datepicker__grid"
-          v-for="month in calendar"
-          :format="format"
-          :range="range"
-          :locale="locale"
-          :today="today"
-          :key="month.month + '-' + month.year"
-          :month="month"
-          :mouse-drag="mouseDrag"
-          :selected-date="range ? undefined : value"
-          :selected-period="range ? value : undefined"
-          :mouse-drag-outbounds="mouseDragOutbounds"
-          @mouse-click="mouseClick"
-          @mouse-drag-start="dragStart"
-          @mouse-drag-end="dragEnd"
-          @mouse-dragging="dragging"
-        />
+        <div
+          class="s-datepicker__scroller"
+          ref="calendarList"
+          @mouseleave="mouseleave"
+        >
+          <s-datepicker-month
+            class="s-datepicker__grid"
+            v-for="month in calendar"
+            :format="format"
+            :range="range"
+            :locale="locale"
+            :today="today"
+            :key="month.month + '-' + month.year"
+            :month="month"
+            :mouse-drag="mouseDrag"
+            :selected-date="range ? undefined : value"
+            :selected-period="range ? value : undefined"
+            :mouse-drag-outbounds="mouseDragOutbounds"
+            @mouse-click="mouseClick"
+            @mouse-drag-start="dragStart"
+            @mouse-drag-end="dragEnd"
+            @mouse-dragging="dragging"
+          />
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -126,6 +130,8 @@ export default Vue.extend({
     return {
       days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'], // TODO i18n
 
+      transition: '',
+
       lastScrollPosition: 0,
       scrollHeight: 0,
       mouseDragOutbounds: false,
@@ -145,6 +151,14 @@ export default Vue.extend({
     value(val) {
       let compareDate = this.range ? this.value.from : this.value;
       this.ensureSelectionVisible(compareDate);
+    },
+
+    dateContext(next, prev) {
+      if (next < prev) {
+        this.transition = 'slide-down';
+      } else {
+        this.transition = 'slide-up';
+      }
     },
   },
 
