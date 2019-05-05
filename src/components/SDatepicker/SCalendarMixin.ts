@@ -5,28 +5,23 @@ import { IMonth } from '../types';
 export default Vue.extend({
   data() {
     return {
-      calendar: [] as IMonth[],
-      dateContext: moment(),
+      dateContext: moment().startOf('month'),
     };
+  },
+
+  computed: {
+    calendar(): IMonth[] {
+      return this.createMonths();
+    },
   },
 
   methods: {
     gotoPreviousMonth() {
-      let firstMonth = this.calendar[0];
-      let firstMonthDate = moment([firstMonth.year, (firstMonth.month - 1), 1]);
-      let previousMonth = moment(firstMonthDate).subtract(1, 'months');
-
-      this.calendar.unshift(this.createMonthItem(previousMonth.get('year'), previousMonth.get('month') + 1));
-      this.calendar.pop();
+      this.dateContext = moment(this.dateContext).subtract(1, 'month');
     },
 
     gotoNextMonth() {
-      let lastMonth = this.calendar[this.calendar.length - 1];
-      let lastMonthDate = moment([lastMonth.year, (lastMonth.month - 1), 1]);
-      let nextMonth = moment(lastMonthDate).add(1, 'months');
-
-      this.calendar.push(this.createMonthItem(nextMonth.get('year'), nextMonth.get('month') + 1));
-      this.calendar.shift();
+      this.dateContext = moment(this.dateContext).add(1, 'month');
     },
 
     createMonthItem(year: number, month: number): IMonth {
@@ -111,15 +106,7 @@ export default Vue.extend({
       if (!moment(compareDate).isSame(currentMonth, 'month') &&
         !moment(compareDate).isSame(nextMonth, 'month')) {
         this.dateContext = moment(compareDate);
-
-        // FIXME Computed
-        this.calendar = this.createMonths();
       }
     },
-  },
-
-  mounted() {
-    // FIXME Computed
-    this.calendar = this.createMonths();
   },
 });

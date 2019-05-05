@@ -128,18 +128,20 @@ export default Vue.extend({
 
       lastScrollPosition: 0,
       scrollHeight: 0,
-      monthNameInHeader: '',
       mouseDragOutbounds: false,
     };
   },
 
-  watch: {
-    calendar: {
-      handler(newVal: IMonth[], oldVal: IMonth[]) {
-        this.setActiveMonth(newVal);
-      },
+  computed: {
+    monthNameInHeader(): string {
+      return moment([
+        this.calendar[0].year,
+        (this.calendar[0].month - 1),
+      ]).format('MMMM YYYY');
     },
+  },
 
+  watch: {
     value(val) {
       let compareDate = this.range ? this.value.from : this.value;
       this.ensureSelectionVisible(compareDate);
@@ -183,13 +185,6 @@ export default Vue.extend({
 
     mouseClick(payload: IMomentPayload) {
       this.$emit('mouse-click', payload);
-    },
-
-    setActiveMonth(calendar: IMonth[]) {
-      this.monthNameInHeader = moment([
-        calendar[0].year,
-        (calendar[0].month - 1),
-      ]).format('MMMM YYYY');
     },
 
     calendarScroll(event: MouseWheelEvent) {
