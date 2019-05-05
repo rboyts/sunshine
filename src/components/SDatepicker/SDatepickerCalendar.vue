@@ -4,7 +4,7 @@
       <div class="flex flex-even s-datepicker__navigation">
         <span
           class="s-datepicker__navigation-arrow back"
-          @click="$emit('add-previous-month')"
+          @click="gotoPreviousMonth"
         >
           <s-icon
             package="sunshine24"
@@ -14,7 +14,7 @@
         <h2>{{ monthNameInHeader }}</h2>
         <span
           class="s-datepicker__navigation-arrow forward"
-          @click="$emit('add-coming-month')"
+          @click="gotoNextMonth"
         >
           <s-icon
             package="sunshine24"
@@ -55,8 +55,8 @@
           :key="month.month + '-' + month.year"
           :month="month"
           :mouse-drag="mouseDrag"
-          :selected-date="range ? undefined : internalValue"
-          :selected-period="range ? internalValue : undefined"
+          :selected-date="range ? undefined : value"
+          :selected-period="range ? value : undefined"
           :mouse-drag-outbounds="mouseDragOutbounds"
           @mouse-click="mouseClick"
           @mouse-drag-start="dragStart"
@@ -79,10 +79,15 @@ import {
   IMomentPayload,
 } from '../types';
 import SIcon from '../SIcon.vue';
+import SCalendarMixin from './SCalendarMixin';
 import SDatepickerMonth from './SDatepickerMonth.vue';
 
 export default Vue.extend({
   name: 'SDatepickerCalendar',
+
+  mixins: [
+    SCalendarMixin,
+  ],
 
   components: {
     SDatepickerMonth,
@@ -98,26 +103,29 @@ export default Vue.extend({
       required: true,
     },
 
-    calendar: Array as () => IMonth[],
-    today: Object as () => Moment,
-    currentMonth: Number,
-    currentYear: Number,
-    mouseDrag: Boolean,
+    today: {
+      type: Object as () => Moment,
+      required: true,
+    },
+
+    mouseDrag: {
+      type: Boolean,
+      required: true,
+    },
+
     format: String,
     locale: String,
 
-    range: Boolean,
+    range: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   data() {
     return {
       days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'], // TODO i18n
 
-      internalValue: this.value,
-
-      dateContext: moment(),
-      activeMonth: this.currentMonth,
-      activeYear: this.currentYear,
       lastScrollPosition: 0,
       scrollHeight: 0,
       monthNameInHeader: '',
@@ -133,7 +141,8 @@ export default Vue.extend({
     },
 
     value(val) {
-      this.internalValue = val;
+      let compareDate = this.range ? this.value.from : this.value;
+      this.ensureSelectionVisible(compareDate);
     },
   },
 
@@ -143,7 +152,7 @@ export default Vue.extend({
 
       if (!this.mouseDrag) return;
 
-      const { from, to } = this.internalValue;
+      const { from, to } = this.value;
       if (from && to) {
         // Make sure we don't interupt the dragging event at a wrong time
         // emit correct events to cancel mouseDrag
@@ -184,11 +193,10 @@ export default Vue.extend({
     },
 
     calendarScroll(event: MouseWheelEvent) {
-      let dragDirection = (event.wheelDelta > 0) ? 'down' : 'up';
-      if (dragDirection === 'down') {
-        this.$emit('add-previous-month');
-      } else if (dragDirection === 'up') {
-        this.$emit('add-coming-month');
+      if (event.wheelDelta > 0) {
+        this.gotoPreviousMonth();
+      } else {
+        this.gotoNextMonth();
       }
     },
   },
