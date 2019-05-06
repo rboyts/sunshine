@@ -23,25 +23,9 @@
       @mouseup="$emit('mouse-drag-end', { y: month.year, M: month.month, d: a })"
       @mouseover="mouseOverEvent({ y: month.year, M: month.month, d: a })"
     >
-      <span
-        v-if="range && isSameDate(month.month, a, month.year, fromDate)"
-        class="s-datepicker__date--circle"
-      >
+      <span :class="{ 's-datepicker__date--circle': hasDateCircle(a) }">
         {{ a }}
       </span>
-      <span
-        v-else-if="range && isSameDate(month.month, a, month.year, toDate)"
-        class="s-datepicker__date--circle"
-      >
-        {{ a }}
-      </span>
-      <span
-        v-else-if="!range && isSameDate(month.month, a, month.year, selectedDate)"
-        class="s-datepicker__date--circle"
-      >
-        {{ a }}
-      </span>
-      <span v-else>{{ a }}</span>
     </span>
     <span
       class="s-datepicker__date--overlapping"
@@ -64,26 +48,42 @@ export default Vue.extend({
   name: 'SDatepickerMonth',
 
   props: {
-    format: String,
-    locale: String,
-    range: Boolean,
-    month: Object as () => IMonth,
-    today: Object as () => Moment,
-    lastScrollPosition: Number,
-    scrollHeight: Number,
-    mouseDrag: Boolean,
-    mouseDragOutbounds: Boolean,
-    selectedDate: {} as () => Moment,
-    selectedPeriod: {} as () => ICalendarPeriod,
+    range: {
+      type: Boolean,
+      required: true,
+    },
+
+    month: {
+      type: Object as () => IMonth,
+      required: true,
+    },
+
+    today: {
+      type: Object as () => Moment,
+      required: true,
+    },
+
+    mouseDrag: {
+      type: Boolean,
+      required: true,
+    },
+
+    /**
+     * Input value, same as for SDatepicker.
+     */
+    value: {
+      type: Object,
+      required: true,
+    },
   },
 
   computed: {
-    fromDate(): Moment | null {
-      return this.selectedPeriod.from;
+    fromDate(): Moment | undefined {
+      return this.range ? this.value.from : undefined;
     },
 
-    toDate(): Moment | null {
-      return this.selectedPeriod.to;
+    toDate(): Moment | undefined {
+      return this.range ? this.value.to : undefined;
     },
   },
 
@@ -130,7 +130,16 @@ export default Vue.extend({
       return moment([y, (m - 1), d]).day() === 0;
     },
 
-    isSameDate(m: number, d: number, y: number, date: Moment): boolean {
+    hasDateCircle(dateInMonth: number): Boolean {
+      const { month, year } = this.month;
+      return (
+        (this.range && this.isSameDate(month, dateInMonth, year, this.fromDate)) ||
+        (this.range && this.isSameDate(month, dateInMonth, year, this.toDate)) ||
+        (!this.range && this.isSameDate(month, dateInMonth, year, this.value))
+      );
+    },
+
+    isSameDate(m: number, d: number, y: number, date: Moment | undefined): boolean {
       if (!date) return false;
       let dateInMonth = moment([y, (m - 1), d]).format('YYYY-MM-DD');
       let compareDate = moment(date).format('YYYY-MM-DD');

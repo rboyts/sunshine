@@ -6,8 +6,6 @@
     <s-datepicker-calendar
       :today="today"
       :mouse-drag="mouseDrag"
-      :format="format"
-      :locale="locale"
       :range="range"
       :value="internalValue"
       @mouse-drag-start="mouseDragStart"
@@ -58,9 +56,6 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-
-    locale: String,
-    format: String,
 
     // XXX Always menu if range?
     withMenu: {

@@ -51,16 +51,12 @@
           <s-datepicker-month
             class="s-datepicker__grid"
             v-for="month in calendar"
-            :format="format"
             :range="range"
-            :locale="locale"
             :today="today"
             :key="month.month + '-' + month.year"
             :month="month"
             :mouse-drag="mouseDrag"
-            :selected-date="range ? undefined : value"
-            :selected-period="range ? value : undefined"
-            :mouse-drag-outbounds="mouseDragOutbounds"
+            :value="value"
             @mouse-click="mouseClick"
             @mouse-drag-start="dragStart"
             @mouse-drag-end="dragEnd"
@@ -74,6 +70,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import mixins from 'vue-typed-mixins';
 import debounce from 'debounce';
 import moment, { Moment } from 'moment';
 import {
@@ -86,12 +83,8 @@ import SIcon from '../SIcon.vue';
 import SCalendarMixin from './SCalendarMixin';
 import SDatepickerMonth from './SDatepickerMonth.vue';
 
-export default Vue.extend({
+export default mixins(SCalendarMixin).extend({
   name: 'SDatepickerCalendar',
-
-  mixins: [
-    SCalendarMixin,
-  ],
 
   components: {
     SDatepickerMonth,
@@ -117,9 +110,6 @@ export default Vue.extend({
       required: true,
     },
 
-    format: String,
-    locale: String,
-
     range: {
       type: Boolean,
       required: true,
@@ -134,16 +124,12 @@ export default Vue.extend({
 
       lastScrollPosition: 0,
       scrollHeight: 0,
-      mouseDragOutbounds: false,
     };
   },
 
   computed: {
     monthNameInHeader(): string {
-      return moment([
-        this.calendar[0].year,
-        (this.calendar[0].month - 1),
-      ]).format('MMMM YYYY');
+      return this.dateContext.format('MMMM YYYY');
     },
   },
 
