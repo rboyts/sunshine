@@ -7,12 +7,12 @@
         <div
           v-if="showLeftBtn"
           :class="classes('button')"
-          class="flex"
           @click="onLeftScrollClick"
         >
-          <div
-            :class="classes('arrow-icon-left')"
-            class="sunshine24-arrow"
+          <s-icon
+            name="arrow"
+            package="sunshine24"
+            :rotate="90"
           />
         </div>
         <div
@@ -38,19 +38,19 @@
           ref="button"
           v-if="showRightBtn"
           :class="classes('button')"
-          class="flex"
           @click="onRightScrollClick"
         >
-          <div
-            :class="classes('arrow-icon-right')"
-            class="sunshine24-arrow"
+          <s-icon
+            name="arrow"
+            package="sunshine24"
+            :rotate="-90"
           />
         </div>
       </div>
     </div>
     <global-events
       target="window"
-      @resize="resize"
+      @resize="onResize"
     />
   </div>
 </template>
@@ -60,6 +60,8 @@ import Vue from 'vue';
 import GlobalEvents from 'vue-global-events';
 import mixins from 'vue-typed-mixins';
 import ClassesMixin from './internal/ClassesMixin';
+
+const SCROLL_EDGE_THRESHOLD = 100;
 
 export default mixins(ClassesMixin).extend({
   name: 's-tabs',
@@ -93,7 +95,6 @@ export default mixins(ClassesMixin).extend({
     // at the right side. To scroll we move the tabs div in the left direction (negative).
     tabsStyle(this: any) {
       return {
-        position: 'absolute',
         left: `${-this.curScroll}px`,
       };
     },
@@ -146,7 +147,7 @@ export default mixins(ClassesMixin).extend({
       const elemRect = elem.getBoundingClientRect();
       const wrapperRect = this.$refs.wrapper.getBoundingClientRect();
       if (elemRect.left < wrapperRect.left) {
-        this.curScroll = Math.max(0, this.curScroll - wrapperRect.left + elemRect.left);
+        this.setScrollLeft(Math.max(0, this.curScroll - wrapperRect.left + elemRect.left));
       } else if (elemRect.right > wrapperRect.right) {
         let buttonWidth = 0;
         if (!this.showLeftBtn) {
@@ -155,14 +156,13 @@ export default mixins(ClassesMixin).extend({
           // (should be of equal size).
           buttonWidth = this.$refs.button.offsetWidth;
         }
-        this.curScroll = Math.min(this.maxScroll,
-          this.curScroll + elemRect.right - wrapperRect.right + buttonWidth);
+        this.setScrollRight(Math.min(this.maxScroll,
+          this.curScroll + elemRect.right - wrapperRect.right + buttonWidth));
       }
     },
 
     async setScrollValues(this: any) {
       const oldMaxScroll = this.maxScroll;
-      const oldCurScroll = this.curScroll;
       await Vue.nextTick();
       this.maxScroll = this.getMaxScroll();
 
@@ -171,12 +171,12 @@ export default mixins(ClassesMixin).extend({
       // with buttons.
       await Vue.nextTick();
       this.maxScroll = this.getMaxScroll();
-      this.curScroll = this.maxScroll && oldMaxScroll ?
-        oldCurScroll * (this.maxScroll / oldMaxScroll) :
+      this.curScroll *= this.maxScroll && oldMaxScroll ?
+        this.maxScroll / oldMaxScroll :
         0;
     },
 
-    resize() {
+    onResize() {
       this.setScrollValues();
       this.updateHighlight();
     },
@@ -187,14 +187,21 @@ export default mixins(ClassesMixin).extend({
       return Math.max(0, this.$refs.tabs.clientWidth - this.$refs.wrapper.clientWidth);
     },
 
+    setScrollLeft(this: any, scroll: Number) {
+      this.curScroll = scroll <= SCROLL_EDGE_THRESHOLD ? 0 : scroll;
+    },
+
+    setScrollRight(this: any, scroll: Number) {
+      this.curScroll = scroll >= this.maxScroll - SCROLL_EDGE_THRESHOLD ? this.maxScroll : scroll;
+    },
+
     onLeftScrollClick() {
-      let scroll = Math.max(0, this.curScroll - this.$refs.tabs.clientWidth / 3);
-      this.curScroll = scroll <= 100 ? 0 : scroll;
+      this.setScrollLeft(Math.max(0, this.curScroll - this.$refs.tabs.clientWidth / 3));
     },
 
     onRightScrollClick() {
-      let scroll = Math.min(this.maxScroll, this.curScroll + this.$refs.tabs.clientWidth / 3);
-      this.curScroll = scroll >= this.maxScroll - 100 ? this.maxScroll : scroll;
+      this.setScrollRight(Math.min(this.maxScroll,
+        this.curScroll + this.$refs.tabs.clientWidth / 3));
     },
 
     onFocus(event: FocusEvent) {
@@ -210,7 +217,7 @@ export default mixins(ClassesMixin).extend({
   },
 
   mounted(this: any) {
-    this.resize();
+    this.onResize();
   },
 });
 </script>

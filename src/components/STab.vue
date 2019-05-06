@@ -29,12 +29,6 @@ export default mixins(ClassesMixin).extend({
     to: String,
   },
 
-  data() {
-    return {
-      nofocus: false,
-    };
-  },
-
   watch: {
     $route: {
       async handler(route) {
