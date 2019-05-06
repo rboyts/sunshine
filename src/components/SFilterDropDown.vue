@@ -63,7 +63,7 @@
           }"
           type="text"
           :disabled="inactive"
-          :placeholder="placeholder"
+          :placeholder="$t('s-filter.placeholder')"
           v-model="filter"
           @click.stop="onClick"
           @focus="hasFocus = true"
@@ -222,12 +222,6 @@ export default Vue.extend({
   },
 
   computed: {
-    placeholder() {
-      return (this.internalValue.filters.length === 0 ?
-        'Filter input field, with suggestions for filter words such as department, machine type or project name...' :
-        'Add filter...');
-    },
-
     currentSection() {
       return this.sections[this.sectionIndex];
     },
