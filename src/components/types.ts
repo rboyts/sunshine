@@ -69,8 +69,8 @@ export interface IMonth {
 }
 
 export interface ICalendarPeriod {
-  from: Moment | null;
-  to: Moment | null;
+  from?: Moment;
+  to?: Moment;
 }
 
 export interface IMomentPayload {

@@ -4,7 +4,7 @@
       <div class="flex flex-even s-datepicker__navigation">
         <span
           class="s-datepicker__navigation-arrow back"
-          @click="$emit('add-previous-month')"
+          @click="gotoPreviousMonth"
         >
           <s-icon
             package="sunshine24"
@@ -14,7 +14,7 @@
         <h2>{{ monthNameInHeader }}</h2>
         <span
           class="s-datepicker__navigation-arrow forward"
-          @click="$emit('add-coming-month')"
+          @click="gotoNextMonth"
         >
           <s-icon
             package="sunshine24"
@@ -36,40 +36,41 @@
         </li>
       </ul>
     </div>
-    <div
-      class="s-datepicker__grid__container"
-      @wheel="calendarScroll"
-    >
+
+    <transition :name="transition">
       <div
-        class="s-datepicker__scroller"
-        ref="calendarList"
-        @mouseleave="mouseleave"
+        class="s-datepicker__grid__container"
+        :key="dateContext.valueOf()"
+        @wheel="calendarScroll"
       >
-        <s-datepicker-month
-          class="s-datepicker__grid"
-          v-for="month in calendar"
-          :format="format"
-          :range="range"
-          :locale="locale"
-          :today="today"
-          :key="month.month + '-' + month.year"
-          :month="month"
-          :mouse-drag="mouseDrag"
-          :selected-date="range ? undefined : internalValue"
-          :selected-period="range ? internalValue : undefined"
-          :mouse-drag-outbounds="mouseDragOutbounds"
-          @mouse-click="mouseClick"
-          @mouse-drag-start="dragStart"
-          @mouse-drag-end="dragEnd"
-          @mouse-dragging="dragging"
-        />
+        <div
+          class="s-datepicker__scroller"
+          ref="calendarList"
+          @mouseleave="mouseleave"
+        >
+          <s-datepicker-month
+            class="s-datepicker__grid"
+            v-for="month in calendar"
+            :range="range"
+            :today="today"
+            :key="month.month + '-' + month.year"
+            :month="month"
+            :mouse-drag="mouseDrag"
+            :value="value"
+            @mouse-click="mouseClick"
+            @mouse-drag-start="dragStart"
+            @mouse-drag-end="dragEnd"
+            @mouse-dragging="dragging"
+          />
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import mixins from 'vue-typed-mixins';
 import debounce from 'debounce';
 import moment, { Moment } from 'moment';
 import {
@@ -79,9 +80,10 @@ import {
   IMomentPayload,
 } from '../types';
 import SIcon from '../SIcon.vue';
+import SCalendarMixin from './SCalendarMixin';
 import SDatepickerMonth from './SDatepickerMonth.vue';
 
-export default Vue.extend({
+export default mixins(SCalendarMixin).extend({
   name: 'SDatepickerCalendar',
 
   components: {
@@ -98,42 +100,51 @@ export default Vue.extend({
       required: true,
     },
 
-    calendar: Array as () => IMonth[],
-    today: Object as () => Moment,
-    currentMonth: Number,
-    currentYear: Number,
-    mouseDrag: Boolean,
-    format: String,
-    locale: String,
+    today: {
+      type: Object as () => Moment,
+      required: true,
+    },
 
-    range: Boolean,
+    mouseDrag: {
+      type: Boolean,
+      required: true,
+    },
+
+    range: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   data() {
     return {
       days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'], // TODO i18n
 
-      internalValue: this.value,
+      transition: '',
 
-      dateContext: moment(),
-      activeMonth: this.currentMonth,
-      activeYear: this.currentYear,
       lastScrollPosition: 0,
       scrollHeight: 0,
-      monthNameInHeader: '',
-      mouseDragOutbounds: false,
     };
   },
 
+  computed: {
+    monthNameInHeader(): string {
+      return this.dateContext.format('MMMM YYYY');
+    },
+  },
+
   watch: {
-    calendar: {
-      handler(newVal: IMonth[], oldVal: IMonth[]) {
-        this.setActiveMonth(newVal);
-      },
+    value(val) {
+      let compareDate = this.range ? this.value.from : this.value;
+      this.ensureSelectionVisible(compareDate);
     },
 
-    value(val) {
-      this.internalValue = val;
+    dateContext(next, prev) {
+      if (next < prev) {
+        this.transition = 'slide-down';
+      } else {
+        this.transition = 'slide-up';
+      }
     },
   },
 
@@ -143,7 +154,7 @@ export default Vue.extend({
 
       if (!this.mouseDrag) return;
 
-      const { from, to } = this.internalValue;
+      const { from, to } = this.value;
       if (from && to) {
         // Make sure we don't interupt the dragging event at a wrong time
         // emit correct events to cancel mouseDrag
@@ -176,19 +187,11 @@ export default Vue.extend({
       this.$emit('mouse-click', payload);
     },
 
-    setActiveMonth(calendar: IMonth[]) {
-      this.monthNameInHeader = moment([
-        calendar[0].year,
-        (calendar[0].month - 1),
-      ]).format('MMMM YYYY');
-    },
-
     calendarScroll(event: MouseWheelEvent) {
-      let dragDirection = (event.wheelDelta > 0) ? 'down' : 'up';
-      if (dragDirection === 'down') {
-        this.$emit('add-previous-month');
-      } else if (dragDirection === 'up') {
-        this.$emit('add-coming-month');
+      if (event.wheelDelta > 0) {
+        this.gotoPreviousMonth();
+      } else {
+        this.gotoNextMonth();
       }
     },
   },
