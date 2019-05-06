@@ -56,6 +56,8 @@ $tabs-link-active-color: $almost-black;
 
 .s-tabs__button {
   display: flex;
+  align-items: center;
+  justify-content: center;
   height: $tabs-height;
   width: $tabs-height;
   border: 1px solid $almost-gray;

@@ -5,14 +5,15 @@
     >
       <div :class="classes('main')">
         <div
-          v-if="showLeftBtn"
+          ref="button"
+          v-show="showLeftBtn"
           :class="classes('button')"
           @click="onLeftScrollClick"
         >
           <s-icon
             name="arrow"
             package="sunshine24"
-            :rotate="90"
+            :rotate="-90"
           />
         </div>
         <div
@@ -35,15 +36,14 @@
           <div :class="classes('border')" />
         </div>
         <div
-          ref="button"
-          v-if="showRightBtn"
+          v-show="showRightBtn"
           :class="classes('button')"
           @click="onRightScrollClick"
         >
           <s-icon
             name="arrow"
             package="sunshine24"
-            :rotate="-90"
+            :rotate="90"
           />
         </div>
       </div>
@@ -116,9 +116,8 @@ export default mixins(ClassesMixin).extend({
   },
 
   methods: {
-    async setActiveTab(this: any, tab: Vue) {
+    setActiveTab(this: any, tab: Vue) {
       this.activeTab = tab;
-      await Vue.nextTick();
       this.ensureVisible(tab.$el);
       this.updateHighlight();
     },
@@ -151,9 +150,6 @@ export default mixins(ClassesMixin).extend({
       } else if (elemRect.right > wrapperRect.right) {
         let buttonWidth = 0;
         if (!this.showLeftBtn) {
-          // We're actually interested in the width of the right buttom here,
-          // but as it's not visible yet, we use the width of the right one
-          // (should be of equal size).
           buttonWidth = this.$refs.button.offsetWidth;
         }
         this.setScrollRight(Math.min(this.maxScroll,
