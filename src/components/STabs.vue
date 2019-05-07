@@ -81,14 +81,6 @@ export default mixins(ClassesMixin).extend({
     };
   },
 
-  watch: {
-    curScroll(val, oldVal) {
-      if (val !== oldVal) {
-        this.curScroll = Math.round(val);
-      }
-    },
-  },
-
   computed: {
     // Internally curScroll and maxScroll are positive values. But in style/css
     // the tabs div starts off at position left 0 and the tabs div overflows the wrapper div
@@ -146,14 +138,14 @@ export default mixins(ClassesMixin).extend({
       const elemRect = elem.getBoundingClientRect();
       const wrapperRect = this.$refs.wrapper.getBoundingClientRect();
       if (elemRect.left < wrapperRect.left) {
-        this.setScrollLeft(Math.max(0, this.curScroll - wrapperRect.left + elemRect.left));
+        this.curScroll = this.normalizeScroll(this.curScroll - wrapperRect.left + elemRect.left);
       } else if (elemRect.right > wrapperRect.right) {
         let buttonWidth = 0;
         if (!this.showLeftBtn) {
           buttonWidth = this.$refs.button.offsetWidth;
         }
-        this.setScrollRight(Math.min(this.maxScroll,
-          this.curScroll + elemRect.right - wrapperRect.right + buttonWidth));
+        this.curScroll = this.normalizeScroll(this.curScroll + elemRect.right -
+          wrapperRect.right + buttonWidth);
       }
     },
 
@@ -167,8 +159,9 @@ export default mixins(ClassesMixin).extend({
       // with buttons.
       await Vue.nextTick();
       this.maxScroll = this.getMaxScroll();
-      this.curScroll *= this.maxScroll && oldMaxScroll ?
-        this.maxScroll / oldMaxScroll :
+
+      this.curScroll = this.maxScroll && oldMaxScroll ?
+        this.normalizeScroll(this.curScroll * (this.maxScroll / oldMaxScroll)) :
         0;
     },
 
@@ -183,21 +176,25 @@ export default mixins(ClassesMixin).extend({
       return Math.max(0, this.$refs.tabs.clientWidth - this.$refs.wrapper.clientWidth);
     },
 
-    setScrollLeft(this: any, scroll: Number) {
-      this.curScroll = scroll <= SCROLL_EDGE_THRESHOLD ? 0 : scroll;
+    normalizeScroll(scroll: number, { snapRight = false, snapLeft = false } = {}) {
+      if (scroll <= 0) return 0;
+      if (scroll >= this.maxScroll) return this.maxScroll;
+
+      // "snapping"
+      if (snapLeft && scroll <= SCROLL_EDGE_THRESHOLD) return 0;
+      if (snapRight && scroll >= this.maxScroll - SCROLL_EDGE_THRESHOLD) return this.maxScroll;
+
+      return Math.round(scroll);
     },
 
-    setScrollRight(this: any, scroll: Number) {
-      this.curScroll = scroll >= this.maxScroll - SCROLL_EDGE_THRESHOLD ? this.maxScroll : scroll;
+    onLeftScrollClick(this: any) {
+      this.curScroll = this.normalizeScroll(this.curScroll -
+        this.$refs.tabs.clientWidth / 3, { snapLeft: true });
     },
 
-    onLeftScrollClick() {
-      this.setScrollLeft(Math.max(0, this.curScroll - this.$refs.tabs.clientWidth / 3));
-    },
-
-    onRightScrollClick() {
-      this.setScrollRight(Math.min(this.maxScroll,
-        this.curScroll + this.$refs.tabs.clientWidth / 3));
+    onRightScrollClick(this: any) {
+      this.curScroll = this.normalizeScroll(this.curScroll +
+        this.$refs.tabs.clientWidth / 3, { snapRight: true });
     },
 
     onFocus(event: FocusEvent) {
