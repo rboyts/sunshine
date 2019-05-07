@@ -2,7 +2,7 @@
   <div class="s-saved-setups">
     <s-drop-down
       v-model="selected"
-      :label="$t('saved-setups')"
+      :label="$t('s-saved-setups.label')"
       :items="items"
     >
       <template v-slot:icon>
@@ -14,7 +14,7 @@
 
       <template v-slot:above>
         <s-list-item @click="onNew">
-          <b>+ {{ $t('add-as-new') }}</b>
+          <b>+ {{ $t('s-saved-setups.add-as-new') }}</b>
         </s-list-item>
         <s-list-separator />
       </template>
@@ -26,7 +26,7 @@
             tabIndex="-1"
             href="#"
             @click.prevent.stop="onEdit(item)"
-          >{{ $t('update') }}</a>
+          >{{ $t('s-saved-setups.update') }}</a>
         </s-list-item>
       </template>
     </s-drop-down>
@@ -44,6 +44,8 @@
           You can save table views with selected filters,
           sortings, and period selections. Give this table a
           suitable name so you can find it later.
+
+          {{ $t('s-saved-setups.help') }}
         </div>
         <s-text-field
           v-model="editText"
@@ -55,14 +57,14 @@
             danger
             @click="onDelete"
           >
-            Delete
+            {{ $t('action.delete') }}
           </s-button>
           <s-button
             primary
             submit
             :inactive="!hasValidName"
           >
-            Save
+            {{ $t('action.save') }}
           </s-button>
         </div>
       </div>
@@ -75,22 +77,6 @@ import Vue from 'vue';
 
 export default Vue.extend({
   name: 'SSavedSetups',
-
-  i18n: {
-    messages: {
-      en: {
-        'saved-setups': 'Saved setups',
-        'add-as-new': 'Save current setup',
-        update: 'Update',
-      },
-
-      nb: {
-        'saved-setups': 'Lagrede oppsett',
-        'add-as-new': 'Lagre gjeldende oppsett',
-        update: 'Oppdater',
-      },
-    },
-  },
 
   props: {
     items: {
