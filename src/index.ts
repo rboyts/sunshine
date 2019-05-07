@@ -27,6 +27,7 @@ import SMenu from './components/SMenu.vue';
 import SMenuList from './components/SMenuList.vue';
 import SMenuBuilder from './components/SMenuBuilder.vue';
 import SMultiselect from './components/SMultiselect.vue';
+import SPageLayout from './components/SPageLayout.vue';
 import SPieChart from './components/SPieChart.vue';
 import SProgress from './components/SProgress.vue';
 import SRadioButton from './components/SRadioButton.vue';
@@ -66,6 +67,7 @@ export {
   SMenuList,
   SMenuBuilder,
   SMultiselect,
+  SPageLayout,
   SPieChart,
   SProgress,
   SRadioButton,
@@ -104,6 +106,7 @@ const plugin = {
     Vue.component('s-menu-list', SMenuList);
     Vue.component('s-menu-builder', SMenuBuilder);
     Vue.component('s-multiselect', SMultiselect);
+    Vue.component('s-page-layout', SPageLayout);
     Vue.component('s-pie-chart', SPieChart);
     Vue.component('s-progress', SProgress);
     Vue.component('s-radio-button', SRadioButton);
