@@ -1,6 +1,6 @@
 {
   "name": "smartdok-sunshine",
-  "version": "0.8.2",
+  "version": "0.13.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -65,7 +65,8 @@
   "lint-staged": {
     "*.{ts,js,vue}": [
       "vue-cli-service lint",
-      "git add"
+      "git add",
+      "vue-cli-service test:unit --findRelatedTests"
     ]
   }
 }

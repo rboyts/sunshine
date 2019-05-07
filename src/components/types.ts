@@ -1,12 +1,16 @@
 import { Moment } from 'moment';
 
-export interface ISortState {
+export interface IVisibleRowsPayload {
+  firstRow: Number;
+  lastRow: Number;
+}
+
+export interface ISortingState {
   key: string | null;
   reverse: boolean;
 }
 
 export interface ISelection {
-  active: string | null;
   selected: string[];
   inverted: boolean;
 }
@@ -41,7 +45,7 @@ export interface IItemData {
 }
 
 export interface IItem {
-  key: string;
+  id: string;
   icon?: string;
 
   // Sub-items for hierarchical data tables.
@@ -65,8 +69,37 @@ export interface IMonth {
 }
 
 export interface ICalendarPeriod {
-  from: Moment;
-  to: Moment;
+  from?: Moment;
+  to?: Moment;
+}
+
+export interface IMomentPayload {
+  y: number,
+  M: number,
+  d: number
+}
+
+export enum CalendarOption {
+  Previous = 'Previous',
+  Current = 'Current',
+  Next = 'Next',
+}
+
+export enum CalendarPeriod {
+  Day = 'Day',
+  Week = 'Week',
+  Month = 'Month',
+}
+
+export interface IDateRangePreset {
+  option: CalendarOption,
+  period: CalendarPeriod,
+}
+
+export interface IDateRangeValue {
+  from: Moment | null;
+  to: Moment | null;
+  preset: IDateRangePreset | null;
 }
 
 export interface MouseWheelEvent extends MouseEvent {
@@ -91,7 +124,6 @@ export interface MouseWheelEvent extends MouseEvent {
 }
 
 export const NO_SELECTION: ISelection = Object.freeze({
-  active: null,
   selected: [],
   inverted: false,
 });

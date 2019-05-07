@@ -99,15 +99,15 @@ export default Vue.extend({
       return it;
     },
 
-    validateSavedColumns(columnState: IColumnState[]): IColumnState[] {
+    validateSavedColumns(columnsState: IColumnState[]): IColumnState[] {
       const missingColumns = this.columns
-        .filter(c => !columnState.find(o => o.key === c.key))
+        .filter(c => !columnsState.find(o => o.key === c.key))
         .map(c => {
           console.warn(`Column ${c.key} was not included in saved state, and will be moved last and hidden.`);
           return { key: c.key, visible: false };
         });
 
-      const extraColumnsRemoved = columnState
+      const extraColumnsRemoved = columnsState
         .filter(o => {
           if (this.columns.find(c => c.key === o.key)) {
             return true;
@@ -117,12 +117,12 @@ export default Vue.extend({
           }
         });
 
-      if (missingColumns.length || extraColumnsRemoved.length !== columnState.length) {
+      if (missingColumns.length || extraColumnsRemoved.length !== columnsState.length) {
         return extraColumnsRemoved.concat(missingColumns);
       }
 
       // Everything OK. We must return the original array, to avoid infinite loop
-      return columnState;
+      return columnsState;
     },
   },
 });

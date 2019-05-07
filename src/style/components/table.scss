@@ -1,8 +1,7 @@
 @import '../tools.scss';
 
 $outer-border : 1px solid $gray;
-$inner-border : 1px solid rgba(0, 0, 0, .07);
-// $inner-border : 1px solid $almost-gray;
+$inner-border : 1px solid rgba(0, 0, 0, .05);
 $th-inner-border : 1px solid $gray;
 
 $table-padding: 1rem;
@@ -14,10 +13,9 @@ $table-condensed-row-height: 1.5rem;
 $table-toggle-width: base-spacing(5);
 
 $table-hover-color: $whiteish;
-$table-highlight-color: mix($color-editish, $white, 25%);
+$table-highlight-color: $color-editish;
 $table-highlight-hover-color: mix($color-editish, $whiteish, 25%);
 $table-selection-outline-color: $color-edit;
-
 $table-selection-outline-width: 1px;
 
 .s-table {
@@ -27,11 +25,9 @@ $table-selection-outline-width: 1px;
   position: relative;
 
   border-top: $outer-border;
-  border-bottom: $outer-border;
 
   background-color: $almost-gray;
 
-  margin-bottom: 8px;
   display: flex;
   flex-direction: column;
 
@@ -46,13 +42,7 @@ $table-selection-outline-width: 1px;
     .s-table__row {
       &:hover {
         td {
-          background-color: $table-hover-color;
-        }
-      }
-
-      &--checked:hover {
-        td {
-          background-color: $table-highlight-hover-color;
+          color: rgba($almost-black, .8);
         }
       }
     }
@@ -64,7 +54,7 @@ $table-selection-outline-width: 1px;
 }
 
 .s-table__table {
-  border-collapse: separate;
+  border-collapse: collapse;
   border-spacing: 0;
   table-layout: fixed;
   min-width: 100%;
@@ -118,7 +108,6 @@ $table-selection-outline-width: 1px;
   th.s-table__col {
     &--sticky {
       z-index: 3;
-      border-right: $th-inner-border;
     }
 
     &:hover {
@@ -133,35 +122,19 @@ $table-selection-outline-width: 1px;
   td.s-table__col {
     &--sticky {
       z-index: 1;
+    }
+  }
+
+  .s-table__col--sticky {
+    .s-table__cell-content {
       border-right: $inner-border;
     }
   }
 }
 
 .s-table__row {
-
   td {
-    &::before {
-      position: absolute;
-      z-index: 3;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      content: '';
-      background-color: rgba(0, 0, 0, .07);
-    }
-
-    &::after {
-      position: absolute;
-      z-index: 3;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      content: '';
-      background-color: rgba(0, 0, 0, .07);
-    }
+    position: relative;
   }
 
   &--checked {
@@ -170,30 +143,49 @@ $table-selection-outline-width: 1px;
     }
   }
 
-  td {
-    position: relative;
+  //  Add 1px padding to the top row, for selection outline
+  &:first-child td {
+    padding-top: 1px;
   }
 
-
-  &--first-checked td {
-    &::before {
+  &--first-checked {
+    td::before {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      left: 0;
+      right: 0;
+      content: '';
       height: $table-selection-outline-width;
       background-color: $table-selection-outline-color;
     }
-  }
 
-  &--last-checked td {
-    &::after {
-      height: $table-selection-outline-width;
-      background-color: $table-selection-outline-color;
+    // Move border 1px up, to merge with row separator
+    &:not(:first-child) {
+      td::before {
+        top: -1px;
+      }
     }
   }
 
-  // &--active {
-  //   td {
-  //     background-color: $smartdok-yellow;
-  //   }
-  // }
+  &--last-checked {
+    td::after {
+      position: absolute;
+      z-index: 3;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      content: '';
+      height: $table-selection-outline-width;
+      background-color: $table-selection-outline-color;
+    }
+
+    &:last-child {
+      td::after {
+        bottom: -1px;
+      }
+    }
+  }
 }
 
 .s-table__cell-wrapper {
@@ -205,12 +197,22 @@ $table-selection-outline-width: 1px;
   height: $table-normal-row-height;
   flex: 1;
   padding: 0 $table-padding;
-  // border-bottom: $inner-border;
+  border-bottom: $inner-border;
+}
+
+.s-table__table {
+  thead tr {
+    padding-bottom: 5px;
+  }
 }
 
 .s-table__table tr:last-child {
   .s-table__cell-content {
     border-bottom: none;
+  }
+
+  td {
+    border-bottom: $outer-border;
   }
 }
 
@@ -331,7 +333,6 @@ $table-selection-outline-width: 1px;
 
 .s-table__sortcolumn {
   opacity: 0;
-  margin-left: base-spacing();
 
   &--active {
     opacity: 1;

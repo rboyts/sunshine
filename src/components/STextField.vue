@@ -9,35 +9,26 @@
     :current-length="currentLength"
     class="s-text-field"
   >
-    <input
-      :class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
+    <s-format-input
+      v-model="internalValue"
+      :format="hasFocus ? format : ''"
+      :maxlength="computedMaxLength"
       :type="type"
       :disabled="inactive"
-      v-model="internalValue"
       :placeholder="placeholder"
+      :input-class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
       @keypress="onKeyPress"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
       v-bind="$attrs"
-    >
-
-    <!-- expected format -->
-    <span
-      v-if="hasFocus && format"
-      class="s-input__format"
-    >
-      <span class="s-input__value">{{
-        internalValue
-      }}</span><span class="s-input__format__remaining">{{
-        remainingFormat
-      }}</span>
-    </span>
+    />
   </s-base-input>
 </template>
 
 <script>
 import Vue from 'vue';
 import SBaseInput from './SBaseInput.vue';
+import SFormatInput from './internal/SFormatInput.vue';
 
 export default Vue.extend({
   name: 'STextField',
@@ -52,6 +43,7 @@ export default Vue.extend({
 
   components: {
     SBaseInput,
+    SFormatInput,
   },
 
   props: {
@@ -107,6 +99,7 @@ export default Vue.extend({
     return {
       internalValue: this.value,
       hasFocus: false,
+      formattedValue: this.value,
     };
   },
 
@@ -137,19 +130,25 @@ export default Vue.extend({
           return 'password';
         case this.email:
           return 'email';
+        case this.moment:
+          return 'text';
         default:
           return 'text';
       }
     },
 
-    remainingFormat() {
-      if (!this.format) return '';
-      return this.format.substring(`${this.internalValue}`.length);
-    },
-
     currentLength() {
       let val = this.internalValue;
       return val instanceof String ? val.length : val.toString().length;
+    },
+
+    computedMaxLength() {
+      if (this.maxLength) {
+        return this.maxLength;
+      } else if (this.format) {
+        return String(this.format.length);
+      }
+      return undefined;
     },
   },
 
@@ -167,6 +166,8 @@ export default Vue.extend({
           keyCode === 45 ||
           (keyCode >= 48 && keyCode <= 57)
         );
+      } else if (this.format) {
+        return keyCode !== 32; // forbid space in formatted input
       } else {
         return true;
       }

@@ -6,6 +6,7 @@ $input-height: base-spacing(5);
 $input-border-width: 1px;
 $input-line-height: calc(#{base-spacing(5)} - #{2 * $input-border-width});
 $input-font-size: $paragraph-font-size;
+$icon-width: calc(.2rem + 24px + .2rem);
 
 .s-input {
   position: relative;
@@ -40,6 +41,10 @@ $input-font-size: $paragraph-font-size;
 
   &--error {
     border-color: $color-bad;
+  }
+
+  &--valid {
+    border-color: $color-good;
   }
 }
 
@@ -128,27 +133,21 @@ $input-font-size: $paragraph-font-size;
   }
 }
 
-.s-input__format {
+.s-input > .s-icon {
   position: absolute;
-  display: block;
-  color: $gray;
-  white-space: nowrap;
-  top: -$input-border-width;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  font-size: $input-font-size;
 
-  // FIXME without label
-  border: solid transparent;
-  border-width: ($input-padding * 2) $input-padding ($input-padding / 2) $input-padding;
+  ~ .s-input__label {
+    left: $icon-width;
+  }
 
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  ~ .s-input__input,
+  ~ .s-format-input input {
+    border-left-width: calc(#{$icon-width} + .5rem);
+  }
 
-.s-input__value {
-  color: transparent;
+  ~ .s-drop-down__label {
+    padding-left: calc(#{$icon-width} + .5rem);
+  }
 }
 
 .s-input__error {
@@ -182,4 +181,30 @@ $input-font-size: $paragraph-font-size;
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.s-format-input {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+}
+
+.s-format-input__format,
+.s-format-input__input {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.s-format-input__format {
+  color: $gray;
+}
+
+.s-format-input__input {
+  background-color: transparent;
 }

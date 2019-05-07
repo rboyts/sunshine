@@ -29,14 +29,18 @@ Use cases:
         :label="label"
         :error="error"
         @click="onClick"
-        @keydown.up.prevent="onArrowUp"
-        @keydown.down.prevent="onArrowDown"
+        @keydown.up.prevent.stop="onArrowUp"
+        @keydown.down.prevent.stop="onArrowDown"
         @keydown.enter.prevent="onEnter"
         @keydown.esc.prevent="onEscape"
         @keydown.backspace="onBackspace"
         @keydown.space="onSpace"
         @mousedown="$event.preventDefault()"
       >
+        <template v-slot:icon>
+          <slot name="icon" />
+        </template>
+
         <span
           v-if="textValue"
           :class="classes('label', { 'with-label': !!label })"

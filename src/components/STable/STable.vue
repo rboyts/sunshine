@@ -24,6 +24,7 @@
         :class="classes('table')"
         @pointermove="onCellMouseMove"
         @pointerup="onCellMouseUp"
+        @pointerleave="onCellMouseLeave"
         @click.stop=""
       >
         <colgroup>
@@ -43,35 +44,22 @@
               v-on="getHeaderListeners(column, index)"
             >
               <span :class="classes('cell-wrapper')">
-                <span
-                  v-if="index === 0"
-                  @click.stop=""
-                  @pointerdown.stop=""
-                >
-                  <s-table-options-menu
-                    :checkable="checkable"
-                    :ordered-columns="orderedColumns"
-                    @selectAll="selectAll"
-                    @selectNone="selectNone"
-                    @toggleColumn="toggleColumn"
-                  />
+                <span :class="classes('cell-content')">
+                  {{ column.title }}
+
+                  <span
+                    v-if="column.sortable"
+                    :class="classes('sortcolumn', {
+                      active: internalSortingState.key === column.key,
+                      reverse: internalSortingState.reverse,
+                    })"
+                  >
+                    <s-icon
+                      package="sunshine24"
+                      name="sortcolumn"
+                    />
+                  </span>
                 </span>
-
-                <span :class="classes('cell-content')">{{ column.title }}</span>
-
-                <span
-                  v-if="column.sortable"
-                  :class="classes('sortcolumn', {
-                    active: sorting.key === column.key,
-                    reverse: sorting.reverse,
-                  })"
-                >
-                  <s-icon
-                    package="sunshine24"
-                    name="sortcolumn"
-                  />
-                </span>
-
               </span>
             </th>
           </tr>
@@ -156,7 +144,9 @@ import debounce from 'debounce';
 import VueGlobalEvents from 'vue-global-events';
 import mixins from 'vue-typed-mixins';
 import {
-  IColumn, IItem, ISortState, ISelection, NO_SELECTION,
+  IColumn, IItem, ISortingState, ISelection,
+  IVisibleRowsPayload,
+  NO_SELECTION,
 } from '../types';
 import ClassesMixin from '../internal/ClassesMixin';
 import { get, joinKeyPath } from '../../lib/utils';
@@ -164,7 +154,6 @@ import SIcon from '../SIcon.vue';
 import SProgress from '../SProgress.vue';
 import STableOutline from './STableOutline.vue';
 import STableToggle from './STableToggle.vue';
-import STableOptionsMenu from './STableOptionsMenu.vue';
 import STableColumnsMixin from './STableColumnsMixin';
 
 const MAX_PLACEHOLDER_ROWS = 0;
@@ -213,7 +202,6 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     SProgress,
     STableOutline,
     STableToggle,
-    STableOptionsMenu,
     VueGlobalEvents,
   },
 
@@ -230,7 +218,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       default: 0,
     },
 
-    sorting: Object as () => ISortState,
+    sortingState: Object as () => ISortingState,
     draggable: Boolean,
     condensed: Boolean,
 
@@ -261,13 +249,18 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       openNodes: [] as string[],
 
       internalSelection: NO_SELECTION,
+      internalSortingState: { key: null, reverse: false } as ISortingState,
+
+      activeRow: null as string | null,
     };
   },
 
   watch: {
     selection: {
       handler(val) {
-        this.internalSelection = val || NO_SELECTION;
+        if (val) {
+          this.internalSelection = val;
+        }
       },
       immediate: true,
     },
@@ -275,6 +268,21 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     internalSelection(val) {
       if (val !== this.selection) {
         this.$emit('update:selection', val);
+      }
+    },
+
+    sortingState: {
+      handler(val) {
+        if (val) {
+          this.internalSortingState = val;
+        }
+      },
+      immediate: true,
+    },
+
+    internalSortingState(val) {
+      if (val !== this.sortingState) {
+        this.$emit('update:sorting-state', val);
       }
     },
   },
@@ -300,7 +308,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       let { drag, firstContentColumn } = this;
       let { currentDropIndex } = drag;
 
-      let width = 6;
+      let width = 4;
       if (currentDropIndex === drag.dragColumnIndex + 1) {
         currentDropIndex = drag.dragColumnIndex;
       }
@@ -343,19 +351,6 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
         this.internalSelection.inverted ||
         this.internalSelection.selected.length !== 0
       );
-    },
-
-    activeRow: {
-      get(): string | null {
-        return this.internalSelection.active;
-      },
-
-      set(val: string | null) {
-        this.internalSelection = {
-          ...this.internalSelection,
-          active: val,
-        };
-      },
     },
   },
 
@@ -430,8 +425,8 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     },
 
     onClick(event: UIEvent, node: ITableNode) {
+      this.activeRow = node.key;
       this.internalSelection = {
-        active: node.key,
         selected: [node.key],
         inverted: false,
       };
@@ -518,6 +513,13 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       if (to > from) to--;
       if (to === from) return;
 
+      // FIXME
+      // Project -> Place/Calculated columns
+      // Move one column on place to the left, then move the same column on
+      // place to the right, back to the original position.
+      // AR: Nothing happens
+      // Try one more time:
+      // AR: Column is moved.
       this.moveColumn({ from, to });
     },
 
@@ -554,7 +556,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
           let firstRow = this.offset + this.rootNodes.length + rowOffset;
           let lastRow = firstRow + rows;
 
-          const args = { firstRow, lastRow };
+          const args: IVisibleRowsPayload = { firstRow, lastRow };
           this.$emit('visible-rows', args);
         }
       }
@@ -571,7 +573,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
           let lastRow = this.offset - rowOffset;
           let firstRow = Math.floor(scrollTop / this.rowHeight);
 
-          const args = { firstRow, lastRow };
+          const args: IVisibleRowsPayload = { firstRow, lastRow };
           this.$emit('visible-rows', args);
         }
       }
@@ -592,10 +594,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     onCellMouseMove(event: PointerEvent) {
       if (!this.select) return;
 
-      // Capture mouse pointer, to make sure we receive pointerup
       const table = this.$refs.table as HTMLElement;
-      table.setPointerCapture(event.pointerId);
-
       const el = document.elementFromPoint(event.clientX, event.clientY);
       if (!(el && table.contains(el))) return;
 
@@ -623,6 +622,16 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       table.releasePointerCapture(event.pointerId);
     },
 
+    onCellMouseLeave(event: PointerEvent) {
+      if (!this.select) return;
+
+      // XXX Do we need to prevent this from happening multiple times?
+
+      // Capture mouse pointer, to make sure we receive pointerup
+      const table = this.$refs.table as HTMLElement;
+      table.setPointerCapture(event.pointerId);
+    },
+
     onKeyArrowUp() {
       this.goToRow(this.getPreviousIndex());
     },
@@ -637,6 +646,13 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
 
     onKeyArrowDownShift() {
       this.goToRow(this.getNextIndex(), true);
+    },
+
+    onSortableColumnClick(key: string) {
+      this.internalSortingState = {
+        key,
+        reverse: this.internalSortingState.key === key ? !this.internalSortingState.reverse : false,
+      };
     },
 
     onGlobalClick(event: MouseEvent) {
@@ -660,10 +676,10 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
         selected = [selectNode.key];
       }
 
+      this.activeRow = selectNode.key;
       this.internalSelection = {
         inverted,
         selected,
-        active: selectNode.key,
       };
     },
 
@@ -697,7 +713,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     getNodes(parent: ITableNode | null, items: IItem[]): ITableNode[] {
       const keyPath = parent != null ? parent.keyPath : [];
       return items.reduce((value: ITableNode[], item: IItem, i: number): ITableNode[] => {
-        const itemKeyPath = keyPath.concat(item.key);
+        const itemKeyPath = keyPath.concat(item.id);
         const node: ITableNode = {
           key: joinKeyPath(itemKeyPath),
           keyPath: itemKeyPath,
@@ -757,7 +773,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       let on: { [key: string]: any } = {};
 
       if (column.sortable) {
-        on.click = (event: MouseEvent) => this.$emit('sort', column.key);
+        on.click = (event: MouseEvent) => this.onSortableColumnClick(column.key);
       }
 
       if (this.draggable) {

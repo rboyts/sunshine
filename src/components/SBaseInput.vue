@@ -3,6 +3,8 @@
     :class="inputClass"
     v-on="$listeners"
   >
+    <slot name="icon" />
+
     <span
       v-if="label"
       :class="labelClass"

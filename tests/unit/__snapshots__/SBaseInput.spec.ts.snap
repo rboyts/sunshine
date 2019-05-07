@@ -9,28 +9,28 @@ exports[`SBaseInput doesnt show label if none is given 1`] = `
 `;
 
 exports[`SBaseInput label is big when input has no content 1`] = `
-<div class="s-input"><span class="s-input__label">This is a lable</span>
+<div class="s-input"> <span class="s-input__label">This is a label</span>
   <!---->
   <!---->
 </div>
 `;
 
 exports[`SBaseInput label is small when input has content 1`] = `
-<div class="s-input"><span class="s-input__label s-input__label--aside">This is a lable</span>
+<div class="s-input"> <span class="s-input__label s-input__label--aside">This is a label</span>
   <!---->
   <!---->
 </div>
 `;
 
 exports[`SBaseInput label is small when input has content and focus 1`] = `
-<div class="s-input s-input--focus"><span class="s-input__label s-input__label--aside">This is a lable</span>
+<div class="s-input s-input--focus"> <span class="s-input__label s-input__label--aside">This is a label</span>
   <!---->
   <!---->
 </div>
 `;
 
 exports[`SBaseInput label is small when input has focus 1`] = `
-<div class="s-input s-input--focus"><span class="s-input__label s-input__label--aside">This is a lable</span>
+<div class="s-input s-input--focus"> <span class="s-input__label s-input__label--aside">This is a label</span>
   <!---->
   <!---->
 </div>
@@ -45,7 +45,7 @@ exports[`SBaseInput renders content in slot 1`] = `
 `;
 
 exports[`SBaseInput shows label if set 1`] = `
-<div class="s-input"><span class="s-input__label">This is a lable</span>
+<div class="s-input"> <span class="s-input__label">This is a label</span>
   <!---->
   <!---->
 </div>

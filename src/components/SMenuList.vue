@@ -1,5 +1,6 @@
 <template>
   <div
+    class="s-menu-list"
     @mouseover="onMouseOver"
     @mousedown.prevent=""
   >
@@ -10,12 +11,12 @@
       @keydown.capture.enter.prevent="onEnter"
     />
 
-    <div
+    <ul
       class="s-list"
       ref="list"
     >
       <slot />
-    </div>
+    </ul>
   </div>
 </template>
 
@@ -87,7 +88,7 @@ export default Vue.extend({
     },
 
     ensureItemVisible(item) {
-      const list = this.$refs.list.$el;
+      const { list } = this.$refs;
       if (item.offsetTop < list.scrollTop) {
         item.scrollIntoView(true);
       } else if (item.offsetTop + item.offsetHeight > list.scrollTop + list.offsetHeight) {
