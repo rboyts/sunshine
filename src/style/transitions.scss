@@ -19,11 +19,11 @@ $slide-length: 100px;
 }
 
 .slide-in-enter-active {
-  animation: slide .2s;
+  animation: slide $duration-normal;
 }
 
 .slide-in-leave-active {
-  animation: slide .2s reverse;
+  animation: slide $duration-normal reverse;
 }
 
 @keyframes slide {

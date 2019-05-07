@@ -1,7 +1,7 @@
 @import '../settings.scss';
 
-$tabs-height: 2.5rem;
-$tabs-line-height: $tabs-height - 0.5rem;
+$tabs-height: 2.9375rem;
+$tabs-line-height: $tabs-height;
 $tabs-margin-bottom: 1.5rem;
 $tabs-highlight-width: 3px;
 $tabs-border-width: 1px;
@@ -11,32 +11,90 @@ $tabs-link-active-color: $almost-black;
 
 .s-tabs {
   position: relative;
-  margin-bottom: $tabs-margin-bottom;
   white-space: nowrap;
+  margin-bottom: $tabs-margin-bottom;
+}
+
+.s-tabs__main {
+  display: flex;
+  align-items: stretch;
+  // Padding to make the whole button focus border visible.
+  padding: 1px 1px 0 1px;
+
+}
+
+.s-tabs__wrapper {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  height: $tabs-height;
+}
+
+.s-tabs__tabs {
+  position: absolute;
+  font-size: 0;
+  transition: left $duration-normal;
 }
 
 .s-tabs__border {
-  width: inherit;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
   height: $tabs-border-width;
   background-color: $almost-gray;
 }
 
 .s-tabs__highlight {
   position: absolute;
+  bottom: 0px;
+  z-index: 1;
   height: $tabs-highlight-width;
-  bottom: 0;
   background-color: $smartdok-yellow;
 
   transition: $duration-normal;
 }
 
+.s-tabs__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: $tabs-height;
+  width: $tabs-height;
+  border: 1px solid $almost-gray;
+  background-color: $whiteish;
+}
+
+.s-tab__wrapper {
+ display: inline-block;
+ outline: none;
+ height: $tabs-height;
+}
+
+.s-tab__title {
+  display: inline-block;
+  position: relative;
+  height: inherit;
+  outline: none;
+  border: 1px solid transparent;
+  z-index: 2;
+}
+
 .s-tab__link {
   display: inline-block;
+  @include action-font;
   height: $tabs-height;
   line-height: $tabs-line-height;
 
   text-decoration: none;
   color: $tabs-link-color;
+  outline: none;
+
+  &:focus {
+    .s-tab__title {
+      border: 1px solid $color-edit;
+      border-bottom-width: 3px;
+    }
+  }
 
   &:hover,
   &.router-link-exact-active {
@@ -44,6 +102,15 @@ $tabs-link-active-color: $almost-black;
   }
 
   &:not(:first-child) {
-    margin-left: 1.5rem;
+    .s-tab__wrapper {
+      padding-left: 0.75rem;
+    }
+  }
+
+  &:not(:last-child) {
+    .s-tab__wrapper {
+      padding-right: 0.75rem;
+    }
   }
 }
+

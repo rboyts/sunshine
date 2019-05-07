@@ -3,7 +3,17 @@
     :class="classes('link')"
     :to="to"
   >
-    <slot />
+    <span
+      tabIndex="-1"
+      :class="classes('wrapper')"
+    >
+      <span
+        ref="title"
+        :class="classes('title')"
+      >
+        <slot />
+      </span>
+    </span>
   </router-link>
 </template>
 
@@ -29,6 +39,12 @@ export default mixins(ClassesMixin).extend({
         }
       },
       immediate: true,
+    },
+  },
+
+  methods: {
+    getTitleElement() {
+      return this.$refs.title;
     },
   },
 });
