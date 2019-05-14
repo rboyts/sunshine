@@ -26,14 +26,10 @@
           >
             <s-date-to-stringinput
               v-model="internalValue.from"
-              :locale="locale"
-              :format="format"
             />
             <span class="s-date-field-range-symbol">-</span>
             <s-date-to-stringinput
               v-model="internalValue.to"
-              :locale="locale"
-              :format="format"
             />
           </div>
         </s-base-input>
@@ -43,8 +39,6 @@
           v-model="internalValue"
           range
           :with-menu="withMenu"
-          :locale="locale"
-          :format="format"
         />
       </template>
     </s-menu>
@@ -62,7 +56,6 @@ import { ICalendarPeriod, IDateRangeValue } from '../types';
 // TODO: Reset preset when user selects range manually
 
 // TODO (Robin):
-// - Remove all the locale stuff. Should use moment or vue-i18n config
 // - Rename CSS classes accoring to BEM conventions ($class)
 // - Replace `value.preset` with a single key value, e.g.
 //   { option: 'Current', period: 'Month' } shall be like 'CurrentMonth'.
@@ -99,8 +92,6 @@ export default Vue.extend({
       type: String,
       default: '',
     },
-
-    localeString: String,
   },
 
   data() {
@@ -111,8 +102,6 @@ export default Vue.extend({
         to: null,
         preset: null,
       } as IDateRangeValue,
-      locale: moment.locale(this.localeString),
-      format: moment.localeData().longDateFormat('L'),
     };
   },
 

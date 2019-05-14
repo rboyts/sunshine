@@ -24,7 +24,10 @@ export default Vue.extend({
   name: 'STab',
 
   props: {
-    to: String,
+    to: {
+      type: String,
+      required: true,
+    },
   },
 
   watch: {

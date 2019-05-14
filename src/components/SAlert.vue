@@ -46,7 +46,10 @@ export default Vue.extend({
       default: false,
     },
 
-    icon: String,
+    icon: {
+      type: String,
+      default: undefined,
+    },
   },
 
   computed: {

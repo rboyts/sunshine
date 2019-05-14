@@ -44,12 +44,21 @@ export default Vue.extend({
   },
 
   props: {
-    value: String,
-    choice: String,
+    value: {
+      type: String,
+      required: true,
+    },
+
+    choice: {
+      type: String,
+      default: undefined,
+    },
+
     name: {
       type: String,
       default: '',
     },
+
     inactive: {
       type: Boolean,
       default: false,

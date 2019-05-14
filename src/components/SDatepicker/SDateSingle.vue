@@ -13,17 +13,13 @@
         >
           <s-date-to-stringinput
             v-model="internalValue"
-            :locale="locale"
             :label="label"
-            :format="format"
           />
         </s-base-input>
       </template>
       <template v-slot:content>
         <s-datepicker
           v-model="internalValue"
-          :locale="locale"
-          :format="format"
         />
       </template>
     </s-menu>
@@ -50,14 +46,19 @@ export default Vue.extend({
     return {
       isOpen: false,
       internalValue: this.value,
-      locale: moment.locale(),
-      format: moment.localeData().longDateFormat('L'),
     };
   },
 
   props: {
-    value: {} as any,
-    label: String,
+    value: {
+      type: Object as () => Moment,
+      default: undefined,
+    },
+
+    label: {
+      type: String,
+      default: undefined,
+    },
   },
 
   watch: {

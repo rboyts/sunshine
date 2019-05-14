@@ -20,16 +20,25 @@ export default Vue.extend({
   },
 
   props: {
-    value: {} as () => Moment,
-    format: String,
-    locale: String,
-    label: String,
+    value: {
+      type: Object as () => Moment,
+      default: undefined,
+    },
+
+    label: {
+      type: String,
+      default: '',
+    },
   },
 
   data() {
     return {
       formattedValue: '',
       focus: false,
+
+      // constants
+      locale: moment.locale('nb'), // FIXME i18n
+      format: moment.localeData().longDateFormat('L'),
     };
   },
 

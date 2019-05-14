@@ -30,7 +30,7 @@ TODO:
 <script>
 import Vue from 'vue';
 
-const PunctuationChars = '!@#$%&:;,.+-()';
+const PunctuationChars = '!@#$%&:;,.+-()/';
 
 const isPunctuation = ch => PunctuationChars.includes(ch);
 
