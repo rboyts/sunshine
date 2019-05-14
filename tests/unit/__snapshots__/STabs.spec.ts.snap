@@ -1,10 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`STabs renders content in slot 1`] = `
-<div class="s-tabs">
-  <h1>Test</h1>
-  <div class="s-tabs__border">
-    <!---->
+<div>
+  <div class="s-tabs">
+    <div class="s-tabs__main">
+      <div class="s-tabs__button" style="display: none;">
+        <s-icon-stub package="sunshine24" name="arrow" rotate="-90"></s-icon-stub>
+      </div>
+      <div class="s-tabs__wrapper">
+        <div class="s-tabs__tabs" style="left: 0px;">
+          <h1>Test</h1>
+          <!---->
+        </div>
+        <div class="s-tabs__border"></div>
+      </div>
+      <div class="s-tabs__button" style="display: none;">
+        <s-icon-stub package="sunshine24" name="arrow" rotate="90"></s-icon-stub>
+      </div>
+    </div>
   </div>
+  <global-events-stub target="window" filter="function (e) { return true; }"></global-events-stub>
 </div>
 `;
