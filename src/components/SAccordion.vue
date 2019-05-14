@@ -1,21 +1,16 @@
 <template>
-  <div :class="classes()">
+  <div :class="$class()">
     <slot />
   </div>
 </template>
 
 <script>
 import Vue from 'vue';
-import ClassesMixin from './internal/ClassesMixin';
 
 export default Vue.extend({
   name: 'SAccordion',
 
   inject: ['$validator'],
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   props: {
     linked: {

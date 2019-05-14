@@ -2,23 +2,23 @@
   <div>
     <div class="flex">
       <s-text-field
-        :class="classes('searchbar')"
+        :class="$class('searchbar')"
         placeholder="Søk.."
         v-model="filter"
       />
     </div>
-    <div :class="classes('row')">
-      <div :class="classes('title')">
+    <div :class="$class('row')">
+      <div :class="$class('title')">
         {{ leftLabel }}
       </div>
       <div />
-      <div :class="classes('title')">
+      <div :class="$class('title')">
         {{ rightLabel }}
       </div>
     </div>
-    <div :class="classes('row')">
+    <div :class="$class('row')">
       <s-list
-        :class="classes('list')"
+        :class="$class('list')"
         :style="listStyle"
         :items="leftList"
         :filter="filter"
@@ -27,7 +27,7 @@
       />
       <div
         class="flex-layout-down"
-        :class="classes('button-container')"
+        :class="$class('button-container')"
       >
         <s-button
           square
@@ -70,7 +70,7 @@
         </s-button>
       </div>
       <s-list
-        :class="classes('list')"
+        :class="$class('list')"
         :style="listStyle"
         :filter="filter"
         :items="internalValue"
@@ -83,17 +83,12 @@
 
 <script>
 import Vue from 'vue';
-import ClassesMixin from './internal/ClassesMixin';
 import SListItem from './SListItem.vue';
 import SList from './SList.vue';
 import SButton from './SButton.vue';
 
 export default Vue.extend({
   name: 'SMultiselect',
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   components: {
     SList,

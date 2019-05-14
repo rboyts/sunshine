@@ -21,10 +21,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-button',
+export default Vue.extend({
+  name: 'SButton',
   inheritAttrs: true,
 
   props: {
@@ -70,7 +69,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     buttonClasses(): object {
-      return this.classes({
+      return this.$class({
         small: this.small,
         round: this.round,
         square: this.square,
@@ -82,7 +81,7 @@ export default mixins(ClassesMixin).extend({
     },
 
     contentClasses(): object {
-      return this.classes('content', {
+      return this.$class('content', {
       });
     },
   },

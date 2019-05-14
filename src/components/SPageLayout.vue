@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="classes({ 'show-inspector': showInspector })"
+    :class="$class({ 'show-inspector': showInspector })"
     @click.self="$emit('background-click')"
   >
     <slot />
@@ -17,15 +17,10 @@
 
 <script>
 import Vue from 'vue';
-import ClassesMixin from './internal/ClassesMixin';
 import SInspector from './SInspector.vue';
 
 export default Vue.extend({
   name: 'SPageLayout',
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   components: {
     SInspector,

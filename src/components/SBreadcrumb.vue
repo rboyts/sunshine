@@ -1,12 +1,12 @@
 <template>
-  <div :class="classes()">
+  <div :class="$class()">
     <router-link
       :to="to"
       class="s-link"
     >
-      <span :class="classes('label')">
+      <span :class="$class('label')">
         <span
-          :class="classes('icon')"
+          :class="$class('icon')"
           class="sunshine24-navigateback"
         />
         <slot />
@@ -18,9 +18,8 @@
 <script>
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 
-export default mixins(ClassesMixin).extend({
+export default Vue.extend({
   name: 'SBreadcrumb',
 
   props: {

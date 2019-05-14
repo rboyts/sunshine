@@ -14,17 +14,11 @@
 </template>
 
 <script>
-import ClassesMixin from '../internal/ClassesMixin';
-
 export default {
   name: 'STableToggle',
 
-  // Override name used by the `classes` method.
+  // Override name used by the `$class` method.
   $_className: 's-table__toggle',
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   props: {
     node: {
@@ -40,7 +34,7 @@ export default {
 
   computed: {
     toggleClass() {
-      return this.classes({
+      return this.$class({
         loading: this.isLoading,
         open: !this.isLoading && this.isOpen,
       });

@@ -1,13 +1,11 @@
 <template>
-  <li :class="classes()" />
+  <li :class="$class()" />
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-list-separator',
+export default Vue.extend({
+  name: 'SListSeparator',
 });
 </script>

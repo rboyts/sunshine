@@ -63,7 +63,7 @@ import { ICalendarPeriod, IDateRangeValue } from '../types';
 
 // TODO (Robin):
 // - Remove all the locale stuff. Should use moment or vue-i18n config
-// - Rename CSS classes accoring to BEM conventions (ClassesMixin)
+// - Rename CSS classes accoring to BEM conventions ($class)
 // - Replace `value.preset` with a single key value, e.g.
 //   { option: 'Current', period: 'Month' } shall be like 'CurrentMonth'.
 

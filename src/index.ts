@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 import { VueConstructor } from 'vue';
 
 import './style/style.scss';
@@ -39,6 +41,7 @@ import STabs from './components/STabs.vue';
 import STextArea from './components/STextArea.vue';
 import STextField from './components/STextField.vue';
 import SToolMenuButton from './components/SToolMenuButton.vue';
+import classHelper from './lib/classHelper';
 
 export { get } from './lib/utils';
 export * from './components/types';
@@ -81,6 +84,9 @@ export {
 
 const plugin = {
   install: (Vue: VueConstructor) => {
+    // Add '$class' helper
+    Vue.prototype.$class = classHelper;
+
     Vue.component('s-accordion', SAccordion);
     Vue.component('s-accordion-item', SAccordionItem);
     Vue.component('s-alert', SAlert);

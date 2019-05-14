@@ -1,8 +1,8 @@
 <template>
-  <div :class="classes(alertOptions)">
-    <div :class="classes('status', alertOptions)" />
+  <div :class="$class(alertOptions)">
+    <div :class="$class('status', alertOptions)" />
 
-    <div :class="classes('content')">
+    <div :class="$class('content')">
       <slot name="icon">
         <s-icon
           v-if="icon"
@@ -11,11 +11,11 @@
         <s-progress v-else-if="progress" />
       </slot>
 
-      <div :class="classes('main')">
+      <div :class="$class('main')">
         <slot />
       </div>
 
-      <div :class="classes('buttons')">
+      <div :class="$class('buttons')">
         <slot name="buttons" />
       </div>
     </div>
@@ -24,11 +24,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-alert',
+export default Vue.extend({
+  name: 'SAlert',
 
   props: {
     success: {

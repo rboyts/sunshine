@@ -25,14 +25,9 @@
 
 <script>
 import Vue from 'vue';
-import ClassesMixin from './internal/ClassesMixin';
 
 export default Vue.extend({
   name: 'SInput',
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   props: {
     label: {
@@ -80,7 +75,7 @@ export default Vue.extend({
 
   computed: {
     inputClass() {
-      return this.classes({
+      return this.$class({
         focus: this.hasFocus,
         inactive: this.inactive,
         error: !!this.error,
@@ -88,7 +83,7 @@ export default Vue.extend({
     },
 
     labelClass() {
-      return this.classes('label', {
+      return this.$class('label', {
         aside: (this.hasFocus && !this.readonly) || !this.isEmpty,
       });
     },
@@ -102,7 +97,7 @@ export default Vue.extend({
     },
 
     counterClass() {
-      return this.classes('counter', {
+      return this.$class('counter', {
         show: this.showCounter,
         stop: this.showCounterStop,
       });

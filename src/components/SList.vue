@@ -11,7 +11,7 @@
 <template>
   <ul
     tabIndex="0"
-    :class="classes()"
+    :class="$class()"
   >
     <s-list-item
       v-for="item in visibleItems"
@@ -28,12 +28,10 @@
 
 <script>
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 import SListItem from './SListItem.vue';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-list',
+export default Vue.extend({
+  name: 'SList',
 
   components: {
     SListItem,

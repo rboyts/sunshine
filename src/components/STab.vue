@@ -1,15 +1,15 @@
 <template>
   <router-link
-    :class="classes('link')"
+    :class="$class('link')"
     :to="to"
   >
     <span
       tabIndex="-1"
-      :class="classes('wrapper')"
+      :class="$class('wrapper')"
     >
       <span
         ref="title"
-        :class="classes('title')"
+        :class="$class('title')"
       >
         <slot />
       </span>
@@ -19,11 +19,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-tab',
+export default Vue.extend({
+  name: 'STab',
 
   props: {
     to: String,

@@ -1,13 +1,13 @@
 <template>
   <div>
     <div
-      :class="classes()"
+      :class="$class()"
     >
-      <div :class="classes('main')">
+      <div :class="$class('main')">
         <div
           ref="button"
           v-show="showLeftBtn"
-          :class="classes('button')"
+          :class="$class('button')"
           @click="onLeftScrollClick"
         >
           <s-icon
@@ -19,27 +19,27 @@
 
         <div
           ref="wrapper"
-          :class="classes('wrapper')"
+          :class="$class('wrapper')"
           @focusin="onFocus"
         >
           <div
             ref="tabs"
-            :class="classes('tabs')"
+            :class="$class('tabs')"
             :style="tabsStyle"
           >
             <slot />
             <div
               v-if="highlight.width !== -1"
-              :class="classes('highlight')"
+              :class="$class('highlight')"
               :style="highlightStyle"
             />
           </div>
-          <div :class="classes('border')" />
+          <div :class="$class('border')" />
         </div>
 
         <div
           v-show="showRightBtn"
-          :class="classes('button')"
+          :class="$class('button')"
           @click="onRightScrollClick"
         >
           <s-icon
@@ -62,12 +62,11 @@
 import Vue from 'vue';
 import GlobalEvents from 'vue-global-events';
 import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 
 const SCROLL_EDGE_THRESHOLD = 100;
 
-export default mixins(ClassesMixin).extend({
-  name: 's-tabs',
+export default Vue.extend({
+  name: 'STabs',
 
   components: {
     GlobalEvents,
@@ -177,7 +176,9 @@ export default mixins(ClassesMixin).extend({
     // When the content of the tabs is larger than the wrapper, we set a max scroll value;
     // if its less or equal the tabs fits within the wrapper and max scroll is 0.
     getMaxScroll() {
-      return Math.max(0, this.$refs.tabs.clientWidth - this.$refs.wrapper.clientWidth);
+      const tabs = this.$refs.tabs as Element;
+      const wrapper = this.$refs.wrapper as Element;
+      return Math.max(0, tabs.clientWidth - wrapper.clientWidth);
     },
 
     normalizeScroll(scroll: number, { snapRight = false, snapLeft = false } = {}) {
@@ -203,7 +204,8 @@ export default mixins(ClassesMixin).extend({
 
     onFocus(event: FocusEvent) {
       // Prevent native scrolling when pressing tab
-      this.$refs.wrapper.scrollLeft = 0;
+      const wrapper = this.$refs.wrapper as Element;
+      wrapper.scrollLeft = 0;
       this.ensureVisible(event.target);
     },
   },
