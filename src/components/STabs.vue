@@ -16,6 +16,7 @@
             :rotate="-90"
           />
         </div>
+
         <div
           ref="wrapper"
           :class="classes('wrapper')"
@@ -35,6 +36,7 @@
           </div>
           <div :class="classes('border')" />
         </div>
+
         <div
           v-show="showRightBtn"
           :class="classes('button')"
@@ -48,6 +50,7 @@
         </div>
       </div>
     </div>
+
     <global-events
       target="window"
       @resize="onResize"
@@ -127,8 +130,9 @@ export default mixins(ClassesMixin).extend({
       let el = this.activeTab.getTitleElement();
       if (el == null) return;
 
-      if (this.highlight.width === '-1') {
+      if (this.highlight.width === -1) {
         this.setHighlight(el.offsetLeft + el.offsetWidth / 2, 0);
+        Vue.nextTick(this.updateHighlight);
       } else {
         this.setHighlight(el.offsetLeft, el.offsetWidth);
       }
@@ -165,8 +169,8 @@ export default mixins(ClassesMixin).extend({
         0;
     },
 
-    onResize() {
-      this.setScrollValues();
+    async onResize() {
+      await this.setScrollValues();
       this.updateHighlight();
     },
 
@@ -206,10 +210,14 @@ export default mixins(ClassesMixin).extend({
 
   created(this: any) {
     this.activeTab = null;
-    this.timerId = null;
   },
 
-  mounted(this: any) {
+  async mounted() {
+    // Wait until fonts are loaded
+    if (window && window.document.fonts) {
+      await window.document.fonts.ready;
+    }
+
     this.onResize();
   },
 });
