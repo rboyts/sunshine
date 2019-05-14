@@ -214,8 +214,9 @@ export default mixins(ClassesMixin).extend({
 
   async mounted() {
     // Wait until fonts are loaded
-    if (window && window.document.fonts) {
-      await window.document.fonts.ready;
+    const { fonts } = window.document as any;
+    if (fonts) {
+      await fonts.ready;
     }
 
     this.onResize();
