@@ -5,7 +5,11 @@
   >
     <slot />
 
-    <s-inspector :show="showInspector">
+    <s-inspector
+      :show="showInspector"
+      @after-enter="onAfter"
+      @after-leave="onAfter"
+    >
       <slot name="inspector" />
     </s-inspector>
   </div>
@@ -31,6 +35,12 @@ export default Vue.extend({
     showInspector: {
       type: Boolean,
       default: false,
+    },
+  },
+
+  methods: {
+    onAfter() {
+      window.dispatchEvent(new Event('resize'));
     },
   },
 });

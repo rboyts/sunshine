@@ -1,5 +1,9 @@
 <template>
-  <transition name="slide-in">
+  <transition
+    name="slide-in"
+    @after-enter="$emit('after-enter')"
+    @after-leave="$emit('after-leave')"
+  >
     <div
       v-if="show"
       :class="classes()"
