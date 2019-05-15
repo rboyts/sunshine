@@ -11,7 +11,7 @@
             v-model="selectedOption"
             :value="option"
           >
-            {{ $t(`datepicker.option.${option.toLowerCase()}`) }}
+            {{ $t(`s-datepicker.option.${option.toLowerCase()}`) }}
           </s-radio-button>
         </p>
       </div>
@@ -25,7 +25,7 @@
             v-model="selectedPeriod"
             :value="period"
           >
-            {{ $t(`datepicker.period.${period.toLowerCase()}`) }}
+            {{ $t(`s-datepicker.period.${period.toLowerCase()}`) }}
           </s-radio-button>
         </p>
       </div>
