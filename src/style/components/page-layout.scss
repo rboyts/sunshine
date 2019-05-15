@@ -16,7 +16,7 @@
   }
 
   // HACK: Clicking header closes inspector
-  h1 {
+  .s-page-header {
     pointer-events: none;
   }
 }
