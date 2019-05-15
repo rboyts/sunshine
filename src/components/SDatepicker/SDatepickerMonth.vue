@@ -1,6 +1,6 @@
 <template>
   <span :class="$class('grid')">
-    <h3 :class="$class('month')">{{ translateMonthName(month.month, month.year) }}</h3>
+    <h3 :class="$class('month')">{{ monthName }}</h3>
     <div :class="$class('weeks')">
       <span
         :class="$class('weeks', 'week')"
@@ -17,10 +17,10 @@
       v-for="a in month.daysInMonth"
       :key="`${a}-${month.month}`"
       :class="getDateClasses(month.month, a, month.year)"
-      @click="mouseClick({ y: month.year, M: month.month, d: a })"
-      @mousedown="onMouseDown({ y: month.year, M: month.month, d: a }, $event)"
-      @mouseup="$emit('mouse-drag-end', { y: month.year, M: month.month, d: a })"
-      @mouseover="mouseOverEvent({ y: month.year, M: month.month, d: a })"
+      @click="onMouseClick({ y: month.year, M: month.month, d: a })"
+      @mousedown.left="$emit('mouse-drag-start', { y: month.year, M: month.month, d: a })"
+      @mouseup.left="$emit('mouse-drag-end', { y: month.year, M: month.month, d: a })"
+      @mouseover.left="onMouseOver({ y: month.year, M: month.month, d: a })"
     >
       <span :class="{ 's-datepicker__date--circle': hasDateCircle(a) }">
         {{ a }}
@@ -42,7 +42,7 @@ import { IMonth, ICalendarPeriod, IMomentPayload } from '../types';
 export default Vue.extend({
   name: 'SDatepickerMonth',
 
-  // CSS class names start with 's-datepicker' instead of 's-datepicker__month'
+  // CSS class names start with 's-datepicker' instead of 's-datepicker-month'
   $_className: 's-datepicker',
 
   props: {
@@ -83,6 +83,11 @@ export default Vue.extend({
     toDate(): Moment | undefined {
       return this.range ? this.value.to : undefined;
     },
+
+    monthName(): string {
+      const { month, year } = this.month;
+      return moment([year, (month - 1)]).format('MMMM-YYYY');
+    },
   },
 
   methods: {
@@ -96,10 +101,6 @@ export default Vue.extend({
         sunday: this.isSunday(m, d, y),
         today: this.isSameDate(m, d, y, this.today),
       });
-    },
-
-    translateMonthName(monthKey: number, year: number) {
-      return moment([year, (monthKey - 1)]).format('MMMM-YYYY');
     },
 
     dayOfWeek(m: number, d: number, y: number) {
@@ -140,17 +141,12 @@ export default Vue.extend({
       return dateInMonth.isBetween(fromDate, toDate, 'day');
     },
 
-    onMouseDown(payload: IMomentPayload, event: any) {
-      if (event.button > 0) return;
-      this.$emit('mouse-drag-start', payload);
-    },
-
-    mouseOverEvent(payload: IMomentPayload) {
+    onMouseOver(payload: IMomentPayload) {
       if (!this.mouseDrag) return;
       this.$emit('mouse-dragging', payload);
     },
 
-    mouseClick(payload: IMomentPayload) {
+    onMouseClick(payload: IMomentPayload) {
       if (this.range) return;
       this.$emit('mouse-click', payload);
     },

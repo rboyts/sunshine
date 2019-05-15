@@ -1,9 +1,9 @@
 <template>
-  <div class="s-datepicker__calendar">
-    <div class="s-datepicker__header">
-      <div class="flex flex-even s-datepicker__navigation">
+  <div :class="$class('calendar')">
+    <div :class="$class('header')">
+      <div :class="$class('navigation')">
         <span
-          class="s-datepicker__navigation-arrow back"
+          :class="$class('navigation-arrow', { back: true })"
           @click="gotoPreviousMonth"
         >
           <s-icon
@@ -13,7 +13,7 @@
         </span>
         <h2>{{ monthNameInHeader }}</h2>
         <span
-          class="s-datepicker__navigation-arrow forward"
+          :class="$class('navigation-arrow', { forward: true })"
           @click="gotoNextMonth"
         >
           <s-icon
@@ -22,15 +22,14 @@
           />
         </span>
       </div>
-      <ul class="s-datepicker__days">
+      <ul :class="$class('days')">
         <li
-          class="s-datepicker__day"
           v-for="(day, i) in days"
           :key="`${day}-${i}`"
-          :class="{
+          :class="$class('day', {
             'saturday': (i === 5),
             'sunday': (i === 6),
-          }"
+          })"
         >
           {{ day }}
         </li>
@@ -39,28 +38,28 @@
 
     <transition :name="transition">
       <div
-        class="s-datepicker__grid__container"
+        :class="$class('grid', 'container')"
         :key="dateContext.valueOf()"
-        @wheel="calendarScroll"
+        @wheel="onCalendarScroll"
       >
         <div
-          class="s-datepicker__scroller"
+          :class="$class('scroller')"
           ref="calendarList"
-          @mouseleave="mouseleave"
+          @mouseleave="onMouseLeave"
         >
           <s-datepicker-month
-            class="s-datepicker__grid"
             v-for="month in calendar"
+            :class="$class('grid')"
             :range="range"
             :today="today"
             :key="month.month + '-' + month.year"
             :month="month"
             :mouse-drag="mouseDrag"
             :value="value"
-            @mouse-click="mouseClick"
-            @mouse-drag-start="dragStart"
-            @mouse-drag-end="dragEnd"
-            @mouse-dragging="dragging"
+            @mouse-click="onMouseClick"
+            @mouse-drag-start="onDragStart"
+            @mouse-drag-end="onDragEnd"
+            @mouse-dragging="onMouseDragging"
           />
         </div>
       </div>
@@ -85,6 +84,9 @@ import SDatepickerMonth from './SDatepickerMonth.vue';
 
 export default mixins(SCalendarMixin).extend({
   name: 'SDatepickerCalendar',
+
+  // CSS class names start with 's-datepicker' instead of 's-datepicker-calendar'
+  $_className: 's-datepicker',
 
   components: {
     SDatepickerMonth,
@@ -149,7 +151,7 @@ export default mixins(SCalendarMixin).extend({
   },
 
   methods: {
-    mouseleave() {
+    onMouseLeave() {
       // FIXME: Implement properly with capture
 
       if (!this.mouseDrag) return;
@@ -171,23 +173,23 @@ export default mixins(SCalendarMixin).extend({
       }
     },
 
-    dragStart(payload: IMomentPayload) {
+    onDragStart(payload: IMomentPayload) {
       this.$emit('mouse-drag-start', payload);
     },
 
-    dragEnd(payload: IMomentPayload) {
+    onDragEnd(payload: IMomentPayload) {
       this.$emit('mouse-drag-end', payload);
     },
 
-    dragging(payload: IMomentPayload) {
+    onMouseDragging(payload: IMomentPayload) {
       this.$emit('mouse-dragging', payload);
     },
 
-    mouseClick(payload: IMomentPayload) {
+    onMouseClick(payload: IMomentPayload) {
       this.$emit('mouse-click', payload);
     },
 
-    calendarScroll(event: MouseWheelEvent) {
+    onCalendarScroll(event: MouseWheelEvent) {
       if (event.wheelDelta > 0) {
         this.gotoPreviousMonth();
       } else {

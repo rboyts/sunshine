@@ -1,8 +1,8 @@
 <template>
-  <div class="s-datepicker__menu">
+  <div :class="$class()">
     <h3>Periodevalg</h3>
-    <div class="s-datepicker__menu__row">
-      <div class="s-datepicker__menu__column">
+    <div :class="$class('row')">
+      <div :class="$class('column')">
         <p
           v-for="option in options"
           :key="option"
@@ -16,7 +16,7 @@
         </p>
       </div>
 
-      <div class="s-datepicker__menu__column">
+      <div :class="$class('column')">
         <p
           v-for="period in periods"
           :key="period"

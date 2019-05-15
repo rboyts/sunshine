@@ -1,17 +1,16 @@
 <template>
   <div
-    class="s-datepicker"
-    :class="{'s-datepicker-menu-active': !!internalValue.preset}"
+    :class="$class({'menu-active': !!internalValue.preset})"
   >
     <s-datepicker-calendar
       :today="today"
       :mouse-drag="mouseDrag"
       :range="range"
       :value="internalValue"
-      @mouse-drag-start="mouseDragStart"
-      @mouse-drag-end="mouseDragEnd"
-      @mouse-dragging="mouseDragging"
-      @mouse-click="mouseClick"
+      @mouse-drag-start="onMouseDragStart"
+      @mouse-drag-end="onMouseDragEnd"
+      @mouse-dragging="onMouseDragging"
+      @mouse-click="onMouseClick"
     />
     <s-datepicker-menu
       v-if="withMenu"
@@ -115,7 +114,7 @@ export default Vue.extend({
       };
     },
 
-    mouseDragStart(payload: IMomentPayload) {
+    onMouseDragStart(payload: IMomentPayload) {
       if (!this.range) return;
 
       let date = moment([payload.y, (payload.M - 1), payload.d]);
@@ -129,7 +128,7 @@ export default Vue.extend({
       }
     },
 
-    mouseDragEnd(payload: IMomentPayload) {
+    onMouseDragEnd(payload: IMomentPayload) {
       if (!this.range) return;
       let date = moment([payload.y, (payload.M - 1), payload.d]);
       if (moment(this.startDragDate).isBefore(date)) {
@@ -140,7 +139,7 @@ export default Vue.extend({
       this.mouseDrag = false;
     },
 
-    mouseDragging(payload: IMomentPayload) {
+    onMouseDragging(payload: IMomentPayload) {
       if (!this.range) return;
       let date = moment([payload.y, (payload.M - 1), payload.d]);
       if (moment(this.startDragDate).isBefore(date)) {
@@ -150,7 +149,7 @@ export default Vue.extend({
       }
     },
 
-    mouseClick(payload: IMomentPayload) {
+    onMouseClick(payload: IMomentPayload) {
       if (this.range) throw new Error('Expected range to be false');
 
       this.internalValue = moment([payload.y, (payload.M - 1), payload.d]);
