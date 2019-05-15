@@ -87,7 +87,11 @@
               v-show="showSuggestionsTab"
               :class="$class('tabs', 'tab', { active: sectionIndex === -1 })"
             >
-              <a @click.prevent="onClickTab(-1)">Suggestions</a>
+              <a @click.prevent="onClickTab(-1)">
+                <span :class="$class('tabs', 'tab', 'content')">
+                  {{ $t('s-filter.suggestions') }}
+                </span>
+              </a>
             </div>
 
             <div
@@ -95,7 +99,11 @@
               :key="i"
               :class="$class('tabs', 'tab', { active: i === sectionIndex })"
             >
-              <a @click.prevent="onClickTab(i)">{{ section.label }}</a>
+              <a @click.prevent="onClickTab(i)">
+                <span :class="$class('tabs', 'tab', 'content')">
+                  {{ section.label }}
+                </span>
+              </a>
             </div>
           </div>
 
