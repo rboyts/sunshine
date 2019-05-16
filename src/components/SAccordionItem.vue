@@ -1,5 +1,11 @@
 <template>
   <div :class="$class()">
+    <s-icon
+      v-if="invalid"
+      package="sunshine24"
+      name="triangle"
+      :class="$class('warning')"
+    />
     <a
       href="#"
       :class="$class('heading', {invalid})"

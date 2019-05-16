@@ -327,6 +327,20 @@
       "search": [
         "addall"
       ]
+    },
+    {
+      "uid": "d96118492894e2c007d50dcb2b48918a",
+      "css": "triangle",
+      "code": 59415,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M654.9 147.4L1000.8 839.2A111.1 111.1 0 0 1 901.4 1000H209.7A111.1 111.1 0 0 1 110.3 839.2L456.1 147.4A111.1 111.1 0 0 1 655 147.4Z",
+        "width": 1111
+      },
+      "search": [
+        "triangle"
+      ]
     }
   ]
 }

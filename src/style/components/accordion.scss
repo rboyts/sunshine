@@ -6,6 +6,7 @@ $accordion-border: 1px solid $gray;
 }
 
 .s-accordion-item {
+  position: relative;
   border-top: $accordion-border;
 
   &:last-child {
@@ -45,6 +46,13 @@ $accordion-border: 1px solid $gray;
   &--rotate {
     transform: rotate(180deg);
   }
+}
+
+.s-accordion-item__warning {
+  position: absolute;
+  top: .6rem;
+  right: $accordion-chevron-size + 1.9rem;
+  color: $color-bad;
 }
 
 .s-accordion-item__body {
