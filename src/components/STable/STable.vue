@@ -157,6 +157,7 @@ import STableColumnsMixin from './STableColumnsMixin';
 
 const MAX_PLACEHOLDER_ROWS = 0;
 const SCROLL_DEBOUNCE = 250;
+const SELECTION_DEBOUNCE = 125;
 const MOVE_TIMEOUT = 350;
 
 const NORMAL_ROW_HEIGHT = 40;
@@ -265,9 +266,7 @@ export default mixins(STableColumnsMixin).extend({
     },
 
     internalSelection(val) {
-      if (val !== this.selection) {
-        this.$emit('update:selection', val);
-      }
+      this.debounceEmitSelection(val);
     },
 
     sortingState: {
@@ -700,8 +699,11 @@ export default mixins(STableColumnsMixin).extend({
       return activeIndex + 1;
     },
 
-    // Placeholder for type safety
-    debounceOnScroll(event: UIEvent) { /* empty */ },
+    emitSelection(val: ISelection) {
+      if (val !== this.selection) {
+        this.$emit('update:selection', val);
+      }
+    },
 
     clearSelection() {
       if (window.getSelection) {
@@ -825,10 +827,15 @@ export default mixins(STableColumnsMixin).extend({
       if (this.drag === null) return false;
       return index === this.drag.dragColumnIndex;
     },
+
+    // Placeholders for type safety
+    debounceOnScroll(event: UIEvent) { /* empty */ },
+    debounceEmitSelection(val: ISelection) { /* empty */ },
   },
 
   created() {
     this.debounceOnScroll = debounce(this.onScroll, SCROLL_DEBOUNCE);
+    this.debounceEmitSelection = debounce(this.emitSelection, SELECTION_DEBOUNCE);
   },
 
   beforeDestroy(this: any) {
