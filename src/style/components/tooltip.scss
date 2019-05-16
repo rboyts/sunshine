@@ -3,7 +3,7 @@
 $tooltip-max-width: 16rem;
 $tooltip-arrow-margin: 0.625rem;
 
-.tooltip {
+.s-tooltip {
   @include paragraph-font;
   display: block;
   position: relative;
@@ -36,7 +36,7 @@ $tooltip-arrow-margin: 0.625rem;
     height: 8px;
     z-index: 1;
 
-    background-image: url('../../icons/custom/tooltip-arrow.svg');
+    background-image: url('../icons/custom/tooltip-arrow.svg');
     transform-origin: center center;
   }
 
