@@ -31,6 +31,9 @@ $table-selection-outline-width: 1px;
   display: flex;
   flex-direction: column;
 
+  // Make the table scrollable, instead of the page
+  min-height: 0;
+
   // XXX Use when adjusting column width
   &--fixed {
     .s-table__table {
