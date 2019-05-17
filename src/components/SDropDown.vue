@@ -71,11 +71,13 @@ Use cases:
           @blur="hasFocus = false"
         />
 
-        <span
-          class="sunshine24-dropdownarrow"
-          :class="classes('caret', caretModifiers)"
-          @click.native="onCaretClick"
-        />
+        <template v-slot:right>
+          <span
+            class="sunshine24-dropdownarrow"
+            :class="classes('caret', caretModifiers)"
+            @click.native="onCaretClick"
+          />
+        </template>
       </s-base-input>
     </template>
 

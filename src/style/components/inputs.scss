@@ -76,7 +76,7 @@ $input-font-size: $paragraph-font-size;
   pointer-events: none;
   font-size: .6rem;
   white-space: nowrap;
-  transition: color  0.5s;
+  transition: color $duration-normal;
 
   &--show {
     color: $gray;
@@ -159,10 +159,24 @@ $input-font-size: $paragraph-font-size;
   color: $color-bad;
 }
 
-.s-input__error-svg {
-  position: absolute;
-  right: 0.4rem;
-  top: 0.4rem;
+.s-input__error-icon {
+  // Decrease the space the icons uses on the left side,
+  // so the input field is closer to the icon.
+  // Looks better when typing/the text is longer than the input field.
+  // Could probably just create an icon without space on the left side,
+  // but haven't looked into it yet.
+  margin-left: -.875rem;
+
+  color: $color-bad;
+  transition: transform $duration-normal;
+
+  &--moveright {
+    margin-right: -1.1rem;
+  }
+
+  &--movedown {
+    transform: translateY(0.3rem);
+  }
 }
 
 .s-text-area {

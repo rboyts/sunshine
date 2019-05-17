@@ -18,19 +18,13 @@
     >
       {{ error }}
     </div>
-    <svg
+    <s-icon
       v-if="error"
-      class="s-input__error-svg"
-      width="10"
-      height="9"
-    >
-      <path
-        fill="#E94E1B"
-        fill-rule="nonzero"
-        d="M5.894 1.327l3.113 6.226A1 1 0 0 1 8.113 9H1.887
-           a1 1 0 0 1-.894-1.447l3.112-6.226a1 1 0 0 1 1.79 0z"
-      />
-    </svg>
+      name="warning"
+      package="sunshine24"
+      :class="warningClass"
+    />
+    <slot name="right" />
   </div>
 </template>
 
@@ -112,10 +106,21 @@ export default Vue.extend({
       return this.currentLength > this.maxLength;
     },
 
+    hasRightSlot() {
+      return this.$scopedSlots.right !== undefined;
+    },
+
     counterClass() {
       return this.classes('counter', {
         show: this.showCounter,
         stop: this.showCounterStop,
+      });
+    },
+
+    warningClass() {
+      return this.classes('error-icon', {
+        moveright: this.hasRightSlot,
+        movedown: this.maxLength > 0 && this.showCounter,
       });
     },
   },
