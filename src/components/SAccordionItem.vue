@@ -3,12 +3,12 @@
     <s-icon
       v-if="invalid"
       package="sunshine24"
-      name="triangle"
+      name="warning"
       :class="$class('warning')"
     />
     <a
       href="#"
-      :class="$class('heading', {invalid})"
+      :class="$class('heading')"
       @_click="$emit('click')"
       @click="onClick"
     >
@@ -57,7 +57,6 @@ export default Vue.extend({
       default: '',
     },
 
-    // Set to true, if one input inside failed form validation
     invalid: {
       type: Boolean,
       default: false,

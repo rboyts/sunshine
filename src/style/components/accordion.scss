@@ -26,10 +26,6 @@ $accordion-border: 1px solid $gray;
   text-decoration: none;
   white-space: nowrap;
 
-  &--invalid {
-    color: $color-bad;
-  }
-
   &:hover {
     // XXX Design system says, "Text opacity: 80%", but this looks a bit weird
     opacity: .8;
@@ -50,8 +46,8 @@ $accordion-border: 1px solid $gray;
 
 .s-accordion-item__warning {
   position: absolute;
-  top: .6rem;
-  right: $accordion-chevron-size + 1.9rem;
+  top: .75rem;
+  right: $accordion-chevron-size + 1.4rem;
   color: $color-bad;
 }
 

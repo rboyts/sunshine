@@ -12,7 +12,7 @@
 .sunshine24-sortcolumn:before { content: '\e80c'; } /* '' */
 .sunshine24-readmessage:before { content: '\e80f'; } /* '' */
 .sunshine24-readmessagebg:before { content: '\e810'; } /* '' */
-.sunshine24-triangle:before { content: '\e817'; } /* '' */
+.sunshine24-warning:before { content: '\e817'; } /* '' */
 .sunshine24-export:before { content: '\e822'; } /* '' */
 .sunshine24-columns:before { content: '\e823'; } /* '' */
 .sunshine24-double-arrow:before { content: '\e824'; } /* '' */
