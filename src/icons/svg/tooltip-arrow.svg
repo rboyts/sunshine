@@ -7,9 +7,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="16"
-   height="8"
-   viewBox="0 0 16 8"
+   width="24"
+   height="20"
+   viewBox="0 0 24 20"
    version="1.1"
    id="svg22"
    sodipodi:docname="tooltip-arrow.svg"
@@ -53,9 +53,9 @@
      inkscape:window-height="987"
      id="namedview24"
      showgrid="false"
-     inkscape:zoom="56.222222"
-     inkscape:cx="9.3739715"
-     inkscape:cy="4.324337"
+     inkscape:zoom="19.877557"
+     inkscape:cx="29.888106"
+     inkscape:cy="4.9587661"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -64,12 +64,56 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0" />
-  <path
-     d="M 20.977834,-0.72444821 H 6.3245375 L 7.276,0.69690357 11.92,6.8889036 c 0.571933,0.762047 1.700169,0.8046951 2.328,0.088 l 5.498,-6.28400003 z"
-     id="path20"
-     inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-rule:nonzero;stroke:#efefef"
-     sodipodi:nodetypes="ccccccc"
-     clip-path="url(#clipPath40)"
-     transform="translate(-5.6603465,0.01778677)" />
+  <g
+     id="g32"
+     transform="translate(3.0849802,11.48419)">
+    <path
+       transform="translate(-4.7453266,0.53359684)"
+       clip-path="url(#clipPath40)"
+       sodipodi:nodetypes="ccccccc"
+       style="fill:#ffffff;fill-rule:nonzero;stroke:#efefef"
+       inkscape:connector-curvature="0"
+       id="path20"
+       d="M 20.977834,-0.72444821 H 6.3245375 L 7.276,0.69690357 11.92,6.8889036 c 0.571933,0.762047 1.700169,0.8046951 2.328,0.088 l 5.498,-6.28400003 z" />
+    <rect
+       y="0.51581007"
+       x="-1.0849801"
+       height="8"
+       width="20"
+       id="rect24"
+       style="opacity:0;fill:#ff0000;stroke-width:1.03779113" />
+  </g>
+  <g
+     id="g37"
+     transform="translate(15.505131,19.219197)">
+    <rect
+       y="-7.2191973"
+       x="-13.093427"
+       height="8"
+       width="32"
+       id="rect34"
+       style="opacity:0;fill:#ff0000;stroke-width:1.10970008" />
+  </g>
+  <g
+     id="g42"
+     transform="translate(2.4117038,12)">
+    <rect
+       y="-8"
+       x="0.10061599"
+       height="16"
+       width="26"
+       id="rect39"
+       style="opacity:0;fill:#ff0000;stroke-width:4.32724905" />
+  </g>
+  <g
+     id="g47"
+     transform="translate(2.4117038,12)">
+    <rect
+       y="-12"
+       x="-2.4117038"
+       height="20"
+       width="24"
+       id="rect44"
+       style="opacity:0;fill:#ff0000;stroke-width:6.22326899" />
+  </g>
 </svg>

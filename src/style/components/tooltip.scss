@@ -14,6 +14,7 @@ $tooltip-arrow-margin: 0.675rem;
 
   max-width: $tooltip-max-width;
   border: 1px solid $almost-gray;
+  border-radius: 4px;
   background-color: $white;
 
   // In the original design blur is set to 4px (box-shadow).
@@ -32,8 +33,14 @@ $tooltip-arrow-margin: 0.675rem;
 
   .tooltip-arrow {
     position: absolute;
-    width: 16px;
-    height: 8px;
+
+    // Svg is edited to have these dimentions to prevent a placement mismatch
+    // between the arrow and the tooltip box. If these dimentions are changed
+    // verify that the placement relation between the two are ok, e.g.
+    // that the arrow doesn't move beyond the box when placed at the far right,
+    // left, top or bottom of the box.
+    width: 24px;
+    height: 20px;
     z-index: 1;
 
     background-image: url('../icons/svg/tooltip-arrow.svg');
@@ -68,7 +75,7 @@ $tooltip-arrow-margin: 0.675rem;
 
     .tooltip-arrow {
       transform: rotate(90deg);
-      left: -12px;
+      left: -10px;
       top: 50%;
       margin-left: 0;
       margin-right: 0
@@ -80,7 +87,7 @@ $tooltip-arrow-margin: 0.675rem;
 
     .tooltip-arrow {
       transform: rotate(-90deg);
-      right: -12px;
+      right: -10px;
       top: 50%;
       margin-left: 0;
       margin-right: 0;
