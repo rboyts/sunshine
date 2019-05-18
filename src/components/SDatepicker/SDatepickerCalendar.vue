@@ -73,8 +73,6 @@ import mixins from 'vue-typed-mixins';
 import debounce from 'debounce';
 import moment, { Moment } from 'moment';
 import {
-  IMonth,
-  ICalendarPeriod,
   MouseWheelEvent,
   IMomentPayload,
 } from '../types';
@@ -107,11 +105,6 @@ export default mixins(SCalendarMixin).extend({
       required: true,
     },
 
-    mouseDrag: {
-      type: Boolean,
-      required: true,
-    },
-
     range: {
       type: Boolean,
       required: true,
@@ -124,6 +117,10 @@ export default mixins(SCalendarMixin).extend({
 
       transition: '',
 
+      internalValue: this.value,
+
+      mouseDrag: false,
+      startDragDate: {} as moment.Moment,
       lastScrollPosition: 0,
       scrollHeight: 0,
     };
@@ -137,7 +134,15 @@ export default mixins(SCalendarMixin).extend({
 
   watch: {
     value(val) {
-      let compareDate = this.range ? this.value.from : this.value;
+      this.internalValue = val;
+    },
+
+    internalValue(val) {
+      if (val !== this.value) {
+        this.$emit('input', val);
+      }
+
+      let compareDate = this.range ? val.from : val;
       this.ensureSelectionVisible(compareDate);
     },
 
@@ -151,42 +156,56 @@ export default mixins(SCalendarMixin).extend({
   },
 
   methods: {
+    setSelectedPeriod(from: Moment, to: Moment) {
+      if (!this.range) throw new Error('Expected range to be true');
+
+      this.internalValue = {
+        from,
+        to,
+        preset: null,
+      };
+    },
+
     onMouseLeave() {
       // FIXME: Implement properly with capture
-
-      if (!this.mouseDrag) return;
-
-      const { from, to } = this.value;
-      if (from && to) {
-        // Make sure we don't interupt the dragging event at a wrong time
-        // emit correct events to cancel mouseDrag
-        this.$emit('mouse-drag-start', {
-          y: moment(from).year(),
-          M: (moment(from).month() + 1),
-          d: moment(from).date(),
-        });
-        this.$emit('mouse-drag-end', {
-          y: moment(to).year(),
-          M: (moment(to).month() + 1),
-          d: moment(to).date(),
-        });
-      }
+      this.mouseDrag = false;
     },
 
     onDragStart(payload: IMomentPayload) {
-      this.$emit('mouse-drag-start', payload);
+      if (!this.range) return;
+
+      let date = moment([payload.y, (payload.M - 1), payload.d]);
+
+      if (moment(this.value.from).isSame(this.value.to)) {
+        // Treat click as period selecting
+        // FIXME
+        this.setSelectedPeriod(this.value.from, date);
+      } else {
+        this.mouseDrag = true;
+        this.startDragDate = date;
+      }
     },
 
     onDragEnd(payload: IMomentPayload) {
-      this.$emit('mouse-drag-end', payload);
+      if (!this.range) return;
+      this.onMouseDragging(payload);
+      this.mouseDrag = false;
     },
 
     onMouseDragging(payload: IMomentPayload) {
-      this.$emit('mouse-dragging', payload);
+      if (!this.range) return;
+      let date = moment([payload.y, (payload.M - 1), payload.d]);
+      if (moment(this.startDragDate).isBefore(date)) {
+        this.setSelectedPeriod(this.startDragDate, date);
+      } else {
+        this.setSelectedPeriod(date, this.startDragDate);
+      }
     },
 
     onMouseClick(payload: IMomentPayload) {
-      this.$emit('mouse-click', payload);
+      if (this.range) throw new Error('Expected range to be false');
+
+      this.internalValue = moment([payload.y, (payload.M - 1), payload.d]);
     },
 
     onCalendarScroll(event: MouseWheelEvent) {

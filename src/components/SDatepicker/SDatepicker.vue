@@ -3,14 +3,9 @@
     :class="$class({'menu-active': !!internalValue.preset})"
   >
     <s-datepicker-calendar
+      v-model="internalValue"
       :today="today"
-      :mouse-drag="mouseDrag"
       :range="range"
-      :value="internalValue"
-      @mouse-drag-start="onMouseDragStart"
-      @mouse-drag-end="onMouseDragEnd"
-      @mouse-dragging="onMouseDragging"
-      @mouse-click="onMouseClick"
     />
     <s-datepicker-menu
       v-if="withMenu"
@@ -24,9 +19,6 @@
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
 import {
-  IMonth,
-  ICalendarPeriod,
-  IMomentPayload,
   IDateRangeValue,
 } from '../types';
 import SDatepickerCalendar from './SDatepickerCalendar.vue';
@@ -67,11 +59,6 @@ export default Vue.extend({
     return {
       internalValue: undefined as IDateRangeValue | Moment | undefined,
       today: moment(),
-      dateContext: moment(),
-      mouseDrag: false,
-      startDragDate: {} as moment.Moment,
-      date: this.value,
-      period: this.value,
     };
   },
 
@@ -102,57 +89,6 @@ export default Vue.extend({
         to: today,
         preset: null,
       } : today;
-    },
-
-    setSelectedPeriod(from: Moment, to: Moment) {
-      if (!this.range) throw new Error('Expected range to be true');
-
-      this.internalValue = {
-        from,
-        to,
-        preset: null,
-      };
-    },
-
-    onMouseDragStart(payload: IMomentPayload) {
-      if (!this.range) return;
-
-      let date = moment([payload.y, (payload.M - 1), payload.d]);
-
-      if (moment(this.period.from).isSame(this.period.to)) {
-        // Treat click as period selecting
-        this.setSelectedPeriod(this.period.from, date);
-      } else {
-        this.mouseDrag = true;
-        this.startDragDate = date;
-      }
-    },
-
-    onMouseDragEnd(payload: IMomentPayload) {
-      if (!this.range) return;
-      let date = moment([payload.y, (payload.M - 1), payload.d]);
-      if (moment(this.startDragDate).isBefore(date)) {
-        this.setSelectedPeriod(this.startDragDate, date);
-      } else {
-        this.setSelectedPeriod(date, this.startDragDate);
-      }
-      this.mouseDrag = false;
-    },
-
-    onMouseDragging(payload: IMomentPayload) {
-      if (!this.range) return;
-      let date = moment([payload.y, (payload.M - 1), payload.d]);
-      if (moment(this.startDragDate).isBefore(date)) {
-        this.setSelectedPeriod(this.startDragDate, date);
-      } else {
-        this.setSelectedPeriod(date, this.startDragDate);
-      }
-    },
-
-    onMouseClick(payload: IMomentPayload) {
-      if (this.range) throw new Error('Expected range to be false');
-
-      this.internalValue = moment([payload.y, (payload.M - 1), payload.d]);
     },
   },
 });
