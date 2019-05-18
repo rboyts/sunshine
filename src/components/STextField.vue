@@ -138,8 +138,6 @@ export default Vue.extend({
           return 'password';
         case this.email:
           return 'email';
-        case this.moment:
-          return 'text';
         default:
           return 'text';
       }
