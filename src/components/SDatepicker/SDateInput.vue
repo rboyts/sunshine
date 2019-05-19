@@ -9,11 +9,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment, { Moment } from 'moment';
+import { DateTime } from 'luxon';
 import SFormatInput from '../internal/SFormatInput.vue';
 
 export default Vue.extend({
-  name: 'SDateToStringinput',
+  name: 'SDateInput',
 
   components: {
     SFormatInput,
@@ -21,7 +21,7 @@ export default Vue.extend({
 
   props: {
     value: {
-      type: Object as () => Moment,
+      type: Object as () => DateTime,
       default: undefined,
     },
 
@@ -37,8 +37,8 @@ export default Vue.extend({
       focus: false,
 
       // constants
-      locale: moment.locale('nb'), // FIXME i18n
-      format: moment.localeData().longDateFormat('L'),
+      // format: moment.localeData().longDateFormat('L'),
+      format: 'dd.MM.yyyy',
     };
   },
 
@@ -48,11 +48,7 @@ export default Vue.extend({
 
     value: {
       handler(newVal) {
-        if (!newVal) {
-          this.formattedValue = '';
-        } else {
-          this.formattedValue = moment(newVal).format(this.format);
-        }
+        this.formattedValue = newVal ? newVal.toFormat(this.format) : '';
       },
       immediate: true,
     },
@@ -60,7 +56,7 @@ export default Vue.extend({
     formattedValue(newVal) {
       if (this.validDate(this.formattedValue) &&
         this.formattedValue.length === this.format.length) {
-        this.$emit('input', moment(this.formattedValue, this.format));
+        this.$emit('input', DateTime.fromFormat(this.formattedValue, this.format));
       } else if (this.formattedValue.length === 0) {
         this.$emit('input', null);
       }
@@ -85,7 +81,7 @@ export default Vue.extend({
     },
 
     validDate(value: string): boolean {
-      return moment(value, this.format).isValid();
+      return DateTime.fromFormat(value, this.format).isValid;
     },
   },
 });

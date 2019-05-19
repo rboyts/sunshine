@@ -28,7 +28,7 @@
     </span>
     <span
       :class="$class('date', { overlapping: true })"
-      v-for="(x, k) in (6 - month.lastDay)"
+      v-for="(x, k) in (7 - month.lastDay)"
       :key="`${x}-${month.month}-${k}`"
     >{{ x }}</span>
   </span>
@@ -36,8 +36,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment, { Moment } from 'moment';
-import { IMonth, ICalendarPeriod, IMomentPayload } from '../types';
+import { DateTime, Interval } from 'luxon';
+import { IMonth, IMomentPayload } from '../types';
 
 export default Vue.extend({
   name: 'SDatepickerMonth',
@@ -57,7 +57,7 @@ export default Vue.extend({
     },
 
     today: {
-      type: Object as () => Moment,
+      type: Object as () => DateTime,
       required: true,
     },
 
@@ -76,69 +76,56 @@ export default Vue.extend({
   },
 
   computed: {
-    fromDate(): Moment | undefined {
-      return this.range ? this.value.from : undefined;
+    fromDate(): DateTime | undefined {
+      return this.range ? this.value.interval && this.value.interval.start : undefined;
     },
 
-    toDate(): Moment | undefined {
-      return this.range ? this.value.to : undefined;
+    toDate(): DateTime | undefined {
+      return this.range ? this.value.interval && this.value.interval.end : undefined;
     },
 
     monthName(): string {
       const { month, year } = this.month;
-      return moment([year, (month - 1)]).format('MMMM-YYYY');
+      return DateTime.local(year, month).toFormat('MMMM yyyy');
     },
   },
 
   methods: {
     getDateClasses(m: number, d: number, y: number) {
       const hasRange = this.range && !!this.fromDate && !!this.toDate;
+      const date = DateTime.local(y, m, d);
       return this.$class('date', {
-        between: hasRange && this.isInPeriod(m, d, y, this.fromDate, this.toDate),
-        from: hasRange && this.isSameDate(m, d, y, this.fromDate),
-        to: hasRange && this.isSameDate(m, d, y, this.toDate),
-        saturday: this.isSaturday(m, d, y),
-        sunday: this.isSunday(m, d, y),
-        today: this.isSameDate(m, d, y, this.today),
+        between: hasRange && this.isInPeriod(date, this.fromDate, this.toDate),
+        from: hasRange && this.isSameDate(date, this.fromDate),
+        to: hasRange && this.isSameDate(date, this.toDate),
+        saturday: date.weekday === 6,
+        sunday: date.weekday === 7,
+        today: this.isSameDate(date, this.today),
       });
-    },
-
-    dayOfWeek(m: number, d: number, y: number) {
-      return moment([y, (m - 1), d]).day();
-    },
-
-    isSaturday(m: number, d: number, y: number) {
-      return moment([y, (m - 1), d]).day() === 6;
-    },
-
-    isSunday(m: number, d: number, y: number) {
-      return moment([y, (m - 1), d]).day() === 0;
     },
 
     hasDateCircle(dateInMonth: number): Boolean {
       const { month, year } = this.month;
+      const date = DateTime.local(year, month, dateInMonth);
       return (
-        (this.range && this.isSameDate(month, dateInMonth, year, this.fromDate)) ||
-        (this.range && this.isSameDate(month, dateInMonth, year, this.toDate)) ||
-        (!this.range && this.isSameDate(month, dateInMonth, year, this.value))
+        (this.range && this.isSameDate(date, this.fromDate)) ||
+        (this.range && this.isSameDate(date, this.toDate)) ||
+        (!this.range && this.isSameDate(date, this.value.date))
       );
     },
 
-    isSameDate(m: number, d: number, y: number, date: Moment | undefined): boolean {
-      if (!date) return false;
-      let dateInMonth = moment([y, (m - 1), d]);
-      return dateInMonth.isSame(date, 'day');
+    isSameDate(date: DateTime, compareDate: DateTime | undefined): boolean {
+      return !!compareDate && date.hasSame(compareDate, 'day');
     },
 
     isInPeriod(
-      m: number, d: number, y: number,
-      fromDate: Moment | undefined,
-      toDate: Moment | undefined,
+      date: DateTime,
+      fromDate: DateTime | undefined,
+      toDate: DateTime | undefined,
     ): boolean {
-      if (!fromDate || !toDate) return false;
       if (!this.range) return false;
-      let dateInMonth = moment([y, (m - 1), d]);
-      return dateInMonth.isBetween(fromDate, toDate, 'day');
+      if (!fromDate || !toDate) return false;
+      return Interval.fromDateTimes(fromDate, toDate).contains(date);
     },
 
     onMouseOver(payload: IMomentPayload) {

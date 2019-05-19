@@ -24,12 +24,12 @@
             v-else
             class="s-date-field-period"
           >
-            <s-date-to-stringinput
-              v-model="internalValue.from"
+            <s-date-input
+              v-model="internalStartDate"
             />
             <span class="s-date-field-range-symbol">-</span>
-            <s-date-to-stringinput
-              v-model="internalValue.to"
+            <s-date-input
+              v-model="internalEndDate"
             />
           </div>
         </s-base-input>
@@ -47,11 +47,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment, { Moment } from 'moment';
+import { DateTime, Interval } from 'luxon';
 import SMenu from '../SMenu.vue';
 import SDatepicker from './SDatepicker.vue';
-import SDateToStringinput from './SDateToStringinput.vue';
-import { ICalendarPeriod, IDateRangeValue } from '../types';
+import SDateInput from './SDateInput.vue';
+import { IDatepickerValue } from '../types';
 
 // TODO: Reset preset when user selects range manually
 
@@ -65,7 +65,7 @@ export default Vue.extend({
 
   components: {
     SMenu,
-    SDateToStringinput,
+    SDateInput,
     SDatepicker,
   },
 
@@ -74,12 +74,11 @@ export default Vue.extend({
     /**
      * Value is an object with the following attributes:
      *
-     * @param {Moment} from Start of selected period.
-     * @param {Moment} to End of selected period.
+     * @param {Interval} interval Selected period.
      * @param {String} preset Chosen preset (e.g. CurrentMonth).
      */
     value: {
-      type: Object,
+      type: Object as () => IDatepickerValue,
       default: undefined,
     },
 
@@ -97,11 +96,12 @@ export default Vue.extend({
   data() {
     return {
       isOpen: false,
+      internalStartDate: undefined as DateTime | undefined,
+      internalEndDate: undefined as DateTime | undefined,
       internalValue: {
-        from: null,
-        to: null,
-        preset: null,
-      } as IDateRangeValue,
+        interval: undefined,
+        preset: undefined,
+      } as IDatepickerValue,
     };
   },
 
@@ -117,6 +117,37 @@ export default Vue.extend({
   watch: {
     value(newVal) {
       this.internalValue = newVal;
+    },
+
+    internalValue(val: IDatepickerValue) {
+      if (val && val.interval && val.interval.isValid) {
+        this.internalStartDate = val.interval.start;
+        this.internalEndDate = val.interval.end;
+      }
+    },
+
+    internalStartDate(val) {
+      if (this.internalValue.interval &&
+          this.internalValue.interval.start.equals(val)) return;
+
+      const end = this.internalEndDate;
+      if (val && val.isValid && end && end.isValid) {
+        this.internalValue = {
+          interval: Interval.fromDateTimes(val, end),
+        };
+      }
+    },
+
+    internalEndDate(val) {
+      if (this.internalValue.interval &&
+          this.internalValue.interval.end.equals(val)) return;
+
+      const start = this.internalStartDate;
+      if (val && val.isValid && start && start.isValid) {
+        this.internalValue = {
+          interval: Interval.fromDateTimes(start, val),
+        };
+      }
     },
 
     // XXX Why not emit on every input?

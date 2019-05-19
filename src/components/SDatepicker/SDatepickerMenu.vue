@@ -35,10 +35,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment, { Moment, unitOfTime } from 'moment';
+import { DateTime, Interval } from 'luxon';
 import {
   IDateRangePreset,
-  IDateRangeValue,
+  IDatepickerValue,
   CalendarPeriod,
   CalendarOption,
 } from '../types';
@@ -54,12 +54,12 @@ export default Vue.extend({
      * Input value, same as for SDatepicker.
      */
     value: {
-      type: Object,
+      type: Object as () => IDatepickerValue,
       required: true,
     },
 
     today: {
-      type: Object as () => Moment,
+      type: Object as () => DateTime,
       required: true,
     },
   },
@@ -120,25 +120,31 @@ export default Vue.extend({
   },
 
   methods: {
-    getValueForPreset(preset: IDateRangePreset): IDateRangeValue {
-      const period = `${preset.period.toLowerCase()}` as unitOfTime.Base;
+    getValueForPreset(preset: IDateRangePreset): IDatepickerValue {
+      const period = `${preset.period.toLowerCase()}`;
       switch (preset.option) {
         case CalendarOption.Previous:
           return {
-            from: moment(this.today).subtract(1, period).startOf(period),
-            to: moment(this.today).subtract(1, period).endOf(period),
+            interval: Interval.fromDateTimes(
+              this.today.minus({ [period]: 1 }).startOf(period),
+              this.today.minus({ [period]: 1 }).endOf(period),
+            ),
             preset,
           };
         case CalendarOption.Current:
           return {
-            from: moment(this.today).startOf(period),
-            to: moment(this.today).endOf(period),
+            interval: Interval.fromDateTimes(
+              this.today.startOf(period),
+              this.today.endOf(period),
+            ),
             preset,
           };
         case CalendarOption.Next:
           return {
-            from: moment(this.today).add(1, period).startOf(period),
-            to: moment(this.today).add(1, period).endOf(period),
+            interval: Interval.fromDateTimes(
+              this.today.plus({ [period]: 1 }).startOf(period),
+              this.today.plus({ [period]: 1 }).endOf(period),
+            ),
             preset,
           };
         default:

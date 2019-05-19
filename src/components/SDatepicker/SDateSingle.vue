@@ -11,8 +11,8 @@
           :is-empty="false"
           @click="toggleOpen"
         >
-          <s-date-to-stringinput
-            v-model="internalValue"
+          <s-date-input
+            v-model="internalDate"
             :label="label"
           />
         </s-base-input>
@@ -28,30 +28,32 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment, { Moment } from 'moment';
+import { DateTime } from 'luxon';
 import SMenu from '../SMenu.vue';
+import { IDatepickerValue } from '../types';
 import SDatepicker from './SDatepicker.vue';
-import SDateToStringinput from './SDateToStringinput.vue';
+import SDateInput from './SDateInput.vue';
 
 export default Vue.extend({
   name: 'SDateSingle',
 
   components: {
     SMenu,
-    SDateToStringinput,
+    SDateInput,
     SDatepicker,
   },
 
   data() {
     return {
       isOpen: false,
+      internalDate: undefined as DateTime | undefined,
       internalValue: this.value,
     };
   },
 
   props: {
     value: {
-      type: Object as () => Moment,
+      type: Object as () => IDatepickerValue,
       default: undefined,
     },
 
@@ -64,6 +66,20 @@ export default Vue.extend({
   watch: {
     value(newVal) {
       this.internalValue = newVal;
+    },
+
+    internalValue(val: IDatepickerValue) {
+      if (val && val.date && val.date.isValid) {
+        this.internalDate = val.date;
+      }
+    },
+
+    internalDate(val) {
+      if (val && val.isValid) {
+        this.internalValue = {
+          date: val,
+        };
+      }
     },
 
     isOpen(newVal) {

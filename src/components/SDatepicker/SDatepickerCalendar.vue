@@ -71,10 +71,11 @@
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import debounce from 'debounce';
-import moment, { Moment } from 'moment';
+import { DateTime, Interval } from 'luxon';
 import {
   MouseWheelEvent,
   IMomentPayload,
+  IDatepickerValue,
 } from '../types';
 import SIcon from '../SIcon.vue';
 import SCalendarMixin from './SCalendarMixin';
@@ -96,12 +97,12 @@ export default mixins(SCalendarMixin).extend({
      * Input value, same as for SDatepicker.
      */
     value: {
-      type: Object,
+      type: Object as () => IDatepickerValue,
       required: true,
     },
 
     today: {
-      type: Object as () => Moment,
+      type: Object as () => DateTime,
       required: true,
     },
 
@@ -120,7 +121,7 @@ export default mixins(SCalendarMixin).extend({
       internalValue: this.value,
 
       mouseDrag: false,
-      startDragDate: {} as moment.Moment,
+      startDragDate: undefined as DateTime | undefined,
       lastScrollPosition: 0,
       scrollHeight: 0,
     };
@@ -128,7 +129,7 @@ export default mixins(SCalendarMixin).extend({
 
   computed: {
     monthNameInHeader(): string {
-      return this.dateContext.format('MMMM YYYY');
+      return this.dateContext.toFormat('MMMM yyyy');
     },
   },
 
@@ -142,7 +143,7 @@ export default mixins(SCalendarMixin).extend({
         this.$emit('input', val);
       }
 
-      let compareDate = this.range ? val.from : val;
+      let compareDate = this.range ? val.interval.start : val.date;
       this.ensureSelectionVisible(compareDate);
     },
 
@@ -156,13 +157,11 @@ export default mixins(SCalendarMixin).extend({
   },
 
   methods: {
-    setSelectedPeriod(from: Moment, to: Moment) {
+    setSelectedPeriod(from: DateTime, to: DateTime) {
       if (!this.range) throw new Error('Expected range to be true');
 
       this.internalValue = {
-        from,
-        to,
-        preset: null,
+        interval: Interval.fromDateTimes(from, to),
       };
     },
 
@@ -174,12 +173,12 @@ export default mixins(SCalendarMixin).extend({
     onDragStart(payload: IMomentPayload) {
       if (!this.range) return;
 
-      let date = moment([payload.y, (payload.M - 1), payload.d]);
+      let date = DateTime.local(payload.y, payload.M, payload.d);
 
-      if (moment(this.value.from).isSame(this.value.to)) {
+      if (this.value.interval && this.value.interval.hasSame('day')) {
         // Treat click as period selecting
         // FIXME
-        this.setSelectedPeriod(this.value.from, date);
+        this.setSelectedPeriod(this.value.interval.start, date);
       } else {
         this.mouseDrag = true;
         this.startDragDate = date;
@@ -193,9 +192,9 @@ export default mixins(SCalendarMixin).extend({
     },
 
     onMouseDragging(payload: IMomentPayload) {
-      if (!this.range) return;
-      let date = moment([payload.y, (payload.M - 1), payload.d]);
-      if (moment(this.startDragDate).isBefore(date)) {
+      if (!this.range || !this.startDragDate) return;
+      let date = DateTime.local(payload.y, payload.M, payload.d);
+      if (this.startDragDate < date) {
         this.setSelectedPeriod(this.startDragDate, date);
       } else {
         this.setSelectedPeriod(date, this.startDragDate);
@@ -205,7 +204,9 @@ export default mixins(SCalendarMixin).extend({
     onMouseClick(payload: IMomentPayload) {
       if (this.range) throw new Error('Expected range to be false');
 
-      this.internalValue = moment([payload.y, (payload.M - 1), payload.d]);
+      this.internalValue = {
+        date: DateTime.local(payload.y, payload.M, payload.d),
+      };
     },
 
     onCalendarScroll(event: MouseWheelEvent) {

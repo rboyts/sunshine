@@ -1,11 +1,11 @@
 import Vue from 'vue';
-import moment, { Moment } from 'moment';
+import { DateTime } from 'luxon';
 import { IMonth } from '../types';
 
 export default Vue.extend({
   data() {
     return {
-      dateContext: moment().startOf('month'),
+      dateContext: DateTime.local().startOf('month'),
     };
   },
 
@@ -17,11 +17,11 @@ export default Vue.extend({
 
   methods: {
     gotoPreviousMonth() {
-      this.dateContext = moment(this.dateContext).subtract(1, 'month');
+      this.dateContext = this.dateContext.minus({ month: 1 });
     },
 
     gotoNextMonth() {
-      this.dateContext = moment(this.dateContext).add(1, 'month');
+      this.dateContext = this.dateContext.plus({ month: 1 });
     },
 
     createMonthItem(year: number, month: number): IMonth {
@@ -30,7 +30,7 @@ export default Vue.extend({
         weeksInMonth: this.createWeekNumbers(year, month),
         firstDay: this.offsetStartDay(year, month),
         lastDay: this.offsetEndDay(year, month),
-        daysInMonth: moment([year, (month - 1)]).daysInMonth(),
+        daysInMonth: DateTime.local(year, month).daysInMonth,
         previousMonthDays: this.addOverlapDays(year, month, this.offsetStartDay(year, month)),
         year,
       };
@@ -38,10 +38,10 @@ export default Vue.extend({
 
     createWeekNumbers(year: number, month: number) {
       let weekNumbers = [] as number[];
-      for (let c = 1, d = (moment([year, (month - 1)]).daysInMonth()); c <= d; c++) {
-        let week = moment(moment([year, (month - 1), c])).week();
-        if (!weekNumbers.includes(week)) {
-          weekNumbers.push(week);
+      for (let c = 1, d = DateTime.local(year, month).daysInMonth; c <= d; c++) {
+        let { weekNumber } = DateTime.local(year, month, c);
+        if (!weekNumbers.includes(weekNumber)) {
+          weekNumbers.push(weekNumber);
         }
       }
       return weekNumbers;
@@ -53,13 +53,13 @@ export default Vue.extend({
       if (month === 1) {
         // If january, get last day from previous years last month
         let lastYear = year - 1;
-        dateToSubtractFrom = moment([lastYear, 11]).daysInMonth();
+        dateToSubtractFrom = DateTime.local(lastYear, 12).daysInMonth;
       } else {
-        dateToSubtractFrom = moment([year, (month - 2)]).daysInMonth();
+        dateToSubtractFrom = DateTime.local(year, month - 1).daysInMonth;
       }
       if (firstDay > 0) {
         // Add lastdays from previous month
-        for (let c = firstDay - 1, d = 0; c >= d; c--) {
+        for (let c = firstDay - 1; c > 0; c--) {
           previousMonthDays.push(dateToSubtractFrom - c);
         }
       }
@@ -67,45 +67,41 @@ export default Vue.extend({
     },
 
     createMonths() {
-      let year = this.dateContext.get('year');
-      let present = this.dateContext.get('month') + 1;
+      const { year, month } = this.dateContext;
       let months = [];
       for (let a = 0; a < 2; a++) {
         let tmpMonth: number;
         let tmpYear: number;
-        if ((present + a) > 12) {
-          tmpMonth = (present + a) - 12;
+        if ((month + a) > 12) {
+          tmpMonth = (month + a) - 12;
           tmpYear = year + 1;
           months.push(this.createMonthItem(tmpYear, tmpMonth));
         } else {
-          tmpMonth = present + a;
+          tmpMonth = month + a;
           tmpYear = year;
           months.push(this.createMonthItem(tmpYear, tmpMonth));
         }
       }
+
       return months;
     },
 
     offsetStartDay(year: number, month: number) {
-      return moment([year, (month - 1)])
-        .startOf('month')
-        .weekday();
+      return DateTime.local(year, month).startOf('month').weekday;
     },
 
     offsetEndDay(year: number, month: number) {
-      return moment([year, (month - 1)])
-        .endOf('month')
-        .weekday();
+      return DateTime.local(year, month).endOf('month').weekday;
     },
 
-    ensureSelectionVisible(compareDate: Moment) {
+    ensureSelectionVisible(compareDate: DateTime) {
       if (!compareDate) return;
 
-      let currentMonth = moment([this.calendar[0].year, (this.calendar[0].month - 1), 1]);
-      let nextMonth = moment([this.calendar[1].year, (this.calendar[1].month - 1), 1]);
-      if (!moment(compareDate).isSame(currentMonth, 'month') &&
-        !moment(compareDate).isSame(nextMonth, 'month')) {
-        this.dateContext = moment(compareDate);
+      let currentMonth = DateTime.local(this.calendar[0].year, this.calendar[0].month, 1);
+      let nextMonth = DateTime.local(this.calendar[1].year, this.calendar[1].month, 1);
+      if (!compareDate.hasSame(currentMonth, 'month') &&
+        !compareDate.hasSame(nextMonth, 'month')) {
+        this.dateContext = compareDate;
       }
     },
   },

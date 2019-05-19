@@ -1,4 +1,4 @@
-import { Moment } from 'moment';
+import { DateTime, Interval } from 'luxon';
 
 export interface IVisibleRowsPayload {
   firstRow: Number;
@@ -68,11 +68,6 @@ export interface IMonth {
   year: number;
 }
 
-export interface ICalendarPeriod {
-  from?: Moment;
-  to?: Moment;
-}
-
 export interface IMomentPayload {
   y: number,
   M: number,
@@ -96,10 +91,10 @@ export interface IDateRangePreset {
   period: CalendarPeriod,
 }
 
-export interface IDateRangeValue {
-  from: Moment | null;
-  to: Moment | null;
-  preset: IDateRangePreset | null;
+export interface IDatepickerValue {
+  date?: DateTime;
+  interval?: Interval;
+  preset?: IDateRangePreset;
 }
 
 export interface MouseWheelEvent extends MouseEvent {

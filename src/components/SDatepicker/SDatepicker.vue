@@ -17,17 +17,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment, { Moment } from 'moment';
-import {
-  IDateRangeValue,
-} from '../types';
+import { DateTime, Interval } from 'luxon';
+import { IDatepickerValue } from '../types';
 import SDatepickerCalendar from './SDatepickerCalendar.vue';
 import SDatepickerMenu from './SDatepickerMenu.vue';
 
 // TODO (Robin)
-// - Encapsulate mouse event handling in Calendar component?
-// - Rename all event handlers, adding 'on' prefix
-// - User Moment as event payload, instead of {y,M,d}
+// - Use DateTime as event payload, instead of {y,M,d}
 
 export default Vue.extend({
   name: 'SDatepicker',
@@ -39,7 +35,7 @@ export default Vue.extend({
 
   props: {
     value: {
-      type: Object,
+      type: Object as () => IDatepickerValue,
       required: true,
     },
 
@@ -57,8 +53,8 @@ export default Vue.extend({
 
   data() {
     return {
-      internalValue: undefined as IDateRangeValue | Moment | undefined,
-      today: moment(),
+      internalValue: undefined as IDatepickerValue | undefined,
+      today: DateTime.local().startOf('day'),
     };
   },
 
@@ -82,13 +78,13 @@ export default Vue.extend({
   },
 
   methods: {
-    getDefaultValue(): any {
-      const today = moment().startOf('day');
+    getDefaultValue(): IDatepickerValue {
+      const today = DateTime.local().startOf('day');
       return this.range ? {
-        from: today,
-        to: today,
-        preset: null,
-      } : today;
+        interval: Interval.fromDateTimes(today, today),
+      } : {
+        date: today,
+      };
     },
   },
 });
