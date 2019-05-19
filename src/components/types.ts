@@ -58,22 +58,6 @@ export interface IItem {
   data: IItemData;
 }
 
-export interface IMonth {
-  daysInMonth: number;
-  firstDay: number;
-  lastDay: number;
-  month: number;
-  previousMonthDays: number[];
-  weeksInMonth: number[];
-  year: number;
-}
-
-export interface IMomentPayload {
-  y: number,
-  M: number,
-  d: number
-}
-
 export enum CalendarOption {
   Previous = 'Previous',
   Current = 'Current',

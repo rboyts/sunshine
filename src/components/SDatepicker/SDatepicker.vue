@@ -22,9 +22,6 @@ import { IDatepickerValue } from '../types';
 import SDatepickerCalendar from './SDatepickerCalendar.vue';
 import SDatepickerMenu from './SDatepickerMenu.vue';
 
-// TODO (Robin)
-// - Use DateTime as event payload, instead of {y,M,d}
-
 export default Vue.extend({
   name: 'SDatepicker',
 

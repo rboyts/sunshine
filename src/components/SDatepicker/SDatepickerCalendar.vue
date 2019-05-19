@@ -52,8 +52,8 @@
             :class="$class('grid')"
             :range="range"
             :today="today"
-            :key="month.month + '-' + month.year"
-            :month="month"
+            :key="month.value"
+            :date-context="month"
             :mouse-drag="mouseDrag"
             :value="value"
             @mouse-click="onMouseClick"
@@ -74,7 +74,6 @@ import debounce from 'debounce';
 import { DateTime, Interval } from 'luxon';
 import {
   MouseWheelEvent,
-  IMomentPayload,
   IDatepickerValue,
 } from '../types';
 import SIcon from '../SIcon.vue';
@@ -170,10 +169,8 @@ export default mixins(SCalendarMixin).extend({
       this.mouseDrag = false;
     },
 
-    onDragStart(payload: IMomentPayload) {
+    onDragStart(date: DateTime) {
       if (!this.range) return;
-
-      let date = DateTime.local(payload.y, payload.M, payload.d);
 
       if (this.value.interval && this.value.interval.hasSame('day')) {
         // Treat click as period selecting
@@ -185,15 +182,14 @@ export default mixins(SCalendarMixin).extend({
       }
     },
 
-    onDragEnd(payload: IMomentPayload) {
+    onDragEnd(date: DateTime) {
       if (!this.range) return;
-      this.onMouseDragging(payload);
+      this.onMouseDragging(date);
       this.mouseDrag = false;
     },
 
-    onMouseDragging(payload: IMomentPayload) {
+    onMouseDragging(date: DateTime) {
       if (!this.range || !this.startDragDate) return;
-      let date = DateTime.local(payload.y, payload.M, payload.d);
       if (this.startDragDate < date) {
         this.setSelectedPeriod(this.startDragDate, date);
       } else {
@@ -201,12 +197,10 @@ export default mixins(SCalendarMixin).extend({
       }
     },
 
-    onMouseClick(payload: IMomentPayload) {
+    onMouseClick(date: DateTime) {
       if (this.range) throw new Error('Expected range to be false');
 
-      this.internalValue = {
-        date: DateTime.local(payload.y, payload.M, payload.d),
-      };
+      this.internalValue = { date };
     },
 
     onCalendarScroll(event: MouseWheelEvent) {

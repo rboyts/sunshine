@@ -44,6 +44,8 @@ import {
 } from '../types';
 import SRadioButton from '../SRadioButton.vue';
 
+type PeriodType = 'month' | 'week' | 'day';
+
 export default Vue.extend({
   name: 'SDatepickerMenu',
 
@@ -121,7 +123,7 @@ export default Vue.extend({
 
   methods: {
     getValueForPreset(preset: IDateRangePreset): IDatepickerValue {
-      const period = `${preset.period.toLowerCase()}`;
+      const period = `${preset.period.toLowerCase()}` as PeriodType;
       switch (preset.option) {
         case CalendarOption.Previous:
           return {
