@@ -198,7 +198,7 @@ export default Vue.extend({
     onWindowClick(event: UIEvent) {
       // Ignore clicks on the menu/activator itself
       let el = this.$el as HTMLElement;
-      if (el.contains(event.target as HTMLElement)) return;
+      if (event.target instanceof Node && el.contains(event.target as Node)) return;
 
       this.hide();
     },
