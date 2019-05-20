@@ -1,20 +1,22 @@
 <template>
   <div :class="$class()">
-    <s-icon
-      v-if="invalid"
-      package="sunshine24"
-      name="warning"
-      :class="$class('warning')"
-    />
     <a
       href="#"
       :class="$class('heading')"
       @_click="$emit('click')"
       @click="onClick"
     >
-      <slot name="heading">
-        {{ heading }}
-      </slot>
+      <span :class="$class('title')">
+        <slot name="heading">
+          {{ heading }}
+        </slot>
+      </span>
+      <s-icon
+        v-if="invalid"
+        package="sunshine24"
+        name="warning"
+        :class="$class('warning')"
+      />
       <s-icon
         package="sunshine24"
         name="arrow"

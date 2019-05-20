@@ -6,7 +6,6 @@ $accordion-border: 1px solid $gray;
 }
 
 .s-accordion-item {
-  position: relative;
   border-top: $accordion-border;
 
   &:last-child {
@@ -32,6 +31,10 @@ $accordion-border: 1px solid $gray;
   }
 }
 
+.s-accordion-item__title {
+  flex: 1;
+}
+
 .s-accordion-item__chevron {
   margin-right: $accordion-chevron-size;
   display: inline-flex;
@@ -45,9 +48,6 @@ $accordion-border: 1px solid $gray;
 }
 
 .s-accordion-item__warning {
-  position: absolute;
-  top: .75rem;
-  right: $accordion-chevron-size + 1.4rem;
   color: $color-bad;
 }
 
