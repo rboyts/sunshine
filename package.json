@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "debounce": "^1.2.0",
-    "luxon": "^1.13.2",
     "vue-global-events": "^1.1.2",
     "vue-typed-mixins": "^0.1.0"
   },
@@ -36,7 +35,7 @@
     "eslint-plugin-vue": "^5.2.2",
     "jest": "^24.5.0",
     "lint-staged": "^8.1.4",
-    "moment": "^2.24.0",
+    "luxon": "^1.15.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "ts-jest": "^24.0.1",
@@ -58,7 +57,7 @@
   "main": "src/index.ts",
   "peerDependencies": {
     "d3": "^5.7.0",
-    "moment": "^2.22.2",
+    "luxon": "^1.15.0",
     "vue": "^2.5.17"
   },
   "gitHooks": {
