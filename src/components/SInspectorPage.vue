@@ -1,18 +1,18 @@
 <template>
   <form
-    :class="classes()"
+    :class="$class()"
     v-bind="$attrs"
     v-on="$listeners"
   >
-    <div :class="classes('header')">
+    <div :class="$class('header')">
       <slot name="header" />
     </div>
 
-    <div :class="classes('main')">
+    <div :class="$class('main')">
       <slot />
     </div>
 
-    <div :class="classes('footer')">
+    <div :class="$class('footer')">
       <slot name="footer" />
     </div>
   </form>
@@ -20,16 +20,11 @@
 
 <script>
 import Vue from 'vue';
-import ClassesMixin from './internal/ClassesMixin';
 
 export default Vue.extend({
   name: 'SInspectorPage',
   inheritAttrs: false,
 
   inject: ['$validator'],
-
-  mixins: [
-    ClassesMixin,
-  ],
 });
 </script>

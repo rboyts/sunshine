@@ -1,8 +1,8 @@
 <template>
-  <div class="s-datepicker__menu">
+  <div :class="$class()">
     <h3>Periodevalg</h3>
-    <div class="s-datepicker__menu__row">
-      <div class="s-datepicker__menu__column">
+    <div :class="$class('row')">
+      <div :class="$class('column')">
         <p
           v-for="option in options"
           :key="option"
@@ -11,12 +11,12 @@
             v-model="selectedOption"
             :value="option"
           >
-            {{ $t(`datepicker.option.${option.toLowerCase()}`) }}
+            {{ $t(`s-datepicker.option.${option.toLowerCase()}`) }}
           </s-radio-button>
         </p>
       </div>
 
-      <div class="s-datepicker__menu__column">
+      <div :class="$class('column')">
         <p
           v-for="period in periods"
           :key="period"
@@ -25,7 +25,7 @@
             v-model="selectedPeriod"
             :value="period"
           >
-            {{ $t(`datepicker.period.${period.toLowerCase()}`) }}
+            {{ $t(`s-datepicker.period.${period.toLowerCase()}`) }}
           </s-radio-button>
         </p>
       </div>
@@ -35,14 +35,16 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment, { Moment, unitOfTime } from 'moment';
+import { DateTime, Interval } from 'luxon';
 import {
   IDateRangePreset,
-  IDateRangeValue,
+  IDatepickerValue,
   CalendarPeriod,
   CalendarOption,
 } from '../types';
 import SRadioButton from '../SRadioButton.vue';
+
+type PeriodType = 'month' | 'week' | 'day';
 
 export default Vue.extend({
   name: 'SDatepickerMenu',
@@ -54,12 +56,12 @@ export default Vue.extend({
      * Input value, same as for SDatepicker.
      */
     value: {
-      type: Object,
+      type: Object as () => IDatepickerValue,
       required: true,
     },
 
     today: {
-      type: Object as () => Moment,
+      type: Object as () => DateTime,
       required: true,
     },
   },
@@ -120,25 +122,31 @@ export default Vue.extend({
   },
 
   methods: {
-    getValueForPreset(preset: IDateRangePreset): IDateRangeValue {
-      const period = `${preset.period.toLowerCase()}` as unitOfTime.Base;
+    getValueForPreset(preset: IDateRangePreset): IDatepickerValue {
+      const period = `${preset.period.toLowerCase()}` as PeriodType;
       switch (preset.option) {
         case CalendarOption.Previous:
           return {
-            from: moment(this.today).subtract(1, period).startOf(period),
-            to: moment(this.today).subtract(1, period).endOf(period),
+            interval: Interval.fromDateTimes(
+              this.today.minus({ [period]: 1 }).startOf(period),
+              this.today.minus({ [period]: 1 }).endOf(period),
+            ),
             preset,
           };
         case CalendarOption.Current:
           return {
-            from: moment(this.today).startOf(period),
-            to: moment(this.today).endOf(period),
+            interval: Interval.fromDateTimes(
+              this.today.startOf(period),
+              this.today.endOf(period),
+            ),
             preset,
           };
         case CalendarOption.Next:
           return {
-            from: moment(this.today).add(1, period).startOf(period),
-            to: moment(this.today).add(1, period).endOf(period),
+            interval: Interval.fromDateTimes(
+              this.today.plus({ [period]: 1 }).startOf(period),
+              this.today.plus({ [period]: 1 }).endOf(period),
+            ),
             preset,
           };
         default:

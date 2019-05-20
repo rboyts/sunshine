@@ -1,8 +1,12 @@
 <template>
-  <transition name="slide-in">
+  <transition
+    name="slide-in"
+    @after-enter="$emit('after-enter')"
+    @after-leave="$emit('after-leave')"
+  >
     <div
       v-if="show"
-      :class="classes()"
+      :class="$class()"
     >
       <slot />
     </div>
@@ -11,15 +15,10 @@
 
 <script>
 import Vue from 'vue';
-import ClassesMixin from './internal/ClassesMixin';
 
 export default Vue.extend({
   name: 'SInspector',
   inheritAttrs: false,
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   model: {
     prop: 'show',

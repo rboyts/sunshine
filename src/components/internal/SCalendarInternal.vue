@@ -1,64 +1,64 @@
 <script lang="ts">
 import Vue, { VNode } from 'vue';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 export default Vue.extend({
   name: 'SCalendarInternal',
 
   props: {
     date: {
-      type: Object as () => moment.Moment,
-      default: () => moment(),
+      type: Object as () => DateTime,
+      default: () => DateTime.local(),
     },
   },
 
   methods: {
     renderHeader(): VNode[] {
       const h = this.$createElement;
-      let weekdays = moment.weekdays();
-      let start = moment(this.date).startOf('isoWeek');
-      let end = moment(this.date).endOf('isoWeek');
+
+      const start = this.date.startOf('week');
+      const end = this.date.endOf('week');
 
       let children: VNode[] = [];
-      for (let d = start; d < end; d = d.add(1, 'day')) {
+      for (let d = start; d < end; d = d.plus({ days: 1 })) {
         children.push(h('span', {
           class: 's-calendar__header',
         },
-        weekdays[d.day()]));
+        d.toFormat('EEEE')));
       }
 
       return children;
     },
 
     renderMonth(): VNode[] {
-      let start = moment(this.date).startOf('month').startOf('isoWeek');
-      let end = moment(this.date).endOf('month').endOf('isoWeek');
+      const start = this.date.startOf('month').startOf('week');
+      const end = this.date.endOf('month').endOf('week');
 
       let children: VNode[] = [];
-      for (let d = start; d < end; d = d.add(1, 'day')) {
+      for (let d = start; d < end; d = d.plus({ days: 1 })) {
         children.push(this.renderCell(d));
       }
 
       return children;
     },
 
-    renderCell(date: moment.Moment) {
+    renderCell(date: DateTime) {
       const h = this.$createElement;
 
-      const d = date.format('D');
-      const text = date.format('LLLL');
+      const d = date.toFormat('d');
+      const text = date.toFormat('LLLL');
       return h('span', {
         class: {
           's-calendar__day': true,
-          's-calendar__day--weekend': date.day() === 6 || date.day() === 0,
-          's-calendar__day--other-month': date.month() !== this.date.month(),
+          's-calendar__day--weekend': date.weekday === 6 || date.weekday === 7,
+          's-calendar__day--other-month': date.month !== this.date.month,
         },
       },
       [
         h('span', {
           class: {
             's-calendar__date': true,
-            's-calendar__date--sunday': date.day() === 0,
+            's-calendar__date--sunday': date.weekday === 7,
           },
         }, d),
       ]);

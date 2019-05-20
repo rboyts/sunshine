@@ -6,16 +6,11 @@
 
 <script>
 import Vue from 'vue';
-import ClassesMixin from './internal/ClassesMixin';
 
 export default Vue.extend({
   name: 'SGridItem',
 
   inject: ['$validator'],
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   props: {
     span: {
@@ -26,7 +21,7 @@ export default Vue.extend({
 
   computed: {
     itemClass() {
-      return this.classes({
+      return this.$class({
         [`span-${this.span}`]: true,
       });
     },

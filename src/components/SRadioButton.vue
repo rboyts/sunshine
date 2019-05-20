@@ -1,5 +1,5 @@
 <template>
-  <label :class="classes(modifiers)">
+  <label :class="$class(modifiers)">
     <input
       type="radio"
       :name="name"
@@ -10,11 +10,11 @@
       @blur="hasFocus = false"
     >
 
-    <span :class="classes('box')">
+    <span :class="$class('box')">
       <transition name="fade">
         <svg
           v-if="checked"
-          :class="classes('selected')"
+          :class="$class('selected')"
           width="16"
           height="16"
         >
@@ -34,10 +34,9 @@
 <script>
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-radio-button',
+export default Vue.extend({
+  name: 'SRadioButton',
 
   model: {
     prop: 'choice',
@@ -45,12 +44,21 @@ export default mixins(ClassesMixin).extend({
   },
 
   props: {
-    value: String,
-    choice: String,
+    value: {
+      type: String,
+      required: true,
+    },
+
+    choice: {
+      type: String,
+      default: undefined,
+    },
+
     name: {
       type: String,
       default: '',
     },
+
     inactive: {
       type: Boolean,
       default: false,

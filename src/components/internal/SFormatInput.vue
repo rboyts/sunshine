@@ -7,19 +7,19 @@ TODO:
 -->
 
 <template>
-  <div :class="classes()">
+  <div :class="$class()">
     <input
       v-if="format"
       ref="format"
       :value="combinedValue"
-      :class="[inputClass, classes('format')]"
+      :class="[inputClass, $class('format')]"
       disabled
       v-bind="$attrs"
     >
     <input
       ref="input"
       :value="internalValue"
-      :class="[inputClass, classes('input')]"
+      :class="[inputClass, $class('input')]"
 
       v-bind="$attrs"
       v-on="listeners"
@@ -29,19 +29,14 @@ TODO:
 
 <script>
 import Vue from 'vue';
-import ClassesMixin from './ClassesMixin';
 
-const PunctuationChars = '!@#$%&:;,.+-()';
+const PunctuationChars = '!@#$%&:;,.+-()/';
 
 const isPunctuation = ch => PunctuationChars.includes(ch);
 
 export default Vue.extend({
   name: 'SFormatInput',
   inheritAttrs: false,
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   props: {
     format: {

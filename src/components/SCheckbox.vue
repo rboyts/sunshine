@@ -1,6 +1,6 @@
 <template>
   <label
-    :class="classes(modifiers)"
+    :class="$class(modifiers)"
     @mousedown.native="$event.preventDefault()"
   >
     <input
@@ -25,10 +25,9 @@
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import SCheckable from './SCheckable.vue';
-import ClassesMixin from './internal/ClassesMixin';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-checkbox',
+export default Vue.extend({
+  name: 'SCheckbox',
 
   components: {
     SCheckable,

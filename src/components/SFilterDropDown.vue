@@ -1,13 +1,13 @@
 <template>
   <s-menu
     v-model="isOpen"
-    :class="classes()"
+    :class="$class()"
     :toggle-on-click="false"
     @closed="$emit('closed')"
   >
     <template v-slot:activator>
       <s-base-input
-        :class="classes('input')"
+        :class="$class('input')"
         :has-focus="hasFocus"
         :is-empty="false"
         :readonly="!isOpen"
@@ -24,15 +24,15 @@
         @keydown.native.space="onSpace"
         @mousedown.native.prevent=""
       >
-        <div :class="classes('pills')">
+        <div :class="$class('pills')">
           <div
             v-for="val in selectedItems"
             :key="val.key"
-            :class="classes('pill', { [val.type]: true })"
+            :class="$class('pill', { [val.type]: true })"
           >
             <span
               class="sunshine24-close"
-              :class="classes('pill-icon')"
+              :class="$class('pill-icon')"
               @click.prevent.stop="onItemRemove(val)"
             />
             {{ val.label }}
@@ -43,11 +43,11 @@
           </div>
           <div
             v-if="internalValue.search"
-            :class="classes('pill', { 'search': true })"
+            :class="$class('pill', { 'search': true })"
           >
             <span
               class="sunshine24-close"
-              :class="classes('pill-icon')"
+              :class="$class('pill-icon')"
               @click.prevent.stop="clearSearch"
             />
             {{ internalValue.search }}
@@ -73,7 +73,7 @@
 
         <span
           class="sunshine24-dropdownarrow"
-          :class="classes('caret', { open: isOpen })"
+          :class="$class('caret', { open: isOpen })"
           @click.stop="onCaretClick"
         />
       </s-base-input>
@@ -81,28 +81,36 @@
 
     <template v-slot:content>
       <s-menu-list>
-        <div :class="classes('header')">
-          <div :class="classes('tabs')">
+        <div :class="$class('header')">
+          <div :class="$class('tabs')">
             <div
               v-show="showSuggestionsTab"
-              :class="classes('tabs', 'tab', { active: sectionIndex === -1 })"
+              :class="$class('tabs', 'tab', { active: sectionIndex === -1 })"
             >
-              <a @click.prevent="onClickTab(-1)">Suggestions</a>
+              <a @click.prevent="onClickTab(-1)">
+                <span :class="$class('tabs', 'tab', 'content')">
+                  {{ $t('s-filter.suggestions') }}
+                </span>
+              </a>
             </div>
 
             <div
               v-for="(section, i) in sections"
               :key="i"
-              :class="classes('tabs', 'tab', { active: i === sectionIndex })"
+              :class="$class('tabs', 'tab', { active: i === sectionIndex })"
             >
-              <a @click.prevent="onClickTab(i)">{{ section.label }}</a>
+              <a @click.prevent="onClickTab(i)">
+                <span :class="$class('tabs', 'tab', 'content')">
+                  {{ section.label }}
+                </span>
+              </a>
             </div>
           </div>
 
-          <div :class="classes('loading')">
+          <div :class="$class('loading')">
             <div
               v-if="loading"
-              :class="classes('loading-progress')"
+              :class="$class('loading-progress')"
             />
           </div>
         </div>
@@ -125,7 +133,6 @@
 
 <script>
 import Vue from 'vue';
-import ClassesMixin from './internal/ClassesMixin';
 import SBaseInput from './SBaseInput.vue';
 import SListItem from './SListItem.vue';
 import SMenu from './SMenu.vue';
@@ -134,10 +141,6 @@ import SMenuList from './SMenuList.vue';
 
 export default Vue.extend({
   name: 'SFilterDropDown',
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   components: {
     SBaseInput,

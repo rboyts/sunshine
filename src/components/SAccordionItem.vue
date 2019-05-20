@@ -1,8 +1,8 @@
 <template>
-  <div :class="classes()">
+  <div :class="$class()">
     <a
       href="#"
-      :class="classes('heading', {invalid})"
+      :class="$class('heading', {invalid})"
       @_click="$emit('click')"
       @click="onClick"
     >
@@ -12,19 +12,19 @@
       <s-icon
         package="sunshine24"
         name="arrow"
-        :class="classes('chevron', chevronOptions)"
+        :class="$class('chevron', chevronOptions)"
       />
     </a>
 
     <div
       v-show="showBody"
-      :class="classes('body', bodyOptions)"
+      :class="$class('body', bodyOptions)"
       :style="bodyStyle"
       @transitionend="onTransitionEnd"
     >
       <div
         ref="inner"
-        :class="classes('content')"
+        :class="$class('content')"
       >
         <slot />
       </div>
@@ -34,17 +34,12 @@
 
 <script>
 import Vue from 'vue';
-import ClassesMixin from './internal/ClassesMixin';
 import SIcon from './SIcon.vue';
 
 export default Vue.extend({
   name: 'SAccordionItem',
 
   inject: ['$validator'],
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   components: {
     SIcon,

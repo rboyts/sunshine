@@ -1,22 +1,33 @@
 <template>
   <router-link
-    :class="classes('link')"
+    :class="$class('link')"
     :to="to"
   >
-    <slot />
+    <span
+      tabIndex="-1"
+      :class="$class('wrapper')"
+    >
+      <span
+        ref="title"
+        :class="$class('title')"
+      >
+        <slot />
+      </span>
+    </span>
   </router-link>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-tab',
+export default Vue.extend({
+  name: 'STab',
 
   props: {
-    to: String,
+    to: {
+      type: String,
+      required: true,
+    },
   },
 
   watch: {
@@ -29,6 +40,12 @@ export default mixins(ClassesMixin).extend({
         }
       },
       immediate: true,
+    },
+  },
+
+  methods: {
+    getTitleElement() {
+      return this.$refs.title;
     },
   },
 });

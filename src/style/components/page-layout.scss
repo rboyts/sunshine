@@ -1,0 +1,22 @@
+@import '../settings.scss';
+
+.s-page-layout {
+  position: relative;
+
+  height: 100%;
+  padding: 40px;
+
+  display: flex;
+  flex-direction: column;
+
+  transition: margin-right $inspector-duration $inspector-ease;
+
+  &--show-inspector {
+    margin-right: $inspector-width;
+  }
+
+  // HACK: Clicking header closes inspector
+  .s-page-header {
+    pointer-events: none;
+  }
+}

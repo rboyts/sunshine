@@ -1,19 +1,19 @@
 <template>
-  <div :class="classes()">
+  <div :class="$class()">
     <div @click="onClick">
       <slot name="activator" />
     </div>
 
     <div
       v-if="showContent"
-      :class="classes('popup')"
+      :class="$class('popup')"
       :style="style"
       @click.stop="onContentClick"
       @transitionend="onTransitionEnd"
     >
       <div
         ref="content"
-        :class="classes('popup', 'content')"
+        :class="$class('popup', 'content')"
         :style="contentStyle"
       >
         <!--
@@ -43,13 +43,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
 import GlobalEvents from 'vue-global-events';
 import Watcher from './internal/Watcher';
-import ClassesMixin from './internal/ClassesMixin';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-menu',
+export default Vue.extend({
+  name: 'SMenu',
 
   components: {
     GlobalEvents,
@@ -200,7 +198,7 @@ export default mixins(ClassesMixin).extend({
     onWindowClick(event: UIEvent) {
       // Ignore clicks on the menu/activator itself
       let el = this.$el as HTMLElement;
-      if (el.contains(event.target as HTMLElement)) return;
+      if (event.target instanceof Node && el.contains(event.target as Node)) return;
 
       this.hide();
     },

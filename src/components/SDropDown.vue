@@ -15,13 +15,13 @@ Use cases:
 <template>
   <s-menu
     v-model="isOpen"
-    :class="classes()"
+    :class="$class()"
     :toggle-on-click="false"
     @closed="$emit('closed')"
   >
     <template v-slot:activator>
       <s-base-input
-        :class="classes('input')"
+        :class="$class('input')"
         :has-focus="hasFocus"
         :is-empty="textValue == '' && text == ''"
         :readonly="!(search && isOpen)"
@@ -43,7 +43,7 @@ Use cases:
 
         <span
           v-if="textValue"
-          :class="classes('label', { 'with-label': !!label })"
+          :class="$class('label', { 'with-label': !!label })"
         >
           {{ textValue }}
         </span>
@@ -69,7 +69,7 @@ Use cases:
         <div
           v-else
           ref="input"
-          :class="classes('spacer')"
+          :class="$class('spacer')"
           :tabIndex="inactive ? undefined : 0"
           @focus="hasFocus = true"
           @blur="hasFocus = false"
@@ -77,7 +77,7 @@ Use cases:
 
         <span
           class="sunshine24-dropdownarrow"
-          :class="classes('caret', caretModifiers)"
+          :class="$class('caret', caretModifiers)"
           @click.native="onCaretClick"
         />
       </s-base-input>
@@ -117,7 +117,6 @@ import SBaseInput from './SBaseInput.vue';
 import SListItem from './SListItem.vue';
 import SMenu from './SMenu.vue';
 import SMenuList from './SMenuList.vue';
-import ClassesMixin from './internal/ClassesMixin';
 
 const validateUniqueKeys = val => (
   val.every((it, index) => !!it.key &&
@@ -133,10 +132,6 @@ export default Vue.extend({
       return this.internalValue;
     },
   },
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   components: {
     SBaseInput,

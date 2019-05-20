@@ -1,6 +1,6 @@
 <template>
   <span
-    :class="classes()"
+    :class="$class()"
     v-on="$listeners"
   ><span
     :style="iconStyle"
@@ -12,14 +12,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 
 import '../icons/icon54/style.css';
 import '../icons/sunshine24/css/sunshine24-embedded.css';
 
 
-export default mixins(ClassesMixin).extend({
-  name: 's-icon',
+export default Vue.extend({
+  name: 'SIcon',
 
   props: {
     package: {

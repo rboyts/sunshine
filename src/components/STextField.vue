@@ -3,6 +3,7 @@
     :inactive="inactive"
     :has-focus="hasFocus"
     :is-empty="isEmpty"
+    :readonly="readonly"
     :error="error"
     :label="label"
     :max-length="maxLength"
@@ -15,6 +16,7 @@
       :maxlength="computedMaxLength"
       :type="type"
       :disabled="inactive"
+      :readonly="readonly"
       :placeholder="placeholder"
       :input-class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
       @keypress="onKeyPress"
@@ -85,6 +87,12 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+
     placeholder: {
       type: String,
       default: '',
@@ -130,8 +138,6 @@ export default Vue.extend({
           return 'password';
         case this.email:
           return 'email';
-        case this.moment:
-          return 'text';
         default:
           return 'text';
       }

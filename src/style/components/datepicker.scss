@@ -42,10 +42,10 @@ $input-padding: .5rem;
   position: relative;
   height: $datepicker-height;
   background: #fff;
-}
 
-.s-datepicker.s-datepicker-menu-active {
-  background: $whiteish;
+  &--menu-active {
+    background: $whiteish;
+  }
 }
 
 .s-datepicker__calendar {
@@ -63,9 +63,10 @@ $input-padding: .5rem;
 }
 
 .s-datepicker__navigation {
+  display: flex;
+  align-items: center;
   flex-direction: row;
   justify-content: space-around;
-  align-items: center;
 }
 
 .s-datepicker__navigation h2 {
@@ -86,36 +87,36 @@ $input-padding: .5rem;
   text-align: center;
 }
 
-.s-datepicker__navigation-arrow.back {
+.s-datepicker__navigation-arrow--back {
   transform: rotate(-90deg);
   margin-left: $datepicker-navigation-margin;
 }
 
-.s-datepicker__navigation-arrow.forward {
+.s-datepicker__navigation-arrow--forward {
   transform: rotate(90deg);
   margin-right: $datepicker-navigation-margin;
 }
 
-.s-datepicker__menu {
+.s-datepicker-menu {
   background-color: $whiteish;
   padding: 0 1rem 0;
 }
 
-.s-datepicker.s-datepicker-menu-active .s-datepicker__menu {
+.s-datepicker--menu-active .s-datepicker-menu {
   background-color: $white;
 }
 
-.s-datepicker__menu__row {
+.s-datepicker-menu__row {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.s-datepicker__menu__column {
+.s-datepicker-menu__column {
   width: 48%;
 }
 
-.s-datepicker__menu__column:last-of-type {
+.s-datepicker-menu__column:last-of-type {
   margin-left: 1rem;
 }
 
@@ -224,7 +225,7 @@ $input-padding: .5rem;
   border-radius: 50%;
 }
 
-.s-datepicker.s-datepicker-menu-active .s-datepicker__date--circle {
+.s-datepicker--menu-active .s-datepicker__date--circle {
   background: $smartdok-eggs-yellow;
 }
 

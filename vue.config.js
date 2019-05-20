@@ -1,7 +1,7 @@
 module.exports = {
   chainWebpack: config => {
     config.externals({
-      moment: 'moment',
+      luxon: 'luxon',
       d3: 'd3',
     });
   },

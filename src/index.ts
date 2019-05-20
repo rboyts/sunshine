@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 import { VueConstructor } from 'vue';
 
 import './style/style.scss';
@@ -27,6 +29,7 @@ import SMenu from './components/SMenu.vue';
 import SMenuList from './components/SMenuList.vue';
 import SMenuBuilder from './components/SMenuBuilder.vue';
 import SMultiselect from './components/SMultiselect.vue';
+import SPageLayout from './components/SPageLayout.vue';
 import SPieChart from './components/SPieChart.vue';
 import SProgress from './components/SProgress.vue';
 import SRadioButton from './components/SRadioButton.vue';
@@ -38,6 +41,7 @@ import STabs from './components/STabs.vue';
 import STextArea from './components/STextArea.vue';
 import STextField from './components/STextField.vue';
 import SToolMenuButton from './components/SToolMenuButton.vue';
+import classHelper from './lib/classHelper';
 
 export { get } from './lib/utils';
 export * from './components/types';
@@ -66,6 +70,7 @@ export {
   SMenuList,
   SMenuBuilder,
   SMultiselect,
+  SPageLayout,
   SPieChart,
   SProgress,
   SRadioButton,
@@ -79,6 +84,9 @@ export {
 
 const plugin = {
   install: (Vue: VueConstructor) => {
+    // Add '$class' helper
+    Vue.prototype.$class = classHelper;
+
     Vue.component('s-accordion', SAccordion);
     Vue.component('s-accordion-item', SAccordionItem);
     Vue.component('s-alert', SAlert);
@@ -104,6 +112,7 @@ const plugin = {
     Vue.component('s-menu-list', SMenuList);
     Vue.component('s-menu-builder', SMenuBuilder);
     Vue.component('s-multiselect', SMultiselect);
+    Vue.component('s-page-layout', SPageLayout);
     Vue.component('s-pie-chart', SPieChart);
     Vue.component('s-progress', SProgress);
     Vue.component('s-radio-button', SRadioButton);

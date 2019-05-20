@@ -11,19 +11,15 @@
           :is-empty="false"
           @click="toggleOpen"
         >
-          <s-date-to-stringinput
-            v-model="internalValue"
-            :locale="locale"
+          <s-date-input
+            v-model="internalDate"
             :label="label"
-            :format="format"
           />
         </s-base-input>
       </template>
       <template v-slot:content>
         <s-datepicker
           v-model="internalValue"
-          :locale="locale"
-          :format="format"
         />
       </template>
     </s-menu>
@@ -32,37 +28,58 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment, { Moment } from 'moment';
+import { DateTime } from 'luxon';
 import SMenu from '../SMenu.vue';
+import { IDatepickerValue } from '../types';
 import SDatepicker from './SDatepicker.vue';
-import SDateToStringinput from './SDateToStringinput.vue';
+import SDateInput from './SDateInput.vue';
 
 export default Vue.extend({
   name: 'SDateSingle',
 
   components: {
     SMenu,
-    SDateToStringinput,
+    SDateInput,
     SDatepicker,
   },
 
   data() {
     return {
       isOpen: false,
+      internalDate: undefined as DateTime | undefined,
       internalValue: this.value,
-      locale: moment.locale(),
-      format: moment.localeData().longDateFormat('L'),
     };
   },
 
   props: {
-    value: {} as any,
-    label: String,
+    value: {
+      type: Object as () => IDatepickerValue,
+      default: undefined,
+    },
+
+    label: {
+      type: String,
+      default: undefined,
+    },
   },
 
   watch: {
     value(newVal) {
       this.internalValue = newVal;
+    },
+
+    internalValue(val: IDatepickerValue) {
+      if (val && val.date && val.date.isValid) {
+        this.internalDate = val.date;
+      }
+    },
+
+    internalDate(val) {
+      if (val && val.isValid) {
+        this.internalValue = {
+          date: val,
+        };
+      }
     },
 
     isOpen(newVal) {

@@ -1,12 +1,12 @@
 <template>
   <div
     v-if="visible"
-    :class="classes('wrapper')"
+    :class="$class('wrapper')"
     @click.self="close"
   >
-    <div :class="classes({ visible })">
-      <div :class="classes('header')">
-        <span :class="classes('heading')">{{ heading }}</span>
+    <div :class="$class({ visible })">
+      <div :class="$class('header')">
+        <span :class="$class('heading')">{{ heading }}</span>
         <s-icon
           @click="close"
           package="sunshine24"
@@ -25,15 +25,10 @@
 
 <script>
 import Vue from 'vue';
-import ClassesMixin from './internal/ClassesMixin';
 
 export default Vue.extend({
   name: 'SDialog',
   inheritAttrs: false,
-
-  mixins: [
-    ClassesMixin,
-  ],
 
   model: {
     prop: 'visible',

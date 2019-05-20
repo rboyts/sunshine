@@ -1,6 +1,6 @@
 <template>
   <li
-    :class="classes({selected})"
+    :class="$class({selected})"
     @click="onClick"
     @accept="onAccept"
   >
@@ -15,12 +15,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 import SCheckable from './SCheckable.vue';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-list-item',
+export default Vue.extend({
+  name: 'SListItem',
 
   model: {
     prop: 'checked',

@@ -1,12 +1,12 @@
 <template>
   <span
-    :class="classes(modifiers)"
+    :class="$class(modifiers)"
     v-on="$listeners"
   >
     <transition name="fade">
       <svg
         v-if="checked === true"
-        :class="classes('checkmark')"
+        :class="$class('checkmark')"
         width="16"
         height="16"
       >
@@ -24,7 +24,7 @@
 
       <svg
         v-else-if="checked === null"
-        :class="classes('checkmark')"
+        :class="$class('checkmark')"
         width="16"
         height="16"
       >
@@ -43,10 +43,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
-import ClassesMixin from './internal/ClassesMixin';
 
-export default mixins(ClassesMixin).extend({
-  name: 's-checkable',
+export default Vue.extend({
+  name: 'SCheckable',
 
   props: {
     checked: Boolean,

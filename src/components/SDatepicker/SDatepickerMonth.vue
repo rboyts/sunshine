@@ -1,51 +1,38 @@
 <template>
-  <span class="s-datepicker__grid">
-    <h3 class="s-datepicker__month">{{ translateMonthName(month.month, month.year) }}</h3>
-    <div class="s-datepicker__weeks">
+  <span :class="$class('grid')">
+    <h3 :class="$class('month')">{{ monthName }}</h3>
+    <div :class="$class('weeks')">
       <span
-        class="s-datepicker__weeks__week"
-        v-for="w in month.weeksInMonth"
+        :class="$class('weeks', 'week')"
+        v-for="w in weeksInMonth"
         :key="w"
       >{{ w }}</span>
     </div>
     <span
-      class="s-datepicker__date--overlapping"
-      v-for="(x, k) in month.previousMonthDays"
-      :key="`${x}-${month.month}-${k}`"
-    >{{ x }}</span>
-    <span
-      class="s-datepicker__date"
-      v-for="a in month.daysInMonth"
-      :key="`${a}-${month.month}`"
-      :class="setDateClasses(month.month, a, month.year)"
-      @click="mouseClick({ y: month.year, M: month.month, d: a })"
-      @mousedown="mousedown({ y: month.year, M: month.month, d: a }, $event)"
-      @mouseup="$emit('mouse-drag-end', { y: month.year, M: month.month, d: a })"
-      @mouseover="mouseOverEvent({ y: month.year, M: month.month, d: a })"
+      v-for="day in days"
+      :key="day.value"
+      :class="getDateClasses(day)"
+      @click="onMouseClick(day)"
+      @mousedown.left="$emit('mouse-drag-start', day)"
+      @mouseup.left="$emit('mouse-drag-end', day)"
+      @mouseover.left="onMouseOver(day)"
     >
-      <span :class="{ 's-datepicker__date--circle': hasDateCircle(a) }">
-        {{ a }}
+      <span :class="{ 's-datepicker__date--circle': hasDateCircle(day) }">
+        {{ day.day }}
       </span>
     </span>
-    <span
-      class="s-datepicker__date--overlapping"
-      v-for="(x, k) in (6 - month.lastDay)"
-      :key="`${x}-${month.month}-${k}`"
-    >{{ x }}</span>
   </span>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import moment, { Moment } from 'moment';
-import { IMonth, ICalendarPeriod, IMomentPayload } from '../types';
-
-/**
- * Obs: for comparison of dates this uses default date format (ISO 8601) 'YYYY-MM-DD'
- */
+import { DateTime, Interval } from 'luxon';
 
 export default Vue.extend({
   name: 'SDatepickerMonth',
+
+  // CSS class names start with 's-datepicker' instead of 's-datepicker-month'
+  $_className: 's-datepicker',
 
   props: {
     range: {
@@ -53,13 +40,13 @@ export default Vue.extend({
       required: true,
     },
 
-    month: {
-      type: Object as () => IMonth,
+    dateContext: {
+      type: Object as () => DateTime,
       required: true,
     },
 
     today: {
-      type: Object as () => Moment,
+      type: Object as () => DateTime,
       required: true,
     },
 
@@ -78,96 +65,87 @@ export default Vue.extend({
   },
 
   computed: {
-    fromDate(): Moment | undefined {
-      return this.range ? this.value.from : undefined;
+    fromDate(): DateTime | undefined {
+      return this.range ? this.value.interval && this.value.interval.start : undefined;
     },
 
-    toDate(): Moment | undefined {
-      return this.range ? this.value.to : undefined;
+    toDate(): DateTime | undefined {
+      return this.range ? this.value.interval && this.value.interval.end : undefined;
+    },
+
+    weeksInMonth(): number[] {
+      const s = this.dateContext.startOf('month');
+      const e = this.dateContext.endOf('month');
+
+      const weeks: number[] = [];
+      for (let d = s; d < e; d = d.plus({ week: 1 })) {
+        weeks.push(d.weekNumber);
+      }
+
+      return weeks;
+    },
+
+    days(): DateTime[] {
+      const s = this.dateContext.startOf('month').startOf('week');
+      const e = this.dateContext.endOf('month').endOf('week');
+
+      const days: DateTime[] = [];
+      for (let d = s; d < e; d = d.plus({ day: 1 })) {
+        days.push(d);
+      }
+
+      return days;
+    },
+
+    monthName(): string {
+      return this.dateContext.toFormat('MMMM yyyy');
     },
   },
 
   methods: {
-    setDateClasses(m: number, d: number, y: number) {
-      let classes = [];
-      if (this.range && this.fromDate && this.toDate) {
-        if (this.isInPeriod(m, d, y, this.fromDate, this.toDate)) {
-          classes.push('s-datepicker__date--between');
-        }
-        if (this.isSameDate(m, d, y, this.fromDate)) {
-          classes.push('s-datepicker__date--from');
-        }
-        if (this.isSameDate(m, d, y, this.toDate)) {
-          classes.push('s-datepicker__date--to');
-        }
-      }
-      if (this.isSaturday(m, d, y)) {
-        classes.push('s-datepicker__date--saturday');
-      }
-      if (this.isSunday(m, d, y)) {
-        classes.push('s-datepicker__date--sunday');
-      }
-      if (this.isSameDate(m, d, y, this.today)) {
-        classes.push('s-datepicker__date--today');
-      }
-
-      return classes;
+    getDateClasses(date: DateTime) {
+      const hasRange = this.range && !!this.fromDate && !!this.toDate;
+      return this.$class('date', {
+        between: hasRange && this.isInPeriod(date, this.fromDate, this.toDate),
+        from: hasRange && this.isSameDate(date, this.fromDate),
+        to: hasRange && this.isSameDate(date, this.toDate),
+        saturday: date.weekday === 6,
+        sunday: date.weekday === 7,
+        today: this.isSameDate(date, this.today),
+        overlapping: !this.dateContext.hasSame(date, 'month'),
+      });
     },
 
-    translateMonthName(monthKey: number, year: number) {
-      return moment([year, (monthKey - 1)]).format('MMMM-YYYY');
-    },
-
-    dayOfWeek(m: number, d: number, y: number) {
-      return moment([y, (m - 1), d]).day();
-    },
-
-    isSaturday(m: number, d: number, y: number) {
-      return moment([y, (m - 1), d]).day() === 6;
-    },
-
-    isSunday(m: number, d: number, y: number) {
-      return moment([y, (m - 1), d]).day() === 0;
-    },
-
-    hasDateCircle(dateInMonth: number): Boolean {
-      const { month, year } = this.month;
+    hasDateCircle(date: DateTime): boolean {
       return (
-        (this.range && this.isSameDate(month, dateInMonth, year, this.fromDate)) ||
-        (this.range && this.isSameDate(month, dateInMonth, year, this.toDate)) ||
-        (!this.range && this.isSameDate(month, dateInMonth, year, this.value))
+        (this.range && this.isSameDate(date, this.fromDate)) ||
+        (this.range && this.isSameDate(date, this.toDate)) ||
+        (!this.range && this.isSameDate(date, this.value.date))
       );
     },
 
-    isSameDate(m: number, d: number, y: number, date: Moment | undefined): boolean {
-      if (!date) return false;
-      let dateInMonth = moment([y, (m - 1), d]).format('YYYY-MM-DD');
-      let compareDate = moment(date).format('YYYY-MM-DD');
-      return moment(dateInMonth).isSame(compareDate);
+    isSameDate(date: DateTime, compareDate: DateTime | undefined): boolean {
+      return !!compareDate && date.hasSame(compareDate, 'day');
     },
 
-    isInPeriod(m: number, d: number, y: number, fromDate: Moment, toDate: Moment): boolean {
-      if (!fromDate || !toDate) return false;
+    isInPeriod(
+      date: DateTime,
+      fromDate: DateTime | undefined,
+      toDate: DateTime | undefined,
+    ): boolean {
       if (!this.range) return false;
-      let dateInMonth = moment([y, (m - 1), d]).format('YYYY-MM-DD');
-      let compareDateFrom = moment(fromDate).format('YYYY-MM-DD');
-      let compareDateTo = moment(toDate).format('YYYY-MM-DD');
-      return moment(dateInMonth).isBetween(compareDateFrom, compareDateTo);
+      if (!fromDate || !toDate) return false;
+      return Interval.fromDateTimes(fromDate, toDate).contains(date);
     },
 
-    mousedown(payload: IMomentPayload, event: any) {
-      if (event.button > 0) return;
-      this.$emit('mouse-drag-start', payload);
-    },
-
-    mouseOverEvent(payload: IMomentPayload) {
+    onMouseOver(date: DateTime) {
       if (!this.mouseDrag) return;
-      this.$emit('mouse-dragging', payload);
+      this.$emit('mouse-dragging', date);
     },
 
-    mouseClick(payload: IMomentPayload) {
+    onMouseClick(date: DateTime) {
       if (this.range) return;
-      this.$emit('mouse-click', payload);
+      this.$emit('mouse-click', date);
     },
   },
 });

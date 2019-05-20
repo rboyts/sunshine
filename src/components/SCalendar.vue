@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import SCalendarInternal from './internal/SCalendarInternal.vue';
 
 export default Vue.extend({
@@ -21,6 +21,13 @@ export default Vue.extend({
 
   components: {
     SCalendarInternal,
+  },
+
+  props: {
+    date: {
+      type: Object as () => DateTime,
+      default: () => DateTime.local(),
+    },
   },
 
   data() {
@@ -31,7 +38,7 @@ export default Vue.extend({
 
   computed: {
     month(): number {
-      return this.date.year() * 12 + this.date.month();
+      return this.date.year * 12 + this.date.month;
     },
   },
 
@@ -47,13 +54,6 @@ export default Vue.extend({
       immediate: true,
     },
   },
-
-  props: {
-    date: {
-      type: Object as () => moment.Moment,
-      default: () => moment(),
-    },
-  },
 });
 </script>
 
@@ -62,7 +62,7 @@ export default Vue.extend({
   position: absolute;
 
   // XXX
-  width: calc(100vw - 120px);
+  width: calc(100% - 120px);
 }
 
 .slide-left-enter-active {

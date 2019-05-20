@@ -29,6 +29,11 @@ h3 {
   text-transform: uppercase;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin-top: base-spacing(2);
+  margin-bottom: base-spacing(1);
+}
+
 body {
   font-family: $base-font-family;
   margin: 0;

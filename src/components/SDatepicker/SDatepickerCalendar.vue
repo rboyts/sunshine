@@ -1,9 +1,9 @@
 <template>
-  <div class="s-datepicker__calendar">
-    <div class="s-datepicker__header">
-      <div class="flex flex-even s-datepicker__navigation">
+  <div :class="$class('calendar')">
+    <div :class="$class('header')">
+      <div :class="$class('navigation')">
         <span
-          class="s-datepicker__navigation-arrow back"
+          :class="$class('navigation-arrow', { back: true })"
           @click="gotoPreviousMonth"
         >
           <s-icon
@@ -13,7 +13,7 @@
         </span>
         <h2>{{ monthNameInHeader }}</h2>
         <span
-          class="s-datepicker__navigation-arrow forward"
+          :class="$class('navigation-arrow', { forward: true })"
           @click="gotoNextMonth"
         >
           <s-icon
@@ -22,15 +22,14 @@
           />
         </span>
       </div>
-      <ul class="s-datepicker__days">
+      <ul :class="$class('days')">
         <li
-          class="s-datepicker__day"
           v-for="(day, i) in days"
           :key="`${day}-${i}`"
-          :class="{
+          :class="$class('day', {
             'saturday': (i === 5),
             'sunday': (i === 6),
-          }"
+          })"
         >
           {{ day }}
         </li>
@@ -39,28 +38,28 @@
 
     <transition :name="transition">
       <div
-        class="s-datepicker__grid__container"
+        :class="$class('grid', 'container')"
         :key="dateContext.valueOf()"
-        @wheel="calendarScroll"
+        @wheel="onCalendarScroll"
       >
         <div
-          class="s-datepicker__scroller"
+          :class="$class('scroller')"
           ref="calendarList"
-          @mouseleave="mouseleave"
+          @mouseleave="onMouseLeave"
         >
           <s-datepicker-month
-            class="s-datepicker__grid"
             v-for="month in calendar"
+            :class="$class('grid')"
             :range="range"
             :today="today"
-            :key="month.month + '-' + month.year"
-            :month="month"
+            :key="month.value"
+            :date-context="month"
             :mouse-drag="mouseDrag"
             :value="value"
-            @mouse-click="mouseClick"
-            @mouse-drag-start="dragStart"
-            @mouse-drag-end="dragEnd"
-            @mouse-dragging="dragging"
+            @mouse-click="onMouseClick"
+            @mouse-drag-start="onDragStart"
+            @mouse-drag-end="onDragEnd"
+            @mouse-dragging="onMouseDragging"
           />
         </div>
       </div>
@@ -72,12 +71,10 @@
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import debounce from 'debounce';
-import moment, { Moment } from 'moment';
+import { DateTime, Interval } from 'luxon';
 import {
-  IMonth,
-  ICalendarPeriod,
   MouseWheelEvent,
-  IMomentPayload,
+  IDatepickerValue,
 } from '../types';
 import SIcon from '../SIcon.vue';
 import SCalendarMixin from './SCalendarMixin';
@@ -85,6 +82,9 @@ import SDatepickerMonth from './SDatepickerMonth.vue';
 
 export default mixins(SCalendarMixin).extend({
   name: 'SDatepickerCalendar',
+
+  // CSS class names start with 's-datepicker' instead of 's-datepicker-calendar'
+  $_className: 's-datepicker',
 
   components: {
     SDatepickerMonth,
@@ -96,17 +96,12 @@ export default mixins(SCalendarMixin).extend({
      * Input value, same as for SDatepicker.
      */
     value: {
-      type: Object,
+      type: Object as () => IDatepickerValue,
       required: true,
     },
 
     today: {
-      type: Object as () => Moment,
-      required: true,
-    },
-
-    mouseDrag: {
-      type: Boolean,
+      type: Object as () => DateTime,
       required: true,
     },
 
@@ -122,6 +117,10 @@ export default mixins(SCalendarMixin).extend({
 
       transition: '',
 
+      internalValue: this.value,
+
+      mouseDrag: false,
+      startDragDate: undefined as DateTime | undefined,
       lastScrollPosition: 0,
       scrollHeight: 0,
     };
@@ -129,13 +128,21 @@ export default mixins(SCalendarMixin).extend({
 
   computed: {
     monthNameInHeader(): string {
-      return this.dateContext.format('MMMM YYYY');
+      return this.dateContext.toFormat('MMMM yyyy');
     },
   },
 
   watch: {
     value(val) {
-      let compareDate = this.range ? this.value.from : this.value;
+      this.internalValue = val;
+    },
+
+    internalValue(val) {
+      if (val !== this.value) {
+        this.$emit('input', val);
+      }
+
+      let compareDate = this.range ? val.interval.start : val.date;
       this.ensureSelectionVisible(compareDate);
     },
 
@@ -149,45 +156,54 @@ export default mixins(SCalendarMixin).extend({
   },
 
   methods: {
-    mouseleave() {
+    setSelectedPeriod(from: DateTime, to: DateTime) {
+      if (!this.range) throw new Error('Expected range to be true');
+
+      this.internalValue = {
+        interval: Interval.fromDateTimes(from, to),
+      };
+    },
+
+    onMouseLeave() {
       // FIXME: Implement properly with capture
+      this.mouseDrag = false;
+    },
 
-      if (!this.mouseDrag) return;
+    onDragStart(date: DateTime) {
+      if (!this.range) return;
 
-      const { from, to } = this.value;
-      if (from && to) {
-        // Make sure we don't interupt the dragging event at a wrong time
-        // emit correct events to cancel mouseDrag
-        this.$emit('mouse-drag-start', {
-          y: moment(from).year(),
-          M: (moment(from).month() + 1),
-          d: moment(from).date(),
-        });
-        this.$emit('mouse-drag-end', {
-          y: moment(to).year(),
-          M: (moment(to).month() + 1),
-          d: moment(to).date(),
-        });
+      if (this.value.interval && this.value.interval.hasSame('day')) {
+        // Treat click as period selecting
+        // FIXME
+        this.setSelectedPeriod(this.value.interval.start, date);
+      } else {
+        this.mouseDrag = true;
+        this.startDragDate = date;
       }
     },
 
-    dragStart(payload: IMomentPayload) {
-      this.$emit('mouse-drag-start', payload);
+    onDragEnd(date: DateTime) {
+      if (!this.range) return;
+      this.onMouseDragging(date);
+      this.mouseDrag = false;
     },
 
-    dragEnd(payload: IMomentPayload) {
-      this.$emit('mouse-drag-end', payload);
+    onMouseDragging(date: DateTime) {
+      if (!this.range || !this.startDragDate) return;
+      if (this.startDragDate < date) {
+        this.setSelectedPeriod(this.startDragDate, date);
+      } else {
+        this.setSelectedPeriod(date, this.startDragDate);
+      }
     },
 
-    dragging(payload: IMomentPayload) {
-      this.$emit('mouse-dragging', payload);
+    onMouseClick(date: DateTime) {
+      if (this.range) throw new Error('Expected range to be false');
+
+      this.internalValue = { date };
     },
 
-    mouseClick(payload: IMomentPayload) {
-      this.$emit('mouse-click', payload);
-    },
-
-    calendarScroll(event: MouseWheelEvent) {
+    onCalendarScroll(event: MouseWheelEvent) {
       if (event.wheelDelta > 0) {
         this.gotoPreviousMonth();
       } else {

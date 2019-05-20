@@ -1,5 +1,5 @@
 <template>
-  <div :class="classes({ condensed, fixed, dragging: drag != null })">
+  <div :class="$class({ condensed, fixed, dragging: drag != null })">
     <vue-global-events
       @keydown.up.exact.prevent="onKeyArrowUp"
       @keydown.down.exact.prevent="onKeyArrowDown"
@@ -10,18 +10,18 @@
 
     <div
       v-if="moveCursorStyle"
-      :class="classes('move-cursor')"
+      :class="$class('move-cursor')"
       :style="moveCursorStyle"
     />
 
     <div
-      :class="classes('wrapper')"
+      :class="$class('wrapper')"
       @scroll="debounceOnScroll"
     >
       <table
         ref="table"
         @mousedown.shift.prevent=""
-        :class="classes('table')"
+        :class="$class('table')"
         @pointermove="onCellMouseMove"
         @pointerup="onCellMouseUp"
         @pointerleave="onCellMouseLeave"
@@ -43,13 +43,13 @@
               :class="getColumnClass(column, index)"
               v-on="getHeaderListeners(column, index)"
             >
-              <span :class="classes('cell-wrapper')">
-                <span :class="classes('cell-content')">
+              <span :class="$class('cell-wrapper')">
+                <span :class="$class('cell-content')">
                   {{ column.title }}
 
                   <span
                     v-if="column.sortable"
-                    :class="classes('sortcolumn', {
+                    :class="$class('sortcolumn', {
                       active: internalSortingState.key === column.key,
                       reverse: internalSortingState.reverse,
                     })"
@@ -94,7 +94,7 @@
               :key="column.key"
               :class="getColumnClass(column, index)"
             >
-              <span :class="classes('cell-wrapper')">
+              <span :class="$class('cell-wrapper')">
                 <s-table-toggle
                   v-if="outline && index === 0"
                   :node="node"
@@ -109,7 +109,7 @@
                   :is-open="isOpen(node)"
                 />
 
-                <span :class="classes('cell-content')">
+                <span :class="$class('cell-content')">
                   <slot
                     :name="`~${column.key}`"
                     v-bind="{
@@ -148,7 +148,6 @@ import {
   IVisibleRowsPayload,
   NO_SELECTION,
 } from '../types';
-import ClassesMixin from '../internal/ClassesMixin';
 import { get, joinKeyPath } from '../../lib/utils';
 import SIcon from '../SIcon.vue';
 import SProgress from '../SProgress.vue';
@@ -158,6 +157,7 @@ import STableColumnsMixin from './STableColumnsMixin';
 
 const MAX_PLACEHOLDER_ROWS = 0;
 const SCROLL_DEBOUNCE = 250;
+const SELECTION_DEBOUNCE = 125;
 const MOVE_TIMEOUT = 350;
 
 const NORMAL_ROW_HEIGHT = 40;
@@ -194,7 +194,7 @@ const hash = (x: number, y: number): number => mod(((x << 24) ^ (y << 8)), 41);
 
 const sum = (numbers: number[]) => numbers.reduce((s, v) => s + v, 0);
 
-export default mixins(ClassesMixin, STableColumnsMixin).extend({
+export default mixins(STableColumnsMixin).extend({
   name: 's-table',
 
   components: {
@@ -266,9 +266,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     },
 
     internalSelection(val) {
-      if (val !== this.selection) {
-        this.$emit('update:selection', val);
-      }
+      this.debounceEmitSelection(val);
     },
 
     sortingState: {
@@ -701,8 +699,11 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       return activeIndex + 1;
     },
 
-    // Placeholder for type safety
-    debounceOnScroll(event: UIEvent) { /* empty */ },
+    emitSelection(val: ISelection) {
+      if (val !== this.selection) {
+        this.$emit('update:selection', val);
+      }
+    },
 
     clearSelection() {
       if (window.getSelection) {
@@ -787,7 +788,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
     },
 
     getColumnClass(column: IColumn, index: number) {
-      return this.classes('col', {
+      return this.$class('col', {
         sticky: index === 0 && this.stickyColumn,
         dragging: this.isDragging(index),
         right: column.align === 'right',
@@ -797,7 +798,7 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
 
     getRowClass(node: ITableNode, row: number) {
       const checked = this.isChecked(row);
-      return this.classes('row', {
+      return this.$class('row', {
         checked,
         'first-checked': checked && !this.isChecked(row - 1),
         'last-checked': checked && !this.isChecked(row + 1),
@@ -826,10 +827,15 @@ export default mixins(ClassesMixin, STableColumnsMixin).extend({
       if (this.drag === null) return false;
       return index === this.drag.dragColumnIndex;
     },
+
+    // Placeholders for type safety
+    debounceOnScroll(event: UIEvent) { /* empty */ },
+    debounceEmitSelection(val: ISelection) { /* empty */ },
   },
 
   created() {
     this.debounceOnScroll = debounce(this.onScroll, SCROLL_DEBOUNCE);
+    this.debounceEmitSelection = debounce(this.emitSelection, SELECTION_DEBOUNCE);
   },
 
   beforeDestroy(this: any) {

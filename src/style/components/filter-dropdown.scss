@@ -41,16 +41,25 @@
   a {
     @include action-font;
     display: inline-block;
-    padding: base-spacing(1) base-spacing(2);
     cursor: pointer;
     text-decoration: none;
     color: $almost-black;
+  }
+
+  .s-filter-drop-down__tabs__tab__content {
+    display: inline-block;
+    padding: 0 base-spacing(2);
+    margin: base-spacing(1) 0;
   }
 
   &--active {
     a {
       color: $color-edit;
     }
+  }
+
+  &:not(:last-child) .s-filter-drop-down__tabs__tab__content {
+    border-right: 1px solid $almost-gray;
   }
 }
 
