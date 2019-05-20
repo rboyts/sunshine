@@ -1,6 +1,6 @@
 <template>
   <div :class="$class()">
-    <h3>Periodevalg</h3>
+    <h3>{{ $t(`s-datepicker.periods`) }} </h3>
     <div :class="$class('row')">
       <div :class="$class('column')">
         <p

@@ -3,7 +3,7 @@
     <div class="flex">
       <s-text-field
         :class="$class('searchbar')"
-        placeholder="Søk.."
+        :placeholder="$t('s-multiselect.search')"
         v-model="filter"
       />
     </div>

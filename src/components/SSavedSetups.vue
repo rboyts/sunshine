@@ -41,10 +41,6 @@
         :style="{width: '330px'}"
       >
         <div>
-          You can save table views with selected filters,
-          sortings, and period selections. Give this table a
-          suitable name so you can find it later.
-
           {{ $t('s-saved-setups.help') }}
         </div>
         <s-text-field
