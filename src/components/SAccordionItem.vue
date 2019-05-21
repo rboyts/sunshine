@@ -2,13 +2,21 @@
   <div :class="$class()">
     <a
       href="#"
-      :class="$class('heading', {invalid})"
+      :class="$class('heading')"
       @_click="$emit('click')"
       @click="onClick"
     >
-      <slot name="heading">
-        {{ heading }}
-      </slot>
+      <span :class="$class('title')">
+        <slot name="heading">
+          {{ heading }}
+        </slot>
+      </span>
+      <s-icon
+        v-if="invalid"
+        package="sunshine24"
+        name="warning"
+        :class="$class('warning')"
+      />
       <s-icon
         package="sunshine24"
         name="arrow"
@@ -51,7 +59,6 @@ export default Vue.extend({
       default: '',
     },
 
-    // Set to true, if one input inside failed form validation
     invalid: {
       type: Boolean,
       default: false,

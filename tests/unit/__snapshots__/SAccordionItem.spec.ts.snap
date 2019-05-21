@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SAccordionItem hides content of inner slot when clicked again 1`] = `
-<div class="s-accordion-item"><a href="#" class="s-accordion-item__heading">This is a header <span class="s-icon s-accordion-item__chevron s-accordion-item__chevron--rotate"><span class="sunshine24-arrow"></span></span></a>
+<div class="s-accordion-item"><a href="#" class="s-accordion-item__heading"><span class="s-accordion-item__title">This is a header</span>
+    <!----> <span class="s-icon s-accordion-item__chevron s-accordion-item__chevron--rotate"><span class="sunshine24-arrow"></span></span></a>
   <div class="s-accordion-item__body s-accordion-item__body--transitioning" style="height: 0px; opacity: 0;">
     <div class="s-accordion-item__content">
       <h1>Test</h1>
@@ -11,7 +12,8 @@ exports[`SAccordionItem hides content of inner slot when clicked again 1`] = `
 `;
 
 exports[`SAccordionItem renders text in header and default slot 1`] = `
-<div class="s-accordion-item"><a href="#" class="s-accordion-item__heading">This is a header <span class="s-icon s-accordion-item__chevron s-accordion-item__chevron--rotate"><span class="sunshine24-arrow"></span></span></a>
+<div class="s-accordion-item"><a href="#" class="s-accordion-item__heading"><span class="s-accordion-item__title">This is a header</span>
+    <!----> <span class="s-icon s-accordion-item__chevron s-accordion-item__chevron--rotate"><span class="sunshine24-arrow"></span></span></a>
   <div class="s-accordion-item__body" style="display: none;">
     <div class="s-accordion-item__content">
       <h1>Test</h1>
@@ -21,7 +23,8 @@ exports[`SAccordionItem renders text in header and default slot 1`] = `
 `;
 
 exports[`SAccordionItem show content of inner slot when clicked 1`] = `
-<div class="s-accordion-item"><a href="#" class="s-accordion-item__heading">This is a header <span class="s-icon s-accordion-item__chevron"><span class="sunshine24-arrow"></span></span></a>
+<div class="s-accordion-item"><a href="#" class="s-accordion-item__heading"><span class="s-accordion-item__title">This is a header</span>
+    <!----> <span class="s-icon s-accordion-item__chevron"><span class="sunshine24-arrow"></span></span></a>
   <div class="s-accordion-item__body s-accordion-item__body--open" style="">
     <div class="s-accordion-item__content">
       <h1>Test</h1>
