@@ -100,7 +100,7 @@ export default Vue.extend({
 
   computed: {
     headingText() {
-      return this.editItem ? 'Edit setup' : 'Save this table setup';
+      return this.editItem ? this.$t('s-saved-setups.header-edit') : this.$t('s-saved-setups.header-save');
     },
 
     hasValidName() {
