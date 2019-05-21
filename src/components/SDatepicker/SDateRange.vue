@@ -127,7 +127,7 @@ export default Vue.extend({
     },
 
     internalStartDate(val) {
-      if (this.internalValue.interval &&
+      if (val && this.internalValue.interval &&
           this.internalValue.interval.start.equals(val)) return;
 
       const end = this.internalEndDate;
@@ -139,7 +139,7 @@ export default Vue.extend({
     },
 
     internalEndDate(val) {
-      if (this.internalValue.interval &&
+      if (val && this.internalValue.interval &&
           this.internalValue.interval.end.equals(val)) return;
 
       const start = this.internalStartDate;
