@@ -45,7 +45,7 @@
         </div>
         <s-text-field
           v-model="editText"
-          label="Name"
+          :label="$t('s-saved-setups.name')"
         />
         <div class="flex-layout flex-end">
           <s-button
