@@ -17,7 +17,7 @@ import { DateTime } from 'luxon';
 import SCalendarInternal from './internal/SCalendarInternal.vue';
 
 export default Vue.extend({
-  name: 'SCelendar',
+  name: 'SCalendar',
 
   components: {
     SCalendarInternal,

@@ -41,15 +41,11 @@
         :style="{width: '330px'}"
       >
         <div>
-          You can save table views with selected filters,
-          sortings, and period selections. Give this table a
-          suitable name so you can find it later.
-
           {{ $t('s-saved-setups.help') }}
         </div>
         <s-text-field
           v-model="editText"
-          label="Name"
+          :label="$t('s-saved-setups.name')"
         />
         <div class="flex-layout flex-end">
           <s-button
@@ -104,7 +100,7 @@ export default Vue.extend({
 
   computed: {
     headingText() {
-      return this.editItem ? 'Edit setup' : 'Save this table setup';
+      return this.editItem ? this.$t('s-saved-setups.header-edit') : this.$t('s-saved-setups.header-save');
     },
 
     hasValidName() {
