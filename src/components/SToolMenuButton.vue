@@ -1,7 +1,11 @@
 <template>
   <s-menu left>
     <template v-slot:activator>
-      <s-button round>
+      <s-button
+        :class="$class({ active })"
+        @click="active = !active"
+        round
+      >
         <s-icon
           package="sunshine24"
           :name="iconName"
@@ -23,6 +27,12 @@ import Vue from 'vue';
 
 export default Vue.extend({
   name: 'SToolMenuButton',
+
+  data() {
+    return {
+      active: false,
+    };
+  },
 
   props: {
     iconName: {
