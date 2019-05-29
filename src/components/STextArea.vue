@@ -26,7 +26,7 @@
       v-on="listeners"
       v-model="internalValue"
       @focus="hasFocus = true"
-      @blur="hasFocus = false"
+      @blur="onBlur"
     />
   </s-base-input>
 </template>
@@ -144,6 +144,11 @@ export default Vue.extend({
   },
 
   methods: {
+    onBlur() {
+      this.hasFocus = false;
+      this.$emit('blur');
+    },
+
     async updateHeight() {
       // Temporarly Let the textarea scale down to it's minimum size,
       // to that we can check scrollHeight

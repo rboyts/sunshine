@@ -21,7 +21,7 @@
       :input-class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
       @keypress="onKeyPress"
       @focus="hasFocus = true"
-      @blur="hasFocus = false"
+      @blur="onBlur"
       v-bind="$attrs"
     />
   </s-base-input>
@@ -159,6 +159,11 @@ export default Vue.extend({
   },
 
   methods: {
+    onBlur() {
+      this.hasFocus = false;
+      this.$emit('blur');
+    },
+
     onKeyPress(event) {
       if (!this.isValidKey(event.keyCode)) {
         event.preventDefault();

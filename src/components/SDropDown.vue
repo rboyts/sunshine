@@ -62,7 +62,7 @@ Use cases:
           v-bind="$attrs"
           @click.stop="onClickSearch"
           @focus="hasFocus = true"
-          @blur="hasFocus = false"
+          @blur="onBlur"
           @input="onInput"
         >
 
@@ -72,7 +72,7 @@ Use cases:
           :class="$class('spacer')"
           :tabIndex="inactive ? undefined : 0"
           @focus="hasFocus = true"
-          @blur="hasFocus = false"
+          @blur="onBlur"
         />
 
         <span
@@ -303,6 +303,11 @@ export default Vue.extend({
   },
 
   methods: {
+    onBlur() {
+      this.hasFocus = false;
+      this.$emit('blur');
+    },
+
     onClick() {
       if (this.inactive) return;
 
