@@ -19,6 +19,7 @@
       :readonly="readonly"
       :placeholder="placeholder"
       :input-class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
+      v-on="$listeners"
       @keypress="onKeyPress"
       @focus="hasFocus = true"
       @blur="onBlur"
