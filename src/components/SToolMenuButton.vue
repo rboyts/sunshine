@@ -1,9 +1,11 @@
 <template>
-  <s-menu left>
+  <s-menu
+    left
+    v-model="active"
+  >
     <template v-slot:activator>
       <s-button
         :class="$class({ active })"
-        @click="active = !active"
         round
       >
         <s-icon
