@@ -61,8 +61,8 @@ Use cases:
           :value="filter"
           v-bind="$attrs"
           @click.stop="onClickSearch"
-          @focus="hasFocus = true"
-          @blur="hasFocus = false"
+          @focus="onFocus"
+          @blur="onBlur"
           @input="onInput"
         >
 
@@ -71,8 +71,8 @@ Use cases:
           ref="input"
           :class="$class('spacer')"
           :tabIndex="inactive ? undefined : 0"
-          @focus="hasFocus = true"
-          @blur="hasFocus = false"
+          @focus="onFocus"
+          @blur="onBlur"
         />
 
         <span
@@ -292,7 +292,7 @@ export default Vue.extend({
       if (this.multiple) {
         if (this.internalValue.length > this.maxSelectedShown) {
           // TODO customize/i18n
-          return `${this.internalValue.length} selected`;
+          return this.$tc('s-drop-down.selected', this.internalValue.length);
         } else {
           return this.internalValue.map(getLabel).join(', ');
         }
@@ -303,6 +303,16 @@ export default Vue.extend({
   },
 
   methods: {
+    onFocus() {
+      this.hasFocus = true;
+      this.$emit('focus');
+    },
+
+    onBlur() {
+      this.hasFocus = false;
+      this.$emit('blur');
+    },
+
     onClick() {
       if (this.inactive) return;
 

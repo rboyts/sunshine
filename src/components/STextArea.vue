@@ -23,10 +23,9 @@
       :readonly="readonly"
       :placeholder="placeholder"
       v-bind="$attrs"
-      v-on="listeners"
       v-model="internalValue"
-      @focus="hasFocus = true"
-      @blur="hasFocus = false"
+      @focus="onFocus"
+      @blur="onBlur"
     />
   </s-base-input>
 </template>
@@ -120,11 +119,6 @@ export default Vue.extend({
       return !this.internalValue && !this.placeholder;
     },
 
-    listeners() {
-      const { input, ...listeners } = this.$listeners;
-      return listeners;
-    },
-
     inputAreaStyle() {
       const height = this.curHeight ? `${this.curHeight}px` : 'auto';
       return { height };
@@ -144,6 +138,16 @@ export default Vue.extend({
   },
 
   methods: {
+    onBlur() {
+      this.hasFocus = false;
+      this.$emit('blur');
+    },
+
+    onFocus() {
+      this.hasFocus = true;
+      this.$emit('focus');
+    },
+
     async updateHeight() {
       // Temporarly Let the textarea scale down to it's minimum size,
       // to that we can check scrollHeight
