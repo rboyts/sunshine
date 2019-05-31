@@ -19,9 +19,8 @@
       :readonly="readonly"
       :placeholder="placeholder"
       :input-class="{ 's-input__input': true, 's-input__input--with-label': !!label }"
-      v-on="$listeners"
       @keypress="onKeyPress"
-      @focus="hasFocus = true"
+      @focus="onFocus"
       @blur="onBlur"
       v-bind="$attrs"
     />
@@ -163,6 +162,11 @@ export default Vue.extend({
     onBlur() {
       this.hasFocus = false;
       this.$emit('blur');
+    },
+
+    onFocus() {
+      this.hasFocus = true;
+      this.$emit('focus');
     },
 
     onKeyPress(event) {

@@ -292,7 +292,7 @@ export default Vue.extend({
       if (this.multiple) {
         if (this.internalValue.length > this.maxSelectedShown) {
           // TODO customize/i18n
-          return `${this.internalValue.length} ${this.$t('s-drop-down.selected')}`;
+          return this.$tc('s-drop-down.selected', this.internalValue.length);
         } else {
           return this.internalValue.map(getLabel).join(', ');
         }

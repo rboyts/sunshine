@@ -23,9 +23,8 @@
       :readonly="readonly"
       :placeholder="placeholder"
       v-bind="$attrs"
-      v-on="listeners"
       v-model="internalValue"
-      @focus="hasFocus = true"
+      @focus="onFocus"
       @blur="onBlur"
     />
   </s-base-input>
@@ -120,11 +119,6 @@ export default Vue.extend({
       return !this.internalValue && !this.placeholder;
     },
 
-    listeners() {
-      const { input, ...listeners } = this.$listeners;
-      return listeners;
-    },
-
     inputAreaStyle() {
       const height = this.curHeight ? `${this.curHeight}px` : 'auto';
       return { height };
@@ -147,6 +141,11 @@ export default Vue.extend({
     onBlur() {
       this.hasFocus = false;
       this.$emit('blur');
+    },
+
+    onFocus() {
+      this.hasFocus = true;
+      this.$emit('focus');
     },
 
     async updateHeight() {
