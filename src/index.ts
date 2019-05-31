@@ -2,6 +2,7 @@
 
 import { VueConstructor } from 'vue';
 
+import './fonts/style.css';
 import './style/style.scss';
 
 import SAccordion from './components/SAccordion.vue';
