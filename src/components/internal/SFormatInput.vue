@@ -127,10 +127,13 @@ export default Vue.extend({
       this.internalValue = val;
     },
 
-    internalValue(val) {
-      if (val !== this.value) {
-        this.$emit('input', val);
-      }
+    internalValue: {
+      handler(val) {
+        if (val !== this.value) {
+          this.$emit('input', val);
+        }
+      },
+      immediate: true,
     },
   },
 
