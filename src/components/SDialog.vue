@@ -51,14 +51,36 @@ export default Vue.extend({
     close() {
       this.$emit('toggle', false);
     },
+
+    setFocus() {
+      const focusable = this.getDefaultFocusElement();
+      if (focusable) {
+        focusable.focus();
+      }
+    },
+
+    getDefaultFocusElement() {
+      const el = this.$el.querySelector('.autofocus');
+      if (el) return el;
+
+      const focusableSelector = [
+        '[href]',
+        'button:not([disabled])',
+        'input:not([disabled])',
+        'select:not([disabled])',
+        'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])',
+      ].join(',');
+
+      return this.$el.querySelector(focusableSelector);
+    },
   },
 
   watch: {
-    // HACK
     async visible(next, prev) {
       if (next && !prev) {
         await Vue.nextTick();
-        this.$el.querySelector('input').focus();
+        this.setFocus();
       }
     },
   },

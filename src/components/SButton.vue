@@ -57,6 +57,11 @@ export default Vue.extend({
       default: false,
     },
 
+    autofocus: {
+      type: Boolean,
+      default: false,
+    },
+
     submit: {
       type: Boolean,
       default: false,
@@ -80,9 +85,13 @@ export default Vue.extend({
       });
     },
 
-    contentClasses(): object {
-      return this.$class('content', {
-      });
+    contentClasses(): any {
+      return [
+        this.$class('content', {}),
+        {
+          autofocus: this.autofocus,
+        },
+      ];
     },
   },
 });

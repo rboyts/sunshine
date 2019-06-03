@@ -19,7 +19,7 @@ TODO:
     <input
       ref="input"
       :value="internalValue"
-      :class="[inputClass, $class('input')]"
+      :class="[inputClass, $class('input'), { autofocus }]"
 
       v-bind="$attrs"
       v-on="listeners"
@@ -52,6 +52,11 @@ export default Vue.extend({
     inputClass: {
       type: null,
       default: undefined,
+    },
+
+    autofocus: {
+      type: Boolean,
+      default: false,
     },
   },
 
