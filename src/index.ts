@@ -41,6 +41,7 @@ import STabs from './components/STabs.vue';
 import STextArea from './components/STextArea.vue';
 import STextField from './components/STextField.vue';
 import SToolMenuButton from './components/SToolMenuButton.vue';
+import STableNoResults from './components/STable/STableNoResults.vue';
 import classHelper from './lib/classHelper';
 
 export { get } from './lib/utils';
@@ -80,6 +81,7 @@ export {
   STabs,
   STextField,
   SToolMenuButton,
+  STableNoResults,
 };
 
 const plugin = {
@@ -124,6 +126,7 @@ const plugin = {
     Vue.component('s-text-area', STextArea);
     Vue.component('s-text-field', STextField);
     Vue.component('s-tool-menu-button', SToolMenuButton);
+    Vue.component('s-table-no-results', STableNoResults);
   },
 };
 

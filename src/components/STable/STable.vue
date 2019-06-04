@@ -75,11 +75,6 @@
             ref="top-spacer"
           />
 
-          <slot
-            v-if="rootNodes.length === 0"
-            name="empty"
-          />
-
           <tr
             v-for="(node, row) in rootNodes"
             :key="node.key"
@@ -134,6 +129,14 @@
           />
         </tbody>
       </table>
+      <slot
+        v-if="rootNodes.length === 0 && !loading"
+        name="empty"
+      />
+      <slot
+        v-if="loading"
+        name="loading"
+      />
     </div>
   </div>
 </template>
@@ -235,6 +238,11 @@ export default mixins(STableColumnsMixin).extend({
     },
 
     stickyColumn: {
+      type: Boolean,
+      default: false,
+    },
+
+    loading: {
       type: Boolean,
       default: false,
     },

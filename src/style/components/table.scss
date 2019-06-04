@@ -365,3 +365,28 @@ $table-selection-outline-width: 1px;
   transition: all .2s;
   transition-property: left, width;
 }
+
+.s-table-no-result {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 7.5rem;
+
+  background-color: $whiteish;
+  color: $grayest;
+}
+
+.s-table-no-result__search {
+  position: absolute;
+  top: 8.75rem;
+}
+
+.s-table-no-result__header {
+  width: 15.19rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+
+  font-size: $h1-font-size;
+  color: $grayer;
+}
