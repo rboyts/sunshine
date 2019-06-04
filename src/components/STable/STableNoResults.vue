@@ -7,10 +7,10 @@
       alt="Search icon"
     >
     <div :class="$class('header')">
-      No results found
+      {{ $t('s-table-no-result.no-result') }}
     </div>
     <div>
-      Try to add different filters
+      {{ $t('s-table-no-result.hint') }}
     </div>
   </div>
 </template>
