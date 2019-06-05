@@ -19,6 +19,6 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'STableNoResult',
+  name: 'STableNoResults',
 });
 </script>

@@ -366,7 +366,7 @@ $table-selection-outline-width: 1px;
   transition-property: left, width;
 }
 
-.s-table-no-result {
+.s-table-no-results {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -377,12 +377,12 @@ $table-selection-outline-width: 1px;
   color: $grayest;
 }
 
-.s-table-no-result__search {
+.s-table-no-results__search {
   position: absolute;
   top: 8.75rem;
 }
 
-.s-table-no-result__header {
+.s-table-no-results__header {
   text-align: center;
   width: 30rem;
   margin-top: 1.5rem;
