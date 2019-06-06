@@ -40,13 +40,25 @@ export default Vue.extend({
   data() {
     return {
       filter: '',
-      items: [],
     };
   },
 
   computed: {
     wrappingItems() {
       return createWrappingArray(this.items);
+    },
+
+    items() {
+      let items = [];
+      this.$slots.default.forEach(it => {
+        if (it.componentInstance && it.componentInstance.searchkey) {
+          items.push({
+            key: it.componentInstance.searchkey,
+            el: it.componentInstance.$el,
+          });
+        }
+      });
+      return items;
     },
   },
 
@@ -165,17 +177,6 @@ export default Vue.extend({
       this.$_reset = false;
       this.filter = '';
     },
-  },
-
-  mounted() {
-    this.$slots.default.forEach(it => {
-      if (it.componentInstance && it.componentInstance.searchkey) {
-        this.items.push({
-          key: it.componentInstance.searchkey,
-          el: it.componentInstance.$el,
-        });
-      }
-    });
   },
 
   beforeDestroy() {
