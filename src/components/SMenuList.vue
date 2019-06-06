@@ -9,6 +9,7 @@
       @keydown.capture.up.prevent="selectPrevious"
       @keydown.capture.space="onSpace"
       @keydown.capture.enter.prevent="onEnter"
+      @keydown="onKeyDown"
     />
 
     <ul
@@ -23,7 +24,9 @@
 <script>
 import Vue from 'vue';
 import GlobalEvents from 'vue-global-events';
+import { createWrappingArray } from '../lib/utils';
 
+const FILTER_RESET_TIMER = 400;
 const itemClass = 's-list-item';
 const selectedItemClass = 's-list-item--selected';
 
@@ -32,6 +35,19 @@ export default Vue.extend({
 
   components: {
     GlobalEvents,
+  },
+
+  data() {
+    return {
+      filter: '',
+      items: [],
+    };
+  },
+
+  computed: {
+    wrappingItems() {
+      return createWrappingArray(this.items);
+    },
   },
 
   methods: {
@@ -57,6 +73,20 @@ export default Vue.extend({
         event.stopPropagation();
         selected.dispatchEvent(new Event('accept'));
       }
+    },
+
+    onKeyDown(event) {
+      if (!this.items) return;
+
+      if (this.$_reset) {
+        this.resetFilter();
+      } else {
+        this.startResetTimer();
+      }
+
+      const { key } = event;
+      this.setFilter(key);
+      this.selectItem(key);
     },
 
     setSelected(next, prev) {
@@ -95,6 +125,61 @@ export default Vue.extend({
         item.scrollIntoView(false);
       }
     },
+
+    setFilter(key) {
+      const klc = key.toLowerCase();
+      this.filter = klc.length === 1 && klc !== ' ' ? this.filter + klc : '';
+      const sameChar = this.filter.split('').every(c => c === klc);
+      if (sameChar && this.filter) {
+        this.filter = this.filter[this.filter.length - 1];
+      }
+    },
+
+    selectItem() {
+      if (!this.filter) return;
+      const item = this.findItem(this.filter);
+      if (item !== null) {
+        const prev = this.getSelectedItem();
+        this.setSelected(item.el, prev);
+      }
+    },
+
+    findItem(searchKey) {
+      let item = null;
+      for (let _ of this.items) {
+        const it = this.wrappingItems.next().value;
+        if (it.key.toLowerCase().startsWith(searchKey)) {
+          item = it;
+          break;
+        }
+      }
+      return item;
+    },
+
+    startResetTimer() {
+      clearTimeout(this.$_timerId);
+      this.$_timerId = setTimeout(() => { this.$_reset = true; }, FILTER_RESET_TIMER);
+    },
+
+    resetFilter() {
+      this.$_reset = false;
+      this.filter = '';
+    },
+  },
+
+  mounted() {
+    this.$slots.default.forEach(it => {
+      if (it.componentInstance && it.componentInstance.searchkey) {
+        this.items.push({
+          key: it.componentInstance.searchkey,
+          el: it.componentInstance.$el,
+        });
+      }
+    });
+  },
+
+  beforeDestroy() {
+    clearTimeout(this.$_timerId);
   },
 });
 </script>

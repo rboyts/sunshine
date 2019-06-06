@@ -97,6 +97,7 @@ Use cases:
           >
             <s-list-item
               :key="node.key"
+              :searchkey="node.searchkey"
               :checkable="multiple"
               :checked="node.checked"
               @change="onItemChange(node.key, $event)"

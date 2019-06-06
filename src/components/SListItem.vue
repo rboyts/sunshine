@@ -49,6 +49,11 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+
+    searchkey: {
+      type: String,
+      default: '',
+    },
   },
 
   methods: {
