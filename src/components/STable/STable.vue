@@ -75,11 +75,6 @@
             ref="top-spacer"
           />
 
-          <slot
-            v-if="rootNodes.length === 0"
-            name="empty"
-          />
-
           <tr
             v-for="(node, row) in rootNodes"
             :key="node.key"
@@ -134,6 +129,16 @@
           />
         </tbody>
       </table>
+      <slot
+        v-if="rootNodes.length === 0 && !loading"
+        name="empty"
+      >
+        <s-table-no-result />
+      </slot>
+      <slot
+        v-if="loading"
+        name="loading"
+      />
     </div>
   </div>
 </template>
@@ -153,6 +158,7 @@ import SIcon from '../SIcon.vue';
 import SProgress from '../SProgress.vue';
 import STableOutline from './STableOutline.vue';
 import STableToggle from './STableToggle.vue';
+import STableNoResult from './STableNoResults.vue';
 import STableColumnsMixin from './STableColumnsMixin';
 
 const MAX_PLACEHOLDER_ROWS = 0;
@@ -202,6 +208,7 @@ export default mixins(STableColumnsMixin).extend({
     SProgress,
     STableOutline,
     STableToggle,
+    STableNoResult,
     VueGlobalEvents,
   },
 
@@ -235,6 +242,11 @@ export default mixins(STableColumnsMixin).extend({
     },
 
     stickyColumn: {
+      type: Boolean,
+      default: false,
+    },
+
+    loading: {
       type: Boolean,
       default: false,
     },

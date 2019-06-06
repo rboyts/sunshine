@@ -365,3 +365,41 @@ $table-selection-outline-width: 1px;
   transition: all .2s;
   transition-property: left, width;
 }
+
+.s-table-no-results {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 7.5rem;
+
+  pointer-events: none;
+  user-select: none;
+
+  white-space: nowrap;
+  background-color: $whiteish;
+  color: $grayest;
+}
+
+.s-table-no-results__search {
+  position: absolute;
+  top: 8.5rem;
+  font-size: 48px;
+  color: $grayer;
+}
+
+.s-table-no-results__circle {
+  width: 88px;
+  height: 88px;
+  background-color: $almost-gray;
+  border-radius: 50%;
+}
+
+.s-table-no-results__header {
+  text-align: center;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+
+  font-size: $h1-font-size;
+  color: $grayer;
+}
