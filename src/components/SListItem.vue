@@ -1,6 +1,7 @@
 <template>
   <li
     :class="$class({selected})"
+    :data-search-tag="searchtag"
     @click="onClick"
     @accept="onAccept"
   >
@@ -50,9 +51,9 @@ export default Vue.extend({
       default: false,
     },
 
-    searchkey: {
+    searchtag: {
       type: String,
-      default: '',
+      default: undefined,
     },
   },
 

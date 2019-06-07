@@ -26,7 +26,7 @@ import Vue from 'vue';
 import GlobalEvents from 'vue-global-events';
 import { createWrappingArray } from '../lib/utils';
 
-const FILTER_RESET_TIMER = 400;
+const TAG_RESET_TIMER = 400;
 const itemClass = 's-list-item';
 const selectedItemClass = 's-list-item--selected';
 
@@ -37,12 +37,6 @@ export default Vue.extend({
     GlobalEvents,
   },
 
-  data() {
-    return {
-      filter: '',
-    };
-  },
-
   computed: {
     wrappingItems() {
       return createWrappingArray(this.items);
@@ -50,11 +44,11 @@ export default Vue.extend({
 
     items() {
       let items = [];
-      this.$slots.default.forEach(it => {
-        if (it.componentInstance && it.componentInstance.searchkey) {
+      this.getItems().forEach(el => {
+        if (el.dataset && el.dataset.searchTag) {
           items.push({
-            key: it.componentInstance.searchkey,
-            el: it.componentInstance.$el,
+            key: el.dataset.searchTag,
+            el,
           });
         }
       });
@@ -88,16 +82,11 @@ export default Vue.extend({
     },
 
     onKeyDown(event) {
-      if (!this.items) return;
-
-      if (this.$_reset) {
-        this.resetFilter();
-      } else {
-        this.startResetTimer();
-      }
+      if (this.items.length === 0) return;
+      this.startResetTimer();
 
       const { key } = event;
-      this.setFilter(key);
+      this.setTag(key);
       this.selectItem(key);
     },
 
@@ -138,29 +127,33 @@ export default Vue.extend({
       }
     },
 
-    setFilter(key) {
+    setTag(key) {
+      if (this.$_tag === undefined) {
+        this.$_tag = '';
+      }
+
       const klc = key.toLowerCase();
-      this.filter = klc.length === 1 && klc !== ' ' ? this.filter + klc : '';
-      const sameChar = this.filter.split('').every(c => c === klc);
-      if (sameChar && this.filter) {
-        this.filter = this.filter[this.filter.length - 1];
+      this.$_tag = klc.length === 1 && klc !== ' ' ? this.$_tag + klc : '';
+      const sameChar = this.$_tag.split('').every(c => c === klc);
+      if (sameChar && this.$_tag) {
+        this.$_tag = this.$_tag[this.$_tag.length - 1];
       }
     },
 
     selectItem() {
-      if (!this.filter) return;
-      const item = this.findItem(this.filter);
+      if (!this.$_tag) return;
+      const item = this.findItem(this.$_tag);
       if (item !== null) {
         const prev = this.getSelectedItem();
         this.setSelected(item.el, prev);
       }
     },
 
-    findItem(searchKey) {
+    findItem(searchTag) {
       let item = null;
       for (let _ of this.items) {
         const it = this.wrappingItems.next().value;
-        if (it.key.toLowerCase().startsWith(searchKey)) {
+        if (it.key.toLowerCase().startsWith(searchTag)) {
           item = it;
           break;
         }
@@ -170,12 +163,7 @@ export default Vue.extend({
 
     startResetTimer() {
       clearTimeout(this.$_timerId);
-      this.$_timerId = setTimeout(() => { this.$_reset = true; }, FILTER_RESET_TIMER);
-    },
-
-    resetFilter() {
-      this.$_reset = false;
-      this.filter = '';
+      this.$_timerId = setTimeout(() => { this.$_tag = ''; }, TAG_RESET_TIMER);
     },
   },
 
