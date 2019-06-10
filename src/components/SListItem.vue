@@ -1,7 +1,7 @@
 <template>
   <li
     :class="$class({selected})"
-    :data-search-tag="searchtag || undefined"
+    :data-search-string="searchString"
     @click="onClick"
     @accept="onAccept"
   >
@@ -51,9 +51,9 @@ export default Vue.extend({
       default: false,
     },
 
-    searchtag: {
+    searchString: {
       type: String,
-      default: '',
+      default: undefined,
     },
   },
 

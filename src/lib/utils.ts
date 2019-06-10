@@ -13,14 +13,3 @@ export const get = (obj: any, path: string | string[], defaultValue?: any): any 
 };
 
 export const joinKeyPath = (keyPath: string[]) => keyPath.join(':');
-
-export const createWrappingArray = function* wrappingArray(array: Array<any>) {
-  let index = 0;
-  while (true) {
-    if (index >= array.length) {
-      index = 0;
-    }
-    yield array[index];
-    index++;
-  }
-};

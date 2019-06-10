@@ -24,9 +24,8 @@
 <script>
 import Vue from 'vue';
 import GlobalEvents from 'vue-global-events';
-import { createWrappingArray } from '../lib/utils';
 
-const TAG_RESET_TIMER = 400;
+const SEARCH_RESET_TIMER = 400;
 const itemClass = 's-list-item';
 const selectedItemClass = 's-list-item--selected';
 
@@ -35,25 +34,6 @@ export default Vue.extend({
 
   components: {
     GlobalEvents,
-  },
-
-  computed: {
-    wrappingItems() {
-      return createWrappingArray(this.items);
-    },
-
-    items() {
-      let items = [];
-      this.getItems().forEach(el => {
-        if (el.dataset && el.dataset.searchTag) {
-          items.push({
-            key: el.dataset.searchTag,
-            el,
-          });
-        }
-      });
-      return items;
-    },
   },
 
   methods: {
@@ -82,12 +62,10 @@ export default Vue.extend({
     },
 
     onKeyDown(event) {
-      if (this.items.length === 0) return;
-      this.startResetTimer();
-
       const { key } = event;
-      this.setTag(key);
-      this.selectItem(key);
+      if (key.length > 1 || key === ' ') return;
+      this.startResetTimer();
+      this.setSearchString(key);
     },
 
     setSelected(next, prev) {
@@ -127,34 +105,47 @@ export default Vue.extend({
       }
     },
 
-    setTag(key) {
-      if (this.$_tag === undefined) {
-        this.$_tag = '';
+    setSearchString(key) {
+      if (this.$_searchString === undefined) {
+        this.$_searchString = '';
       }
 
       const klc = key.toLowerCase();
-      this.$_tag = klc.length === 1 && klc !== ' ' ? this.$_tag + klc : '';
-      const sameChar = this.$_tag.split('').every(c => c === klc);
-      if (sameChar && this.$_tag) {
-        this.$_tag = this.$_tag[this.$_tag.length - 1];
+      this.$_searchString += klc;
+      const sameChar = this.$_searchString.split('').every(c => c === klc);
+      if (sameChar) {
+        this.$_searchString = klc;
       }
+
+      this.selectItem(this.$_searchString);
     },
 
-    selectItem() {
-      if (!this.$_tag) return;
-      const item = this.findItem(this.$_tag);
+    selectItem(searchString) {
+      const item = this.findItem(searchString);
       if (item !== null) {
         const prev = this.getSelectedItem();
-        this.setSelected(item.el, prev);
+        this.setSelected(item, prev);
       }
     },
 
-    findItem(searchTag) {
+    findItem(searchString) {
+      const items = this.getItems();
+      const selected = this.getSelectedItem();
+      const index = selected ? items.indexOf(selected) : -1;
+      let item = this.searchArray(index + 1, items.length, items, searchString);
+
+      if (!item) {
+        item = this.searchArray(0, index, items, searchString);
+      }
+      return item;
+    },
+
+    searchArray(from, to, items, searchString) {
       let item = null;
-      for (let _ of this.items) {
-        const it = this.wrappingItems.next().value;
-        if (it.key.toLowerCase().startsWith(searchTag)) {
-          item = it;
+      for (let i = from; i < to; i++) {
+        const tag = items[i].dataset.searchString;
+        if (tag && tag.toLowerCase().startsWith(searchString)) {
+          item = items[i];
           break;
         }
       }
@@ -163,7 +154,7 @@ export default Vue.extend({
 
     startResetTimer() {
       clearTimeout(this.$_timerId);
-      this.$_timerId = setTimeout(() => { this.$_tag = ''; }, TAG_RESET_TIMER);
+      this.$_timerId = setTimeout(() => { this.$_searchString = ''; }, SEARCH_RESET_TIMER);
     },
   },
 
