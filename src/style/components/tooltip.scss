@@ -22,7 +22,7 @@ $tooltip-arrow-margin: 0.675rem;
   // blur, therefore the value is differenet here.
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
 
-  .tooltip-inner {
+  .s-tooltip-inner {
     color: $almost-black;
     border-radius: 4px;
 
@@ -31,7 +31,7 @@ $tooltip-arrow-margin: 0.675rem;
     pointer-events: none;
   }
 
-  .tooltip-arrow {
+  .s-tooltip-arrow {
     position: absolute;
 
     // Svg is edited to have these dimentions to prevent a placement mismatch
@@ -50,7 +50,7 @@ $tooltip-arrow-margin: 0.675rem;
   &[x-placement^="top"] {
     margin-bottom: $tooltip-arrow-margin;
 
-    .tooltip-arrow {
+    .s-tooltip-arrow {
       bottom: -8px;
       left: 50%;
       margin-top: 0;
@@ -61,7 +61,7 @@ $tooltip-arrow-margin: 0.675rem;
   &[x-placement^="bottom"] {
     margin-top: $tooltip-arrow-margin;
 
-    .tooltip-arrow {
+    .s-tooltip-arrow {
       top: -8px;
       left: 50%;
       margin-top: 0;
@@ -73,7 +73,7 @@ $tooltip-arrow-margin: 0.675rem;
   &[x-placement^="right"] {
     margin-left: $tooltip-arrow-margin;
 
-    .tooltip-arrow {
+    .s-tooltip-arrow {
       transform: rotate(90deg);
       left: -10px;
       top: 50%;
@@ -85,7 +85,7 @@ $tooltip-arrow-margin: 0.675rem;
   &[x-placement^="left"] {
     margin-right: $tooltip-arrow-margin;
 
-    .tooltip-arrow {
+    .s-tooltip-arrow {
       transform: rotate(-90deg);
       right: -10px;
       top: 50%;
