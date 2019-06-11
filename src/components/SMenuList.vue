@@ -132,24 +132,22 @@ export default Vue.extend({
       const items = this.getItems();
       const selected = this.getSelectedItem();
       const index = selected ? items.indexOf(selected) : -1;
-      let item = this.searchArray(index + 1, items.length, items, searchString);
-
-      if (!item) {
-        item = this.searchArray(0, index, items, searchString);
-      }
-      return item;
-    },
-
-    searchArray(from, to, items, searchString) {
+      let offset = index + 1;
       let item = null;
-      for (let i = from; i < to; i++) {
-        const tag = items[i].dataset.searchString;
-        if (tag && tag.toLowerCase().startsWith(searchString)) {
-          item = items[i];
+
+      for (let i = 0; i < items.length; i++) {
+        const it = items[(offset + i) % items.length];
+        if (this.isMatch(it, searchString)) {
+          item = it;
           break;
         }
       }
       return item;
+    },
+
+    isMatch(item, searchString) {
+      const tag = item.dataset.searchString;
+      return tag && tag.toLowerCase().startsWith(searchString);
     },
 
     startResetTimer() {
