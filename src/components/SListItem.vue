@@ -1,6 +1,7 @@
 <template>
   <li
     :class="$class({selected})"
+    :data-search-string="searchString"
     @click="onClick"
     @accept="onAccept"
   >
@@ -48,6 +49,11 @@ export default Vue.extend({
     selected: {
       type: Boolean,
       default: false,
+    },
+
+    searchString: {
+      type: String,
+      default: undefined,
     },
   },
 

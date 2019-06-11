@@ -9,6 +9,7 @@
       @keydown.capture.up.prevent="selectPrevious"
       @keydown.capture.space="onSpace"
       @keydown.capture.enter.prevent="onEnter"
+      @keydown="onKeyDown"
     />
 
     <ul
@@ -24,6 +25,7 @@
 import Vue from 'vue';
 import GlobalEvents from 'vue-global-events';
 
+const SEARCH_RESET_TIMER = 400;
 const itemClass = 's-list-item';
 const selectedItemClass = 's-list-item--selected';
 
@@ -57,6 +59,13 @@ export default Vue.extend({
         event.stopPropagation();
         selected.dispatchEvent(new Event('accept'));
       }
+    },
+
+    onKeyDown(event) {
+      const { key } = event;
+      if (key.length > 1 || key === ' ') return;
+      this.startResetTimer();
+      this.setSearchString(key);
     },
 
     setSelected(next, prev) {
@@ -95,6 +104,60 @@ export default Vue.extend({
         item.scrollIntoView(false);
       }
     },
+
+    setSearchString(key) {
+      if (this.$_searchString === undefined) {
+        this.$_searchString = '';
+      }
+
+      const klc = key.toLowerCase();
+      this.$_searchString += klc;
+      const sameChar = this.$_searchString.split('').every(c => c === klc);
+      if (sameChar) {
+        this.$_searchString = klc;
+      }
+
+      this.selectItem(this.$_searchString);
+    },
+
+    selectItem(searchString) {
+      const item = this.findItem(searchString);
+      if (item !== null) {
+        const prev = this.getSelectedItem();
+        this.setSelected(item, prev);
+      }
+    },
+
+    findItem(searchString) {
+      const items = this.getItems();
+      const selected = this.getSelectedItem();
+      const index = selected ? items.indexOf(selected) : -1;
+      let offset = index + 1;
+      let item = null;
+
+      for (let i = 0; i < items.length; i++) {
+        const it = items[(offset + i) % items.length];
+        if (this.isMatch(it, searchString)) {
+          item = it;
+          break;
+        }
+      }
+      return item;
+    },
+
+    isMatch(item, searchString) {
+      const tag = item.dataset.searchString;
+      return tag && tag.toLowerCase().startsWith(searchString);
+    },
+
+    startResetTimer() {
+      clearTimeout(this.$_timerId);
+      this.$_timerId = setTimeout(() => { this.$_searchString = ''; }, SEARCH_RESET_TIMER);
+    },
+  },
+
+  beforeDestroy() {
+    clearTimeout(this.$_timerId);
   },
 });
 </script>
