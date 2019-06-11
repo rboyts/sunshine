@@ -95,7 +95,7 @@ export default Vue.extend({
 
     placeholder: {
       type: String,
-      default: '',
+      default: undefined,
     },
     maxLength: {
       type: Number,
