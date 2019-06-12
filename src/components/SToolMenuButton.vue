@@ -18,8 +18,8 @@
     <template v-slot:content="{ hide }">
       <s-menu-builder
         :items="items"
-        @onClick="onEvent(hide)"
-        @onChange="onEvent(hide)"
+        @onClick="hide"
+        @onChange="dismiss ? hide() : undefined"
       />
     </template>
   </s-menu>
@@ -51,14 +51,6 @@ export default Vue.extend({
     dismiss: {
       type: Boolean,
       default: false,
-    },
-  },
-
-  methods: {
-    onEvent(closeMethod) {
-      if (this.dismiss) {
-        closeMethod();
-      }
     },
   },
 });
