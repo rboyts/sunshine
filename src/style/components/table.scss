@@ -366,6 +366,15 @@ $table-selection-outline-width: 1px;
   transition-property: left, width;
 }
 
+.s-table__loading-progress {
+  height: 2px;
+  margin-left: 0;
+  margin-right: 0;
+  background-color: $gray;
+
+  animation: progress 1.5s infinite;
+}
+
 .s-table-no-results {
   display: flex;
   flex-direction: column;

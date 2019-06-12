@@ -129,16 +129,16 @@
           />
         </tbody>
       </table>
+      <div
+        v-if="loading"
+        :class="$class('loading-progress')"
+      />
       <slot
         v-if="rootNodes.length === 0 && !loading"
         name="empty"
       >
         <s-table-no-result />
       </slot>
-      <slot
-        v-if="loading"
-        name="loading"
-      />
     </div>
   </div>
 </template>
