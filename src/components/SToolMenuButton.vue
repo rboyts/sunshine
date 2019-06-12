@@ -18,7 +18,7 @@
     <template v-slot:content="{ hide }">
       <s-menu-builder
         :items="items"
-        @onClick="hide"
+        @onClick="dismiss ? hide() : ''"
       />
     </template>
   </s-menu>
@@ -45,6 +45,11 @@ export default Vue.extend({
     items: {
       type: Array,
       required: true,
+    },
+
+    dismiss: {
+      type: Boolean,
+      default: false,
     },
   },
 });
