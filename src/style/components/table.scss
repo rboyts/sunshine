@@ -370,9 +370,9 @@ $table-selection-outline-width: 1px;
   height: 2px;
   margin-left: 0;
   margin-right: 0;
-  background-color: $gray;
+  background-color: $color-edit;
 
-  animation: progress 1.5s infinite;
+  animation: in-progress 1.5s infinite;
 }
 
 .s-table-no-results {
