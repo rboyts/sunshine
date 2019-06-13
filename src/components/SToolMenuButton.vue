@@ -5,6 +5,7 @@
   >
     <template v-slot:activator>
       <s-button
+        v-tooltip.auto="tooltip"
         :class="$class({ active })"
         round
       >
@@ -51,6 +52,11 @@ export default Vue.extend({
     dismiss: {
       type: Boolean,
       default: false,
+    },
+
+    tooltip: {
+      type: String,
+      default: '',
     },
   },
 });
