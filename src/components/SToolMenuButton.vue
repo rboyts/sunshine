@@ -5,6 +5,7 @@
   >
     <template v-slot:activator>
       <s-button
+        v-tooltip.auto="tooltip"
         :class="$class({ active })"
         round
       >
@@ -19,6 +20,7 @@
       <s-menu-builder
         :items="items"
         @onClick="hide"
+        @onChange="dismiss && hide()"
       />
     </template>
   </s-menu>
@@ -45,6 +47,16 @@ export default Vue.extend({
     items: {
       type: Array,
       required: true,
+    },
+
+    dismiss: {
+      type: Boolean,
+      default: false,
+    },
+
+    tooltip: {
+      type: [String, Object],
+      default: undefined,
     },
   },
 });
