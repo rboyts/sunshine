@@ -19,7 +19,7 @@
       <s-menu-builder
         :items="items"
         @onClick="hide"
-        @onChange="dismiss ? hide() : undefined"
+        @onChange="dismiss && hide()"
       />
     </template>
   </s-menu>
