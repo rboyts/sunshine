@@ -55,8 +55,8 @@ export default Vue.extend({
     },
 
     tooltip: {
-      type: String,
-      default: '',
+      type: [String, Object],
+      default: undefined,
     },
   },
 });
