@@ -68,7 +68,7 @@
               colspan="9999"
               :class="$class('loading')"
             >
-              <div :class="$class('loading-progress')" />
+              <div :class="$class('loading', { progress: true })" />
             </th>
           </tr>
         </thead>

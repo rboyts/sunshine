@@ -73,6 +73,18 @@ $table-selection-outline-width: 1px;
     transition: opacity $duration-normal;
   }
 
+  .s-table__loading {
+    height: 2px;
+
+    &--progress {
+      margin-left: 0;
+      margin-right: 0;
+      background-color: $color-edit;
+
+      animation: in-progress 1.5s infinite;
+    }
+  }
+
   td {
     background-color: $white;
     z-index: 0;
@@ -364,19 +376,6 @@ $table-selection-outline-width: 1px;
 
   transition: all .2s;
   transition-property: left, width;
-}
-
-.s-table__loading {
-  height: 2px !important;
-}
-
-.s-table__loading-progress {
-  height: 2px;
-  margin-left: 0;
-  margin-right: 0;
-  background-color: $color-edit;
-
-  animation: in-progress 1.5s infinite;
 }
 
 .s-table-no-results {
