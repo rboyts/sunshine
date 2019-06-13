@@ -1,6 +1,7 @@
 <template>
   <SToolMenuButton
     icon-name="columns"
+    :tooltip="tooltip"
     :items="items"
   />
 </template>
@@ -19,6 +20,13 @@ export default Vue.extend({
 
   components: {
     SToolMenuButton,
+  },
+
+  props: {
+    tooltip: {
+      type: [String, Object],
+      default: undefined,
+    },
   },
 
   computed: {
