@@ -1,10 +1,11 @@
 <template>
   <div :class="$class()">
-    <div :class="$class('circle')" />
-    <div
-      class="sunshine24-search"
-      :class="$class('search')"
-    />
+    <div :class="$class('circle')">
+      <div
+        class="sunshine24-search"
+        :class="$class('search')"
+      />
+    </div>
     <div :class="$class('header')">
       {{ $t('s-table-no-result.no-result') }}
     </div>

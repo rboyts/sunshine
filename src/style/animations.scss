@@ -1,0 +1,27 @@
+
+@keyframes in-progress {
+    0% {
+      margin-left: 0;
+      margin-right: 80%;
+    }
+
+    25% {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    50% {
+      margin-left: 80%;
+      margin-right: 0;
+    }
+
+    75% {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    100% {
+      margin-left: 0;
+      margin-right: 80%;
+    }
+  }
