@@ -63,6 +63,14 @@
               </span>
             </th>
           </tr>
+          <tr v-if="loading">
+            <th
+              colspan="9999"
+              :class="$class('loading')"
+            >
+              <div :class="$class('loading-progress')" />
+            </th>
+          </tr>
         </thead>
 
         <tbody>
@@ -129,10 +137,6 @@
           />
         </tbody>
       </table>
-      <div
-        v-if="loading"
-        :class="$class('loading-progress')"
-      />
       <slot
         v-if="rootNodes.length === 0 && !loading"
         name="empty"

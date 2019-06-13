@@ -366,6 +366,10 @@ $table-selection-outline-width: 1px;
   transition-property: left, width;
 }
 
+.s-table__loading {
+  height: 2px !important;
+}
+
 .s-table__loading-progress {
   height: 2px;
   margin-left: 0;
