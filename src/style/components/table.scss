@@ -26,7 +26,7 @@ $table-selection-outline-width: 1px;
 
   border-top: $outer-border;
 
-  background-color: $almost-gray;
+  background-color: $whiteish;
 
   display: flex;
   flex-direction: column;
@@ -388,7 +388,6 @@ $table-selection-outline-width: 1px;
   user-select: none;
 
   white-space: nowrap;
-  background-color: $whiteish;
   color: $grayest;
 }
 
