@@ -523,6 +523,7 @@ export default mixins(STableColumnsMixin).extend({
       let to = currentDropIndex;
 
       this.drag = null;
+      this.$_wasDragged = true;
 
       if (to > from) to--;
       if (to === from) return;
@@ -663,6 +664,11 @@ export default mixins(STableColumnsMixin).extend({
     },
 
     onSortableColumnClick(key: string) {
+      if (this.$_wasDragged) {
+        this.$_wasDragged = false;
+        return;
+      }
+
       this.internalSortingState = {
         key,
         reverse: this.internalSortingState.key === key ? !this.internalSortingState.reverse : false,
