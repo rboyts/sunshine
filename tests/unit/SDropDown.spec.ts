@@ -60,6 +60,7 @@ describe('SDropDown', () => {
         <s-drop-down
           v-model="selected"
           :items="items"
+          strict
           multiple
           label="Choose"
         />

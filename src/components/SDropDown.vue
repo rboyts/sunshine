@@ -181,6 +181,23 @@ export default Vue.extend({
       default: false,
     },
 
+    /**
+     * Strictly ensure that the value (v-model) is always an available option
+     * (every value if multiple is true).
+     *
+     * XXX: This seems to be a bad idea in general, because it may cause users
+     * to change fields that they don't intend to. Instead of unselecting
+     * invalid values, we show the key of the original value in angular
+     * brackets.
+     * Also, the current implementation of this property, doesn't work in all
+     * cases. It works when items are changed after value, but not when value
+     * is set programmatically after items are loaded.
+     */
+    strict: {
+      type: Boolean,
+      default: false,
+    },
+
     maxSelectedShown: {
       type: Number,
       default: 2,
@@ -221,6 +238,8 @@ export default Vue.extend({
 
     // Update selection when data is changed.
     items(val) {
+      if (!this.strict) return;
+
       const keys = val.map(it => it.key);
       if (this.multiple) {
         this.internalValue = this.internalValue.filter(k => keys.includes(k));
@@ -287,7 +306,7 @@ export default Vue.extend({
 
       const getLabel = key => {
         const item = this.items.find(it => it.key === key);
-        return item ? item[this.labelKey] : key;
+        return item ? item[this.labelKey] : `[${key}]`;
       };
 
       if (this.multiple) {
