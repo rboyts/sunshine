@@ -479,10 +479,15 @@ export default mixins(STableColumnsMixin).extend({
 
       clearTimeout(this.moveTimeoutId);
 
+      // This mechanism prevents sorting being triggered, when moving a column
+      this.$_acceptHeaderClick = true;
+
       // Prevent moving sticky column
       if (this.stickyColumn && index === 0) return;
 
       this.moveTimeoutId = window.setTimeout(() => {
+        this.$_acceptHeaderClick = false;
+
         let el = event.target as HTMLElement;
 
         let tr = el.closest('tr') as HTMLElement;
@@ -663,6 +668,8 @@ export default mixins(STableColumnsMixin).extend({
     },
 
     onSortableColumnClick(key: string) {
+      if (!this.$_acceptHeaderClick) return;
+
       this.internalSortingState = {
         key,
         reverse: this.internalSortingState.key === key ? !this.internalSortingState.reverse : false,
