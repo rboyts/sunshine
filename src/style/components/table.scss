@@ -26,7 +26,7 @@ $table-selection-outline-width: 1px;
 
   border-top: $outer-border;
 
-  background-color: $almost-gray;
+  background-color: $whiteish;
 
   display: flex;
   flex-direction: column;
@@ -379,16 +379,17 @@ $table-selection-outline-width: 1px;
 }
 
 .s-table-no-results {
+  position: sticky;
+  left: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 7.5rem;
+  padding: 7.5rem 0;
 
   pointer-events: none;
   user-select: none;
 
   white-space: nowrap;
-  background-color: $whiteish;
   color: $grayest;
 }
 
