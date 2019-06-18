@@ -1,3 +1,9 @@
+v1.2.0 (2019-06-18):
+
+  - SDropDown: Allow non-existing values
+  - STable: Center no result message in table
+  - STable: Avoid triggering sort event when drag/dropping column
+
 v1.1.0 (2019-06-13):
 
   - Add tooltip prop in SToolMenuButton
