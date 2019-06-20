@@ -71,7 +71,7 @@
 import Vue from 'vue';
 import mixins from 'vue-typed-mixins';
 import debounce from 'debounce';
-import { DateTime, Interval } from 'luxon';
+import { DateTime, Interval, Info } from 'luxon';
 import {
   MouseWheelEvent,
   IDatepickerValue,
@@ -113,7 +113,7 @@ export default mixins(SCalendarMixin).extend({
 
   data() {
     return {
-      days: ['M', 'T', 'O', 'T', 'F', 'L', 'S'], // TODO i18n
+      days: Info.weekdays('narrow'),
 
       transition: '',
 
