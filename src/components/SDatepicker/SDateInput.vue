@@ -36,8 +36,7 @@ export default Vue.extend({
       formattedValue: '',
       focus: false,
 
-      // constants
-      // format: moment.localeData().longDateFormat('L'),
+      // Change dateformat according to locale?
       format: 'dd.MM.yyyy',
     };
   },
