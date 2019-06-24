@@ -1,40 +1,39 @@
 <template>
-  <div :class="$class()">
-    <a
-      href="#"
-      :class="$class('heading')"
-      @_click="$emit('click')"
-      @click="onClick"
-    >
-      <span :class="$class('title')">
-        <slot name="heading">
-          {{ heading }}
-        </slot>
-      </span>
-      <s-icon
-        v-if="invalid"
-        package="sunshine24"
-        name="warning"
-        :class="$class('warning')"
-      />
-      <s-icon
-        package="sunshine24"
-        name="arrow"
-        :class="$class('chevron', chevronOptions)"
-      />
-    </a>
-
-    <div
-      v-show="showBody"
-      :class="$class('body', bodyOptions)"
-      :style="bodyStyle"
-      @transitionend="onTransitionEnd"
-    >
-      <div
-        ref="inner"
-        :class="$class('content')"
+  <div :class="$class('wrapper')">
+    <div :class="$class('status-wrapper')">
+      <div :class="$class('status', statusOptions)" />
+    </div>
+    <div :class="$class()">
+      <a
+        href="#"
+        :class="$class('heading')"
+        @_click="$emit('click')"
+        @click="onClick"
       >
-        <slot />
+        <span :class="$class('title', { open, invalid })">
+          <slot name="heading">
+            {{ heading }}
+          </slot>
+        </span>
+        <s-icon
+          package="sunshine24"
+          name="arrow"
+          :class="$class('chevron', chevronOptions)"
+        />
+      </a>
+
+      <div
+        v-show="showBody"
+        :class="$class('body', bodyOptions)"
+        :style="bodyStyle"
+        @transitionend="onTransitionEnd"
+      >
+        <div
+          ref="inner"
+          :class="$class('content')"
+        >
+          <slot />
+        </div>
       </div>
     </div>
   </div>
@@ -123,6 +122,13 @@ export default Vue.extend({
       return {
         open: this.open,
         transitioning: this.transitioning,
+      };
+    },
+
+    statusOptions() {
+      return {
+        open: this.open && !this.invalid,
+        invalid: this.invalid && this.open,
       };
     },
 
