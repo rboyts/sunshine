@@ -54,13 +54,11 @@ $accordion-status-height: 2.7rem;
   outline: none;
   text-decoration: none;
   white-space: nowrap;
-  transition: color $duration-normal;
 
   &:hover {
     // XXX Design system says, "Text opacity: 80%", but this looks a bit weird
     opacity: .8;
   }
-
 }
 
 .s-accordion-item__title {
