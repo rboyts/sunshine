@@ -120,7 +120,10 @@
                       item: node.item,
                     }"
                   >
-                    <span>{{ getCellValue(node, column) }}</span>
+                    <span v-if="column.boolean">
+                      <s-checkbox v-model="node.item.data[column.key]"></s-checkbox>
+                    </span>
+                    <span v-else>{{ getCellValue(node, column) }}</span>
                   </slot>
                 </span>
               </span>
